@@ -197,6 +197,31 @@ tr:hover td{background:#f5f8ff}
 .toast-err{background:#ff4d4f;color:#fff}
 @keyframes fadeio{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0}}
 
+/* ── INDENTED FORM ITEMS ── */
+.fi-title{display:flex;align-items:center;margin-bottom:12px;margin-top:4px}
+.fi-title-label{width:148px;flex-shrink:0;text-align:right;padding-right:12px;font-size:13px;font-weight:600;color:#333}
+.fi-sub{display:flex;align-items:flex-start;margin-bottom:16px;padding-left:32px}
+.fi-sub .fl{width:116px}
+.fi-sub-title{display:flex;align-items:center;margin-bottom:12px;margin-top:4px;padding-left:32px}
+.fi-sub-title-label{width:116px;flex-shrink:0;text-align:right;padding-right:12px;font-size:13px;font-weight:600;color:#595959}
+
+/* ── CASCADE SELECTOR ── */
+.cascade-wrap{position:relative;min-width:240px}
+.cascade-input{height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;color:#333;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-width:240px;user-select:none}
+.cascade-input:hover{border-color:#0961BD}
+.cascade-dropdown{display:none;position:absolute;top:36px;left:0;z-index:500;background:#fff;border:1px solid #d9d9d9;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.12);min-width:380px}
+.cascade-dropdown.open{display:flex}
+.cascade-col{overflow-y:auto;max-height:240px}
+.cascade-col-hd{padding:6px 12px;font-size:11px;color:#888;border-bottom:1px solid #f0f0f0;background:#fafafa;white-space:nowrap}
+.cascade-row{padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;white-space:nowrap}
+.cascade-row:hover{background:#f0f5ff}
+.cascade-row.active{background:#e6f4ff}
+.cascade-row input[type=checkbox]{accent-color:#0961BD;cursor:pointer;flex-shrink:0}
+
+/* ── EDIT ICON SVG ── */
+.edit-icon-svg{color:#0961BD;cursor:pointer;width:32px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #0961BD;border-radius:3px;background:#fff;transition:all .15s}
+.edit-icon-svg:hover{background:#e6f4ff}
+
 /* ── PLACEHOLDER COLOR ── */
 .fs::placeholder,.fin::placeholder,.f-select::placeholder,.f-input::placeholder{color:#bfbfbf}
 input::placeholder,textarea::placeholder{color:#bfbfbf}
@@ -476,16 +501,16 @@ select.fs.ph{color:#bfbfbf}
       <table class="in-table">
         <thead><tr><th>推广商</th><th>显示/隐藏</th><th>排序</th><th>操作</th></tr></thead>
         <tbody>
-          <tr><td>短信1000</td><td class="s-show">显示</td><td>10000</td><td><span class="act-btn act-edit" onclick="openEditP('短信1000',10000,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>DALI 5</td><td class="s-show">显示</td><td>1000</td><td><span class="act-btn act-edit" onclick="openEditP('DALI 5',1000,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>DA LI 4</td><td class="s-show">显示</td><td>101</td><td><span class="act-btn act-edit" onclick="openEditP('DA LI 4',101,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>DA LI 3</td><td class="s-show">显示</td><td>100</td><td><span class="act-btn act-edit" onclick="openEditP('DA LI 3',100,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>106-快手</td><td class="s-show">显示</td><td>99</td><td><span class="act-btn act-edit" onclick="openEditP('106-快手',99,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>谷歌上架包</td><td class="s-show">显示</td><td>7</td><td><span class="act-btn act-edit" onclick="openEditP('谷歌上架包',7,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>105</td><td class="s-hide">隐藏</td><td>5</td><td><span class="act-btn act-edit" onclick="openEditP('105',5,'隐藏')">✏ 编辑</span></td></tr>
-          <tr><td>短信</td><td class="s-show">显示</td><td>4</td><td><span class="act-btn act-edit" onclick="openEditP('短信',4,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>FB-22</td><td class="s-show">显示</td><td>3</td><td><span class="act-btn act-edit" onclick="openEditP('FB-22',3,'显示')">✏ 编辑</span></td></tr>
-          <tr><td>DAYU 2</td><td class="s-show">显示</td><td>2</td><td><span class="act-btn act-edit" onclick="openEditP('DAYU 2',2,'显示')">✏ 编辑</span></td></tr>
+          <tr><td>短信1000</td><td class="s-show">显示</td><td>10000</td><td><span class="edit-icon-svg" onclick="openEditP('短信1000',10000,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DALI 5</td><td class="s-show">显示</td><td>1000</td><td><span class="edit-icon-svg" onclick="openEditP('DALI 5',1000,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DA LI 4</td><td class="s-show">显示</td><td>101</td><td><span class="edit-icon-svg" onclick="openEditP('DA LI 4',101,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DA LI 3</td><td class="s-show">显示</td><td>100</td><td><span class="edit-icon-svg" onclick="openEditP('DA LI 3',100,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>106-快手</td><td class="s-show">显示</td><td>99</td><td><span class="edit-icon-svg" onclick="openEditP('106-快手',99,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>谷歌上架包</td><td class="s-show">显示</td><td>7</td><td><span class="edit-icon-svg" onclick="openEditP('谷歌上架包',7,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>105</td><td class="s-hide">隐藏</td><td>5</td><td><span class="edit-icon-svg" onclick="openEditP('105',5,'隐藏')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>短信</td><td class="s-show">显示</td><td>4</td><td><span class="edit-icon-svg" onclick="openEditP('短信',4,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>FB-22</td><td class="s-show">显示</td><td>3</td><td><span class="edit-icon-svg" onclick="openEditP('FB-22',3,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DAYU 2</td><td class="s-show">显示</td><td>2</td><td><span class="edit-icon-svg" onclick="openEditP('DAYU 2',2,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
         </tbody>
       </table>
     </div>
@@ -616,7 +641,7 @@ select.fs.ph{color:#bfbfbf}
 
 <!-- Batch Replace -->
 <div class="overlay" id="m-batch-replace">
-  <div class="modal" style="width:600px">
+  <div class="modal" style="width:620px">
     <div class="mh"><span class="mt">批量替换</span><span class="mc" onclick="closeM('m-batch-replace')">×</span></div>
     <div class="mb">
       <div class="fi"><span class="fl">地区：</span><div class="fc"><select class="fs"><option>巴西</option></select></div></div>
@@ -626,67 +651,65 @@ select.fs.ph{color:#bfbfbf}
       <!-- ── 更换安装包 ── -->
       <div id="br-pkg">
         <div class="fi"><span class="fl req">渠道安装类型：</span><div class="fc"><select class="fs" id="br-pkg-type" onchange="brPkgType(this.value)"><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option><option value="苹果商店">苹果商店</option></select></div></div>
-        <!-- APK fields -->
-        <div id="br-pkg-apk-fields" style="padding-left:20px">
-          <div class="fi"><span class="fl">目标地址 APK包地址：</span><div class="fc"><input class="fin" id="br-pkg-apkaddr" placeholder="请输入" oninput="brPkgAddrChange()"></div></div>
-          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="br-pkg-apkname" disabled placeholder="自动读取"></div></div>
-          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','br')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
+        <div id="br-pkg-apk-fields">
+          <div class="fi-title"><span class="fi-title-label">目标地址</span></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">APK包地址：</span><div class="fc"><input class="fin" id="br-pkg-apkaddr" placeholder="请输入" oninput="brPkgAddrChange()"></div></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">APK包名：</span><div class="fc"><input class="fin" id="br-pkg-apkname" disabled></div></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','br')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
         </div>
-        <!-- Apple Store fields -->
         <div id="br-pkg-ios-fields" style="display:none">
           <div class="fi"><span class="fl req">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-ios-at" value="普通" checked onchange="brIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-ios-at" value="OneLink" onchange="brIosAddr(this.value)"> OneLink地址</label></div></div></div>
           <div id="br-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
           <div id="br-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
         </div>
-        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc" style="display:flex;gap:10px;align-items:center"><select class="fs" style="flex:1"><option value="">请选择渠道</option><option>短信1001</option><option>短信1002</option><option>TK22-BR007</option><option>FB-22-127B</option></select><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;flex-shrink:0"><input type="checkbox"> 全选</label></div></div>
+        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc"><div class="cascade-wrap" id="br-pkg-cascade"><div class="cascade-input" onclick="toggleCascadeById('br-pkg-cascade-dd')"><span style="color:#bfbfbf;font-size:13px">请选择渠道</span><span style="color:#bbb;font-size:11px">▼</span></div><div class="cascade-dropdown" id="br-pkg-cascade-dd"><div class="cascade-col" style="width:160px;border-right:1px solid #f0f0f0"><div class="cascade-col-hd">推广商</div><div class="cascade-row" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1000</label><span style="color:#bbb;font-size:11px">›</span></div><div class="cascade-row active" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> FB-22</label><span style="color:#0961BD;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> DALI 5</label><span style="color:#bbb;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 106-快手</label><span style="color:#bbb;font-size:11px">›</span></div></div><div class="cascade-col" id="bpcd" style="flex:1"><div class="cascade-col-hd">渠道</div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> TK22-BR007</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22-127B</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22-128</label></div></div></div></div><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;margin-left:8px"><input type="checkbox"> 全选</label></div></div>
       </div>
 
       <!-- ── 更换安装引导 ── -->
       <div id="br-guide" style="display:none">
         <div class="fi"><span class="fl req">渠道安装类型：</span><div class="fc"><select class="fs" id="br-guide-chtype" onchange="brGuideChType(this.value)"><option value="PWA">PWA</option><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option><option value="保存桌面">保存桌面</option><option value="苹果商店">苹果商店</option></select></div></div>
-        <div style="margin-bottom:12px;margin-top:4px"><span style="font-size:13px;font-weight:600;color:#333;padding-left:148px">目标安装类型</span></div>
+        <div class="fi-title"><span class="fi-title-label">目标安装类型</span></div>
         <div id="br-guide-android-fields">
-          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="br-guide-popup" onchange="brGuidePopup(this.value)"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框内容：</span><div class="fc"><select class="fs" id="br-guide-popup" onchange="brGuidePopup(this.value)"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
           <div id="br-guide-bonus-fields" class="cond">
-            <div class="fi"><span class="fl req">赠送金额类型：</span><div class="fc"><select class="fs" id="br-guide-bt" onchange="brGuideBonusType(this.value)"><option>固定金额</option><option>随机金额</option></select></div></div>
-            <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc" id="br-guide-ba"><input class="fin" placeholder="请输入金额"></div></div>
+            <div class="fi-sub"><span class="fl req" style="width:116px">赠送金额类型：</span><div class="fc"><select class="fs" id="br-guide-bt" onchange="brGuideBonusType(this.value)"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi-sub"><span class="fl req" style="width:116px">显示赠送金额：</span><div class="fc" id="br-guide-ba"><input class="fin" placeholder="请输入金额"></div></div>
           </div>
-          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
-          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
-          <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="br-guide-itype" onchange="brGuideInstallType(this.value)"><option value="PWA">PWA</option><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs" id="br-guide-itype" onchange="brGuideInstallType(this.value)"><option value="PWA">PWA</option><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option></select></div></div>
           <div id="br-guide-apk-fields" class="cond">
-            <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="br-guide-apkaddr" placeholder="请输入" oninput="brGuideAddrChange()"></div></div>
-            <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="br-guide-apkname" disabled placeholder="自动读取"></div></div>
-            <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','brg')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
+            <div class="fi-sub"><span class="fl" style="width:116px">APK包地址：</span><div class="fc"><input class="fin" id="br-guide-apkaddr" placeholder="请输入" oninput="brGuideAddrChange()"></div></div>
+            <div class="fi-sub"><span class="fl" style="width:116px">APK包名：</span><div class="fc"><input class="fin" id="br-guide-apkname" disabled></div></div>
+            <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','brg')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
           </div>
         </div>
         <div id="br-guide-ios-fields" style="display:none">
-          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="br-guide-ios-popup" onchange="brGuidePopup(this.value)"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框内容：</span><div class="fc"><select class="fs" id="br-guide-ios-popup" onchange="brGuidePopup(this.value)"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
           <div id="br-guide-ios-bonus" class="cond">
-            <div class="fi"><span class="fl req">赠送金额类型：</span><div class="fc"><select class="fs" onchange="brGuideBonusType(this.value,'br-guide-ios-ba')"><option>固定金额</option><option>随机金额</option></select></div></div>
-            <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc" id="br-guide-ios-ba"><input class="fin" placeholder="请输入金额"></div></div>
+            <div class="fi-sub"><span class="fl req" style="width:116px">赠送金额类型：</span><div class="fc"><select class="fs" onchange="brGuideBonusType(this.value,'br-guide-ios-ba')"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi-sub"><span class="fl req" style="width:116px">显示赠送金额：</span><div class="fc" id="br-guide-ios-ba"><input class="fin" placeholder="请输入金额"></div></div>
           </div>
-          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
-          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>12小时</option><option>24小时</option></select></div></div>
-          <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs"><option>苹果商店</option></select></div></div>
-          <div class="fi"><span class="fl req">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="普通" checked onchange="brGuideIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="OneLink" onchange="brGuideIosAddr(this.value)"> OneLink地址</label></div></div></div>
-          <div id="br-guide-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
-          <div id="br-guide-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs"><option>苹果商店</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="普通" checked onchange="brGuideIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="OneLink" onchange="brGuideIosAddr(this.value)"> OneLink地址</label></div></div></div>
+          <div id="br-guide-ios-normal" class="cond on"><div class="fi-sub"><span class="fl req" style="width:116px">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+          <div id="br-guide-ios-onelink" class="cond"><div class="fi-sub"><span class="fl" style="width:116px">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi-sub"><span class="fl req" style="width:116px">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
         </div>
-        <div class="fi"><span class="fi-sep" style="padding-left:148px;margin-bottom:8px;font-size:12px;color:#8c8c8c"></span></div>
         <div class="fi"><span class="fl">安装送彩金：</span><div class="fc"><select class="fs" id="br-guide-gift" onchange="brGuideGift(this.value)"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
         <div id="br-guide-gift-fields" class="cond">
           <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
           <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
         </div>
         <div class="fi"><span class="fl req">替换引导开关：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-gs" checked> 保持原有</label><label class="radio-item"><input type="radio" name="br-gs"> 全部开启</label><label class="radio-item"><input type="radio" name="br-gs"> 全部关闭</label></div></div></div>
-        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc" style="display:flex;gap:10px;align-items:center"><select class="fs" style="flex:1"><option value="">请选择渠道</option><option>短信1001</option><option>短信1002</option><option>TK22-BR007</option></select><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;flex-shrink:0"><input type="checkbox"> 全选</label></div></div>
+        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc"><div class="cascade-wrap" id="br-guide-cascade"><div class="cascade-input" onclick="toggleCascadeById('br-guide-cascade-dd')"><span style="color:#bfbfbf;font-size:13px">请选择渠道</span><span style="color:#bbb;font-size:11px">▼</span></div><div class="cascade-dropdown" id="br-guide-cascade-dd"><div class="cascade-col" style="width:160px;border-right:1px solid #f0f0f0"><div class="cascade-col-hd">推广商</div><div class="cascade-row active" onclick="selCascadePromoter(this,'bgcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> FB-22</label><span style="color:#0961BD;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bgcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 106-快手</label><span style="color:#bbb;font-size:11px">›</span></div></div><div class="cascade-col" id="bgcd" style="flex:1"><div class="cascade-col-hd">渠道</div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> TK22-BR007</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22-127B</label></div></div></div></div><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;margin-left:8px"><input type="checkbox"> 全选</label></div></div>
       </div>
 
       <!-- ── 更换跳转域名 ── -->
       <div id="br-domain" style="display:none">
         <div class="fi"><span class="fl req">选择跳转域名：</span><div class="fc"><select class="fs"><option>www.kk678.ac</option><option>www.kk678.bz</option><option>www.kk678.cc</option></select></div></div>
-        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc" style="display:flex;gap:10px;align-items:center"><select class="fs" style="flex:1"><option value="">请选择渠道</option><option>短信1001</option><option>短信1002</option><option>TK22-BR007</option></select><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;flex-shrink:0"><input type="checkbox"> 全选</label></div></div>
+        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc"><div class="cascade-wrap" id="br-domain-cascade"><div class="cascade-input" onclick="toggleCascadeById('br-domain-cascade-dd')"><span style="color:#bfbfbf;font-size:13px">请选择渠道</span><span style="color:#bbb;font-size:11px">▼</span></div><div class="cascade-dropdown" id="br-domain-cascade-dd"><div class="cascade-col" style="width:160px;border-right:1px solid #f0f0f0"><div class="cascade-col-hd">推广商</div><div class="cascade-row" onclick="selCascadePromoter(this,'bdcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1000</label><span style="color:#bbb;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bdcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22</label><span style="color:#bbb;font-size:11px">›</span></div></div><div class="cascade-col" id="bdcd" style="flex:1"><div class="cascade-col-hd">渠道</div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1001</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1002</label></div></div></div></div><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;margin-left:8px"><input type="checkbox"> 全选</label></div></div>
         <div class="fi"><span class="fl req">替换后跳转域名：</span><div class="fc"><select class="fs"><option value="">请选择</option><option>www.kk678.ac</option><option>www.kk678.bz</option><option>www.kk678.cc</option></select></div></div>
       </div>
     </div>
@@ -723,7 +746,9 @@ select.fs.ph{color:#bfbfbf}
       </div>
       <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ba-track" onchange="baTrackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option></select></div></div>
       <div id="ba-track-extra"></div>
-      <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active">安卓</button><button class="tab-b">苹果</button></div></div></div>
+      <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="batchTab(this,'ba-and')">安卓</button><button class="tab-b" onclick="batchTab(this,'ba-ios')">苹果</button></div></div></div>
+      <!-- 安卓 fields -->
+      <div id="ba-and">
       <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
       <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ba-guide" onchange="gcond('ba-guide-fields',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
       <div id="ba-guide-fields" class="cond">
@@ -741,7 +766,37 @@ select.fs.ph{color:#bfbfbf}
           <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
         </div>
       </div>
-      <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+      <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ba-and-gift" onchange="gcond('ba-and-gift-fields',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+      <div id="ba-and-gift-fields" class="cond">
+        <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+      </div>
+      </div>
+      <!-- 苹果 fields -->
+      <div id="ba-ios" style="display:none">
+        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ba-ios-guide" onchange="gcond('ba-ios-guide-fields',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
+        <div id="ba-ios-guide-fields" class="cond">
+          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ba-ios-popup" onchange="gcond('ba-ios-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div id="ba-ios-bonus" class="cond">
+            <div class="fi"><span class="fl req">赠送金额类型：</span><div class="fc"><select class="fs"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入金额"></div></div>
+          </div>
+          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ba-ios-it" onchange="gcond('ba-ios-store',this.value==='苹果商店')"><option>保存桌面</option><option>苹果商店</option></select></div></div>
+          <div id="ba-ios-store" class="cond">
+            <div class="fi"><span class="fl req">上架包地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="ba-ios-at" value="普通" checked onchange="gcond('ba-ios-normal',this.value==='普通');gcond('ba-ios-onelink',this.value==='OneLink')"> 普通地址</label><label class="radio-item"><input type="radio" name="ba-ios-at" value="OneLink" onchange="gcond('ba-ios-normal',this.value==='普通');gcond('ba-ios-onelink',this.value==='OneLink')"> OneLink地址</label></div></div></div>
+            <div id="ba-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+            <div id="ba-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+          </div>
+        </div>
+        <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ba-ios-gift" onchange="gcond('ba-ios-gift-fields',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+        <div id="ba-ios-gift-fields" class="cond">
+          <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+          <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        </div>
+      </div>
     </div>
     <div class="mf"><button class="btn btn-blue" onclick="batchSubmit()">确定</button></div>
   </div>
@@ -1147,6 +1202,34 @@ function baTrackChange(){
     h=`<div class="fi"><span class="fl req">Pixel ID：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">Token：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>`;
   }
   if(cont)cont.innerHTML=h;
+}
+
+// ─── CASCADE DROPDOWN TOGGLE ───
+function toggleCascadeById(id){
+  const d=document.getElementById(id);
+  if(!d)return;
+  const isOpen=d.classList.contains('open');
+  document.querySelectorAll('.cascade-dropdown.open').forEach(el=>el.classList.remove('open'));
+  if(!isOpen)d.classList.add('open');
+}
+function selCascadePromoter(row,channelColId){
+  const col=row.closest('.cascade-dropdown').querySelector('[id]');
+  row.closest('.cascade-col').querySelectorAll('.cascade-row').forEach(r=>{r.classList.remove('active');r.querySelector('span:last-child').style.color='#bbb';});
+  row.classList.add('active');
+  row.querySelector('span:last-child').style.color='#0961BD';
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.cascade-wrap')){
+    document.querySelectorAll('.cascade-dropdown.open').forEach(el=>el.classList.remove('open'));
+  }
+});
+
+// ─── BATCH ADD TAB ───
+function batchTab(btn,tab){
+  btn.parentElement.querySelectorAll('.tab-b').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ba-and').style.display=tab==='ba-and'?'block':'none';
+  document.getElementById('ba-ios').style.display=tab==='ba-ios'?'block':'none';
 }
 // ─── INIT ───
 renderTable();
