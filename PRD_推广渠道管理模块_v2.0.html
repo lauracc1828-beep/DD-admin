@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD · 推广渠道管理模块 v2.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
+.page{max-width:960px;margin:0 auto;padding:40px 20px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:32px;display:flex;gap:20px;flex-wrap:wrap}
+.meta span{display:flex;align-items:center;gap:4px}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:40px 0 16px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:600;color:#262626;margin:28px 0 12px}
+h4{font-size:14px;font-weight:600;color:#444;margin:20px 0 10px}
+p{margin-bottom:12px;color:#444}
+.note{background:#fff7e6;border-left:3px solid #fa8c16;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#7d4f00}
+.info{background:#e6f4ff;border-left:3px solid #0961BD;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#003a8c}
+.tip{background:#f6ffed;border-left:3px solid #52c41a;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#135200}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+th{background:#f0f5ff;padding:10px 14px;text-align:left;font-weight:600;color:#0961BD;border-bottom:2px solid #d6e4ff;white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcff}
+td:first-child{white-space:nowrap;font-weight:500}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.tag-req{background:#fff0f0;color:#cf1322;border:1px solid #ffa39e}
+.tag-opt{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.tag-cond{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
+.divider{height:1px;background:#f0f0f0;margin:32px 0}
+.toc{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:32px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.toc h3{margin:0 0 12px;font-size:14px;color:#888}
+.toc ol{padding-left:20px}
+.toc li{margin-bottom:6px}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc .sub{padding-left:16px;margin-top:4px}
+.section-card{background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:500;margin-left:8px}
+.badge-done{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.badge-wip{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
+.indent{padding-left:24px}
+.indent2{padding-left:48px}
+.flow-wrap{background:#f8f9ff;border-radius:8px;padding:20px;margin:12px 0;overflow-x:auto}
+.mermaid-placeholder{font-family:monospace;font-size:12px;line-height:1.8;color:#555;white-space:pre}
+/* Flow diagram */
+.flow{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:8px 0}
+.flow-box{background:#e6f4ff;border:1px solid #91caff;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:500;color:#003a8c;white-space:nowrap}
+.flow-box.green{background:#f6ffed;border-color:#b7eb8f;color:#135200}
+.flow-box.orange{background:#fff7e6;border-color:#ffd591;color:#7d4f00}
+.flow-box.purple{background:#f9f0ff;border-color:#d3adf7;color:#531dab}
+.flow-box.gray{background:#fafafa;border-color:#d9d9d9;color:#595959}
+.flow-arrow{text-align:center;color:#0961BD;font-size:18px;line-height:1.4;padding:2px 0 2px 20px}
+.flow-branch{display:flex;gap:20px;align-items:flex-start;margin:4px 0}
+.flow-branch-item{display:flex;flex-direction:column;align-items:center;gap:0;flex:1}
+.flow-branch-label{font-size:11px;color:#888;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>推广渠道管理模块 · PRD</h1>
+<div class="meta">
+  <span>📄 版本：v2.0</span>
+  <span>✅ 状态：已完成</span>
+  <span>👥 适用范围：产品 / 运营内部评审</span>
+  <span>📅 更新日期：2026-06-09</span>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#overview">模块概述</a></li>
+    <li><a href="#flow">推广链路说明</a></li>
+    <li><a href="#page1">子页面一：推广渠道管理</a>
+      <ol class="sub">
+        <li><a href="#p1-filter">筛选区</a></li>
+        <li><a href="#p1-tags">快捷筛选标签栏</a></li>
+        <li><a href="#p1-actions">操作按钮区</a></li>
+        <li><a href="#p1-table">数据表格</a></li>
+        <li><a href="#p1-modals">功能弹窗</a></li>
+      </ol>
+    </li>
+    <li><a href="#page2">子页面二：推广效果报表</a></li>
+    <li><a href="#page3">子页面三：安装引导</a></li>
+  </ol>
+</div>
+
+<!-- 模块概述 -->
+<div class="section-card" id="overview">
+<h2>一、模块概述</h2>
+<p>推广渠道管理模块用于管理平台所有对外推广渠道的配置，包含渠道创建与编辑、推广商管理、推广效果查看、安装引导配置等功能。商户可在此模块为每条推广渠道生成唯一的带参落地链接，配置落地页类型、安装引导策略和第三方广告平台埋点回传，并通过推广效果报表实时查看各渠道的转化数据。</p>
+
+<table>
+  <tr><th>#</th><th>子页面</th><th>状态</th></tr>
+  <tr><td>1</td><td>推广渠道管理</td><td><span class="badge badge-done">✅ 已完成</span></td></tr>
+  <tr><td>2</td><td>推广效果报表</td><td><span class="badge badge-done">✅ 已完成</span></td></tr>
+  <tr><td>3</td><td>安装引导</td><td><span class="badge badge-done">✅ 已完成</span></td></tr>
+</table>
+</div>
+
+<!-- 推广链路说明 -->
+<div class="section-card" id="flow">
+<h2>二、推广链路说明</h2>
+<p>以下流程图展示了从商户配置渠道到用户转化、数据回传的完整链路。</p>
+
+<div class="flow-wrap">
+<div class="flow">
+  <div class="flow-box">① 商户在后台配置推广渠道（落地指向 / 跳转域名 / 埋点类型 / 安装引导）</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-box">② 系统生成唯一渠道链接（格式：跳转域名 + ?ch=渠道ID）</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-box">③ 运营将渠道链接投放至推广渠道（短信 / Facebook / TikTok / 快手等）</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-box">④ 用户点击推广链接，渠道ID（ch参数）随请求传递</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-box">⑤ 跳转域名接收请求，根据落地指向将用户引导至对应落地页</div>
+  <div class="flow-arrow">↓ 落地页分两类</div>
+  <div class="flow-branch">
+    <div class="flow-branch-item">
+      <div class="flow-branch-label">落地指向：仿谷歌页 / 防封下载页</div>
+      <div class="flow-box orange">⑥A 下载页（仿谷歌/苹果商店样式）<br>用户只有下载操作，无H5跳转<br>下载按钮和引导安装弹窗不生效<br>弹框安装类型决定安装PWA还是APK</div>
+    </div>
+    <div class="flow-branch-item">
+      <div class="flow-branch-label">落地指向：官网首页 / 官网注册页 / 主域名</div>
+      <div class="flow-box green">⑥B H5页面<br>下载按钮横幅生效<br>引导安装弹窗生效<br>按渠道配置触发时机和安装类型</div>
+    </div>
+  </div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-box">⑦ 用户完成安装（PWA / APK）/ 注册 / 充值等行为</div>
+  <div class="flow-arrow">↓ 数据出口分两路</div>
+  <div class="flow-branch">
+    <div class="flow-branch-item">
+      <div class="flow-branch-label">所有渠道</div>
+      <div class="flow-box purple">⑧A 我方后台统计<br>按渠道ID（ch）归因<br>→ 推广效果报表展示<br>（注册/充值/提现/投注等）</div>
+    </div>
+    <div class="flow-branch-item">
+      <div class="flow-branch-label">配置了三方埋点的渠道</div>
+      <div class="flow-box purple">⑧B 服务器端API回传<br>向Facebook/TikTok/Kwai<br>推送转化事件<br>（用于广告平台优化投放）</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<h3>关键概念说明</h3>
+<table>
+  <tr><th>概念</th><th>说明</th></tr>
+  <tr><td>渠道ID（ch参数）</td><td>系统为每条渠道分配的唯一数字标识，附加在渠道链接URL参数中，用于所有后续用户行为的数据归因。APK包本身不内嵌渠道ID，渠道信息通过下载URL参数在安装时透传</td></tr>
+  <tr><td>跳转域名</td><td>推广链接的入口域名，负责接收用户点击请求并根据落地指向转发。来源于系统管理-域名管理中已配置并生效的推广域名</td></tr>
+  <tr><td>落地指向</td><td>决定用户最终看到的页面类型，共5个选项，本质上分为「下载页类」和「H5页类」两大类，详见子页面一字段说明</td></tr>
+  <tr><td>埋点回传</td><td>当前支持三种三方API回传：Facebook API / TK API / Kwai API，均为服务器端回传，不依赖浏览器，数据准确性高。回传参数（Pixel ID / Token）由投流方提供</td></tr>
+  <tr><td>直推 vs 裂变</td><td>直推：用户自己点击推广链接进入；裂变：已注册用户邀请带来的新用户。两者数据在推广效果报表中分开统计</td></tr>
+  <tr><td>充提差</td><td>充值金额 - 提现金额，是衡量渠道质量的核心指标。正值表示渠道用户为平台贡献利润，负值表示亏损</td></tr>
+</table>
+</div>
+
+<!-- 子页面一 -->
+<div class="section-card" id="page1">
+<h2>三、子页面一：推广渠道管理</h2>
+<p>用于管理平台所有推广渠道的配置。推广商与渠道为上下级关系，一个推广商下可包含多个渠道。页面右上角提供「使用教程」按钮，点击后打开对应谷歌文档（文档链接待补充）。</p>
+
+<div class="info">页面布局从上到下：筛选区 → 快捷筛选标签栏 → 操作按钮区 → 数据表格 → 分页器</div>
+
+<h3 id="p1-filter">3.1 筛选区</h3>
+<p><strong>第一行</strong></p>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>地区</td><td>下拉单选</td><td>默认当前账号授权地区</td></tr>
+  <tr><td>商户</td><td>下拉单选</td><td>随地区联动刷新</td></tr>
+  <tr><td>埋点类型</td><td>下拉单选</td><td>可选：全部 / 常规推广 / Facebook API / TK API / Kwai API</td></tr>
+  <tr><td>推广渠道</td><td>下拉单选</td><td>可选：全部 / 各推广商名称</td></tr>
+</table>
+<p><strong>第二行</strong></p>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>安卓引导开关</td><td>下拉单选</td><td>可选：全部 / 开 / 关</td></tr>
+  <tr><td>弹框时间点</td><td>下拉单选</td><td>可选：全部 / 访问主页 / 用户充值 / 首次提现</td></tr>
+  <tr><td>弹框间隔</td><td>下拉单选</td><td>可选：全部 / 0小时(强制安装) / 1小时 / 2小时 / … / 24小时（每小时一档）</td></tr>
+  <tr><td>安装类型</td><td>下拉单选</td><td>可选：全部 / pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用)</td></tr>
+</table>
+<p>点击「查询」刷新表格数据。</p>
+
+<h3 id="p1-tags">3.2 快捷筛选标签栏</h3>
+<ul style="padding-left:20px;color:#444;font-size:13px">
+  <li>展示当前商户下所有推广商名称，以 Tag 形式平铺，首位固定为「全部」</li>
+  <li>点击某 Tag 后，自动将筛选区「推广渠道」字段同步更新并刷新表格</li>
+  <li>当前选中项高亮显示</li>
+  <li>推广商管理中被设置为「隐藏」的推广商，不出现在此标签栏中</li>
+</ul>
+
+<h3 id="p1-actions">3.3 操作按钮区</h3>
+<table>
+  <tr><th>按钮</th><th>说明</th></tr>
+  <tr><td>批量替换</td><td>打开批量替换弹窗，在弹窗内选择替换渠道范围；主页面表格无行级勾选操作</td></tr>
+  <tr><td>新增推广商</td><td>打开推广商管理弹窗</td></tr>
+  <tr><td>新增渠道</td><td>打开新增渠道弹窗</td></tr>
+  <tr><td>批量新增渠道</td><td>打开批量新增渠道弹窗，在同一弹窗内填写多条渠道信息后一次性创建</td></tr>
+</table>
+
+<h3 id="p1-table">3.4 数据表格</h3>
+<table>
+  <tr><th>列名</th><th>说明</th></tr>
+  <tr><td>序号</td><td>当前页行序号</td></tr>
+  <tr><td>渠道名称</td><td>渠道唯一标识名称</td></tr>
+  <tr><td>地区</td><td>渠道所属地区</td></tr>
+  <tr><td>商户</td><td>商户 ID</td></tr>
+  <tr><td>推广商</td><td>所属推广商名称</td></tr>
+  <tr><td>渠道 Id</td><td>系统分配的唯一 ID</td></tr>
+  <tr><td>埋点类型</td><td>如：常规推广、Facebook API 等</td></tr>
+  <tr><td>渠道链接</td><td>固定列宽换行完整展示，绿色可点击文字，点击在新标签页打开；链接后附复制图标，点击一键复制完整链接</td></tr>
+  <tr><td>安卓引导安装弹框</td><td>Toggle 开关，可直接在列表切换开/关，操作后即时保存</td></tr>
+  <tr><td>弹框时间点</td><td>如：访问主页、用户充值</td></tr>
+  <tr><td>弹框间隔</td><td>如：0小时(强制安装)</td></tr>
+  <tr><td>安装类型</td><td>如：pwa(快速安装)</td></tr>
+  <tr><td>安装方式</td><td>显示安装包地址（APK包地址），截断显示约前8-10个字符后加省略号，绿色可点击，点击在新标签页打开，后附复制图标；无链接时显示「-」</td></tr>
+  <tr><td>操作</td><td>编辑图标（打开编辑弹窗）/ Test按钮（悬浮提示「测试」，点击打开测试回传弹窗）/ 事件说明图标（仅非常规推广渠道显示，悬浮提示「事件说明」，点击弹出事件说明弹窗）</td></tr>
+</table>
+<p style="font-size:13px;color:#888;margin-top:6px">分页器：显示总条数，支持页码点击跳转，支持输入页码直接跳至指定页，支持切换每页显示条数（默认50条/页）。</p>
+
+<h3 id="p1-modals">3.5 功能弹窗</h3>
+
+<!-- 7.1 批量替换 -->
+<h4>3.5.1 批量替换弹窗</h4>
+<p>用于将同一地区/商户下多个渠道的指定配置批量更新为新值。</p>
+<p><strong>固定字段</strong></p>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>地区</td><td>下拉单选</td><td>默认当前账号地区</td></tr>
+  <tr><td>商户</td><td>下拉单选</td><td>随地区联动</td></tr>
+  <tr><td>替换类型 <span class="tag tag-req">必填</span></td><td>单选（Radio）</td><td>可选：更换安装包 / 更换安装引导 / 更换跳转域名；选择后展示对应字段</td></tr>
+</table>
+
+<p><strong>替换类型：更换安装包</strong></p>
+<div class="note">APK相关配置项（APK包地址、APK包名、选择APK按钮）因当前平台暂无APK功能，实际使用时置灰不可操作。</div>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>渠道安装类型 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：APK / PWA+APK / 苹果商店；PWA无需替换安装包故不在选项内</td></tr>
+  <tr><td class="indent">↳ 目标地址 - APK包地址</td><td>文本输入</td><td>渠道安装类型选APK或PWA+APK时展示；新的APK包地址；可手动输入，或通过「选择马甲包」自动填入；手动修改后APK包名自动清空</td></tr>
+  <tr><td class="indent">↳ APK包名</td><td>自动填充</td><td>同上；选择马甲包后自动填入，无需手动输入</td></tr>
+  <tr><td class="indent">↳ 选择APK</td><td>按钮组</td><td>同上；「选择马甲包」点击弹出马甲包选择弹窗（来源：系统管理-马甲包管理），选中后自动填入APK包地址和APK包名；「上传」直接上传apk文件（限100MB）</td></tr>
+  <tr><td class="indent">↳ iOS地址类型 <span class="tag tag-req">必填</span></td><td>单选（Radio）</td><td>渠道安装类型选「苹果商店」时展示；可选：普通地址 / OneLink地址</td></tr>
+  <tr><td class="indent2">↳↳ 苹果地址</td><td>文本输入</td><td>iOS地址类型选「普通地址」时展示</td></tr>
+  <tr><td class="indent2">↳↳ IOS上架包名字</td><td>自动填充</td><td>iOS地址类型选「OneLink地址」时展示，选择后自动填入</td></tr>
+  <tr><td class="indent2">↳↳ 选择IOS上架包</td><td>按钮</td><td>iOS地址类型选「OneLink地址」时展示；点击弹出子弹窗选择上架包（由后端上传）</td></tr>
+  <tr><td>替换渠道 <span class="tag tag-req">必填</span></td><td>两层级联多选 + 全选</td><td>第一层为推广商列表（带勾选框），点击展开第二层渠道列表；勾选推广商等于勾选其下所有渠道；仅展示安装类型与所选「渠道安装类型」完全匹配的渠道</td></tr>
+</table>
+
+<p><strong>替换类型：更换安装引导</strong></p>
+<p>渠道安装类型决定下方目标安装类型的配置内容：选择安卓类型（PWA / APK / PWA+APK）展示安卓引导配置；选择苹果类型（保存桌面 / 苹果商店）展示苹果引导配置。</p>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>渠道安装类型 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：PWA / APK / PWA+APK / 保存桌面 / 苹果商店</td></tr>
+  <tr><td colspan="3" style="background:#f0f5ff;font-weight:600;color:#0961BD">目标安装类型（以下字段为目标安装类型的配置内容）</td></tr>
+  <tr><td class="indent">↳ 弹框内容</td><td>下拉单选</td><td>可选：常规升级 / 赠送彩金升级</td></tr>
+  <tr><td class="indent2">↳↳ 赠送金额类型</td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额</td></tr>
+  <tr><td class="indent2">↳↳ 显示赠送金额</td><td>数字输入</td><td>同上；固定金额为单一输入框，随机金额为区间两个输入框；为展示给用户的金额，非实际赠送金额</td></tr>
+  <tr><td class="indent">↳ 弹框时间点</td><td>下拉单选</td><td>可选：访问主页 / 用户充值 / 首次提现</td></tr>
+  <tr><td class="indent">↳ 弹框间隔时间</td><td>下拉单选</td><td>可选：0小时（强制弹窗，无法关闭）/ 1~24小时（每小时一档）</td></tr>
+  <tr><td class="indent">↳ 弹框安装类型（安卓）</td><td>下拉单选</td><td>安卓类型时展示；可选：PWA / APK / PWA+APK；选PWA时不展示APK相关字段</td></tr>
+  <tr><td class="indent2">↳↳ APK包地址</td><td>文本输入</td><td>弹框安装类型选APK或PWA+APK时展示；联动逻辑同更换安装包</td></tr>
+  <tr><td class="indent2">↳↳ APK包名</td><td>自动填充</td><td>同上</td></tr>
+  <tr><td class="indent2">↳↳ 选择APK</td><td>按钮组</td><td>同上；逻辑与更换安装包一致</td></tr>
+  <tr><td class="indent">↳ 弹框安装类型（苹果）</td><td>下拉单选</td><td>苹果类型时展示；固定为「苹果商店」</td></tr>
+  <tr><td class="indent2">↳↳ iOS地址类型</td><td>单选（Radio）</td><td>苹果类型时展示；可选：普通地址 / OneLink地址；字段逻辑同更换安装包</td></tr>
+  <tr><td>安装送彩金</td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；为用户实际到账的赠送金额</td></tr>
+  <tr><td class="indent">↳ 赠送金额</td><td>数字输入</td><td>选非关闭时展示；为实际赠送金额</td></tr>
+  <tr><td class="indent">↳ 打码倍数</td><td>数字输入</td><td>同上</td></tr>
+  <tr><td>替换引导开关</td><td>单选（Radio）</td><td>可选：保持原有 / 全部开启 / 全部关闭；控制批量替换后各渠道安卓引导安装弹框Toggle开关的状态</td></tr>
+  <tr><td>替换渠道 <span class="tag tag-req">必填</span></td><td>两层级联多选 + 全选</td><td>同更换安装包；仅展示安装类型与所选「渠道安装类型」完全匹配的渠道</td></tr>
+</table>
+
+<p><strong>替换类型：更换跳转域名</strong></p>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>选择跳转域名 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>下拉选项为当前商户下所有渠道已配置的跳转域名（去重展示），选择后作为筛选条件</td></tr>
+  <tr><td>替换渠道 <span class="tag tag-req">必填</span></td><td>两层级联多选 + 全选</td><td>在所选跳转域名范围内，进一步选择需要替换的渠道</td></tr>
+  <tr><td>替换后跳转域名 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>选择替换后的新跳转域名，来源于域名管理中已配置的域名</td></tr>
+</table>
+
+<!-- 7.2 推广商管理 -->
+<h4>3.5.2 推广商管理弹窗</h4>
+<p>点击「新增推广商」按钮后弹出，包含推广商列表查询与管理功能。</p>
+<p><strong>筛选区</strong>：推广商（文本模糊搜索）/ 显示/隐藏（下拉：全部/显示/隐藏）/ 重置按钮 / 查询按钮</p>
+<table>
+  <tr><th>列名</th><th>说明</th></tr>
+  <tr><td>推广商</td><td>推广商名称</td></tr>
+  <tr><td>显示/隐藏</td><td>当前状态：显示 / 隐藏；控制该推广商是否出现在主页面快捷筛选标签栏，以及新增渠道弹窗内推广商下拉列表中</td></tr>
+  <tr><td>排序</td><td>数字越大越靠前展示</td></tr>
+  <tr><td>操作</td><td>编辑图标，点击叠加弹出编辑弹窗</td></tr>
+</table>
+
+<p><strong>新增推广商弹窗</strong>（叠加弹出）</p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th></tr>
+  <tr><td>推广商</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>推广商名称</td></tr>
+  <tr><td>排序</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>数字越大越靠前；纯文本输入框</td></tr>
+  <tr><td>显示/隐藏</td><td><span class="tag tag-req">必填</span></td><td>单选（Radio）</td><td>默认「显示」</td></tr>
+</table>
+<p><strong>编辑推广商弹窗</strong>：字段与新增弹窗一致，回填当前数据。</p>
+
+<!-- 7.3 新增渠道 -->
+<h4>3.5.3 新增渠道弹窗</h4>
+<p><strong>基础字段（固定展示）</strong></p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th></tr>
+  <tr><td>地区</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>默认当前账号地区</td></tr>
+  <tr><td>所属商户</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>随地区联动</td></tr>
+  <tr><td>渠道名称</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>渠道唯一标识名称，用于区分不同投放渠道，生成渠道链接后附带渠道ID</td></tr>
+  <tr><td>落地指向</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>决定渠道链接打开后用户看到的页面类型，同时决定跳转域名的可选范围。可选项及说明见下方</td></tr>
+  <tr><td>跳转域名</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>随落地指向联动；选项来源于系统管理-域名管理中对应类型的已配置域名</td></tr>
+  <tr><td>埋点类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>决定该渠道的数据追踪方式；详见「埋点类型」说明</td></tr>
+  <tr><td>推广商</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>仅展示状态为「显示」的推广商；来源于推广商管理</td></tr>
+  <tr><td>渠道设置</td><td><span class="tag tag-req">必填</span></td><td>Tab切换</td><td>分安卓/苹果两个Tab，各自独立配置下载和安装引导行为</td></tr>
+</table>
+
+<p><strong>落地指向选项说明</strong></p>
+<table>
+  <tr><th>选项</th><th>落地页类型</th><th>下载按钮/引导安装</th><th>说明</th></tr>
+  <tr><td>仿谷歌页</td><td>下载页（仿谷歌商店样式）</td><td>❌ 不生效</td><td>仿应用商店模板页面，安卓设备适用；页面只有下载操作，不跳转H5；弹框安装类型和APK包地址生效，决定安装方式</td></tr>
+  <tr><td>防封下载页</td><td>下载页（防封中转）</td><td>❌ 不生效</td><td>功能与仿谷歌页类似；弹框安装类型和APK包地址生效</td></tr>
+  <tr><td>官网首页</td><td>H5官网主页</td><td>✅ 生效</td><td>落地到H5首页，下载横幅和引导安装弹窗按渠道配置生效</td></tr>
+  <tr><td>官网注册页</td><td>H5注册页</td><td>✅ 生效</td><td>落地到H5注册页，同上</td></tr>
+  <tr><td>主域名</td><td>H5主域名</td><td>✅ 生效</td><td>直接走主域名落地H5页面，同上</td></tr>
+</table>
+
+<p><strong>埋点类型说明</strong></p>
+<div class="tip">当前平台支持4种埋点类型：常规推广（无三方回传）+ Facebook API / TK API / Kwai API（三方服务器端API回传）。三方埋点的Pixel ID和Token均由投流方提供。</div>
+<table>
+  <tr><th>埋点类型</th><th>展开字段</th><th>说明</th></tr>
+  <tr><td>常规推广</td><td>无</td><td>不接入任何第三方广告平台，数据仅在我方后台统计</td></tr>
+  <tr><td>Facebook API（Facebook服务器接口回传）</td><td>Pixel ID <span class="tag tag-req">必填</span>、Token <span class="tag tag-req">必填</span></td><td>服务器端回传至Facebook广告平台；具体回传事件以Facebook官方文档为准</td></tr>
+  <tr><td>TK API（TikTok服务器接口回传）</td><td>Pixel ID <span class="tag tag-req">必填</span>、Token <span class="tag tag-req">必填</span></td><td>服务器端回传至TikTok广告平台；具体回传事件以TikTok官方文档为准</td></tr>
+  <tr><td>Kwai API（快手服务器接口回传）</td><td>Pixel ID <span class="tag tag-req">必填</span>、Token <span class="tag tag-req">必填</span></td><td>服务器端回传至快手广告平台；具体回传事件以快手官方文档为准</td></tr>
+</table>
+<p style="font-size:13px;color:#888">事件说明弹窗格式：标题为「[埋点类型名称]」，内容为该类型的回传事件列表，每条格式为「中文事件名称 - 事件标识符」，具体内容以三方平台官方文档为准。</p>
+
+<p><strong>渠道设置 - 安卓 Tab</strong></p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th></tr>
+  <tr><td>下载按钮</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>控制H5首页顶部是否显示下载提示横幅；可选：开启 / 关闭；落地指向为下载页类时不生效</td></tr>
+  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>控制H5首页底部是否展示安装引导弹窗；可选：开启 / 关闭；落地指向为下载页类时不生效</td></tr>
+  <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；「常规升级」不赠送奖励；「赠送彩金升级」安装后赠送彩金并在弹窗中展示金额</td></tr>
+  <tr><td class="indent2">↳↳ 赠送金额类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额</td></tr>
+  <tr><td class="indent2">↳↳ 显示赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>弹窗中展示给用户的金额，仅为展示用，非实际赠送金额；固定金额为单一输入框，随机金额为区间两个输入框</td></tr>
+  <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；「访问主页」每次访问H5首页时触发；「用户充值」充值回调成功后触发（游戏中不弹，退出游戏后仍会弹）；「首次提现」第一次提现回调成功后触发</td></tr>
+  <tr><td class="indent">↳ 弹框间隔时间</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；「0小时(强制安装)」弹窗强制弹出无法关闭；1~24小时每隔对应时长自动弹出一次</td></tr>
+  <tr><td class="indent">↳ 弹框安装类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用)；当前平台APK暂未上线，含APK选项实际置灰不可用</td></tr>
+  <tr><td class="indent2">↳↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>弹框安装类型含APK时展示</td></tr>
+  <tr><td class="indent2">↳↳ APK包名</td><td>—</td><td>自动填充</td><td>含APK时展示；选择马甲包后自动读取，手动修改APK包地址后自动清空</td></tr>
+  <tr><td class="indent2">↳↳ 选择APK</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮组</td><td>含APK时展示；「选择马甲包」从系统管理-马甲包管理中选（自动填入地址和包名）；「上传」直接上传apk文件（限100MB）</td></tr>
+  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>用户完成安装后的实际赠送规则；「关闭」不赠送；「充值用户赠送」仅有过充值记录的用户安装后赠送；「无需充值赠送」所有用户安装后赠送</td></tr>
+  <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示；为用户实际到账金额</td></tr>
+  <tr><td class="indent">↳ 打码倍数</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>同上；赠送金额对应的流水要求倍数</td></tr>
+</table>
+<div class="tip">用户完成PWA或APK安装后，H5首页顶部下载提示横幅不再显示，强制安装弹窗也不再弹出。</div>
+
+<p><strong>渠道设置 - 苹果 Tab</strong></p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th></tr>
+  <tr><td>下载按钮</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td class="indent">↳ 弹框间隔时间</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td class="indent">↳ 弹框安装类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>可选：「保存桌面」在Safari中将页面保存至桌面（相当于安卓PWA，谷歌浏览器会引导用Safari打开）；「苹果商店」引导用户至已上架App下载</td></tr>
+  <tr><td class="indent2">↳↳ 上架包地址类型</td><td><span class="tag tag-cond">条件必填</span></td><td>单选（Radio）</td><td>弹框安装类型选「苹果商店」后展示；可选：普通地址 / OneLink地址</td></tr>
+  <tr><td class="indent2">↳↳ 苹果地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>上架包地址类型选「普通地址」时展示；填写苹果商店App下载链接</td></tr>
+  <tr><td class="indent2">↳↳ IOS上架包名字</td><td>—</td><td>自动填充</td><td>上架包地址类型选「OneLink地址」时展示；选择后自动填入</td></tr>
+  <tr><td class="indent2">↳↳ 选择IOS上架包</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮</td><td>上架包地址类型选「OneLink地址」时展示；点击弹出子弹窗选择已上传的IOS上架包（由后端上传）</td></tr>
+  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+</table>
+
+<!-- 7.4 批量新增渠道 -->
+<h4>3.5.4 批量新增渠道弹窗</h4>
+<p>用于在同一地区/商户下一次性创建多条渠道。各渠道共享埋点类型和渠道设置（字段与新增渠道弹窗完全一致），渠道名称、落地指向、跳转域名、推广商可逐行独立配置。</p>
+<p><strong>固定字段</strong>：地区 / 所属商户 / 埋点类型 / 渠道设置（安卓/苹果Tab，字段与新增渠道完全一致）</p>
+<p><strong>渠道信息行（可动态增减，默认2行）</strong></p>
+<table>
+  <tr><th>字段</th><th>说明</th></tr>
+  <tr><td>渠道名称</td><td>每条渠道独立填写</td></tr>
+  <tr><td>落地指向</td><td>每条渠道独立选择，选项与新增渠道一致</td></tr>
+  <tr><td>跳转域名</td><td>随落地指向联动，每条渠道独立选择</td></tr>
+  <tr><td>推广商</td><td>每条渠道独立选择，仅展示「显示」状态的推广商</td></tr>
+  <tr><td>+（新增行）</td><td>点击在下方新增一行</td></tr>
+  <tr><td>-（删除行）</td><td>点击删除当前行；最少保留2条，少于2条时提示「至少需要创建两个渠道」</td></tr>
+</table>
+
+<!-- 7.5 编辑渠道 -->
+<h4>3.5.5 编辑渠道弹窗</h4>
+<p>点击表格操作列编辑图标后弹出，标题为「编辑渠道」。地区和所属商户字段置灰不可编辑，回填当前数据；渠道名称等其他字段均回填当前配置数据，渠道名称输入框右侧显示清除按钮（×）。所有配置项与新增渠道弹窗完全一致，提交后保存更新。</p>
+
+<!-- 7.6 测试回传 -->
+<h4>3.5.6 测试回传弹窗</h4>
+<p>点击表格操作列「Test」按钮后弹出，用于测试该渠道的埋点回传是否正常。</p>
+<table>
+  <tr><th>字段</th><th>说明</th></tr>
+  <tr><td>渠道名称</td><td>只读，自动填入当前渠道名称</td></tr>
+  <tr><td>类型</td><td>只读，自动填入当前渠道的埋点类型</td></tr>
+  <tr><td>Pixel Id</td><td>只读，自动填入当前渠道配置的Pixel Id（如有）</td></tr>
+  <tr><td>测试链接</td><td>可编辑文本域，展示当前渠道的测试专用链接；修改不影响实际渠道链接，仅用于本次测试</td></tr>
+</table>
+<div class="note">页面提示：「[测试链接]只用于测试回传，测试成功后，请使用[渠道链接]进行投放」</div>
+
+<!-- 7.7 事件说明 -->
+<h4>3.5.7 事件说明弹窗</h4>
+<p>点击表格操作列「事件说明」图标后弹出（仅非常规推广类型的渠道显示此按钮）。弹窗标题为该埋点类型名称，内容展示该类型的回传事件列表，每条格式为「中文事件名称 - 事件标识符」。具体事件内容以三方平台官方文档为准。</p>
+<p><strong>格式范例（以Facebook API为例）：</strong></p>
+<div class="info" style="font-family:monospace;font-size:13px">
+  <strong>Facebook API（Facebook服务器接口回传）</strong><br><br>
+  注册 - CompleteRegistration<br>
+  登录 - SubmitApplication<br>
+  充值 - Purchase（仅在首充时触发）
+</div>
+</div>
+
+<!-- 子页面二 -->
+<div class="section-card" id="page2">
+<h2>四、子页面二：推广效果报表</h2>
+<p>展示指定地区、商户、推广渠道在选定时间范围内的推广效果数据，分综合效果、直推效果、裂变效果三个维度呈现。数据每10分钟更新一次。</p>
+
+<h3>4.1 筛选区</h3>
+<table>
+  <tr><th>字段</th><th>控件</th><th>说明</th></tr>
+  <tr><td>地区</td><td>下拉单选</td><td>默认当前账号授权地区</td></tr>
+  <tr><td>商户</td><td>下拉单选</td><td>随地区联动</td></tr>
+  <tr><td>推广渠道</td><td>两层级联多选 + 全选</td><td>第一层为推广商，点击展开第二层渠道列表；样式与批量替换「替换渠道」选择器一致；支持直接输入搜索</td></tr>
+  <tr><td>时间</td><td>日期范围选择器</td><td>默认当天；支持自定义起止日期</td></tr>
+</table>
+<p>快捷筛选标签栏：展示当前商户下所有推广商，规则与推广渠道管理页一致。</p>
+
+<h3>4.2 数据展示</h3>
+<p>页面分三个数据块，字段完全一致。金额类字段精确到小数点后两位；充提差正数显示绿色，负数显示红色。</p>
+<table>
+  <tr><th>数据块</th><th>说明</th></tr>
+  <tr><td>综合效果</td><td>直推 + 裂变的合计数据</td></tr>
+  <tr><td>直推效果</td><td>通过推广渠道直接注册的用户产生的数据</td></tr>
+  <tr><td>裂变效果</td><td>通过已注册用户邀请带来的新用户产生的数据</td></tr>
+</table>
+<p>各数据块字段：注册人数 / 首充人数 / 首充金额 / 充值人数 / 充值金额 / 提现人数 / 提现金额 / 充提差 / 提现手续费 / 投注人数 / 投注金额 / 有效投注 / 赠送金额</p>
+</div>
+
+<!-- 子页面三 -->
+<div class="section-card" id="page3">
+<h2>五、子页面三：安装引导</h2>
+<p>配置官网主域名（不带渠道ID）的安装引导行为。此处设置与各渠道的渠道设置相互独立、互不影响，各自独立生效。</p>
+
+<h3>5.1 页面行为</h3>
+<ul style="padding-left:20px;color:#444;font-size:13px;line-height:2">
+  <li>页面进入后直接展示当前商户的默认配置，无需点击查询</li>
+  <li>切换地区或商户后点击「查询」，刷新并展示所选商户的当前配置</li>
+  <li>修改配置后点击「保存」提交，保存成功后给出轻提示</li>
+</ul>
+
+<h3>5.2 筛选区</h3>
+<p>地区（下拉单选，默认当前地区）/ 商户（下拉单选，随地区联动）/ 查询按钮</p>
+
+<h3>5.3 配置字段</h3>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th></tr>
+  <tr><td>下载按钮</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>控制官网H5首页顶部是否显示下载提示横幅；可选：显示 / 关闭</td></tr>
+  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>控制官网H5首页底部是否展示安装引导弹窗；可选：开启 / 关闭</td></tr>
+  <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；选项及说明同新增渠道</td></tr>
+  <tr><td class="indent2">↳↳ 赠送金额类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额</td></tr>
+  <tr><td class="indent2">↳↳ 显示赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>展示给用户的金额，非实际赠送金额</td></tr>
+  <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；同新增渠道</td></tr>
+  <tr><td class="indent">↳ 弹框间隔时间</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；同新增渠道</td></tr>
+  <tr><td>安卓安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>配置安卓端安装方式；可选：pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用)；含APK选项当前置灰不可用</td></tr>
+  <tr><td class="indent">↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>安卓安装类型含APK时展示</td></tr>
+  <tr><td class="indent">↳ APK包名</td><td>—</td><td>自动填充</td><td>同上；选择马甲包后自动读取</td></tr>
+  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮组</td><td>同上；逻辑与新增渠道一致</td></tr>
+  <tr><td>苹果安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>配置苹果端安装方式；可选：保存桌面 / 苹果商店；选「苹果商店」后展开上架包地址类型等字段，逻辑与新增渠道苹果Tab完全一致</td></tr>
+  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>用户完成安装后的实际赠送规则；同新增渠道</td></tr>
+  <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示；为实际赠送金额</td></tr>
+  <tr><td class="indent">↳ 打码倍数</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>同上</td></tr>
+</table>
+</div>
+
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">推广渠道管理模块 PRD v2.0 · 2026-06-09</p>
+</div>
+</body>
+</html>
