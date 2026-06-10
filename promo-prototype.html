@@ -342,7 +342,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="action-bar">
         <button class="btn btn-blue" onclick="openM('m-batch-replace')">批量替换</button>
         <button class="btn btn-blue" onclick="openM('m-promoter')">新增推广商</button>
-        <button class="btn btn-blue" onclick="openM('m-add-ch')">新增渠道</button>
+        <button class="btn btn-blue" onclick="openNewChannel()">新增渠道</button>
         <button class="btn btn-blue" onclick="openM('m-batch-add')">批量新增渠道</button>
       </div>
       <div class="table-wrap">
@@ -442,7 +442,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西</option></select></div>
           <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>762</option></select></div>
-          <button class="btn btn-query" onclick="loadGuide()">查询</button>
+          <button class="btn btn-query" onclick="loadGuideQuiet()">查询</button>
         </div>
       </div>
       <div id="guide-form" style="display:block;background:#fff;padding:24px 32px;border-radius:6px;border:1px solid #f0f0f0;max-width:640px">
@@ -459,9 +459,9 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="fi"><span class="fl req">安卓安装类型：</span><div class="fc"><select class="fs" id="g-at" onchange="gcond('g-apk-sub',this.value.includes('apk'))"><option>pwa(快速安装)</option><option selected>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
         <div id="g-apk-sub" class="cond on">
-          <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" value="https://upload-us.f-1-g-h.com/s4/6112906/kk"></div></div>
-          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" disabled value="kk678.bet_400165.apk"></div></div>
-          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
+          <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="g-apk-addr" value="https://upload-us.f-1-g-h.com/s4/6112906/kk" oninput="guideAddrChange()"></div></div>
+          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="g-apk-name" disabled value="kk678.bet_400165.apk"></div></div>
+          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
         </div>
         <div class="fi"><span class="fl req">苹果安装类型：</span><div class="fc"><select class="fs" id="g-ios-type" onchange="gcond('g-ios-store-fields',this.value==='苹果商店')"><option selected>保存桌面</option><option>苹果商店</option></select></div></div>
         <div id="g-ios-store-fields" class="cond">
@@ -550,7 +550,7 @@ select.fs.ph{color:#bfbfbf}
     <div class="mb">
       <div class="fi"><span class="fl req">地区：</span><div class="fc"><select class="fs"><option>巴西</option></select></div></div>
       <div class="fi"><span class="fl req">所属商户：</span><div class="fc"><select class="fs"><option>762</option></select></div></div>
-      <div class="fi"><span class="fl req">渠道名称：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+      <div class="fi"><span class="fl req">渠道名称：</span><div class="fc"><div style="position:relative;display:flex;align-items:center"><input class="fin" id="ac-ch-name" placeholder="请输入" oninput="showClearBtn('ac-ch-name-clear',this.value.length>0)" style="padding-right:28px"><span id="ac-ch-name-clear" onclick="document.getElementById('ac-ch-name').value='';showClearBtn('ac-ch-name-clear',false)" style="display:none;position:absolute;right:8px;cursor:pointer;width:16px;height:16px;background:#bbb;border-radius:50%;align-items:center;justify-content:center;color:#fff;font-size:11px;line-height:1">×</span></div></div></div>
       <div class="fi"><span class="fl req">落地指向：</span><div class="fc"><select class="fs" id="ac-land" onchange="landChange()"><option>仿谷歌页</option><option>官网首页</option><option>官网注册页</option><option>主域名</option><option>防封下载页</option></select></div></div>
       <div class="fi"><span class="fl req">跳转域名：</span><div class="fc"><select class="fs" id="ac-domain"><option>www.kk678.ac</option><option>www.kk678.bz</option></select></div></div>
       <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ac-track" onchange="trackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option></select></div></div>
@@ -573,7 +573,7 @@ select.fs.ph{color:#bfbfbf}
           <div id="ac-and-apk" class="cond">
             <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
             <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" disabled placeholder="自动读取"></div></div>
-            <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
+            <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
           </div>
         </div>
         <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ac-and-gift" onchange="gcond('ac-and-gf',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
@@ -761,9 +761,9 @@ select.fs.ph{color:#bfbfbf}
         <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
         <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ba-itype" onchange="gcond('ba-apk',this.value.includes('apk')||this.value.includes('APK'))"><option>pwa(快速安装)</option><option>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
         <div id="ba-apk" class="cond">
-          <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
-          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" disabled></div></div>
-          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
+          <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="ba-and-apkaddr" placeholder="请输入" oninput="baAndAddrChange()"></div></div>
+          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="ba-and-apkname" disabled></div></div>
+          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','ba-and')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
         </div>
       </div>
       <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ba-and-gift" onchange="gcond('ba-and-gift-fields',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
@@ -821,8 +821,11 @@ const channels=[
 
 const evMap={
   'Facebook-API':{title:'Facebook API（Facebook服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','SubmitApplication'],['充值','Purchase（仅在首充时触发）']]},
+  'facebook-api':{title:'Facebook API（Facebook服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','SubmitApplication'],['充值','Purchase（仅在首充时触发）']]},
   'TikTok-click-API':{title:'TK API（TikTok服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','Login'],['充值','Purchase（仅在首充时触发）']]},
+  'tiktok-click-api':{title:'TK API（TikTok服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','Login'],['充值','Purchase（仅在首充时触发）']]},
   'Kwai-API':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
+  'kwai-click':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
 };
 
 // ─── RENDER TABLE ───
@@ -1026,14 +1029,17 @@ function confirmMafia(){
   if(!val){closeSub('m-mafia-pkg');return;}
   const parts=val.split('|');
   const name=parts[0],addr=parts[1]||'',pkg=parts[2]||'';
-  if(mafiaTarget==='br'){
-    const addrEl=document.getElementById('br-pkg-apkaddr');
-    const nameEl=document.getElementById('br-pkg-apkname');
-    if(addrEl){addrEl.value=addr;addrEl.dataset.fromMafia='1';}
-    if(nameEl){nameEl.value=pkg;}
-  } else if(mafiaTarget==='brg'){
-    const addrEl=document.getElementById('br-guide-apkaddr');
-    const nameEl=document.getElementById('br-guide-apkname');
+  const targetMap={
+    'br':   {addr:'br-pkg-apkaddr',   name:'br-pkg-apkname'},
+    'brg':  {addr:'br-guide-apkaddr', name:'br-guide-apkname'},
+    'ac-and':{addr:'ac-and-apkaddr',  name:'ac-and-apkname'},
+    'ba-and':{addr:'ba-and-apkaddr',  name:'ba-and-apkname'},
+    'guide':{addr:'g-apk-addr',       name:'g-apk-name'},
+  };
+  const t=targetMap[mafiaTarget];
+  if(t){
+    const addrEl=document.getElementById(t.addr);
+    const nameEl=document.getElementById(t.name);
     if(addrEl){addrEl.value=addr;addrEl.dataset.fromMafia='1';}
     if(nameEl){nameEl.value=pkg;}
   }
@@ -1124,7 +1130,6 @@ function batchSubmit(){closeM('m-batch-add');toast('批量新增成功')}
 // ─── INSTALL GUIDE ───
 function loadGuide(){
   document.getElementById('guide-form').style.display='block';
-  toast('配置加载成功');
 }
 
 // ─── TOAST ───
@@ -1170,20 +1175,34 @@ function setDefaultDates(){
 }
 
 // ─── OPEN EDIT CHANNEL ───
+function openNewChannel(){
+  document.getElementById('ac-modal-title').textContent='新增渠道';
+  // reset channel name
+  const nameEl=document.getElementById('ac-ch-name');
+  if(nameEl){nameEl.value='';showClearBtn('ac-ch-name-clear',false);}
+  openM('m-add-ch');
+}
+
 function openEditChannel(i){
   const ch=channels[i];
   document.getElementById('ac-modal-title').textContent='编辑渠道';
-  // prefill basic fields
+  // prefill channel name with clear button
+  const nameEl=document.getElementById('ac-ch-name');
+  if(nameEl){nameEl.value=ch.name;showClearBtn('ac-ch-name-clear',true);}
   const land=document.getElementById('ac-land');
   if(land){land.value='仿谷歌页';landChange();}
   const track=document.getElementById('ac-track');
   if(track){
-    // map track type to option value
     const tm={'常规推广':'常规推广','tiktok-click-api':'TikTok-click-API','facebook-api':'Facebook-API','kwai-click':'Kwai-API'};
     track.value=tm[ch.track]||'常规推广';
     trackChange();
   }
   openM('m-add-ch');
+}
+
+function showClearBtn(id,show){
+  const el=document.getElementById(id);
+  if(el)el.style.display=show?'flex':'none';
 }
 
 // ─── iOS ADDR (guide page) ───
@@ -1230,6 +1249,25 @@ function batchTab(btn,tab){
   btn.classList.add('active');
   document.getElementById('ba-and').style.display=tab==='ba-and'?'block':'none';
   document.getElementById('ba-ios').style.display=tab==='ba-ios'?'block':'none';
+}
+
+// ─── APK addr change handlers ───
+function acAndAddrChange(){
+  const el=document.getElementById('ac-and-apkaddr');
+  if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('ac-and-apkname');if(n)n.value='';}
+}
+function baAndAddrChange(){
+  const el=document.getElementById('ba-and-apkaddr');
+  if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('ba-and-apkname');if(n)n.value='';}
+}
+function guideAddrChange(){
+  const el=document.getElementById('g-apk-addr');
+  if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('g-apk-name');if(n)n.value='';}
+}
+
+// ─── Guide page query without toast ───
+function loadGuideQuiet(){
+  document.getElementById('guide-form').style.display='block';
 }
 // ─── INIT ───
 renderTable();
