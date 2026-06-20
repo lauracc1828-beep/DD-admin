@@ -269,7 +269,7 @@ select.fs.ph{color:#bfbfbf}
 .aa-day-panel.active{display:block}
 /* ── TIER BLOCK ── */
 .aa-tier-block{border:1px solid #e8e8e8;border-radius:4px;margin-bottom:10px;overflow:hidden}
-.aa-tier-hd{background:#f5f7fa;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e8e8e8}
+.aa-tier-hd{background:#f5f7fa;padding:7px 12px;display:flex;align-items:center;justify-content:flex-start;gap:8px;border-bottom:1px solid #e8e8e8}
 .aa-tier-hd-name{font-size:13px;font-weight:500;color:#333}
 .aa-tier-hd-btns{display:flex;gap:4px}
 .aa-tier-btn{width:24px;height:24px;border-radius:4px;border:1px solid;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;background:#fff;line-height:1;font-family:inherit}
@@ -320,7 +320,7 @@ select.fs.ph{color:#bfbfbf}
 
 /* ── tooltip (multiline hover) ── */
 .has-tip{position:relative;cursor:default;display:inline-flex;align-items:center}
-.has-tip .tip-box{display:none;position:absolute;left:24px;top:-4px;z-index:9999;background:#333;color:#fff;font-size:12px;line-height:1.7;padding:8px 12px;border-radius:6px;white-space:pre-wrap;min-width:220px;max-width:340px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.has-tip{position:relative}.has-tip .tip-box{display:none;position:absolute;left:24px;top:-4px;z-index:9999;background:#333;color:#fff;font-size:12px;line-height:1.7;padding:8px 12px;border-radius:6px;white-space:pre-wrap;min-width:220px;max-width:340px;box-shadow:0 4px 12px rgba(0,0,0,.3);text-align:left}
 .has-tip:hover .tip-box{display:block}
 /* ── date range picker style ── */
 .date-range-inp{display:inline-flex;align-items:center;border:1px solid #d9d9d9;border-radius:4px;padding:4px 10px;font-size:13px;background:#fff;gap:6px;cursor:pointer;color:rgba(0,0,0,.65);height:32px;box-sizing:border-box}
@@ -377,15 +377,56 @@ select.fs.ph{color:#bfbfbf}
 /* ── tier section fixed height ── */
 .aa-tier-scroll{max-height:460px;overflow-y:auto;padding-right:4px}
 /* ── 领取条件 header ── */
-.aa-cond-hd{display:flex;align-items:center;justify-content:space-between;padding:4px 0 4px;font-size:12px;color:#595959;border-top:1px solid #f5f5f5;margin-top:6px}
-.aa-cond-add{font-size:12px;color:#0961BD;background:none;border:none;cursor:pointer;padding:2px 6px}
-.aa-cond-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:13px}
-.aa-cond-range{color:#8c8c8c;font-size:12px}
-.aa-cond-del{background:none;border:none;color:#ff4d4f;cursor:pointer;font-size:15px;padding:0 4px;line-height:1}
+.aa-cond-hd{display:flex!important;align-items:center;gap:6px;font-size:11px;color:#8c8c8c;padding-bottom:4px;border-bottom:1px solid #f0f0f0;margin-bottom:4px;margin-top:8px}
+.aa-cond-row{display:flex!important;align-items:center;gap:6px;margin-bottom:6px;font-size:13px}
+.aa-cond-spacer{width:72px;flex-shrink:0;display:inline-block}
+.aa-cond-row .aa-s-inp{width:70px!important;box-sizing:border-box!important}
+.aa-cond-range{color:#8c8c8c;font-size:12px;text-align:center}
+.aa-cond-add2{width:24px;height:24px;border-radius:4px;border:1px solid #0961BD;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;background:#fff;line-height:1;font-family:inherit;color:#0961BD}
+.aa-cond-add2:hover{background:#e6f0ff}
 /* ── tbl-icon close ── */
 .tbl-icon-close{color:#ff4d4f;border-color:#ffc6c6;background:#fff0f0}
 /* ── 展示时间 field ── */
 #aa-show-time-wrap{display:none;align-items:center;gap:8px;margin-top:8px;font-size:13px}
+
+/* ── btn text centering ── */
+.btn{justify-content:center!important;text-align:center!important}
+/* ── tip-left: tooltip opens leftward ── */
+.has-tip.tip-left .tip-box{left:auto!important;right:28px!important;top:-4px}
+/* ── wide no-wrap tooltip for 奖励作废 ── */
+.tip-wide .tip-box{white-space:nowrap!important;max-width:none!important;min-width:auto!important}
+/* ── background gallery with radio on images ── */
+.bg-img-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.bg-img-item{position:relative;width:132px;height:80px;border-radius:6px;cursor:pointer;border:2px solid transparent;overflow:hidden;flex-shrink:0}
+.bg-img-item.selected{border-color:#0961BD}
+.bg-img-item input[type=radio]{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:16px;height:16px;cursor:pointer;accent-color:#0961BD;z-index:2}
+.bg-img-inner{width:100%;height:100%;display:block}
+/* ── 默认背景 tag style ── */
+.default-bg-tag{display:inline-block;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;border-radius:4px;padding:2px 10px;font-size:12px;margin-bottom:10px;cursor:pointer}
+/* ── logo-img gallery ── */
+.logo-img-wrap{display:flex;flex-wrap:wrap;gap:10px}
+.logo-img-item{position:relative;width:80px;height:80px;border-radius:6px;cursor:pointer;border:2px solid #f0f0f0;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.logo-img-item.selected{border-color:#0961BD}
+.logo-img-item input[type=radio]{position:absolute;left:4px;top:4px;width:14px;height:14px;cursor:pointer;accent-color:#0961BD;z-index:2}
+.logo-img-inner{width:72px;height:72px;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px}
+/* ── preview modal (white box) ── */
+.preview-overlay{background:rgba(0,0,0,.55)!important}
+.preview-box{display:flex!important;flex-direction:column;align-items:stretch;background:#fff;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.3);padding:0;overflow:hidden;position:relative;width:75vw;max-width:1200px;height:90vh}
+.preview-ctrl-bar{position:absolute;top:8px;right:8px;display:flex;gap:4px;z-index:20}
+.preview-ctrl-btn{width:28px;height:28px;border-radius:4px;border:1px solid rgba(0,0,0,.18);background:rgba(255,255,255,.92);color:#333;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.preview-ctrl-btn:hover{background:#fff;border-color:#0961BD;color:#0961BD}
+.preview-body{flex:1;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0;background:#fff;min-height:0}
+.preview-phone-wrap{width:280px;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.preview-overlay.maximized .preview-box{width:100vw!important;height:100vh!important;max-width:100vw!important;max-height:100vh!important;border-radius:0!important}
+.preview-overlay.maximized .preview-body{flex:1!important;height:100%!important;overflow:hidden!important;min-height:0!important}
+.preview-overlay.maximized .preview-phone-wrap{width:340px}
+/* ── 宣传图预览 banner: 660×220 ratio ── */
+.aa-banner{height:132px!important;width:396px;max-width:100%;border-radius:6px!important}
+/* ── 奖励作废 expire days row ── */
+#aa-expire-days-wrap{margin-top:8px}
+/* ── tip-bottom: tooltip below element (for table action icons) ── */
+.tip-bottom .tip-box{left:50%!important;transform:translateX(-50%);top:calc(100% + 6px)!important;bottom:auto!important;min-width:60px!important;text-align:center!important;white-space:nowrap!important;padding:5px 10px!important}
+.tip-bottom .tip-box::before{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top:none;border-bottom-color:#333}
 </style>
 </head>
 <body>
@@ -680,72 +721,72 @@ select.fs.ph{color:#bfbfbf}
                   <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>一次性</td><td>自动派发</td><td>系统(周期内)</td><td>128</td><td>94</td><td>3,240.00</td><td>2,960.00</td><td>280.00</td><td>1</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>2</td><td>综合</td><td>签到</td><td>每日签到</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>每日</td><td>自动派发</td><td>系统(周期内)</td><td>256</td><td>210</td><td>1,050.00</td><td>980.00</td><td>70.00</td><td>2</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>3</td><td>存款</td><td>首存礼</td><td>新会员首存礼</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>一次性</td><td>玩家申请</td><td>人工审核</td><td>72</td><td>68</td><td>8,160.00</td><td>8,000.00</td><td>160.00</td><td>3</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>4</td><td>存款</td><td>每日存款礼</td><td>每日存款彩金</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>每日</td><td>自动派发</td><td>系统(周期内)</td><td>0</td><td>0</td><td>0.00</td><td>0.00</td><td>0.00</td><td>4</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>5</td><td>综合</td><td>救援金</td><td>每周救援金</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>每周</td><td>玩家申请</td><td>系统(周期内)</td><td>44</td><td>38</td><td>1,900.00</td><td>1,750.00</td><td>150.00</td><td>5</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>6</td><td>综合</td><td>神秘彩金</td><td>周末神秘彩金</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>循环</td><td>自动派发</td><td>系统(周期内)</td><td>86</td><td>71</td><td>2,130.00</td><td>1,980.00</td><td>150.00</td><td>6</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>7</td><td>存款</td><td>周存款礼</td><td>VIP专属周存款礼</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>每周</td><td>自动派发</td><td>人工审核</td><td>0</td><td>0</td><td>0.00</td><td>0.00</td><td>0.00</td><td>7</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
                 <tr><td>8</td><td>综合</td><td>注册礼</td><td>新会员注册礼</td>
                   <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
                   <td>一次性</td><td>自动派发</td><td>系统(过期时)</td><td>312</td><td>298</td><td>4,470.00</td><td>4,200.00</td><td>270.00</td><td>8</td>
                   <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
-                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
-                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
+                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
+                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="">⏻<span class="tip-box">关闭活动</span></span>
                   </div></td>
                 </tr>
               </tbody>
@@ -802,7 +843,7 @@ select.fs.ph{color:#bfbfbf}
               <label class="radio-item"><input type="radio" name="aa-name-t" value="sys" checked onchange="aaNameToggle('sys')"> 系统默认</label>
               <label class="radio-item"><input type="radio" name="aa-name-t" value="custom" onchange="aaNameToggle('custom')"> 自定义</label>
             </div>
-            <input class="fin" id="aa-name-inp" placeholder="请输入活动名称" style="width:100%;box-sizing:border-box;background:#f5f5f5" disabled>
+            <input class="fin" id="aa-name-inp" value="神秘彩金活动" placeholder="请输入活动名称" style="width:100%;box-sizing:border-box;background:#f5f5f5" disabled>
           </div>
         </div>
         <!-- 活动时间 -->
@@ -842,8 +883,8 @@ select.fs.ph{color:#bfbfbf}
             <div id="aa-reset-mystery" class="radio-g">
               <label class="radio-item"><input type="radio" name="aa-reset-m" checked> 一次性</label>
               <label class="radio-item"><input type="radio" name="aa-reset-m"> 循环</label>
-              <span class="has-tip" style="margin-left:4px">ⓘ<span class="tip-box">一次性：一个会员只可以参与一次。周期长度为32天。
-循环：每32天一个周期，一个周期结束后自动进入下一个周期。</span></span>
+              <span class="has-tip" style="margin-left:4px">ⓘ<span class="tip-box">一次性：一个会员只可以参与一次。周期长度为31天。
+循环：每31天一个周期，一个周期结束后自动进入下一个周期。</span></span>
             </div>
             <div id="aa-reset-normal" class="radio-g" style="display:none">
               <label class="radio-item"><input type="radio" name="aa-reset-n" checked> 不重置</label>
@@ -895,10 +936,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 奖励作废 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">奖励作废：<span class="has-tip" style="margin-left:2px">ⓘ<span class="tip-box">过期自动派发：奖励领取过期后，系统自动将奖励派发给会员。
-过期作废：奖励领取过期后，奖励自动作废，不予补发。
-奖励保留天数自动派发：会员领取后在保留天数内未完成，超过天数后自动派发奖励。
-奖励保留天数作废：会员领取后在保留天数内未完成，超过天数后奖励自动作废。</span></span></span>
+          <span class="aa-fl" style="display:flex;align-items:center;justify-content:flex-end;line-height:22px;padding-top:0">奖励作废：<span class="has-tip tip-wide" style="margin-left:2px;font-size:13px;color:#8c8c8c;cursor:default">ⓘ<span class="tip-box"><div>过期自动派发：到达过期时间后，不满足条件的奖励自动派发给会员</div><div>过期作废：到达过期时间后，不满足条件的奖励自动作废</div><div>奖励保留天数自动派发：在设定的保留天数内满足条件后自动派发奖励</div><div>奖励保留天数作废：超过保留天数后不满足条件则奖励自动作废</div></span></span></span>
           <div class="aa-fc">
             <div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px">
               <label class="radio-item"><input type="radio" name="aa-expire" value="1" onchange="aaExpireToggle(this.value)"> 过期自动派发</label>
@@ -921,7 +959,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 参与条件 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">参与条件：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">参与条件：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:6px">
               <label class="radio-item"><input type="radio" name="aa-participant" value="all" checked onchange="aaParticipantToggle('all')"> 全部会员</label>
@@ -948,7 +986,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 申领终端 -->
         <div class="aa-fi" id="aa-terminal-sec" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">申领终端：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">申领终端：</span>
           <div class="aa-fc">
             <div style="display:flex;flex-wrap:wrap;gap:14px;row-gap:10px">
               <label class="radio-item"><input type="checkbox" checked> 苹果H5</label>
@@ -964,14 +1002,14 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 申领限制 -->
         <div class="aa-fi" id="aa-restrict-sec" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">申领限制：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">申领限制：</span>
           <div class="aa-fc">
             <div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px;margin-bottom:10px">
               <label class="radio-item"><input type="checkbox"> 绑定收款方式 <span class="has-tip">ⓘ<span class="tip-box">您号需绑定收款方式，才能领取奖励</span></span></label>
               <label class="radio-item"><input type="checkbox"> 完成首充可申领 <span class="has-tip">ⓘ<span class="tip-box">您号需完成首充充值，才能领取奖励</span></span></label>
-              <label class="radio-item"><input type="checkbox"> 同姓名只能申领1次 <span class="has-tip">ⓘ<span class="tip-box">若不同账号使用相同真实姓名，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
-              <label class="radio-item"><input type="checkbox"> 同登录IP只能申领1次 <span class="has-tip">ⓘ<span class="tip-box">若不同账号登录时的IP相同，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
-              <label class="radio-item"><input type="checkbox"> 同注册IP只能申领1次 <span class="has-tip">ⓘ<span class="tip-box">若不同账号注册时的IP相同，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 同姓名只能申领1次 <span class="has-tip tip-left">ⓘ<span class="tip-box">若不同账号使用相同真实姓名，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 同登录IP只能申领1次 <span class="has-tip tip-left">ⓘ<span class="tip-box">若不同账号登录时的IP相同，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 同注册IP只能申领1次 <span class="has-tip tip-left">ⓘ<span class="tip-box">若不同账号注册时的IP相同，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
             </div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px">
               <input type="checkbox">
@@ -980,7 +1018,7 @@ select.fs.ph{color:#bfbfbf}
               <span>天内充值次数 ≥</span>
               <input class="aa-s-inp" style="width:90px" placeholder="1-999999">
               <span>次才能申领</span>
-              <span class="has-tip">ⓘ<span class="tip-box">领奖当日前N天(含当天)内N次充值，才能领取奖励。</span></span>
+              <span class="has-tip tip-left">ⓘ<span class="tip-box">领奖当日前N天(含当天)内N次充值，才能领取奖励。</span></span>
             </div>
             <div style="display:flex;align-items:center;gap:6px;font-size:13px">
               <input type="checkbox">
@@ -989,13 +1027,13 @@ select.fs.ph{color:#bfbfbf}
               <span>天内充值金额 ≥</span>
               <input class="aa-s-inp" style="width:110px" placeholder="填0表示不限制">
               <span>才能申领</span>
-              <span class="has-tip">ⓘ<span class="tip-box">领奖当日前N天(含当天)累计充值金额满N元，才能领取奖励。</span></span>
+              <span class="has-tip tip-left">ⓘ<span class="tip-box">领奖当日前N天(含当天)累计充值金额满N元，才能领取奖励。</span></span>
             </div>
           </div>
         </div>
         <!-- 稽核限定平台 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">稽核限定平台：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">稽核限定平台：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:10px">
               <label class="radio-item"><input type="radio" name="aa-plat" value="all" checked onchange="aaPlatToggle('all')"> 不限制</label>
@@ -1030,7 +1068,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 参与层级 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">参与层级：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">参与层级：</span>
           <div class="aa-fc">
             <div style="margin-bottom:8px"><label class="radio-item"><input type="checkbox" id="aa-all-tier" onchange="aaAllTier(this.checked)"> 全部层级</label></div>
             <div style="display:flex;flex-wrap:wrap;gap:10px;row-gap:6px">
@@ -1057,7 +1095,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 规则说明 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">规则说明：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">规则说明：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:8px">
               <label class="radio-item"><input type="radio" name="aa-rule" checked onchange="aaRuleToggle('sys')"> 系统默认</label>
@@ -1080,7 +1118,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 活动详情页选择 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">活动详情页选择：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">活动详情页选择：</span>
           <div class="aa-fc">
             <div class="radio-g">
               <label class="radio-item"><input type="radio" name="aa-page-style" value="skin" checked onchange="aaDetailPageToggle('skin')"> 跟随皮肤</label>
@@ -1092,8 +1130,8 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
         <!-- 背景样式 -->
-        <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">背景样式：</span>
+        <div class="aa-fi">
+          <span class="aa-fl">背景样式：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:10px">
               <label class="radio-item"><input type="radio" name="aa-bg-style" value="sys" checked onchange="aaBgStyleToggle('sys')"> 系统默认</label>
@@ -1101,39 +1139,125 @@ select.fs.ph{color:#bfbfbf}
             </div>
             <!-- 系统默认内容 -->
             <div id="aa-bg-sys">
-              <div style="font-size:13px;color:#0961BD;margin-bottom:8px;cursor:pointer">默认背景</div>
-              <div class="aa-bg-gallery" id="aa-bg-gallery"></div>
+              <div class="default-bg-tag">默认背景</div>
+              <div class="bg-img-wrap" id="aa-bg-gallery">
+<div class="bg-img-item selected" onclick="aaBgSelect(this,'linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)"></div><input type="radio" name="aa-bg-radio" checked></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#c8510a 0%,#e8820a 55%,#6a2a0a 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#c8510a 0%,#e8820a 55%,#6a2a0a 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#5a0ea0 0%,#8a3ae8 55%,#c060f8 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#5a0ea0 0%,#8a3ae8 55%,#c060f8 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#0a4060 0%,#0a6090 55%,#3ab8d8 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#0a4060 0%,#0a6090 55%,#3ab8d8 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#1a0a5e 0%,#4a1a9e 55%,#7a3aee 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#1a0a5e 0%,#4a1a9e 55%,#7a3aee 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#601010 0%,#901818 55%,#c03030 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#601010 0%,#901818 55%,#c03030 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#0a3020 0%,#1a6040 55%,#3ab870 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#0a3020 0%,#1a6040 55%,#3ab870 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#4a3000 0%,#8a5800 55%,#c8860a 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#4a3000 0%,#8a5800 55%,#c8860a 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#2a0a4e 0%,#5a1a7e 55%,#9060c8 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#2a0a4e 0%,#5a1a7e 55%,#9060c8 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#0a2a4e 0%,#1a4a7e 55%,#3078c8 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#0a2a4e 0%,#1a4a7e 55%,#3078c8 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#4e0a2a 0%,#7e1a4a 55%,#c83078 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#4e0a2a 0%,#7e1a4a 55%,#c83078 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+<div class="bg-img-item" onclick="aaBgSelect(this,'linear-gradient(135deg,#1a2a0a 0%,#3a5a1a 55%,#70a030 100%)')"><div class="bg-img-inner" style="background:linear-gradient(135deg,#1a2a0a 0%,#3a5a1a 55%,#70a030 100%)"></div><input type="radio" name="aa-bg-radio" ></div>
+              </div>
             </div>
             <!-- 自定义上传 -->
             <div id="aa-bg-custom" style="display:none">
-              <label class="upload-btn"><span>⬆ 上传图片</span></label>
+              <label class="upload-btn" style="margin-bottom:6px"><span>⬆ 上传图片</span></label>
               <div class="upload-hint">支持JPG/PNG/SVG格式的图片 (建议尺寸: 660 x 220)</div>
-              <div class="upload-preview-box" id="aa-bg-preview" style="margin-top:8px"></div>
+              <div id="aa-bg-custom-preview" style="display:none;margin-top:8px;width:396px;max-width:100%;height:132px;border-radius:6px;overflow:hidden"></div>
             </div>
           </div>
         </div>
-        <!-- LOGO样式 -->
-        <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">LOGO样式：</span>
+        <!-- LOGO样式 (隐藏在自定义背景时) -->
+        <div class="aa-fi" id="aa-logo-section">
+          <span class="aa-fl">LOGO样式：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:10px">
               <label class="radio-item"><input type="radio" name="aa-logo-style" value="sys" checked onchange="aaLogoStyleToggle('sys')"> 系统默认</label>
               <label class="radio-item"><input type="radio" name="aa-logo-style" value="custom" onchange="aaLogoStyleToggle('custom')"> 自定义</label>
             </div>
-            <!-- 系统默认：logo tabs gallery -->
+            <!-- 系统默认：logo category tabs + image gallery -->
             <div id="aa-logo-sys">
               <div class="logo-cat-tabs">
                 <div class="logo-cat-tab active" onclick="aaLogoTab(this,'棋牌')">棋牌</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'捕鱼')">捕鱼</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'彩票')">彩票</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'体育')">体育</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'视讯')">视讯</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'老虎机')">老虎机</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'活动')">活动</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'节日')">节日</div>
-                <div class="logo-cat-tab" onclick="aaLogoTab(this,'礼物')">礼物</div>
+                <div class="logo-cat-tab" onclick="">捕鱼</div>
+                <div class="logo-cat-tab" onclick="">彩票</div>
+                <div class="logo-cat-tab" onclick="">体育</div>
+                <div class="logo-cat-tab" onclick="">视讯</div>
+                <div class="logo-cat-tab" onclick="">老虎机</div>
+                <div class="logo-cat-tab" onclick="">活动</div>
+                <div class="logo-cat-tab" onclick="">节日</div>
+                <div class="logo-cat-tab" onclick="">礼物</div>
               </div>
-              <div id="aa-logo-gallery" class="aa-logo-gallery"></div>
+              <div id="aa-logo-gallery" class="logo-img-wrap">
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🎭')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a4a8e20;font-size:32px">🎭</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🧙')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#4a1a8e20;font-size:32px">🧙</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🃏')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e1a4a20;font-size:32px">🃏</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🦸')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a8e4a20;font-size:32px">🦸</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'👸')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e4a1a20;font-size:32px">👸</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🧝')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a8e8e20;font-size:32px">🧝</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🏺')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#4a8e1a20;font-size:32px">🏺</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🦊')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e1a1a20;font-size:32px">🦊</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🐉')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a1a8e20;font-size:32px">🐉</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🎪')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e8e1a20;font-size:32px">🎪</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'💎')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a4a1a20;font-size:32px">💎</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🎰')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#4a4a1a20;font-size:32px">🎰</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🃏')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e4a8e20;font-size:32px">🃏</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'⚔️')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a8e1a20;font-size:32px">⚔️</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🏆')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e1a8e20;font-size:32px">🏆</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🎯')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#1a4a8e20;font-size:32px">🎯</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🌟')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#4a1a4a20;font-size:32px">🌟</div>
+</div>
+<div class="logo-img-item" onclick="aaLogoSelect(this,'🎲')">
+  <input type="radio" name="aa-logo-radio">
+  <div class="logo-img-inner" style="background:#8e8e4a20;font-size:32px">🎲</div>
+</div>
+              </div>
             </div>
             <!-- 自定义上传 -->
             <div id="aa-logo-custom" style="display:none">
@@ -1144,9 +1268,9 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <!-- 宣传图预览 -->
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">宣传图预览：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">宣传图预览：</span>
           <div class="aa-fc">
-            <div class="aa-banner" id="aa-banner" style="background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)">
+            <div class="aa-banner" id="aa-banner" style="background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%);width:396px;height:132px;max-width:100%">
               <div class="aa-banner-text">
                 <div class="aa-banner-title" id="aa-banner-title">神秘彩金活动</div>
                 <div class="aa-banner-rules">
@@ -1241,7 +1365,7 @@ select.fs.ph{color:#bfbfbf}
           </div></div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">奖励作废：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">奖励作废：</span>
           <div class="aa-fc"><div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px">
             <label class="radio-item"><input type="radio" name="va-expire" disabled> 过期自动派发</label>
             <label class="radio-item"><input type="radio" name="va-expire" checked disabled> 过期作废</label>
@@ -1254,7 +1378,7 @@ select.fs.ph{color:#bfbfbf}
           <div class="aa-fc"><input class="fin" type="number" value="1" style="width:100px" readonly></div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">参与条件：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">参与条件：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:8px">
               <label class="radio-item"><input type="radio" name="va-participant" checked disabled> 全部会员</label>
@@ -1270,7 +1394,7 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">申领终端：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">申领终端：</span>
           <div class="aa-fc"><div style="display:flex;flex-wrap:wrap;gap:14px;row-gap:10px">
             <label class="radio-item"><input type="checkbox" checked disabled> 苹果H5</label>
             <label class="radio-item"><input type="checkbox" checked disabled> 安卓H5</label>
@@ -1283,7 +1407,7 @@ select.fs.ph{color:#bfbfbf}
           </div></div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">申领限制：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">申领限制：</span>
           <div class="aa-fc"><div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px">
             <label class="radio-item"><input type="checkbox" disabled> 绑定收款方式</label>
             <label class="radio-item"><input type="checkbox" disabled> 完成首充可申领</label>
@@ -1293,7 +1417,7 @@ select.fs.ph{color:#bfbfbf}
           </div></div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">稽核限定平台：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">稽核限定平台：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:8px">
               <label class="radio-item"><input type="radio" name="va-plat" disabled> 不限制</label>
@@ -1319,7 +1443,7 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">参与层级：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">参与层级：</span>
           <div class="aa-fc">
             <div style="display:flex;flex-wrap:wrap;gap:10px;row-gap:6px">
               <label class="radio-item"><input type="checkbox" checked disabled> 默认层级</label>
@@ -1344,7 +1468,7 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">规则说明：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">规则说明：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:8px">
               <label class="radio-item"><input type="radio" name="va-rule" checked disabled> 系统默认</label>
@@ -1364,14 +1488,14 @@ select.fs.ph{color:#bfbfbf}
           <div class="aa-fc"><input class="fin" type="number" value="1" style="width:100px" readonly></div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">活动详情页选择：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">活动详情页选择：</span>
           <div class="aa-fc"><div class="radio-g">
             <label class="radio-item"><input type="radio" name="va-page" checked disabled> 跟随皮肤</label>
             <label class="radio-item"><input type="radio" name="va-page" disabled> 样式一</label>
           </div></div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">背景样式：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">背景样式：</span>
           <div class="aa-fc">
             <div class="radio-g" style="margin-bottom:8px">
               <label class="radio-item"><input type="radio" name="va-bg" disabled> 系统默认</label>
@@ -1383,7 +1507,7 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
         <div class="aa-fi" style="align-items:flex-start">
-          <span class="aa-fl" style="padding-top:6px">宣传图预览：</span>
+          <span class="aa-fl" style="line-height:22px;padding-top:0">宣传图预览：</span>
           <div class="aa-fc">
             <div class="aa-banner" style="background:linear-gradient(135deg,#5a0ea0,#1a5fa8 55%,#e07020)">
               <div class="aa-banner-text">
@@ -1405,48 +1529,13 @@ select.fs.ph{color:#bfbfbf}
 
 <!-- ══════════ PREVIEW POPUP ══════════ -->
 <div class="preview-overlay" id="preview-overlay" onclick="aaClosePreview(event)">
-  <div class="preview-box">
-    <div class="preview-ctrl">
-      <div class="preview-ctrl-btn" onclick="aaToggleMaxPreview(event)" title="最大化/还原">⊞</div>
-      <div class="preview-ctrl-btn" onclick="document.getElementById('preview-overlay').classList.remove('show','maximized')" title="关闭">✕</div>
+  <div class="preview-box" onclick="event.stopPropagation()">
+    <div class="preview-ctrl-bar">
+      <span class="preview-ctrl-btn has-tip tip-bottom" id="preview-max-btn" onclick="aaToggleMaxPreview()">⤢<span class="tip-box">最大化</span></span>
+      <span class="preview-ctrl-btn has-tip tip-bottom" onclick="document.getElementById('preview-overlay').classList.remove('show','maximized');aaResetMaxBtn()">✕<span class="tip-box">关闭</span></span>
     </div>
-    <div class="preview-phone">
-      <div style="background:linear-gradient(180deg,#2a0a5e 0%,#1a0a3e 100%);padding:16px 12px;font-family:sans-serif">
-        <div style="text-align:center;padding:8px 0 4px;font-size:11px;color:#c9b7ff;font-weight:700;letter-spacing:1px">Bônus Misterioso</div>
-        <div style="background:linear-gradient(135deg,#4a1a9e,#7a3aee);border-radius:10px;padding:12px;margin-bottom:8px;position:relative;overflow:hidden">
-          <div style="text-align:center;font-size:18px;font-weight:900;color:#ffe066;text-shadow:0 2px 4px rgba(0,0,0,.5);line-height:1.2">Mystery<br>Bonus</div>
-          <div style="display:flex;justify-content:center;gap:6px;margin-top:6px;font-size:20px">🧙🃏🎁✨🏆</div>
-        </div>
-        <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:10px;margin-bottom:6px;font-size:10px;color:#e0d0ff">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Data de Início</span><span>2024-07-02 14:25</span></div>
-          <div style="display:flex;justify-content:space-between"><span>Depósito Necessário</span><span>R$ 3,000.00</span></div>
-        </div>
-        <div style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);border-radius:8px;padding:10px;margin-bottom:8px;text-align:center;font-size:10px;color:#ffe066">
-          <div style="margin-bottom:4px">O lembrete vai te Bônus Misterioso que</div>
-          <div>⏰ 2024-07-03 04:00</div>
-          <div style="font-size:14px;font-weight:700;margin-top:4px">🎁 Bônus Misterioso<br><span style="font-size:18px">R$ 1,999.00</span></div>
-        </div>
-        <div style="background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden">
-          <div style="display:grid;grid-template-columns:1fr 1fr;font-size:9px;color:#c9b7ff;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.1);font-weight:600">
-            <span>Faixa de Depósito</span><span style="text-align:right">Bônus Misterioso</span>
-          </div>
-          <div style="font-size:9px;color:#e0d0ff">
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 30-70</span><span style="text-align:right;color:#ffe066">R$ 0.2-1.7</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 70-150</span><span style="text-align:right;color:#ffe066">R$ 0.5-1.77</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 150-300</span><span style="text-align:right;color:#ffe066">R$ 2-3.77</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 300-600</span><span style="text-align:right;color:#ffe066">R$ 5-6.66</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 600-1000</span><span style="text-align:right;color:#ffe066">R$ 10-9.99</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 1000-2000</span><span style="text-align:right;color:#ffe066">R$ 15-15.55</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 2000-5000</span><span style="text-align:right;color:#ffe066">R$ 20-28.88</span></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px"><span>R$ 5000+</span><span style="text-align:right;color:#ffe066">R$ 75-88.88</span></div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-size:9px;color:#a090cc;line-height:1.6">
-          <div>1. Participar ativamente, concluir o depósito e apostas...</div>
-          <div>2. Após 32 dias a atividade termina automaticamente...</div>
-        </div>
-        <div style="margin-top:8px;background:#7c3aed;border-radius:8px;padding:10px;text-align:center;color:#fff;font-size:12px;font-weight:700">Reclamar</div>
-      </div>
+    <div class="preview-body">
+      <img src="神秘彩金活动截图/image 37.png" style="max-height:100%;max-width:100%;width:auto;height:auto;display:block;object-fit:contain">
     </div>
   </div>
 </div>
@@ -2313,7 +2402,6 @@ function actSecTab(el, tabId){
 function openAddActivity(){
   document.getElementById('aa-modal-title').textContent = '增加活动';
   aaInitDays();
-  aaInitBgGallery();
   aaLogoTab(document.querySelector('#aa-logo-sys .logo-cat-tab'), '棋牌');
   // reset claim to auto
   document.querySelector('input[name="aa-claim"][value="auto"]').checked = true;
@@ -2333,6 +2421,7 @@ function openAddActivity(){
   // reset bg
   document.querySelector('input[name="aa-bg-style"][value="sys"]').checked = true;
   aaBgStyleToggle('sys');
+  aaInitBgGallery();
   // reset logo
   document.querySelector('input[name="aa-logo-style"][value="sys"]').checked = true;
   aaLogoStyleToggle('sys');
@@ -2346,10 +2435,22 @@ function openAddActivity(){
 function openEditActivity(idx){
   document.getElementById('aa-modal-title').textContent = '修改活动';
   aaInitDays();
-  aaInitBgGallery();
   aaLogoTab(document.querySelector('#aa-logo-sys .logo-cat-tab'), '棋牌');
   aaClaimToggle('manual');
   document.querySelector('input[name="aa-claim"][value="manual"]').checked = true;
+  // Pre-fill mock saved data
+  var nameInp = document.getElementById('aa-name-inp');
+  if(nameInp){ nameInp.removeAttribute('disabled'); nameInp.value='七日神秘彩金'; nameInp.setAttribute('disabled',''); }
+  var ds = document.getElementById('aa-date-start');
+  var de = document.getElementById('aa-date-end');
+  if(ds){ ds.textContent='2026-06-01'; ds.style.color=''; }
+  if(de){ de.textContent='2026-06-30'; de.style.color=''; }
+  var expRad = document.querySelector('input[name="aa-expire"][value="3"]');
+  if(expRad){ expRad.checked=true; aaExpireToggle('3'); }
+  var expDaysInp = document.querySelector('#aa-expire-days-wrap input[type=number]');
+  if(expDaysInp){ expDaysInp.value='7'; }
+  var audMult = document.getElementById('aa-audit-mult');
+  if(audMult){ audMult.value='2'; }
   openM('m-add-activity');
 }
 
@@ -2373,9 +2474,9 @@ function aaBuildViewTier(){
     html2 += `<div class="aa-tier-block"><div class="aa-tier-hd"><span>第${i+1}档位</span></div><div class="aa-tier-body">`;
     html2 += `<div class="aa-tier-row"><span class="aa-tier-label">充值金额(≥)：</span><input class="aa-s-inp" style="width:100px;background:#f5f5f5" value="${t.charge}" readonly></div>`;
     html2 += `<div class="aa-tier-row"><span class="aa-tier-label">显示奖励：</span><input class="aa-s-inp" style="width:80px;background:#f5f5f5" value="${t.dMin}" readonly><span style="margin:0 4px;color:#8c8c8c">~</span><input class="aa-s-inp" style="width:80px;background:#f5f5f5" value="${t.dMax}" readonly></div>`;
-    html2 += `<div class="aa-cond-hd"><span style="font-size:12px;color:#595959">领取条件</span><span style="font-size:12px;color:#8c8c8c">打码倍数(≥)</span><span style="font-size:12px;color:#8c8c8c;margin-left:40px">奖励金额</span></div>`;
+    html2 += `<div class="aa-cond-hd"><span style="width:72px;flex-shrink:0">领取条件</span><span style="width:70px;flex-shrink:0">打码倍数(≥)</span><span>奖励金额</span></div>`;
     t.conds.forEach(function(c){
-      html2 += `<div class="aa-cond-row"><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.m}" readonly><span style="font-size:12px;color:#8c8c8c;margin:0 4px"></span><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.a}" readonly><span class="aa-cond-range">~</span><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.b}" readonly></div>`;
+      html2 += `<div class="aa-cond-row"><span class="aa-cond-spacer"></span><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.m}" readonly><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.a}" readonly><span class="aa-cond-range">~</span><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.b}" readonly><span></span><span></span></div>`;
     });
     html2 += '</div></div>';
   });
@@ -2412,18 +2513,15 @@ function aaBuildTier(dayIdx, tierIdx){
   div.dataset.tier = tierIdx;
   let condsHtml = '';
   d.conds.forEach(function(c){
-    condsHtml += `<div class="aa-cond-row">
-      <input class="aa-s-inp" type="number" value="${c.m}" style="width:70px">
-      <input class="aa-s-inp" type="number" value="${c.a}" style="width:80px">
-      <span class="aa-cond-range">~</span>
-      <input class="aa-s-inp" type="number" value="${c.b}" style="width:80px">
-      <button class="aa-cond-del" onclick="aaCondDel(this)">−</button>
-    </div>`;
+    condsHtml += `<div class="aa-cond-row"><span class="aa-cond-spacer"></span><input class="aa-s-inp" type="number" value="${c.m}" style="width:70px"><input class="aa-s-inp" type="number" value="${c.a}" style="width:70px"><span class="aa-cond-range">~</span><input class="aa-s-inp" type="number" value="${c.b}" style="width:70px"><button class="aa-cond-del" onclick="aaCondDel(this)">−</button><button class="aa-cond-add2" onclick="aaCondAdd(this)">+</button></div>`;
   });
   div.innerHTML = `
     <div class="aa-tier-hd">
-      <span>第${tierIdx+1}档位</span>
-      <button class="aa-tier-btn-del" onclick="aaTierDel(this)">− 删除档位</button>
+      <span class="aa-tier-hd-name">第${tierIdx+1}档位</span>
+      <div class="aa-tier-hd-btns">
+        <button class="aa-tier-btn aa-tier-btn-del" onclick="aaTierDel(this)">−</button>
+        <button class="aa-tier-btn aa-tier-btn-add" onclick="aaTierAdd(this)">+</button>
+      </div>
     </div>
     <div class="aa-tier-body">
       <div class="aa-tier-row">
@@ -2437,8 +2535,7 @@ function aaBuildTier(dayIdx, tierIdx){
         <input class="aa-s-inp" type="number" value="${d.dMax}" style="width:90px">
       </div>
       <div class="aa-cond-hd">
-        <span>领取条件 &nbsp; <span style="color:#8c8c8c">打码倍数(≥)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#8c8c8c">奖励金额</span></span>
-        <button class="aa-cond-add" onclick="aaCondAdd(this)">+ 添加条件</button>
+        <span style="width:72px;flex-shrink:0">领取条件</span><span style="width:70px;flex-shrink:0">打码倍数(≥)</span><span>奖励金额</span>
       </div>
       <div class="aa-cond-wrap">${condsHtml}</div>
     </div>`;
@@ -2453,7 +2550,7 @@ function aaTierAdd(el){
   const nextIdx = blocks.length;
   if(nextIdx >= 8) return;
   const nb = aaBuildTier(dayIdx, nextIdx);
-  panel.insertBefore(nb, el);
+  panel.appendChild(nb);
   aaRenumberTiers(panel);
 }
 function aaTierDel(el){
@@ -2465,22 +2562,23 @@ function aaTierDel(el){
 }
 function aaRenumberTiers(panel){
   panel.querySelectorAll('.aa-tier-block').forEach(function(b,i){
-    const hd = b.querySelector('.aa-tier-hd span');
+    const hd = b.querySelector('.aa-tier-hd-name');
     if(hd) hd.textContent = '第'+(i+1)+'档位';
   });
 }
 
 // ─── COND ADD / DEL ───
 function aaCondAdd(el){
-  const wrap = el.closest('.aa-tier-body').querySelector('.aa-cond-wrap');
+  const wrap = el.closest('.aa-cond-row').parentElement;
   const row = document.createElement('div');
   row.className = 'aa-cond-row';
-  row.innerHTML = `
-    <input class="aa-s-inp" type="number" value="0" style="width:70px">
-    <input class="aa-s-inp" type="number" placeholder="最小" style="width:80px">
-    <span class="aa-cond-range">~</span>
-    <input class="aa-s-inp" type="number" placeholder="最大" style="width:80px">
-    <button class="aa-cond-del" onclick="aaCondDel(this)">−</button>`;
+  row.innerHTML = '<span class="aa-cond-spacer"></span>'
+    +'<input class="aa-s-inp" type="number" value="0" style="width:70px">'
+    +'<input class="aa-s-inp" type="number" style="width:70px">'
+    +'<span class="aa-cond-range">~</span>'
+    +'<input class="aa-s-inp" type="number" style="width:70px">'
+    +'<button class="aa-cond-del" onclick="aaCondDel(this)">−</button>'
+    +'<button class="aa-cond-add2" onclick="aaCondAdd(this)">+</button>';
   wrap.appendChild(row);
 }
 function aaCondDel(el){
@@ -2498,82 +2596,42 @@ function aaInitDays(){
     for(let t=0;t<8;t++){
       panel.appendChild(aaBuildTier(i, t));
     }
-    const addBtn = document.createElement('button');
-    addBtn.className='aa-tier-btn-add';
-    addBtn.textContent='+ 添加档位';
-    addBtn.onclick=function(){aaTierAdd(this);};
-    panel.appendChild(addBtn);
+
   }
 }
 
 // ─── BG GALLERY ───
-const AA_BG_GRADS = [
-  'linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)',
-  'linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)',
-  'linear-gradient(135deg,#7b2ff7 0%,#f107a3 100%)',
-  'linear-gradient(135deg,#f093fb 0%,#f5576c 100%)',
-  'linear-gradient(135deg,#4facfe 0%,#00f2fe 100%)',
-  'linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)',
-  'linear-gradient(135deg,#fa709a 0%,#fee140 100%)',
-  'linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)',
-  'linear-gradient(135deg,#ff9a9e 0%,#fad0c4 100%)',
-  'linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)',
-  'linear-gradient(135deg,#2193b0 0%,#6dd5ed 100%)',
-  'linear-gradient(135deg,#cc2b5e 0%,#753a88 100%)'
-];
 function aaInitBgGallery(){
-  const g = document.getElementById('aa-bg-gallery');
-  if(!g) return;
-  g.innerHTML='';
-  AA_BG_GRADS.forEach(function(grad,i){
-    const item=document.createElement('div');
-    item.className='aa-bg-item'+(i===0?' selected':'');
-    item.style.background=grad;
-    item.onclick=function(){aaSelectBg(this,grad);};
-    g.appendChild(item);
-  });
+  // Gallery is now static HTML, just reset selection to first item
+  const items = document.querySelectorAll('.bg-img-item');
+  items.forEach(function(it,i){ it.classList.toggle('selected', i===0); });
+  const radios = document.querySelectorAll('input[name="aa-bg-radio"]');
+  radios.forEach(function(r,i){ r.checked=(i===0); });
+  const firstGrad = 'linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)';
+  const banner = document.getElementById('aa-banner');
+  if(banner) banner.style.background = firstGrad;
 }
-function aaSelectBg(el,grad){
-  el.closest('.aa-bg-gallery').querySelectorAll('.aa-bg-item').forEach(i=>i.classList.remove('selected'));
+function aaBgSelect(el, grad){
+  document.querySelectorAll('.bg-img-item').forEach(function(it){ it.classList.remove('selected'); });
   el.classList.add('selected');
-  const banner=document.getElementById('aa-banner');
-  if(banner) banner.style.background=grad;
+  el.querySelector('input[type=radio]').checked = true;
+  const banner = document.getElementById('aa-banner');
+  if(banner) banner.style.background = grad;
 }
-
 // ─── LOGO GALLERY ───
-const AA_LOGO_CATS = {
-  '棋牌':['🃏','♠️','♥️','♦️','♣️','🀄','🎴','🎰','🎲'],
-  '捕鱼':['🐟','🦈','🐠','🦑','🐙','🦀','🐡','🦞','🐚'],
-  '彩票':['🎟️','🏆','🎯','🍀','💰','💎','🎁','🎊','🎉'],
-  '体育':['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🏓','🥊'],
-  '视讯':['🎬','📺','🎥','📷','🔴','📡','🎞️','📽️','🎦'],
-  '老虎机':['🎰','🍒','🍋','🍊','🍇','⭐','💎','🔔','7️⃣'],
-  '活动':['🎪','🎠','🎡','🎢','🎭','🎨','🎶','🎤','🎸'],
-  '节日':['🎄','🎆','🎇','🧨','🎑','🎃','🎋','🎍','🎎'],
-  '礼物':['🎁','🎀','🛍️','💝','💌','🎊','🥳','🎈','🎉']
-};
 function aaLogoTab(el, cat){
   if(el){
     el.closest('.logo-cat-tabs').querySelectorAll('.logo-cat-tab').forEach(t=>t.classList.remove('active'));
     el.classList.add('active');
   }
-  const g = document.getElementById('aa-logo-gallery');
-  if(!g) return;
-  g.innerHTML='';
-  const icons = AA_LOGO_CATS[cat]||AA_LOGO_CATS['棋牌'];
-  icons.forEach(function(icon,i){
-    const item=document.createElement('div');
-    item.className='aa-logo-item';
-    item.textContent=icon;
-    item.onclick=function(){aaSelectLogo(this,icon);};
-    g.appendChild(item);
-  });
+  // Logo gallery is static HTML for 棋牌, other tabs show nothing
 }
-function aaSelectLogo(el,icon){
-  el.closest('.aa-logo-gallery').querySelectorAll('.aa-logo-item').forEach(i=>i.classList.remove('selected'));
+function aaLogoSelect(el, icon){
+  document.querySelectorAll('.logo-img-item').forEach(function(it){ it.classList.remove('selected'); });
   el.classList.add('selected');
-  const bl=document.getElementById('aa-banner-logo');
-  if(bl) bl.textContent=icon;
+  el.querySelector('input[type=radio]').checked = true;
+  const bl = document.getElementById('aa-banner-logo');
+  if(bl) bl.textContent = icon;
 }
 
 // ─── FIELD TOGGLES ───
@@ -2581,9 +2639,9 @@ function aaNameToggle(val){
   const inp=document.getElementById('aa-name-inp');
   if(!inp) return;
   if(val==='sys'){
-    inp.disabled=true; inp.style.background='#f5f5f5'; inp.placeholder='请输入活动名称';
+    inp.disabled=true; inp.style.background='#f5f5f5'; inp.value='神秘彩金活动';
   } else {
-    inp.disabled=false; inp.style.background='#fff';
+    inp.disabled=false; inp.style.background='#fff'; inp.value='';
   }
 }
 function aaTimeToggle(show){
@@ -2597,7 +2655,11 @@ function aaRuleToggle(val){
   document.getElementById('aa-rule-custom').style.display=val==='custom'?'block':'none';
 }
 function aaAllTier(checked){
-  document.querySelectorAll('.aa-tier-cb').forEach(cb=>cb.checked=checked);
+  const allCb = document.getElementById('aa-all-tier');
+  const fc = allCb && allCb.closest('.aa-fc');
+  if(fc) fc.querySelectorAll('input[type=checkbox]').forEach(function(cb){
+    if(cb !== allCb) cb.checked = checked;
+  });
 }
 function aaTypeChange(val){
   const isMystery=(val==='mystery');
@@ -2610,13 +2672,11 @@ function aaClaimToggle(val){
   const termSec = document.getElementById('aa-terminal-sec');
   const restSec = document.getElementById('aa-restrict-sec');
   if(val==='auto'){
-    if(termSec) termSec.style.opacity='0.45';
-    if(restSec) restSec.style.opacity='0.45';
-    if(termSec) termSec.style.pointerEvents='none';
-    if(restSec) restSec.style.pointerEvents='none';
+    if(termSec){ termSec.style.opacity='0.45'; termSec.style.pointerEvents='none'; termSec.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=false;}); }
+    if(restSec){ restSec.style.opacity='0.45'; restSec.style.pointerEvents='none'; }
   } else {
-    if(termSec) { termSec.style.opacity='1'; termSec.style.pointerEvents=''; }
-    if(restSec) { restSec.style.opacity='1'; restSec.style.pointerEvents=''; }
+    if(termSec){ termSec.style.opacity='1'; termSec.style.pointerEvents=''; termSec.querySelectorAll('input[type=checkbox]').forEach(function(cb){cb.checked=true;}); }
+    if(restSec){ restSec.style.opacity='1'; restSec.style.pointerEvents=''; }
   }
 }
 function aaExpireToggle(val){
@@ -2634,14 +2694,16 @@ function aaDetailPageToggle(val){
 function aaBgStyleToggle(val){
   const sys=document.getElementById('aa-bg-sys');
   const custom=document.getElementById('aa-bg-custom');
+  const logoSec=document.getElementById('aa-logo-section');
   if(sys) sys.style.display=(val==='sys')?'block':'none';
   if(custom) custom.style.display=(val==='custom')?'block':'none';
+  if(logoSec) logoSec.style.display=(val==='custom')?'none':'flex';
 }
 function aaLogoStyleToggle(val){
   const sys=document.getElementById('aa-logo-sys');
   const custom=document.getElementById('aa-logo-custom');
   if(sys) sys.style.display=(val==='sys')?'block':'none';
-  if(custom) custom.style.display=(val==='custom')?'block':'none';
+  if(custom) custom.style.display=(val==='custom')?'flex':'none';
 }
 function aaPlatToggle(val){
   const list=document.getElementById('aa-plat-list');
@@ -2664,13 +2726,31 @@ function aaOpenPreview(){
   document.getElementById('preview-overlay').classList.add('show');
   document.getElementById('preview-overlay').classList.remove('maximized');
 }
-function aaClosePreview(e){
-  if(e.target===document.getElementById('preview-overlay'))
-    document.getElementById('preview-overlay').classList.remove('show','maximized');
+function aaResetMaxBtn(){
+  const btn = document.getElementById('preview-max-btn');
+  if(!btn) return;
+  const tn = btn.childNodes[0];
+  if(tn) tn.textContent = '⤢';
+  const tip = btn.querySelector('.tip-box');
+  if(tip) tip.textContent = '最大化';
 }
-function aaToggleMaxPreview(e){
-  e.stopPropagation();
-  document.getElementById('preview-overlay').classList.toggle('maximized');
+function aaClosePreview(e){
+  if(e.target===document.getElementById('preview-overlay')){
+    document.getElementById('preview-overlay').classList.remove('show','maximized');
+    aaResetMaxBtn();
+  }
+}
+function aaToggleMaxPreview(){
+  const overlay = document.getElementById('preview-overlay');
+  const btn = document.getElementById('preview-max-btn');
+  overlay.classList.toggle('maximized');
+  const isMax = overlay.classList.contains('maximized');
+  if(btn){
+    const tn = btn.childNodes[0];
+    if(tn) tn.textContent = isMax ? '⤡' : '⤢';
+    const tip = btn.querySelector('.tip-box');
+    if(tip) tip.textContent = isMax ? '还原' : '最大化';
+  }
 }
 
 // ─── CALENDAR ───
