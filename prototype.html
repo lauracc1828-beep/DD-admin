@@ -1,0 +1,2750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panda - 推广渠道管理</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f0f2f5;color:#333;font-size:13px;display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR (dark, matches screenshot) ── */
+.sidebar{width:200px;background:#001529;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-box{width:32px;height:32px;background:#fa8c16;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;flex-shrink:0}
+.logo-text{color:#fff;font-size:16px;font-weight:700;letter-spacing:1px}
+.menu-group{}
+.menu-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;color:rgba(255,255,255,.65);font-size:13px;transition:all .2s;user-select:none}
+.menu-item:hover{color:#fff;background:rgba(255,255,255,.06)}
+.menu-item.open{color:#fff}
+.menu-item-left{display:flex;align-items:center;gap:8px}
+.menu-icon{font-size:14px;width:16px;text-align:center}
+.arrow{font-size:10px;color:rgba(255,255,255,.3);transition:transform .2s}
+.menu-item.open .arrow{transform:rotate(90deg)}
+.submenu{background:#000c17}
+.submenu-item{padding:10px 16px 10px 40px;cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;transition:all .2s}
+.submenu-item:hover{color:#fff;background:rgba(255,255,255,.04)}
+.submenu-item.active{color:#0961BD;background:rgba(9,97,189,.15);border-left:3px solid #0961BD}
+.submenu-item.disabled{color:rgba(255,255,255,.2);cursor:not-allowed}
+.submenu-item.disabled:hover{background:none;color:rgba(255,255,255,.2)}
+.sidebar-version{padding:10px 16px;font-size:11px;color:rgba(255,255,255,.25);margin-top:auto;border-top:1px solid rgba(255,255,255,.06)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:46px;background:#fff;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0}
+.breadcrumb{font-size:13px;color:#8c8c8c;display:flex;align-items:center;gap:4px}
+.breadcrumb .cur{color:#262626;font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:10px;font-size:12px;color:#595959}
+.br-flag{display:inline-flex;align-items:center;gap:4px}
+.content{flex:1;overflow-y:auto;padding:20px 20px 16px 20px}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.page-title{font-size:14px;font-weight:600;color:#262626}
+
+/* ── FILTER ── */
+.filter-area{background:#fff;padding:18px 20px 14px 20px;border-radius:6px;margin-bottom:10px;border:1px solid #f0f0f0}
+.filter-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:14px}
+.filter-row:last-child{margin-bottom:0}
+.filter-item{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.filter-label{color:#595959;font-size:13px}
+.f-select,.f-input{height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;color:#333;background:#fff;min-width:110px;outline:none;cursor:pointer}
+.f-select:focus,.f-input:focus{border-color:#0961BD;box-shadow:0 0 0 2px rgba(9,97,189,.1)}
+
+/* ── QUICK TAGS ── */
+.quick-filter{background:#fff;padding:12px 20px;border-radius:6px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid #f0f0f0}
+.qf-label{color:#595959;margin-right:4px;font-size:13px;white-space:nowrap}
+.tag{padding:3px 12px;border-radius:4px;border:1px solid #d9d9d9;cursor:pointer;font-size:13px;color:#595959;background:#fff;transition:all .15s;white-space:nowrap}
+.tag:hover{border-color:#0961BD;color:#0961BD}
+.tag.active{background:#0961BD;color:#fff;border-color:#0961BD}
+
+/* ── ACTION BAR ── */
+.action-bar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:12px}
+
+/* ── BUTTONS ── */
+.btn{height:32px;padding:0 16px;border-radius:4px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:all .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-family:inherit}
+.btn-blue{background:#0961BD;color:#fff;border-color:#0961BD}
+.btn-blue:hover{background:#2e7fd4;border-color:#2e7fd4}
+.btn-white{background:#fff;color:#595959;border-color:#d9d9d9}
+.btn-white:hover{border-color:#0961BD;color:#0961BD}
+.btn-query{background:#0961BD;color:#fff;border-color:#0961BD;height:32px;padding:0 20px}
+.btn-query:hover{background:#2e7fd4}
+.btn-sm{height:26px;padding:0 10px;font-size:12px}
+.btn-save{background:#0961BD;color:#fff;border-color:#0961BD;height:32px;padding:0 20px}
+
+/* ── TABLE ── */
+.table-wrap{background:#fff;border-radius:6px;border:1px solid #f0f0f0;overflow:hidden}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#fafafa;padding:11px 10px;text-align:left;font-weight:500;color:#595959;border-bottom:1px solid #f0f0f0;white-space:nowrap}
+td{padding:11px 10px;border-bottom:1px solid #f5f5f5;vertical-align:middle;color:#333}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f5f8ff}
+
+/* ── TOGGLE SWITCH (exact screenshot style) ── */
+.sw{position:relative;display:inline-flex;align-items:center;gap:5px}
+.sw-input{position:absolute;opacity:0;width:0;height:0}
+.sw-track{width:44px;height:22px;background:#d9d9d9;border-radius:11px;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0}
+.sw-track::after{content:'关闭';position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:10px;color:rgba(0,0,0,.45);transition:all .2s;white-space:nowrap}
+.sw-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:left .2s;z-index:1}
+.sw-input:checked ~ .sw-track{background:#0961BD}
+.sw-input:checked ~ .sw-track::after{content:'开启';color:#fff;right:auto;left:5px}
+.sw-input:checked ~ .sw-knob{left:24px}
+.sw-label{font-size:12px;color:#8c8c8c}
+.sw-input:checked ~ .sw-label-text{color:#0961BD}
+
+/* ── CHANNEL LINK ── */
+.ch-link{color:#52c41a;cursor:pointer;font-size:11px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:middle;text-decoration:none}
+.ch-link:hover{text-decoration:underline}
+.copy-icon{cursor:pointer;color:#0961BD;font-size:12px;margin-left:3px;opacity:.7}
+.copy-icon:hover{opacity:1}
+
+/* ── TABLE ACTIONS ── */
+.tbl-actions{display:flex;align-items:center;gap:5px}
+.act-btn{padding:1px 8px;border-radius:3px;font-size:11px;cursor:pointer;border:1px solid;background:#fff;transition:all .15s;white-space:nowrap}
+.act-edit{color:#0961BD;border-color:#0961BD}
+.act-edit:hover{background:#e6f7ff}
+.act-test{color:#0961BD;border-color:#0961BD}
+.act-test:hover{background:#e6f7ff}
+.act-event{color:#722ed1;border-color:#d3adf7}
+.act-event:hover{background:#f9f0ff}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#fff;border-top:1px solid #f0f0f0}
+.pg-info{color:#8c8c8c;font-size:12px}
+.pg-controls{display:flex;align-items:center;gap:5px}
+.pg-btn{width:28px;height:28px;border:1px solid #d9d9d9;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;background:#fff;color:#595959;transition:all .15s;user-select:none}
+.pg-btn:hover,.pg-btn.active{border-color:#0961BD;color:#0961BD}
+.pg-size{height:28px;border:1px solid #d9d9d9;border-radius:4px;padding:0 6px;font-size:12px;outline:none}
+.pg-jump{display:flex;align-items:center;gap:4px;font-size:12px;color:#595959;margin-left:6px}
+.pg-jump input{width:40px;height:28px;border:1px solid #d9d9d9;border-radius:4px;text-align:center;font-size:12px;outline:none}
+.pg-jump input:focus{border-color:#0961BD}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.18);max-height:90vh;overflow-y:auto;position:relative}
+.modal-sm{width:480px}
+.modal-md{width:560px}
+.modal-lg{width:760px}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:16px 28px 16px 28px;border-bottom:1px solid #f0f0f0}
+.mt{font-size:15px;font-weight:600;color:#262626}
+.mc{cursor:pointer;color:#8c8c8c;font-size:20px;line-height:1;padding:0 4px;border-radius:4px}
+.mc:hover{background:#f5f5f5;color:#333}
+.mb{padding:24px 32px 24px 28px}
+.mf{padding:20px 32px 20px 28px;border-top:1px solid #f0f0f0;display:flex;justify-content:center;gap:10px}
+
+/* ── FORM ── */
+.fi{display:flex;align-items:flex-start;margin-bottom:16px}
+.fl{width:148px;flex-shrink:0;text-align:right;padding-right:12px;line-height:32px;color:#595959;font-size:13px}
+.fl.req::before{content:'* ';color:#ff4d4f}
+.fc{flex:1;min-width:0}
+.fs,.fin{width:100%;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 12px;font-size:13px;color:#333;background:#fff;outline:none;font-family:inherit}
+.fs{padding-right:28px} /* extra space for dropdown arrow */
+.fs:focus,.fin:focus{border-color:#0961BD;box-shadow:0 0 0 2px rgba(9,97,189,.1)}
+.fs[disabled],.fin[disabled]{background:#f5f5f5;color:#bbb;cursor:not-allowed}
+.radio-g{display:flex;align-items:center;gap:14px;height:28px}
+.radio-item{display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px}
+.radio-item input{cursor:pointer;accent-color:#0961BD}
+.tab-g{display:inline-flex;border:1px solid #d9d9d9;border-radius:4px;overflow:hidden}
+.tab-b{padding:4px 18px;font-size:13px;cursor:pointer;background:#fff;color:#595959;border:none;transition:all .15s;font-family:inherit}
+.tab-b.active{background:#0961BD;color:#fff}
+.hint{font-size:11px;color:#ff4d4f;margin-top:3px}
+.note{font-size:11px;color:#8c8c8c;margin-top:3px}
+.cond{display:none}
+.cond.on{display:block}
+
+/* ── SUB-OVERLAY ── */
+.sub-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:1100;align-items:center;justify-content:center}
+.sub-overlay.show{display:flex}
+
+/* ── CHANNEL ROWS ── */
+.ch-row{display:grid;grid-template-columns:1.5fr 1fr 1.3fr 1.2fr 28px 28px;gap:5px;margin-bottom:6px;align-items:center}
+.ch-row .ri{height:28px;border:1px solid #d9d9d9;border-radius:4px;padding:0 7px;font-size:12px;outline:none}
+.ch-row .ri:focus{border-color:#0961BD}
+.ch-row .rs{height:28px;border:1px solid #d9d9d9;border-radius:4px;padding:0 5px;font-size:12px;outline:none;width:100%}
+.row-add{width:28px;height:28px;background:#0961BD;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.row-del{width:28px;height:28px;background:#ff7875;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* ── INNER TABLE ── */
+.in-table{width:100%;border-collapse:collapse;font-size:13px}
+.in-table th{background:#fafafa;padding:8px 12px;text-align:left;font-weight:500;color:#595959;border-bottom:1px solid #f0f0f0}
+.in-table td{padding:8px 12px;border-bottom:1px solid #f5f5f5}
+.in-table tr:last-child td{border-bottom:none}
+.in-table tr:hover td{background:#fafbff}
+.s-show{color:#52c41a}
+.s-hide{color:#ff4d4f}
+
+/* ── REPORT ── */
+.rpt-sec{background:#fff;border-radius:6px;margin-bottom:10px;border:1px solid #f0f0f0;overflow:hidden}
+.rpt-hd{background:#e6f7ff;padding:8px 16px;font-size:13px;font-weight:500;color:#0961BD;border-bottom:1px solid #bae7ff}
+.rpt-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.rpt-tbl th{background:#fafafa;padding:9px 12px;text-align:right;font-weight:500;color:#595959;border-bottom:1px solid #f0f0f0;white-space:nowrap}
+.rpt-tbl th:first-child,.rpt-tbl td:first-child{text-align:left}
+.rpt-tbl td{padding:9px 12px;text-align:right;color:#333;white-space:nowrap}
+.neg{color:#ff4d4f}
+.notice{font-size:12px;color:#ff4d4f;margin-bottom:10px}
+
+/* ── TOOLTIP ── */
+.tip{position:relative;display:inline-flex}
+.tip .tiptext{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:200}
+.tip:hover .tiptext{opacity:1}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:6px;font-size:13px;z-index:9999;display:none;pointer-events:none}
+.toast.show{display:block;animation:fadeio 2.2s forwards}
+.toast-ok{background:#333;color:#fff}
+.toast-err{background:#ff4d4f;color:#fff}
+@keyframes fadeio{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0}}
+
+/* ── INDENTED FORM ITEMS ── */
+.fi-title{display:flex;align-items:center;margin-bottom:12px;margin-top:4px}
+.fi-title-label{width:148px;flex-shrink:0;text-align:right;padding-right:12px;font-size:13px;font-weight:600;color:#333}
+.fi-sub{display:flex;align-items:flex-start;margin-bottom:16px;padding-left:32px}
+.fi-sub .fl{width:116px}
+.fi-sub-title{display:flex;align-items:center;margin-bottom:12px;margin-top:4px;padding-left:32px}
+.fi-sub-title-label{width:116px;flex-shrink:0;text-align:right;padding-right:12px;font-size:13px;font-weight:600;color:#595959}
+
+/* ── CASCADE SELECTOR ── */
+.cascade-wrap{position:relative;min-width:240px}
+.cascade-input{height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;color:#333;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-width:240px;user-select:none}
+.cascade-input:hover{border-color:#0961BD}
+.cascade-dropdown{display:none;position:absolute;top:36px;left:0;z-index:500;background:#fff;border:1px solid #d9d9d9;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.12);min-width:380px}
+.cascade-dropdown.open{display:flex}
+.cascade-col{overflow-y:auto;max-height:240px}
+.cascade-col-hd{padding:6px 12px;font-size:11px;color:#888;border-bottom:1px solid #f0f0f0;background:#fafafa;white-space:nowrap}
+.cascade-row{padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;white-space:nowrap}
+.cascade-row:hover{background:#f0f5ff}
+.cascade-row.active{background:#e6f4ff}
+.cascade-row input[type=checkbox]{accent-color:#0961BD;cursor:pointer;flex-shrink:0}
+
+/* ── EDIT ICON SVG ── */
+.edit-icon-svg{color:#0961BD;cursor:pointer;width:32px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #0961BD;border-radius:3px;background:#fff;transition:all .15s}
+.edit-icon-svg:hover{background:#e6f4ff}
+
+/* ── PLACEHOLDER COLOR ── */
+.fs::placeholder,.fin::placeholder,.f-select::placeholder,.f-input::placeholder{color:#bfbfbf}
+input::placeholder,textarea::placeholder{color:#bfbfbf}
+select.fs option:first-child{color:#bfbfbf}
+/* select placeholder via CSS trick */
+select.fs.ph{color:#bfbfbf}
+/* ── SECTION TITLE in form ── */
+.form-section-title{font-size:13px;font-weight:600;color:#333;margin-bottom:12px;margin-top:4px;padding-left:0}
+/* ── Indented sub-form fields ── */
+.sub-fi{display:flex;align-items:flex-start;margin-bottom:16px;padding-left:20px}
+.sub-fl{width:128px;flex-shrink:0;text-align:right;padding-right:12px;line-height:32px;color:#595959;font-size:13px}
+/* ── Mafia pkg sub modal ── */
+.pkg-select-wrap{position:relative}
+/* ── section divider ── */
+.sec-divider{height:1px;background:#f0f0f0;margin:8px 0 16px 0}
+
+/* ── WELFARE BADGE ── */
+.menu-badge{background:#ff4d4f;color:#fff;font-size:10px;border-radius:8px;padding:1px 5px;min-width:16px;text-align:center;margin-left:4px}
+/* ── SECONDARY TABS (activity-list) ── */
+.sec-tabs-bar{background:#fff;border-bottom:1px solid #f0f0f0;display:flex;padding:0 20px}
+.sec-tab{padding:10px 16px;font-size:13px;cursor:pointer;color:#595959;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.sec-tab:hover{color:#0961BD}
+.sec-tab.active{color:#0961BD;border-bottom-color:#0961BD;font-weight:500}
+/* ── PAGE TAB BAR ── */
+.page-tabs-bar{background:#fff;padding:0 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;margin-bottom:0}
+.page-tab-btn{padding:12px 0;font-size:14px;font-weight:600;color:#262626;cursor:pointer;border-bottom:2px solid #0961BD;margin-right:24px}
+/* ── TABLE ICON BUTTONS ── */
+.tbl-icon{width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;border:1px solid;font-size:13px;transition:all .15s}
+.tbl-icon-view{color:#0961BD;border-color:#c6d9f5;background:#f0f5ff}
+.tbl-icon-view:hover{background:#dceeff}
+.tbl-icon-edit{color:#0961BD;border-color:#c6d9f5;background:#f0f5ff}
+.tbl-icon-edit:hover{background:#dceeff}
+/* ── MODAL STICKY (增加活动) ── */
+.modal-flex{display:flex;flex-direction:column;max-height:88vh}
+.modal-flex .mh{flex-shrink:0;position:sticky;top:0;z-index:10;background:#fff}
+.modal-flex .modal-scroll{flex:1;overflow-y:auto}
+.modal-flex .mf{flex-shrink:0;position:sticky;bottom:0;z-index:10;background:#fff}
+/* ── DAY TABS ── */
+.day-tabs{display:flex;border-bottom:1px solid #e8e8e8;background:#fafafa;border-radius:4px 4px 0 0}
+.day-tab{padding:8px 20px;cursor:pointer;font-size:13px;color:#595959;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;background:#fafafa}
+.day-tab:hover{color:#0961BD}
+.day-tab.active{color:#0961BD;border-bottom-color:#0961BD;background:#fff;font-weight:500}
+.day-panel-area{border:1px solid #e8e8e8;border-top:none;border-radius:0 0 4px 4px;max-height:360px;overflow-y:auto;background:#fff}
+.aa-day-panel{display:none;padding:12px 14px}
+.aa-day-panel.active{display:block}
+/* ── TIER BLOCK ── */
+.aa-tier-block{border:1px solid #e8e8e8;border-radius:4px;margin-bottom:10px;overflow:hidden}
+.aa-tier-hd{background:#f5f7fa;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e8e8e8}
+.aa-tier-hd-name{font-size:13px;font-weight:500;color:#333}
+.aa-tier-hd-btns{display:flex;gap:4px}
+.aa-tier-btn{width:24px;height:24px;border-radius:4px;border:1px solid;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;background:#fff;line-height:1;font-family:inherit}
+.aa-tier-btn-del{border-color:#d9d9d9;color:#595959}
+.aa-tier-btn-del:hover{border-color:#ff4d4f;color:#ff4d4f}
+.aa-tier-btn-add{border-color:#0961BD;color:#0961BD}
+.aa-tier-btn-add:hover{background:#e6f0ff}
+.aa-tier-body{padding:10px 12px}
+.aa-tier-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;color:#595959}
+.aa-tier-label{width:90px;flex-shrink:0;font-size:13px;color:#595959}
+.aa-s-inp{height:28px;border:1px solid #d9d9d9;border-radius:4px;padding:0 8px;font-size:12px;outline:none;font-family:inherit}
+.aa-s-inp:focus{border-color:#0961BD}
+.aa-cond-hd{display:grid;grid-template-columns:90px 1fr 1fr 26px 26px;gap:6px;font-size:11px;color:#8c8c8c;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid #f0f0f0;align-items:center}
+.aa-cond-row{display:grid;grid-template-columns:90px 1fr 1fr 26px 26px;gap:6px;align-items:center;margin-bottom:6px}
+.aa-cond-del,.aa-cond-add{width:24px;height:24px;border-radius:4px;border:1px solid;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;background:#fff;line-height:1;font-family:inherit}
+.aa-cond-del{border-color:#d9d9d9;color:#595959}
+.aa-cond-del:hover{border-color:#ff4d4f;color:#ff4d4f;background:#fff1f0}
+.aa-cond-add{border-color:#0961BD;color:#0961BD}
+.aa-cond-add:hover{background:#e6f0ff}
+.aa-cond-range{display:flex;align-items:center;gap:4px}
+/* ── BG / LOGO GALLERY ── */
+.aa-bg-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.aa-bg-item{position:relative;cursor:pointer;border-radius:4px;overflow:hidden;width:90px;height:63px;flex-shrink:0}
+.aa-bg-item input[type=radio]{position:absolute;top:5px;left:5px;z-index:2;accent-color:#0961BD;cursor:pointer}
+.aa-bg-item .aa-bg-swatch{width:100%;height:100%;border-radius:4px}
+.aa-bg-item.selected .aa-bg-swatch{outline:2px solid #0961BD;outline-offset:1px}
+.aa-logo-gallery{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.aa-logo-item{position:relative;cursor:pointer;width:66px;height:66px;flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid #e8e8e8}
+.aa-logo-item input[type=radio]{position:absolute;top:3px;left:3px;z-index:2;accent-color:#0961BD;cursor:pointer}
+.aa-logo-item .aa-logo-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:26px;background:#f5f5f5}
+.aa-logo-item.selected{border-color:#0961BD}
+.logo-cat-tabs{display:flex;border-bottom:1px solid #e8e8e8;margin-bottom:10px;flex-wrap:wrap}
+.logo-cat-tab{padding:6px 14px;font-size:13px;cursor:pointer;color:#595959;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.logo-cat-tab:hover{color:#0961BD}
+.logo-cat-tab.active{color:#0961BD;border-bottom-color:#0961BD;font-weight:500}
+/* ── BANNER PREVIEW ── */
+.aa-banner{width:296px;height:168px;border-radius:8px;overflow:hidden;position:relative;display:flex;align-items:center;padding:16px 20px;gap:12px}
+.aa-banner-text{flex:1;z-index:1}
+.aa-banner-title{color:#fff;font-size:15px;font-weight:700;margin-bottom:6px;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.aa-banner-rules{color:rgba(255,255,255,.85);font-size:11px;line-height:2}
+.aa-banner-logo{width:80px;height:80px;flex-shrink:0;z-index:1;display:flex;align-items:center;justify-content:center;font-size:42px}
+/* ── AA FORM ROWS ── */
+.aa-fi{display:flex;align-items:flex-start;margin-bottom:14px}
+.aa-fl{width:148px;flex-shrink:0;text-align:right;padding-right:12px;line-height:32px;color:#595959;font-size:13px}
+.aa-fc{flex:1;min-width:0}
+.aa-info{color:#1890ff;font-size:12px;cursor:pointer;margin-left:4px;vertical-align:middle}
+
+
+/* ── tooltip (multiline hover) ── */
+.has-tip{position:relative;cursor:default;display:inline-flex;align-items:center}
+.has-tip .tip-box{display:none;position:absolute;left:24px;top:-4px;z-index:9999;background:#333;color:#fff;font-size:12px;line-height:1.7;padding:8px 12px;border-radius:6px;white-space:pre-wrap;min-width:220px;max-width:340px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.has-tip:hover .tip-box{display:block}
+/* ── date range picker style ── */
+.date-range-inp{display:inline-flex;align-items:center;border:1px solid #d9d9d9;border-radius:4px;padding:4px 10px;font-size:13px;background:#fff;gap:6px;cursor:pointer;color:rgba(0,0,0,.65);height:32px;box-sizing:border-box}
+.date-range-inp:hover{border-color:#4096ff}
+/* ── dual-month calendar overlay ── */
+.cal-overlay{display:none;position:fixed;inset:0;z-index:9000;background:transparent}
+.cal-overlay.show{display:flex;align-items:flex-start;justify-content:flex-start}
+.cal-popup{background:#fff;border:1px solid #e8e8e8;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.15);padding:16px;display:flex;gap:16px;position:absolute;z-index:9001}
+.cal-month{width:224px}
+.cal-month-hd{display:flex;align-items:center;justify-content:space-between;padding:4px 0 10px;font-size:13px;font-weight:500}
+.cal-nav{background:none;border:none;cursor:pointer;color:#595959;font-size:15px;padding:2px 6px;border-radius:4px}
+.cal-nav:hover{background:#f5f5f5}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-dow{font-size:11px;color:#8c8c8c;padding:4px 0}
+.cal-day{font-size:12px;padding:5px 0;border-radius:50%;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;margin:auto}
+.cal-day:hover{background:#e6f4ff;color:#1677ff}
+.cal-day.selected{background:#1677ff;color:#fff;border-radius:50%}
+.cal-day.in-range{background:#e6f4ff;border-radius:0}
+.cal-day.empty{cursor:default}
+/* ── platform tabs & list ── */
+.plat-tabs{display:flex;border-bottom:1px solid #f0f0f0;margin-bottom:8px}
+.plat-tab{padding:6px 14px;cursor:pointer;font-size:13px;color:#595959;border-bottom:2px solid transparent}
+.plat-tab.active{color:#0961BD;border-bottom-color:#0961BD}
+.plat-row{display:flex;align-items:center;padding:8px 12px;border:1px solid #f0f0f0;border-radius:4px;margin-bottom:4px;cursor:pointer;font-size:13px;gap:8px}
+.plat-row:hover{background:#f5f5f5}
+.plat-row-name{flex:1}
+.plat-row-cnt{color:#8c8c8c;font-size:12px;margin-right:4px}
+.plat-row-arr{color:#8c8c8c}
+/* ── disabled section overlay ── */
+.sec-disabled{opacity:.45;pointer-events:none}
+/* ── 查看活动 read-only ── */
+.aa-readonly select,.aa-readonly input,.aa-readonly textarea{background:#f5f5f5!important;color:rgba(0,0,0,.45)!important;pointer-events:none}
+.aa-readonly .radio-item input,.aa-readonly label{pointer-events:none}
+/* ── preview popup ── */
+.preview-overlay{display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.6);align-items:center;justify-content:center}
+.preview-overlay.show{display:flex}
+.preview-box{position:relative;display:flex;align-items:flex-start;justify-content:center}
+.preview-phone{width:320px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4);background:#1a0a3e}
+.preview-phone img{width:100%;display:block}
+.preview-ctrl{position:absolute;top:8px;right:8px;display:flex;gap:6px}
+.preview-ctrl-btn{width:28px;height:28px;border-radius:4px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.4);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.preview-ctrl-btn:hover{background:rgba(0,0,0,.7)}
+.preview-overlay.maximized .preview-box{width:100%;height:100%;justify-content:center;align-items:center}
+.preview-overlay.maximized .preview-phone{width:360px}
+/* ── upload area ── */
+.upload-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #d9d9d9;border-radius:4px;padding:5px 14px;cursor:pointer;font-size:13px;background:#fff;color:rgba(0,0,0,.88)}
+.upload-btn:hover{border-color:#4096ff;color:#1677ff}
+.upload-hint{font-size:12px;color:#ff4d4f;margin-top:4px}
+.upload-preview-box{margin-top:8px;border-radius:6px;overflow:hidden;width:330px;height:80px;background:linear-gradient(135deg,#0a2a6e,#1a5fa8 55%,#3ab8d8)}
+/* ── expire extra field ── */
+#aa-expire-days-wrap{display:none;align-items:center;gap:8px;margin-top:8px;font-size:13px}
+/* ── new member note ── */
+#aa-new-member-note{display:none;color:#ff4d4f;font-size:13px;margin-top:4px}
+/* ── tier section fixed height ── */
+.aa-tier-scroll{max-height:460px;overflow-y:auto;padding-right:4px}
+/* ── 领取条件 header ── */
+.aa-cond-hd{display:flex;align-items:center;justify-content:space-between;padding:4px 0 4px;font-size:12px;color:#595959;border-top:1px solid #f5f5f5;margin-top:6px}
+.aa-cond-add{font-size:12px;color:#0961BD;background:none;border:none;cursor:pointer;padding:2px 6px}
+.aa-cond-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:13px}
+.aa-cond-range{color:#8c8c8c;font-size:12px}
+.aa-cond-del{background:none;border:none;color:#ff4d4f;cursor:pointer;font-size:15px;padding:0 4px;line-height:1}
+/* ── tbl-icon close ── */
+.tbl-icon-close{color:#ff4d4f;border-color:#ffc6c6;background:#fff0f0}
+/* ── 展示时间 field ── */
+#aa-show-time-wrap{display:none;align-items:center;gap:8px;margin-top:8px;font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-box">P</div>
+    <span class="logo-text">Panda</span>
+  </div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🏠</span>平台概况</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">⚙️</span>系统管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🎮</span>商户游戏管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">👥</span>会员管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">💰</span>商户财务管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">📊</span>报表查询</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🤝</span>代理中心(无限极差)</div><span class="arrow">›</span></div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">💬</span>消息管理</div><span class="arrow">›</span></div>
+  <!-- 福利中心 -->
+  <div class="menu-item" id="menu-welfare" onclick="toggleMenu(this,'sub-welfare')"><div class="menu-item-left"><span class="menu-icon">🎁</span>福利中心</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-welfare" style="display:none">
+    <div class="submenu-item disabled">VIP管理</div>
+    <div class="submenu-item disabled">任务中心</div>
+    <div class="submenu-item disabled">兑换码</div>
+    <div class="submenu-item" id="si-activity-list" onclick="switchPage('activity-list',this)">活动列表</div>
+    <div class="submenu-item disabled">活动加倍记录</div>
+    <div class="submenu-item disabled">活动统计</div>
+    <div class="submenu-item disabled">优惠统计</div>
+  </div>
+  <!-- 运营相关 -->
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">📣</span>运营相关 <span class="menu-badge">6</span></div><span class="arrow">›</span></div>
+  <!-- 推广渠道管理 -->
+  <div class="menu-item open" id="menu-promo" onclick="toggleMenu(this,'promo-sub')"><div class="menu-item-left"><span class="menu-icon">📡</span>推广渠道管理</div><span class="arrow">›</span></div>
+  <div class="submenu" id="promo-sub" style="display:block">
+    <div class="submenu-item active" onclick="switchPage('channel',this)">推广渠道管理</div>
+    <div class="submenu-item disabled">仿应用商店</div>
+    <div class="submenu-item disabled">推广渠道报表</div>
+    <div class="submenu-item disabled">推广渠道报表新</div>
+    <div class="submenu-item" onclick="switchPage('effect',this)">推广效果报表</div>
+    <div class="submenu-item" onclick="switchPage('guide',this)">安装引导</div>
+  </div>
+  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🎯</span>子平台游戏管理</div><span class="arrow">›</span></div>
+  <div class="sidebar-version">V: 2026/06/18 14:29:18</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb" id="breadcrumb"><span id="bc-section">推广渠道管理</span> / <span class="cur" id="bc-text">推广渠道管理</span></div>
+    <div class="topbar-right">
+      <span>🇧🇷</span><span>巴西</span><span style="color:#d9d9d9">|</span><span>Etc/GMT+3</span><span>2026/06/04 07:18:30</span>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- PAGE: CHANNEL -->
+    <div id="pg-channel">
+      <div class="page-header">
+        <span class="page-title">渠道管理</span>
+        <button class="btn btn-white" onclick="toast('正在打开使用教程...')">使用教程</button>
+      </div>
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>762</option><option>763</option><option>764</option></select></div>
+          <div class="filter-item"><span class="filter-label">埋点类型：</span><select class="f-select"><option>全部</option><option>常规推广</option><option>facebook-click</option><option>tiktok-click-api</option><option>facebook-api</option><option>kwai-click</option></select></div>
+          <div class="filter-item"><span class="filter-label">推广渠道：</span><select class="f-select"><option>全部</option><option>短信1000</option><option>DALI 5</option><option>DA LI 4</option><option>FB-22</option><option>106-快手</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">安卓引导开关：</span><select class="f-select"><option>全部</option><option>开</option><option>关</option></select></div>
+          <div class="filter-item"><span class="filter-label">弹框时间点：</span><select class="f-select"><option>全部</option><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div>
+          <div class="filter-item"><span class="filter-label">弹框间隔：</span><select class="f-select"><option>全部</option><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div>
+          <div class="filter-item"><span class="filter-label">安装类型：</span><select class="f-select" style="min-width:160px"><option>全部</option><option>pwa(快速安装)</option><option>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div>
+          <button class="btn btn-query" onclick="renderTable()">查询</button>
+        </div>
+      </div>
+      <div class="quick-filter">
+        <span class="qf-label">快捷筛选：</span>
+        <span class="tag active" onclick="selTag(this)">全部</span>
+        <span class="tag" onclick="selTag(this)">短信1000</span>
+        <span class="tag" onclick="selTag(this)">DALI 5</span>
+        <span class="tag" onclick="selTag(this)">DA LI 4</span>
+        <span class="tag" onclick="selTag(this)">DA LI 3</span>
+        <span class="tag" onclick="selTag(this)">106-快手</span>
+        <span class="tag" onclick="selTag(this)">谷歌上架包</span>
+        <span class="tag" onclick="selTag(this)">短信</span>
+        <span class="tag" onclick="selTag(this)">103-FB分部</span>
+        <span class="tag" onclick="selTag(this)">FB-22</span>
+        <span class="tag" onclick="selTag(this)">DAYU 2</span>
+        <span class="tag" onclick="selTag(this)">DAYU 1</span>
+        <span class="tag" onclick="selTag(this)">DALI2</span>
+        <span class="tag" onclick="selTag(this)">dali</span>
+        <span class="tag" onclick="selTag(this)">FB/77</span>
+        <span class="tag" onclick="selTag(this)">fb私域推广</span>
+        <span class="tag" onclick="selTag(this)">KW</span>
+        <span class="tag" onclick="selTag(this)">FB-M</span>
+        <span class="tag" onclick="selTag(this)">新kwai-快手</span>
+        <span class="tag" onclick="selTag(this)">TK</span>
+        <span class="tag" onclick="selTag(this)">FB-66</span>
+        <span class="tag" onclick="selTag(this)">FB-33</span>
+        <span class="tag" onclick="selTag(this)">104</span>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-blue" onclick="openM('m-batch-replace')">批量替换</button>
+        <button class="btn btn-blue" onclick="openM('m-promoter')">新增推广商</button>
+        <button class="btn btn-blue" onclick="openNewChannel()">新增渠道</button>
+        <button class="btn btn-blue" onclick="openM('m-batch-add')">批量新增渠道</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>序号</th><th>渠道名称</th><th>地区</th><th>商户</th><th>推广商</th>
+              <th>渠道Id</th><th>埋点类型</th><th>渠道链接</th>
+              <th>安卓引导安装弹框</th><th>弹框时间点</th><th>弹框间隔</th>
+              <th>安装类型</th><th>安装方式</th><th>操作</th>
+            </tr></thead>
+            <tbody id="ch-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <div class="pg-info">共 <span id="pg-total">47</span> 条数据</div>
+          <div class="pg-controls">
+            <div class="pg-btn" onclick="toast('上一页')">‹</div>
+            <div class="pg-btn active">1</div>
+            <div class="pg-btn" onclick="toast('下一页')">›</div>
+            <select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select>
+            <div class="pg-jump">跳至<input type="number" min="1" onkeydown="if(event.key==='Enter')toast('已跳转至第'+this.value+'页')">页</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: EFFECT REPORT -->
+    <div id="pg-effect" style="display:none">
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>762</option></select></div>
+          <div class="filter-item" style="position:relative">
+            <span class="filter-label">推广渠道：</span>
+            <div id="ch-cascade-wrap" style="position:relative;min-width:200px">
+              <div id="ch-cascade-input" onclick="toggleCascade()" style="height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;color:#333;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-width:200px">
+                <span id="ch-cascade-label" style="color:#bfbfbf">请选择渠道</span>
+                <span style="color:#bbb;font-size:11px">▼</span>
+              </div>
+              <div id="ch-cascade-dropdown" style="display:none;position:absolute;top:36px;left:0;z-index:500;background:#fff;border:1px solid #d9d9d9;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.1);min-width:360px;display:none">
+                <div style="display:flex;max-height:260px">
+                  <div style="width:160px;border-right:1px solid #f0f0f0;overflow-y:auto" id="promoter-col">
+                    <div style="padding:8px 12px;font-size:11px;color:#888;border-bottom:1px solid #f0f0f0">推广商</div>
+                    <div class="cas-item" onclick="selPromoter(this,'官方渠道')" style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span><input type="checkbox" style="margin-right:6px;accent-color:#0961BD">官方渠道</span><span style="color:#bbb;font-size:11px">›</span></div>
+                    <div class="cas-item cas-active" onclick="selPromoter(this,'FB-22')" style="padding:8px 12px;font-size:13px;cursor:pointer;background:#e6f4ff;display:flex;align-items:center;justify-content:space-between"><span><input type="checkbox" checked style="margin-right:6px;accent-color:#0961BD">FB-22</span><span style="color:#0961BD;font-size:11px">›</span></div>
+                    <div class="cas-item" onclick="selPromoter(this,'103-FB分部')" style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span><input type="checkbox" style="margin-right:6px;accent-color:#0961BD">103-FB分部</span><span style="color:#bbb;font-size:11px">›</span></div>
+                    <div class="cas-item" onclick="selPromoter(this,'短信')" style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span><input type="checkbox" style="margin-right:6px;accent-color:#0961BD">短信</span><span style="color:#bbb;font-size:11px">›</span></div>
+                    <div class="cas-item" onclick="selPromoter(this,'104')" style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span><input type="checkbox" style="margin-right:6px;accent-color:#0961BD">104</span><span style="color:#bbb;font-size:11px">›</span></div>
+                    <div class="cas-item" onclick="selPromoter(this,'106-快手')" style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span><input type="checkbox" style="margin-right:6px;accent-color:#0961BD">106-快手</span><span style="color:#bbb;font-size:11px">›</span></div>
+                  </div>
+                  <div style="flex:1;overflow-y:auto" id="channel-col">
+                    <div style="padding:8px 12px;font-size:11px;color:#888;border-bottom:1px solid #f0f0f0">渠道</div>
+                    <div style="padding:8px 12px;font-size:13px;cursor:pointer;background:#e6f4ff;display:flex;align-items:center"><input type="checkbox" checked style="margin-right:6px;accent-color:#0961BD"> TK22-BR007</div>
+                    <div style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center"><input type="checkbox" style="margin-right:6px;accent-color:#0961BD"> FB-22-127B</div>
+                    <div style="padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center"><input type="checkbox" style="margin-right:6px;accent-color:#0961BD"> FB-22-128</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="filter-item" style="gap:4px"><input type="checkbox" id="ch-all-sel" onchange="selAllChannels(this)"><span class="filter-label">全选</span></div>
+          <div class="filter-item"><span class="filter-label">时间：</span><input type="date" class="f-select" id="eff-date-from" style="min-width:120px">—<input type="date" class="f-select" id="eff-date-to" style="min-width:120px"></div>
+          <button class="btn btn-query" onclick="renderTable()">查询</button>
+        </div>
+      </div>
+      <div class="quick-filter">
+        <span class="qf-label">快捷筛选：</span>
+        <span class="tag active" onclick="selTag(this)">全部</span>
+        <span class="tag" onclick="selTag(this)">短信1000</span>
+        <span class="tag" onclick="selTag(this)">DALI 5</span>
+        <span class="tag" onclick="selTag(this)">DA LI 4</span>
+        <span class="tag" onclick="selTag(this)">FB-22</span>
+        <span class="tag" onclick="selTag(this)">106-快手</span>
+      </div>
+      <p class="notice">*推广效果报表数据统计每10分钟更新一次</p>
+      <div class="rpt-sec">
+        <div class="rpt-hd">综合效果</div>
+        <div style="overflow-x:auto"><table class="rpt-tbl"><thead><tr><th>注册人数</th><th>首充人数</th><th>首充金额</th><th>充值人数</th><th>充值金额</th><th>提现人数</th><th>提现金额</th><th>充提差</th><th>提现手续费</th><th>投注人数</th><th>投注金额</th><th>有效投注</th><th>赠送金额</th></tr></thead>
+        <tbody><tr><td>21</td><td>17</td><td>315.00</td><td>563</td><td>22399.00</td><td>218</td><td>26587.00</td><td style="color:#ff4d4f">-4188.00</td><td>0.00</td><td>3809</td><td>219872.45</td><td>219929.44</td><td>9618.96</td></tr></tbody></table></div>
+      </div>
+      <div class="rpt-sec">
+        <div class="rpt-hd">直推效果</div>
+        <div style="overflow-x:auto"><table class="rpt-tbl"><thead><tr><th>注册人数</th><th>首充人数</th><th>首充金额</th><th>充值人数</th><th>充值金额</th><th>提现人数</th><th>提现金额</th><th>充提差</th><th>提现手续费</th><th>投注人数</th><th>投注金额</th><th>有效投注</th><th>赠送金额</th></tr></thead>
+        <tbody><tr><td>8</td><td>6</td><td>130.00</td><td>253</td><td>10485.00</td><td>103</td><td>12512.00</td><td style="color:#ff4d4f">-2027.00</td><td>0.00</td><td>1861</td><td>91241.34</td><td>91260.11</td><td>4442.46</td></tr></tbody></table></div>
+      </div>
+      <div class="rpt-sec">
+        <div class="rpt-hd">裂变效果</div>
+        <div style="overflow-x:auto"><table class="rpt-tbl"><thead><tr><th>注册人数</th><th>首充人数</th><th>首充金额</th><th>充值人数</th><th>充值金额</th><th>提现人数</th><th>提现金额</th><th>充提差</th><th>提现手续费</th><th>投注人数</th><th>投注金额</th><th>有效投注</th><th>赠送金额</th></tr></thead>
+        <tbody><tr><td>13</td><td>11</td><td>185.00</td><td>310</td><td>11914.00</td><td>115</td><td>14075.00</td><td style="color:#ff4d4f">-2161.00</td><td>0.00</td><td>1948</td><td>128631.11</td><td>128669.33</td><td>5176.50</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- PAGE: INSTALL GUIDE -->
+    <div id="pg-guide" style="display:none">
+      <div class="filter-area" style="margin-bottom:14px">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>762</option></select></div>
+          <button class="btn btn-query" onclick="loadGuideQuiet()">查询</button>
+        </div>
+      </div>
+      <div id="guide-form" style="display:block;background:#fff;padding:24px 32px;border-radius:6px;border:1px solid #f0f0f0;max-width:640px">
+        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option selected>显示</option></select></div></div>
+        <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="g-guide" onchange="gcond('g-guide-sub',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
+        <div id="g-guide-sub" class="cond">
+          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="g-popup" onchange="gcond('g-bonus-sub',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div id="g-bonus-sub" class="cond">
+            <div class="fi"><span class="fl req">显示赠送金额类型：</span><div class="fc"><select class="fs" id="g-bt" onchange="gbonus()"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc" id="g-ba"><input class="fin" placeholder="请输入金额"></div></div>
+          </div>
+          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option selected>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option selected>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+        </div>
+        <div class="fi"><span class="fl req">安卓安装类型：</span><div class="fc"><select class="fs" id="g-at" onchange="gcond('g-apk-sub',this.value.includes('apk'))"><option>pwa(快速安装)</option><option selected>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
+        <div id="g-apk-sub" class="cond on">
+          <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="g-apk-addr" value="https://upload-us.f-1-g-h.com/s4/6112906/kk" oninput="guideAddrChange()"></div></div>
+          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="g-apk-name" disabled value="kk678.bet_400165.apk"></div></div>
+          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
+        </div>
+        <div class="fi"><span class="fl req">苹果安装类型：</span><div class="fc"><select class="fs" id="g-ios-type" onchange="gcond('g-ios-store-fields',this.value==='苹果商店')"><option selected>保存桌面</option><option>苹果商店</option></select></div></div>
+        <div id="g-ios-store-fields" class="cond">
+          <div class="fi"><span class="fl req">上架包地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="g-ios-at" value="普通" checked onchange="gIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="g-ios-at" value="OneLink" onchange="gIosAddr(this.value)"> OneLink地址</label></div></div></div>
+          <div id="g-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+          <div id="g-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+        </div>
+        <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="g-gift" onchange="gcond('g-gift-sub',this.value!=='关闭')"><option selected>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+        <div id="g-gift-sub" class="cond">
+          <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+          <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        </div>
+        <div style="padding-left:140px"><button class="btn btn-save" onclick="toast('保存成功')">保存</button></div>
+      </div>
+
+
+    </div>
+    <!-- ══════════ PAGE: ACTIVITY LIST ══════════ -->
+    <div id="pg-activity-list" style="display:none">
+      <!-- Page tab -->
+      <div class="page-tabs-bar">
+        <div class="page-tab-btn">活动列表</div>
+      </div>
+      <!-- Secondary tabs -->
+      <div class="sec-tabs-bar">
+        <div class="sec-tab active" onclick="actSecTab(this,'al-main')">活动列表</div>
+        <div class="sec-tab" onclick="actSecTab(this,'al-pending')">待审核奖励记录</div>
+        <div class="sec-tab" onclick="actSecTab(this,'al-reviewed')">已审核奖励记录</div>
+      </div>
+
+      <!-- Main list -->
+      <div id="al-main" style="margin:0 0">
+        <!-- Top filter: 地区/商户/教程 -->
+        <div style="background:#fff;padding:10px 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:flex-end;gap:10px">
+          <div class="filter-item"><span class="filter-label">地区</span><select class="f-select" style="min-width:90px"><option>全部</option><option>BR</option><option>IN</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户</span><select class="f-select" style="min-width:110px"><option>全部商户</option><option>762</option></select></div>
+          <button class="btn btn-white">使用教程</button>
+        </div>
+        <!-- Search filter -->
+        <div style="background:#fff;padding:12px 20px;border-bottom:1px solid #f0f0f0">
+          <div class="filter-row" style="margin-bottom:0">
+            <div class="filter-item"><span class="filter-label">活动分类：</span><select class="f-select"><option>全部</option><option>综合</option><option>存款</option></select></div>
+            <div class="filter-item"><span class="filter-label">活动类型：</span><select class="f-select"><option>全部</option><option>神秘彩金</option><option>签到</option><option>救援金</option></select></div>
+            <div class="filter-item"><span class="filter-label">活动名称：</span><input class="f-input" placeholder="请输入" style="min-width:130px"></div>
+            <div class="filter-item"><span class="filter-label">活动状态：</span><select class="f-select"><option>全部</option><option>开启</option><option>关闭</option></select></div>
+            <button class="btn btn-white" style="margin-left:4px">重置</button>
+            <button class="btn btn-query">查询</button>
+          </div>
+        </div>
+        <!-- Actions -->
+        <div style="display:flex;justify-content:flex-end;gap:8px;padding:10px 20px;background:#fff;border-bottom:1px solid #f0f0f0">
+          <button class="btn btn-blue" onclick="openAddActivity()">新增</button>
+          <button class="btn btn-blue" onclick="">分类设置</button>
+        </div>
+        <!-- Table -->
+        <div style="background:#fff">
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr>
+                <th>序号</th><th>活动分类</th><th>活动类型</th><th>活动名称</th><th>活动状态</th>
+                <th>重置方式</th><th>派发方式</th><th>审核方式</th><th>参与人数</th>
+                <th>派发奖励数</th><th>派发奖励金额</th><th>已领取金额</th><th>未领取金额</th>
+                <th>显示排序</th><th>操作</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>1</td><td>综合</td><td>神秘彩金</td><td>神秘彩金活动</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>一次性</td><td>自动派发</td><td>系统(周期内)</td><td>128</td><td>94</td><td>3,240.00</td><td>2,960.00</td><td>280.00</td><td>1</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>2</td><td>综合</td><td>签到</td><td>每日签到</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>每日</td><td>自动派发</td><td>系统(周期内)</td><td>256</td><td>210</td><td>1,050.00</td><td>980.00</td><td>70.00</td><td>2</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>3</td><td>存款</td><td>首存礼</td><td>新会员首存礼</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>一次性</td><td>玩家申请</td><td>人工审核</td><td>72</td><td>68</td><td>8,160.00</td><td>8,000.00</td><td>160.00</td><td>3</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>4</td><td>存款</td><td>每日存款礼</td><td>每日存款彩金</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>每日</td><td>自动派发</td><td>系统(周期内)</td><td>0</td><td>0</td><td>0.00</td><td>0.00</td><td>0.00</td><td>4</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>5</td><td>综合</td><td>救援金</td><td>每周救援金</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>每周</td><td>玩家申请</td><td>系统(周期内)</td><td>44</td><td>38</td><td>1,900.00</td><td>1,750.00</td><td>150.00</td><td>5</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>6</td><td>综合</td><td>神秘彩金</td><td>周末神秘彩金</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>循环</td><td>自动派发</td><td>系统(周期内)</td><td>86</td><td>71</td><td>2,130.00</td><td>1,980.00</td><td>150.00</td><td>6</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>7</td><td>存款</td><td>周存款礼</td><td>VIP专属周存款礼</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>每周</td><td>自动派发</td><td>人工审核</td><td>0</td><td>0</td><td>0.00</td><td>0.00</td><td>0.00</td><td>7</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+                <tr><td>8</td><td>综合</td><td>注册礼</td><td>新会员注册礼</td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                  <td>一次性</td><td>自动派发</td><td>系统(过期时)</td><td>312</td><td>298</td><td>4,470.00</td><td>4,200.00</td><td>270.00</td><td>8</td>
+                  <td><div style="display:flex;gap:5px">
+                    <span class="tbl-icon tbl-icon-view" title="查看" onclick="openViewActivity(0)">👁</span>
+                    <span class="tbl-icon tbl-icon-edit" title="修改" onclick="openEditActivity(0)">✏️</span>
+                    <span class="tbl-icon tbl-icon-close" title="关闭活动" onclick="">⏻</span>
+                  </div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <div class="pg-info">共 8 条数据</div>
+            <div class="pg-controls">
+              <div class="pg-btn">‹</div>
+              <div class="pg-btn active">1</div>
+              <div class="pg-btn">›</div>
+              <select class="pg-size"><option>10条/页</option><option>20条/页</option><option>50条/页</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="al-pending" style="display:none;padding:40px 20px;text-align:center;color:#8c8c8c;background:#fff">暂无待审核奖励记录</div>
+      <div id="al-reviewed" style="display:none;padding:40px 20px;text-align:center;color:#8c8c8c;background:#fff">暂无已审核奖励记录</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ MODAL: 增加/修改活动 ══════════ -->
+<div class="overlay" id="m-add-activity">
+  <div class="modal modal-flex" style="width:1100px;border-radius:8px">
+    <div class="mh">
+      <span class="mt" id="aa-modal-title">增加活动</span>
+      <span class="mc" onclick="closeM('m-add-activity')">×</span>
+    </div>
+    <div class="modal-scroll" id="aa-modal-scroll">
+      <div style="padding:20px 40px 0 40px">
+
+        <!-- 活动分类 -->
+        <div class="aa-fi">
+          <span class="aa-fl">活动分类：</span>
+          <div class="aa-fc"><select class="fs" style="width:200px"><option>综合</option><option>存款</option><option>投注</option></select></div>
+        </div>
+        <!-- 活动类型 -->
+        <div class="aa-fi">
+          <span class="aa-fl">活动类型：</span>
+          <div class="aa-fc">
+            <select class="fs" id="aa-type" style="width:200px" onchange="aaTypeChange(this.value)">
+              <option value="">请选择</option>
+              <option value="mystery" selected>神秘彩金</option>
+            </select>
+          </div>
+        </div>
+        <!-- 活动名称 -->
+        <div class="aa-fi">
+          <span class="aa-fl">活动名称：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="aa-name-t" value="sys" checked onchange="aaNameToggle('sys')"> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="aa-name-t" value="custom" onchange="aaNameToggle('custom')"> 自定义</label>
+            </div>
+            <input class="fin" id="aa-name-inp" placeholder="请输入活动名称" style="width:100%;box-sizing:border-box;background:#f5f5f5" disabled>
+          </div>
+        </div>
+        <!-- 活动时间 -->
+        <div class="aa-fi">
+          <span class="aa-fl">活动时间：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-time" value="forever" checked onchange="aaTimeToggle(false)"> 永久</label>
+              <label class="radio-item"><input type="radio" name="aa-time" value="custom" onchange="aaTimeToggle(true)"> 自定义</label>
+            </div>
+            <div id="aa-time-range" style="display:none;margin-top:8px;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:13px;color:rgba(0,0,0,.88)">活动时间：</span>
+                <div class="date-range-inp" id="aa-date-range-btn" onclick="aaOpenCal()">
+                  <span id="aa-date-start" style="color:rgba(0,0,0,.45)">开始日期</span>
+                  <span style="color:#8c8c8c">→</span>
+                  <span id="aa-date-end" style="color:rgba(0,0,0,.45)">结束日期</span>
+                  <span style="color:#8c8c8c;font-size:15px;margin-left:4px">📅</span>
+                </div>
+              </div>
+              <div id="aa-show-time-wrap" style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                <span style="font-size:13px;color:rgba(0,0,0,.88)">展示时间：</span>
+                <div class="date-range-inp" onclick="aaOpenCal()">
+                  <span style="color:rgba(0,0,0,.45)">开始日期</span>
+                  <span style="color:#8c8c8c">→</span>
+                  <span style="color:rgba(0,0,0,.45)">结束日期</span>
+                  <span style="color:#8c8c8c;font-size:15px;margin-left:4px">📅</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 重置方式 -->
+        <div class="aa-fi">
+          <span class="aa-fl">重置方式：</span>
+          <div class="aa-fc">
+            <div id="aa-reset-mystery" class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-reset-m" checked> 一次性</label>
+              <label class="radio-item"><input type="radio" name="aa-reset-m"> 循环</label>
+              <span class="has-tip" style="margin-left:4px">ⓘ<span class="tip-box">一次性：一个会员只可以参与一次。周期长度为32天。
+循环：每32天一个周期，一个周期结束后自动进入下一个周期。</span></span>
+            </div>
+            <div id="aa-reset-normal" class="radio-g" style="display:none">
+              <label class="radio-item"><input type="radio" name="aa-reset-n" checked> 不重置</label>
+              <label class="radio-item"><input type="radio" name="aa-reset-n"> 每日</label>
+              <label class="radio-item"><input type="radio" name="aa-reset-n"> 每周</label>
+            </div>
+          </div>
+        </div>
+        <!-- 派发方式 -->
+        <div class="aa-fi">
+          <span class="aa-fl">派发方式：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-dist" checked> 自动派发</label>
+              <label class="radio-item" style="opacity:.4"><input type="radio" name="aa-dist" disabled> 玩家申请</label>
+            </div>
+          </div>
+        </div>
+        <!-- 审核方式 -->
+        <div class="aa-fi">
+          <span class="aa-fl">审核方式：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-audit" checked> 系统(周期内)</label>
+              <label class="radio-item" style="opacity:.4"><input type="radio" name="aa-audit" disabled> 系统(过期时)</label>
+              <label class="radio-item" style="opacity:.4"><input type="radio" name="aa-audit" disabled> 人工审核</label>
+            </div>
+          </div>
+        </div>
+        <!-- 派奖时间 -->
+        <div class="aa-fi">
+          <span class="aa-fl">派奖时间：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-prize-t" checked> 立即到账</label>
+              <label class="radio-item" style="opacity:.4"><input type="radio" name="aa-prize-t" disabled> 延迟到账</label>
+            </div>
+          </div>
+        </div>
+        <!-- 领取方式 -->
+        <div class="aa-fi">
+          <span class="aa-fl">领取方式：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-claim" id="aa-claim-auto" value="auto" checked onchange="aaClaimToggle('auto')"> 自动领取</label>
+              <label class="radio-item"><input type="radio" name="aa-claim" id="aa-claim-manual" value="manual" onchange="aaClaimToggle('manual')"> 手动领取</label>
+            </div>
+          </div>
+        </div>
+        <!-- 奖励作废 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">奖励作废：<span class="has-tip" style="margin-left:2px">ⓘ<span class="tip-box">过期自动派发：奖励领取过期后，系统自动将奖励派发给会员。
+过期作废：奖励领取过期后，奖励自动作废，不予补发。
+奖励保留天数自动派发：会员领取后在保留天数内未完成，超过天数后自动派发奖励。
+奖励保留天数作废：会员领取后在保留天数内未完成，超过天数后奖励自动作废。</span></span></span>
+          <div class="aa-fc">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px">
+              <label class="radio-item"><input type="radio" name="aa-expire" value="1" onchange="aaExpireToggle(this.value)"> 过期自动派发</label>
+              <label class="radio-item"><input type="radio" name="aa-expire" value="2" checked onchange="aaExpireToggle(this.value)"> 过期作废</label>
+              <label class="radio-item"><input type="radio" name="aa-expire" value="3" onchange="aaExpireToggle(this.value)"> 奖励保留天数自动派发</label>
+              <label class="radio-item"><input type="radio" name="aa-expire" value="4" onchange="aaExpireToggle(this.value)"> 奖励保留天数作废</label>
+            </div>
+            <div id="aa-expire-days-wrap" style="display:none;align-items:center;gap:8px;margin-top:8px;font-size:13px">
+              <span style="color:rgba(0,0,0,.88)">奖励领取过期天数：</span>
+              <input class="fin" type="number" value="0" style="width:80px">
+            </div>
+          </div>
+        </div>
+        <!-- 稽核倍数 -->
+        <div class="aa-fi">
+          <span class="aa-fl">稽核倍数：</span>
+          <div class="aa-fc" style="display:flex;align-items:center;gap:6px">
+            <input class="fin" type="number" id="aa-audit-mult" value="1" style="width:100px" disabled>
+          </div>
+        </div>
+        <!-- 参与条件 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">参与条件：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:6px">
+              <label class="radio-item"><input type="radio" name="aa-participant" value="all" checked onchange="aaParticipantToggle('all')"> 全部会员</label>
+              <label class="radio-item"><input type="radio" name="aa-participant" value="new" onchange="aaParticipantToggle('new')"> 新注册会员(活动时间内注册玩家)</label>
+            </div>
+            <div id="aa-new-member-note" style="display:none;color:#ff4d4f;font-size:13px;margin-bottom:8px">备注：新会员以注册时间自动报名参加活动。</div>
+            <!-- Day tabs (fixed) -->
+            <div class="day-tabs">
+              <div class="day-tab active" onclick="aaDaySwitch(this,0)">第2日</div>
+              <div class="day-tab" onclick="aaDaySwitch(this,1)">第3日</div>
+              <div class="day-tab" onclick="aaDaySwitch(this,2)">第7日</div>
+              <div class="day-tab" onclick="aaDaySwitch(this,3)">第15日</div>
+              <div class="day-tab" onclick="aaDaySwitch(this,4)">第30日</div>
+            </div>
+            <!-- Day panels with fixed height scroll -->
+            <div class="aa-tier-scroll">
+              <div id="aa-day-0" class="aa-day-panel active"></div>
+              <div id="aa-day-1" class="aa-day-panel"></div>
+              <div id="aa-day-2" class="aa-day-panel"></div>
+              <div id="aa-day-3" class="aa-day-panel"></div>
+              <div id="aa-day-4" class="aa-day-panel"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 申领终端 -->
+        <div class="aa-fi" id="aa-terminal-sec" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">申领终端：</span>
+          <div class="aa-fc">
+            <div style="display:flex;flex-wrap:wrap;gap:14px;row-gap:10px">
+              <label class="radio-item"><input type="checkbox" checked> 苹果H5</label>
+              <label class="radio-item"><input type="checkbox" checked> 安卓H5</label>
+              <label class="radio-item"><input type="checkbox" checked> PWA</label>
+              <label class="radio-item"><input type="checkbox" checked> APK</label>
+              <label class="radio-item"><input type="checkbox" checked> 苹果包</label>
+              <label class="radio-item"><input type="checkbox" checked> 苹果书签</label>
+              <label class="radio-item"><input type="checkbox" checked> APK上架包</label>
+              <label class="radio-item"><input type="checkbox" checked> 电脑系统</label>
+            </div>
+          </div>
+        </div>
+        <!-- 申领限制 -->
+        <div class="aa-fi" id="aa-restrict-sec" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">申领限制：</span>
+          <div class="aa-fc">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px;margin-bottom:10px">
+              <label class="radio-item"><input type="checkbox"> 绑定收款方式 <span class="has-tip">ⓘ<span class="tip-box">您号需绑定收款方式，才能领取奖励</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 完成首充可申领 <span class="has-tip">ⓘ<span class="tip-box">您号需完成首充充值，才能领取奖励</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 同姓名只能申领1次 <span class="has-tip">ⓘ<span class="tip-box">若不同账号使用相同真实姓名，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 同登录IP只能申领1次 <span class="has-tip">ⓘ<span class="tip-box">若不同账号登录时的IP相同，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
+              <label class="radio-item"><input type="checkbox"> 同注册IP只能申领1次 <span class="has-tip">ⓘ<span class="tip-box">若不同账号注册时的IP相同，某个账号领取奖励后，其他账号也在同一活动中无法领取</span></span></label>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px">
+              <input type="checkbox">
+              <span>最近</span>
+              <input class="aa-s-inp" style="width:64px" placeholder="1-90">
+              <span>天内充值次数 ≥</span>
+              <input class="aa-s-inp" style="width:90px" placeholder="1-999999">
+              <span>次才能申领</span>
+              <span class="has-tip">ⓘ<span class="tip-box">领奖当日前N天(含当天)内N次充值，才能领取奖励。</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:13px">
+              <input type="checkbox">
+              <span>最近</span>
+              <input class="aa-s-inp" style="width:64px" placeholder="1-90">
+              <span>天内充值金额 ≥</span>
+              <input class="aa-s-inp" style="width:110px" placeholder="填0表示不限制">
+              <span>才能申领</span>
+              <span class="has-tip">ⓘ<span class="tip-box">领奖当日前N天(含当天)累计充值金额满N元，才能领取奖励。</span></span>
+            </div>
+          </div>
+        </div>
+        <!-- 稽核限定平台 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">稽核限定平台：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:10px">
+              <label class="radio-item"><input type="radio" name="aa-plat" value="all" checked onchange="aaPlatToggle('all')"> 不限制</label>
+              <label class="radio-item"><input type="radio" name="aa-plat" value="limited" onchange="aaPlatToggle('limited')"> 仅限以下平台</label>
+            </div>
+            <div id="aa-plat-list" style="display:none">
+              <div class="plat-tabs">
+                <div class="plat-tab active" onclick="aaPlatTab(this,'electronic')">电子 <span id="plat-cnt-e">(0)</span></div>
+                <div class="plat-tab" onclick="aaPlatTab(this,'sports')">体育 <span id="plat-cnt-s">(0)</span></div>
+              </div>
+              <div id="plat-panel-e">
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:4px;font-size:13px;border-bottom:1px solid #f0f0f0">
+                  <input type="checkbox" id="plat-all-e" onchange="aaPlatCheckAll('e',this.checked)"> <label for="plat-all-e" style="cursor:pointer">全部平台</label>
+                </div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">FaChai</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">PLAYNGO</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">TOPPLAYER</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">PANDA</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">FASTSPIN</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">inout</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">RUBYPLAY</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+                <div class="plat-row"><input type="checkbox" class="plat-cb-e"> <span class="plat-row-name">PLAYSON</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+              </div>
+              <div id="plat-panel-s" style="display:none">
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:4px;font-size:13px;border-bottom:1px solid #f0f0f0">
+                  <input type="checkbox"> <span>全部平台</span>
+                </div>
+                <div style="padding:20px;text-align:center;color:#8c8c8c;font-size:13px">暂无体育平台</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 参与层级 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">参与层级：</span>
+          <div class="aa-fc">
+            <div style="margin-bottom:8px"><label class="radio-item"><input type="checkbox" id="aa-all-tier" onchange="aaAllTier(this.checked)"> 全部层级</label></div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;row-gap:6px">
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 默认层级</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 10雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 20雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 50雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 100雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 200雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 500雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 1000雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 5000雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 10000雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 50000雷</label>
+              <label class="radio-item"><input type="checkbox" class="aa-tier-cb"> 刷子套利</label>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+              <label class="radio-item"><input type="checkbox"> 不出款</label>
+              <label class="radio-item"><input type="checkbox"> 测试账号</label>
+              <label class="radio-item"><input type="checkbox"> 无宝箱层级</label>
+              <label class="radio-item"><input type="checkbox"> 无佣金</label>
+            </div>
+          </div>
+        </div>
+        <!-- 规则说明 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">规则说明：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="aa-rule" checked onchange="aaRuleToggle('sys')"> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="aa-rule" onchange="aaRuleToggle('custom')"> 自定义</label>
+            </div>
+            <div id="aa-rule-sys" style="background:#f8f8f8;border-radius:4px;padding:12px 14px;font-size:12px;color:#595959;line-height:2;border:1px solid #f0f0f0">
+              <div>1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；</div>
+              <div>2. 活动于报名后第32天结束，彩金自动领取，过期后彩金将作废；</div>
+              <div>3. 彩金（不含本金）需要1倍有效投注才能提现；</div>
+              <div>4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；</div>
+              <div>5. 为避免文字理解差异，平台将保留本活动最终解释权。</div>
+            </div>
+            <textarea id="aa-rule-custom" class="fin" placeholder="请输入" style="display:none;width:100%;height:140px;resize:vertical;padding:8px;line-height:1.8;font-size:13px;box-sizing:border-box"></textarea>
+          </div>
+        </div>
+        <!-- 显示排序 -->
+        <div class="aa-fi">
+          <span class="aa-fl">显示排序：</span>
+          <div class="aa-fc"><input class="fin" type="number" value="1" style="width:100px"></div>
+        </div>
+        <!-- 活动详情页选择 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">活动详情页选择：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="aa-page-style" value="skin" checked onchange="aaDetailPageToggle('skin')"> 跟随皮肤</label>
+              <label class="radio-item"><input type="radio" name="aa-page-style" value="style1" onchange="aaDetailPageToggle('style1')"> 样式一</label>
+            </div>
+            <div id="aa-preview-btn-wrap" style="display:none;margin-top:8px">
+              <button class="btn btn-blue" style="font-size:13px;height:32px;padding:0 16px" onclick="aaOpenPreview()">预览样式</button>
+            </div>
+          </div>
+        </div>
+        <!-- 背景样式 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">背景样式：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:10px">
+              <label class="radio-item"><input type="radio" name="aa-bg-style" value="sys" checked onchange="aaBgStyleToggle('sys')"> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="aa-bg-style" value="custom" onchange="aaBgStyleToggle('custom')"> 自定义</label>
+            </div>
+            <!-- 系统默认内容 -->
+            <div id="aa-bg-sys">
+              <div style="font-size:13px;color:#0961BD;margin-bottom:8px;cursor:pointer">默认背景</div>
+              <div class="aa-bg-gallery" id="aa-bg-gallery"></div>
+            </div>
+            <!-- 自定义上传 -->
+            <div id="aa-bg-custom" style="display:none">
+              <label class="upload-btn"><span>⬆ 上传图片</span></label>
+              <div class="upload-hint">支持JPG/PNG/SVG格式的图片 (建议尺寸: 660 x 220)</div>
+              <div class="upload-preview-box" id="aa-bg-preview" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+        <!-- LOGO样式 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">LOGO样式：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:10px">
+              <label class="radio-item"><input type="radio" name="aa-logo-style" value="sys" checked onchange="aaLogoStyleToggle('sys')"> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="aa-logo-style" value="custom" onchange="aaLogoStyleToggle('custom')"> 自定义</label>
+            </div>
+            <!-- 系统默认：logo tabs gallery -->
+            <div id="aa-logo-sys">
+              <div class="logo-cat-tabs">
+                <div class="logo-cat-tab active" onclick="aaLogoTab(this,'棋牌')">棋牌</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'捕鱼')">捕鱼</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'彩票')">彩票</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'体育')">体育</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'视讯')">视讯</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'老虎机')">老虎机</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'活动')">活动</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'节日')">节日</div>
+                <div class="logo-cat-tab" onclick="aaLogoTab(this,'礼物')">礼物</div>
+              </div>
+              <div id="aa-logo-gallery" class="aa-logo-gallery"></div>
+            </div>
+            <!-- 自定义上传 -->
+            <div id="aa-logo-custom" style="display:none">
+              <label class="upload-btn"><span>⬆ 上传图片</span></label>
+              <div class="upload-hint">支持JPG/PNG/SVG格式的图片 (建议尺寸: 300 x 300)</div>
+            </div>
+          </div>
+        </div>
+        <!-- 宣传图预览 -->
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">宣传图预览：</span>
+          <div class="aa-fc">
+            <div class="aa-banner" id="aa-banner" style="background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)">
+              <div class="aa-banner-text">
+                <div class="aa-banner-title" id="aa-banner-title">神秘彩金活动</div>
+                <div class="aa-banner-rules">
+                  <div>1. 最高奖励 8,888...</div>
+                  <div>2. 一次性</div>
+                  <div>3. 过期作废</div>
+                </div>
+              </div>
+              <div class="aa-banner-logo" id="aa-banner-logo">🃏</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:24px"></div>
+      </div><!-- /inner padding -->
+    </div><!-- /modal-scroll -->
+    <div class="mf">
+      <button class="btn btn-blue" style="width:120px;height:36px;font-size:14px" onclick="closeM('m-add-activity');toast('保存成功')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL: 查看活动 ══════════ -->
+<div class="overlay" id="m-view-activity">
+  <div class="modal modal-flex aa-readonly" style="width:1100px;border-radius:8px">
+    <div class="mh">
+      <span class="mt">查看活动</span>
+      <span class="mc" onclick="closeM('m-view-activity')">×</span>
+    </div>
+    <div class="modal-scroll">
+      <div style="padding:20px 40px 0 40px">
+        <div class="aa-fi">
+          <span class="aa-fl">活动分类：</span>
+          <div class="aa-fc"><select class="fs" style="width:200px" disabled><option>综合</option></select></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">活动类型：</span>
+          <div class="aa-fc"><select class="fs" style="width:200px" disabled><option>神秘彩金</option></select></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">活动名称：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="va-name-t" checked disabled> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="va-name-t" disabled> 自定义</label>
+            </div>
+            <input class="fin" value="神秘彩金活动" style="width:100%;box-sizing:border-box;background:#f5f5f5" readonly>
+          </div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">活动时间：</span>
+          <div class="aa-fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="va-time" checked disabled> 永久</label>
+              <label class="radio-item"><input type="radio" name="va-time" disabled> 自定义</label>
+            </div>
+          </div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">重置方式：</span>
+          <div class="aa-fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="va-reset" disabled> 一次性</label>
+            <label class="radio-item"><input type="radio" name="va-reset" checked disabled> 循环</label>
+          </div></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">派发方式：</span>
+          <div class="aa-fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="va-dist" checked disabled> 自动派发</label>
+            <label class="radio-item"><input type="radio" name="va-dist" disabled> 玩家申请</label>
+          </div></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">审核方式：</span>
+          <div class="aa-fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="va-audit" checked disabled> 系统(周期内)</label>
+            <label class="radio-item"><input type="radio" name="va-audit" disabled> 系统(过期时)</label>
+            <label class="radio-item"><input type="radio" name="va-audit" disabled> 人工审核</label>
+          </div></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">派奖时间：</span>
+          <div class="aa-fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="va-prize" checked disabled> 立即到账</label>
+            <label class="radio-item"><input type="radio" name="va-prize" disabled> 延迟到账</label>
+          </div></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">领取方式：</span>
+          <div class="aa-fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="va-claim" disabled> 自动领取</label>
+            <label class="radio-item"><input type="radio" name="va-claim" checked disabled> 手动领取</label>
+          </div></div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">奖励作废：</span>
+          <div class="aa-fc"><div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px">
+            <label class="radio-item"><input type="radio" name="va-expire" disabled> 过期自动派发</label>
+            <label class="radio-item"><input type="radio" name="va-expire" checked disabled> 过期作废</label>
+            <label class="radio-item"><input type="radio" name="va-expire" disabled> 奖励保留天数自动派发</label>
+            <label class="radio-item"><input type="radio" name="va-expire" disabled> 奖励保留天数作废</label>
+          </div></div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">稽核倍数：</span>
+          <div class="aa-fc"><input class="fin" type="number" value="1" style="width:100px" readonly></div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">参与条件：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="va-participant" checked disabled> 全部会员</label>
+              <label class="radio-item"><input type="radio" name="va-participant" disabled> 新注册会员(活动时间内注册玩家)</label>
+            </div>
+            <div class="day-tabs">
+              <div class="day-tab active">第2日</div><div class="day-tab">第3日</div>
+              <div class="day-tab">第7日</div><div class="day-tab">第15日</div><div class="day-tab">第30日</div>
+            </div>
+            <div class="aa-tier-scroll" id="va-tier-area">
+              <!-- tiers rendered by JS -->
+            </div>
+          </div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">申领终端：</span>
+          <div class="aa-fc"><div style="display:flex;flex-wrap:wrap;gap:14px;row-gap:10px">
+            <label class="radio-item"><input type="checkbox" checked disabled> 苹果H5</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> 安卓H5</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> PWA</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> APK</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> 苹果包</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> 苹果书签</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> APK上架包</label>
+            <label class="radio-item"><input type="checkbox" checked disabled> 电脑系统</label>
+          </div></div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">申领限制：</span>
+          <div class="aa-fc"><div style="display:flex;flex-wrap:wrap;gap:12px;row-gap:8px">
+            <label class="radio-item"><input type="checkbox" disabled> 绑定收款方式</label>
+            <label class="radio-item"><input type="checkbox" disabled> 完成首充可申领</label>
+            <label class="radio-item"><input type="checkbox" disabled> 同姓名只能申领1次</label>
+            <label class="radio-item"><input type="checkbox" disabled> 同登录IP只能申领1次</label>
+            <label class="radio-item"><input type="checkbox" disabled> 同注册IP只能申领1次</label>
+          </div></div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">稽核限定平台：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="va-plat" disabled> 不限制</label>
+              <label class="radio-item"><input type="radio" name="va-plat" checked disabled> 仅限以下平台</label>
+            </div>
+            <div class="plat-tabs">
+              <div class="plat-tab active">电子 (16)</div>
+              <div class="plat-tab">体育 (0)</div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 0;margin-bottom:4px;font-size:13px;border-bottom:1px solid #f0f0f0">
+                <input type="checkbox" checked disabled> <span>全部平台</span>
+              </div>
+              <div class="plat-row"><input type="checkbox" checked disabled> <span class="plat-row-name">FaChai</span> <span class="plat-row-cnt">已选 50 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" checked disabled> <span class="plat-row-name">PLAYNGO</span> <span class="plat-row-cnt">已选 10 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" checked disabled> <span class="plat-row-name">TOPPLAYER</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" checked disabled> <span class="plat-row-name">PANDA</span> <span class="plat-row-cnt">已选 64 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" checked disabled> <span class="plat-row-name">FASTSPIN</span> <span class="plat-row-cnt">已选 134 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" disabled> <span class="plat-row-name">inout</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" disabled> <span class="plat-row-name">RUBYPLAY</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+              <div class="plat-row"><input type="checkbox" disabled> <span class="plat-row-name">PLAYSON</span> <span class="plat-row-cnt">已选 0 个游戏</span><span class="plat-row-arr">›</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">参与层级：</span>
+          <div class="aa-fc">
+            <div style="display:flex;flex-wrap:wrap;gap:10px;row-gap:6px">
+              <label class="radio-item"><input type="checkbox" checked disabled> 默认层级</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 10雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 20雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 50雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 100雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 200雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 500雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 1000雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 5000雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 10000雷</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 50000雷</label>
+              <label class="radio-item"><input type="checkbox" disabled> 刷子套利</label>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+              <label class="radio-item"><input type="checkbox" disabled> 不出款</label>
+              <label class="radio-item"><input type="checkbox" disabled> 测试账号</label>
+              <label class="radio-item"><input type="checkbox" checked disabled> 无宝箱层级</label>
+              <label class="radio-item"><input type="checkbox" disabled> 无佣金</label>
+            </div>
+          </div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">规则说明：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="va-rule" checked disabled> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="va-rule" disabled> 自定义</label>
+            </div>
+            <div style="background:#f8f8f8;border-radius:4px;padding:12px 14px;font-size:12px;color:#595959;line-height:2;border:1px solid #f0f0f0">
+              <div>1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；</div>
+              <div>2. 活动于报名后第32天结束，彩金自动领取，过期后彩金将作废；</div>
+              <div>3. 彩金（不含本金）需要1倍有效投注才能提现；</div>
+              <div>4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；</div>
+              <div>5. 为避免文字理解差异，平台将保留本活动最终解释权。</div>
+            </div>
+          </div>
+        </div>
+        <div class="aa-fi">
+          <span class="aa-fl">显示排序：</span>
+          <div class="aa-fc"><input class="fin" type="number" value="1" style="width:100px" readonly></div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">活动详情页选择：</span>
+          <div class="aa-fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="va-page" checked disabled> 跟随皮肤</label>
+            <label class="radio-item"><input type="radio" name="va-page" disabled> 样式一</label>
+          </div></div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">背景样式：</span>
+          <div class="aa-fc">
+            <div class="radio-g" style="margin-bottom:8px">
+              <label class="radio-item"><input type="radio" name="va-bg" disabled> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="va-bg" checked disabled> 自定义</label>
+            </div>
+            <label class="upload-btn" style="pointer-events:none"><span>⬆ 上传图片</span></label>
+            <div class="upload-hint">支持JPG/PNG/SVG格式的图片 (建议尺寸: 660 x 220)</div>
+            <div style="margin-top:8px;border-radius:6px;overflow:hidden;width:330px;height:80px;background:linear-gradient(135deg,#5a0ea0,#e07020)"></div>
+          </div>
+        </div>
+        <div class="aa-fi" style="align-items:flex-start">
+          <span class="aa-fl" style="padding-top:6px">宣传图预览：</span>
+          <div class="aa-fc">
+            <div class="aa-banner" style="background:linear-gradient(135deg,#5a0ea0,#1a5fa8 55%,#e07020)">
+              <div class="aa-banner-text">
+                <div class="aa-banner-title">神秘彩金活动</div>
+                <div class="aa-banner-rules"><div>1. 最高奖励 8,888...</div><div>2. 过期作废</div></div>
+              </div>
+              <div class="aa-banner-logo">🃏</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:24px"></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-white" style="width:120px;height:36px;font-size:14px" onclick="closeM('m-view-activity')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PREVIEW POPUP ══════════ -->
+<div class="preview-overlay" id="preview-overlay" onclick="aaClosePreview(event)">
+  <div class="preview-box">
+    <div class="preview-ctrl">
+      <div class="preview-ctrl-btn" onclick="aaToggleMaxPreview(event)" title="最大化/还原">⊞</div>
+      <div class="preview-ctrl-btn" onclick="document.getElementById('preview-overlay').classList.remove('show','maximized')" title="关闭">✕</div>
+    </div>
+    <div class="preview-phone">
+      <div style="background:linear-gradient(180deg,#2a0a5e 0%,#1a0a3e 100%);padding:16px 12px;font-family:sans-serif">
+        <div style="text-align:center;padding:8px 0 4px;font-size:11px;color:#c9b7ff;font-weight:700;letter-spacing:1px">Bônus Misterioso</div>
+        <div style="background:linear-gradient(135deg,#4a1a9e,#7a3aee);border-radius:10px;padding:12px;margin-bottom:8px;position:relative;overflow:hidden">
+          <div style="text-align:center;font-size:18px;font-weight:900;color:#ffe066;text-shadow:0 2px 4px rgba(0,0,0,.5);line-height:1.2">Mystery<br>Bonus</div>
+          <div style="display:flex;justify-content:center;gap:6px;margin-top:6px;font-size:20px">🧙🃏🎁✨🏆</div>
+        </div>
+        <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:10px;margin-bottom:6px;font-size:10px;color:#e0d0ff">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Data de Início</span><span>2024-07-02 14:25</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Depósito Necessário</span><span>R$ 3,000.00</span></div>
+        </div>
+        <div style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.3);border-radius:8px;padding:10px;margin-bottom:8px;text-align:center;font-size:10px;color:#ffe066">
+          <div style="margin-bottom:4px">O lembrete vai te Bônus Misterioso que</div>
+          <div>⏰ 2024-07-03 04:00</div>
+          <div style="font-size:14px;font-weight:700;margin-top:4px">🎁 Bônus Misterioso<br><span style="font-size:18px">R$ 1,999.00</span></div>
+        </div>
+        <div style="background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1fr 1fr;font-size:9px;color:#c9b7ff;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.1);font-weight:600">
+            <span>Faixa de Depósito</span><span style="text-align:right">Bônus Misterioso</span>
+          </div>
+          <div style="font-size:9px;color:#e0d0ff">
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 30-70</span><span style="text-align:right;color:#ffe066">R$ 0.2-1.7</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 70-150</span><span style="text-align:right;color:#ffe066">R$ 0.5-1.77</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 150-300</span><span style="text-align:right;color:#ffe066">R$ 2-3.77</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 300-600</span><span style="text-align:right;color:#ffe066">R$ 5-6.66</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 600-1000</span><span style="text-align:right;color:#ffe066">R$ 10-9.99</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 1000-2000</span><span style="text-align:right;color:#ffe066">R$ 15-15.55</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.05)"><span>R$ 2000-5000</span><span style="text-align:right;color:#ffe066">R$ 20-28.88</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:4px 10px"><span>R$ 5000+</span><span style="text-align:right;color:#ffe066">R$ 75-88.88</span></div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:9px;color:#a090cc;line-height:1.6">
+          <div>1. Participar ativamente, concluir o depósito e apostas...</div>
+          <div>2. Após 32 dias a atividade termina automaticamente...</div>
+        </div>
+        <div style="margin-top:8px;background:#7c3aed;border-radius:8px;padding:10px;text-align:center;color:#fff;font-size:12px;font-weight:700">Reclamar</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CALENDAR POPUP ══════════ -->
+<div class="cal-overlay" id="cal-overlay" onclick="aaCloseCal(event)">
+  <div class="cal-popup" id="cal-popup">
+    <div class="cal-month" id="cal-m1">
+      <div class="cal-month-hd">
+        <button class="cal-nav" onclick="calNav(-1)">‹</button>
+        <span id="cal-title1"></span>
+        <button class="cal-nav" style="visibility:hidden">›</button>
+      </div>
+      <div class="cal-grid" id="cal-grid1"></div>
+    </div>
+    <div class="cal-month" id="cal-m2">
+      <div class="cal-month-hd">
+        <button class="cal-nav" style="visibility:hidden">‹</button>
+        <span id="cal-title2"></span>
+        <button class="cal-nav" onclick="calNav(1)">›</button>
+      </div>
+      <div class="cal-grid" id="cal-grid2"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast toast-ok" id="g-toast"></div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Promoter -->
+<div class="overlay" id="m-promoter">
+  <div class="modal modal-lg">
+    <div class="mh"><span class="mt">推广商</span><span class="mc" onclick="closeM('m-promoter')">×</span></div>
+    <div class="mb">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+        <div class="filter-item"><span class="filter-label">推广商：</span><input class="f-input" placeholder="请输入"></div>
+        <div class="filter-item"><span class="filter-label">显示/隐藏：</span><select class="f-select"><option>全部</option><option>显示</option><option>隐藏</option></select></div>
+        <button class="btn btn-white btn-sm">重置</button>
+        <button class="btn btn-query btn-sm" onclick="toast('查询成功')">查询</button>
+        <button class="btn btn-blue btn-sm" onclick="openSub('m-add-promoter','')" style="margin-left:auto">新增推广商</button>
+      </div>
+      <table class="in-table">
+        <thead><tr><th>推广商</th><th>显示/隐藏</th><th>排序</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td>短信1000</td><td class="s-show">显示</td><td>10000</td><td><span class="edit-icon-svg" onclick="openEditP('短信1000',10000,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DALI 5</td><td class="s-show">显示</td><td>1000</td><td><span class="edit-icon-svg" onclick="openEditP('DALI 5',1000,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DA LI 4</td><td class="s-show">显示</td><td>101</td><td><span class="edit-icon-svg" onclick="openEditP('DA LI 4',101,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DA LI 3</td><td class="s-show">显示</td><td>100</td><td><span class="edit-icon-svg" onclick="openEditP('DA LI 3',100,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>106-快手</td><td class="s-show">显示</td><td>99</td><td><span class="edit-icon-svg" onclick="openEditP('106-快手',99,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>谷歌上架包</td><td class="s-show">显示</td><td>7</td><td><span class="edit-icon-svg" onclick="openEditP('谷歌上架包',7,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>105</td><td class="s-hide">隐藏</td><td>5</td><td><span class="edit-icon-svg" onclick="openEditP('105',5,'隐藏')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>短信</td><td class="s-show">显示</td><td>4</td><td><span class="edit-icon-svg" onclick="openEditP('短信',4,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>FB-22</td><td class="s-show">显示</td><td>3</td><td><span class="edit-icon-svg" onclick="openEditP('FB-22',3,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+          <tr><td>DAYU 2</td><td class="s-show">显示</td><td>2</td><td><span class="edit-icon-svg" onclick="openEditP('DAYU 2',2,'显示')"><svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add Promoter Sub -->
+<div class="sub-overlay" id="m-add-promoter">
+  <div class="modal modal-sm">
+    <div class="mh"><span class="mt">新增</span><span class="mc" onclick="closeSub('m-add-promoter')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl req">推广商：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+      <div class="fi"><span class="fl req">排序：</span><div class="fc"><input class="fin" type="number" placeholder="请输入"></div></div>
+      <div class="fi"><span class="fl req">显示/隐藏：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="np-s" value="显示" checked> 显示</label><label class="radio-item"><input type="radio" name="np-s" value="隐藏"> 隐藏</label></div></div></div>
+    </div>
+    <div class="mf"><button class="btn btn-blue" onclick="closeSub('m-add-promoter');toast('新增成功')">确定</button></div>
+  </div>
+</div>
+
+<!-- Edit Promoter Sub -->
+<div class="sub-overlay" id="m-edit-promoter">
+  <div class="modal modal-sm">
+    <div class="mh"><span class="mt">编辑</span><span class="mc" onclick="closeSub('m-edit-promoter')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl req">推广商：</span><div class="fc"><input class="fin" id="ep-name"></div></div>
+      <div class="fi"><span class="fl req">排序：</span><div class="fc"><input class="fin" type="number" id="ep-sort"></div></div>
+      <div class="fi"><span class="fl req">显示/隐藏：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="ep-s" value="显示" id="ep-r-show"> 显示</label><label class="radio-item"><input type="radio" name="ep-s" value="隐藏"> 隐藏</label></div></div></div>
+    </div>
+    <div class="mf"><button class="btn btn-blue" onclick="closeSub('m-edit-promoter');toast('保存成功')">确定</button></div>
+  </div>
+</div>
+
+<!-- Add Channel -->
+<div class="overlay" id="m-add-ch">
+  <div class="modal modal-md" style="width:540px">
+    <div class="mh"><span class="mt" id="ac-modal-title">新增渠道</span><span class="mc" onclick="closeM('m-add-ch')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl req">地区：</span><div class="fc"><select class="fs"><option>巴西</option></select></div></div>
+      <div class="fi"><span class="fl req">所属商户：</span><div class="fc"><select class="fs"><option>762</option></select></div></div>
+      <div class="fi"><span class="fl req">渠道名称：</span><div class="fc"><div style="position:relative;display:flex;align-items:center"><input class="fin" id="ac-ch-name" placeholder="请输入" oninput="showClearBtn('ac-ch-name-clear',this.value.length>0)" style="padding-right:28px"><span id="ac-ch-name-clear" onclick="document.getElementById('ac-ch-name').value='';showClearBtn('ac-ch-name-clear',false)" style="display:none;position:absolute;right:8px;cursor:pointer;width:16px;height:16px;background:#bbb;border-radius:50%;align-items:center;justify-content:center;color:#fff;font-size:11px;line-height:1">×</span></div></div></div>
+      <div class="fi"><span class="fl req">落地指向：</span><div class="fc"><select class="fs" id="ac-land" onchange="landChange()"><option>仿谷歌页</option><option>官网首页</option><option>官网注册页</option><option>主域名</option><option>防封下载页</option></select></div></div>
+      <div class="fi"><span class="fl req">跳转域名：</span><div class="fc"><select class="fs" id="ac-domain"><option>www.kk678.ac</option><option>www.kk678.bz</option></select></div></div>
+      <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ac-track" onchange="trackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option></select></div></div>
+      <div id="ac-track-extra"></div>
+      <div class="fi"><span class="fl req">推广商：</span><div class="fc"><select class="fs"><option>短信1000</option><option>DALI 5</option><option>DA LI 4</option><option>FB-22</option><option>106-快手</option><option>谷歌上架包</option></select></div></div>
+      <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="chTab(this,'ac','and')">安卓</button><button class="tab-b" onclick="chTab(this,'ac','ios')">苹果</button></div></div></div>
+      <!-- Android -->
+      <div id="ac-and">
+        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ac-and-g" onchange="gcond('ac-and-gsub',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
+        <div id="ac-and-gsub" class="cond">
+          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ac-and-popup" onchange="gcond('ac-and-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div id="ac-and-bonus" class="cond">
+            <div class="fi"><span class="fl req">显示赠送金额类型：</span><div class="fc"><select class="fs" id="ac-and-bt" onchange="bonusAmt('ac-and-ba',this.value)"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc" id="ac-and-ba"><input class="fin" placeholder="请输入金额"></div></div>
+          </div>
+          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ac-and-it" onchange="gcond('ac-and-apk',this.value.includes('apk')||this.value.includes('APK'))"><option>pwa(快速安装)</option><option>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
+          <div id="ac-and-apk" class="cond">
+            <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+            <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" disabled placeholder="自动读取"></div></div>
+            <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
+          </div>
+        </div>
+        <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ac-and-gift" onchange="gcond('ac-and-gf',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+        <div id="ac-and-gf" class="cond">
+          <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+          <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        </div>
+      </div>
+      <!-- iOS -->
+      <div id="ac-ios" style="display:none">
+        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ac-ios-g" onchange="gcond('ac-ios-gsub',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
+        <div id="ac-ios-gsub" class="cond">
+          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ac-ios-it" onchange="gcond('ac-ios-store',this.value==='苹果商店')"><option>保存桌面</option><option>苹果商店</option></select></div></div>
+          <div id="ac-ios-store" class="cond">
+            <div class="fi"><span class="fl req">上架包地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="ac-ios-at" value="普通" checked onchange="iosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="ac-ios-at" value="OneLink" onchange="iosAddr(this.value)"> OneLink地址</label></div></div></div>
+            <div id="ac-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+            <div id="ac-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+          </div>
+        </div>
+        <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ac-ios-gift" onchange="gcond('ac-ios-gf',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+        <div id="ac-ios-gf" class="cond">
+          <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+          <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-blue" onclick="closeM('m-add-ch');toast('新增渠道成功')">确定</button></div>
+  </div>
+</div>
+
+<!-- iOS Pkg Sub -->
+<div class="sub-overlay" id="m-ios-pkg">
+  <div class="modal modal-sm">
+    <div class="mh"><span class="mt">选择IOS上架包</span><span class="mc" onclick="closeSub('m-ios-pkg')">×</span></div>
+    <div class="mb"><div class="fi"><span class="fl">IOS上架包：</span><div class="fc"><select class="fs"><option>请选择</option><option>kk678_ios_v1.2</option><option>kk678_ios_v1.3</option></select></div></div></div>
+    <div class="mf"><button class="btn btn-blue" onclick="closeSub('m-ios-pkg');toast('选择成功')">确定</button></div>
+  </div>
+</div>
+
+<!-- Test Modal -->
+<div class="overlay" id="m-test">
+  <div class="modal modal-sm">
+    <div class="mh"><span class="mt">测试回传</span><span class="mc" onclick="closeM('m-test')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl">渠道名称：</span><div class="fc"><input class="fin" id="t-name" disabled></div></div>
+      <div class="fi"><span class="fl">类型：</span><div class="fc"><input class="fin" id="t-type" disabled></div></div>
+      <div class="fi"><span class="fl">Pixel Id：</span><div class="fc"><input class="fin" id="t-pixel" disabled></div></div>
+      <div class="fi"><span class="fl">测试链接：</span><div class="fc"><textarea class="fin" id="t-link" style="height:68px;padding-top:5px;resize:none;line-height:1.5"></textarea></div></div>
+      <p class="hint" style="padding-left:140px;margin-top:4px">[测试链接]只用于测试回传，测试成功后，请使用[渠道链接]进行投放</p>
+    </div>
+  </div>
+</div>
+
+<!-- Event Modal -->
+<div class="overlay" id="m-event">
+  <div class="modal modal-sm">
+    <div class="mh"><span class="mt">事件说明</span><span class="mc" onclick="closeM('m-event')">×</span></div>
+    <div class="mb" id="event-body"></div>
+  </div>
+</div>
+
+<!-- Batch Replace -->
+<div class="overlay" id="m-batch-replace">
+  <div class="modal" style="width:620px">
+    <div class="mh"><span class="mt">批量替换</span><span class="mc" onclick="closeM('m-batch-replace')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl">地区：</span><div class="fc"><select class="fs"><option>巴西</option></select></div></div>
+      <div class="fi"><span class="fl">商户：</span><div class="fc"><select class="fs"><option>762</option></select></div></div>
+      <div class="fi"><span class="fl req">替换类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-t" value="pkg" checked onchange="brType(this.value)"> 更换安装包</label><label class="radio-item"><input type="radio" name="br-t" value="guide" onchange="brType(this.value)"> 更换安装引导</label><label class="radio-item"><input type="radio" name="br-t" value="domain" onchange="brType(this.value)"> 更换跳转域名</label></div></div></div>
+
+      <!-- ── 更换安装包 ── -->
+      <div id="br-pkg">
+        <div class="fi"><span class="fl req">渠道安装类型：</span><div class="fc"><select class="fs" id="br-pkg-type" onchange="brPkgType(this.value)"><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option><option value="苹果商店">苹果商店</option></select></div></div>
+        <div id="br-pkg-apk-fields">
+          <div class="fi-title"><span class="fi-title-label">目标地址</span></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">APK包地址：</span><div class="fc"><input class="fin" id="br-pkg-apkaddr" placeholder="请输入" oninput="brPkgAddrChange()"></div></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">APK包名：</span><div class="fc"><input class="fin" id="br-pkg-apkname" disabled></div></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','br')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
+        </div>
+        <div id="br-pkg-ios-fields" style="display:none">
+          <div class="fi"><span class="fl req">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-ios-at" value="普通" checked onchange="brIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-ios-at" value="OneLink" onchange="brIosAddr(this.value)"> OneLink地址</label></div></div></div>
+          <div id="br-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+          <div id="br-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+        </div>
+        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc"><div class="cascade-wrap" id="br-pkg-cascade"><div class="cascade-input" onclick="toggleCascadeById('br-pkg-cascade-dd')"><span style="color:#bfbfbf;font-size:13px">请选择渠道</span><span style="color:#bbb;font-size:11px">▼</span></div><div class="cascade-dropdown" id="br-pkg-cascade-dd"><div class="cascade-col" style="width:160px;border-right:1px solid #f0f0f0"><div class="cascade-col-hd">推广商</div><div class="cascade-row" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1000</label><span style="color:#bbb;font-size:11px">›</span></div><div class="cascade-row active" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> FB-22</label><span style="color:#0961BD;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> DALI 5</label><span style="color:#bbb;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bpcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 106-快手</label><span style="color:#bbb;font-size:11px">›</span></div></div><div class="cascade-col" id="bpcd" style="flex:1"><div class="cascade-col-hd">渠道</div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> TK22-BR007</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22-127B</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22-128</label></div></div></div></div><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;margin-left:8px"><input type="checkbox"> 全选</label></div></div>
+      </div>
+
+      <!-- ── 更换安装引导 ── -->
+      <div id="br-guide" style="display:none">
+        <div class="fi"><span class="fl req">渠道安装类型：</span><div class="fc"><select class="fs" id="br-guide-chtype" onchange="brGuideChType(this.value)"><option value="PWA">PWA</option><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option><option value="保存桌面">保存桌面</option><option value="苹果商店">苹果商店</option></select></div></div>
+        <div class="fi-title"><span class="fi-title-label">目标安装类型</span></div>
+        <div id="br-guide-android-fields">
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框内容：</span><div class="fc"><select class="fs" id="br-guide-popup" onchange="brGuidePopup(this.value)"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div id="br-guide-bonus-fields" class="cond">
+            <div class="fi-sub"><span class="fl req" style="width:116px">赠送金额类型：</span><div class="fc"><select class="fs" id="br-guide-bt" onchange="brGuideBonusType(this.value)"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi-sub"><span class="fl req" style="width:116px">显示赠送金额：</span><div class="fc" id="br-guide-ba"><input class="fin" placeholder="请输入金额"></div></div>
+          </div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs" id="br-guide-itype" onchange="brGuideInstallType(this.value)"><option value="PWA">PWA</option><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option></select></div></div>
+          <div id="br-guide-apk-fields" class="cond">
+            <div class="fi-sub"><span class="fl" style="width:116px">APK包地址：</span><div class="fc"><input class="fin" id="br-guide-apkaddr" placeholder="请输入" oninput="brGuideAddrChange()"></div></div>
+            <div class="fi-sub"><span class="fl" style="width:116px">APK包名：</span><div class="fc"><input class="fin" id="br-guide-apkname" disabled></div></div>
+            <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','brg')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
+          </div>
+        </div>
+        <div id="br-guide-ios-fields" style="display:none">
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框内容：</span><div class="fc"><select class="fs" id="br-guide-ios-popup" onchange="brGuidePopup(this.value)"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div id="br-guide-ios-bonus" class="cond">
+            <div class="fi-sub"><span class="fl req" style="width:116px">赠送金额类型：</span><div class="fc"><select class="fs" onchange="brGuideBonusType(this.value,'br-guide-ios-ba')"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi-sub"><span class="fl req" style="width:116px">显示赠送金额：</span><div class="fc" id="br-guide-ios-ba"><input class="fin" placeholder="请输入金额"></div></div>
+          </div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs"><option>苹果商店</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="普通" checked onchange="brGuideIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="OneLink" onchange="brGuideIosAddr(this.value)"> OneLink地址</label></div></div></div>
+          <div id="br-guide-ios-normal" class="cond on"><div class="fi-sub"><span class="fl req" style="width:116px">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+          <div id="br-guide-ios-onelink" class="cond"><div class="fi-sub"><span class="fl" style="width:116px">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi-sub"><span class="fl req" style="width:116px">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+        </div>
+        <div class="fi"><span class="fl">安装送彩金：</span><div class="fc"><select class="fs" id="br-guide-gift" onchange="brGuideGift(this.value)"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+        <div id="br-guide-gift-fields" class="cond">
+          <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+          <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        </div>
+        <div class="fi"><span class="fl req">替换引导开关：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-gs" checked> 保持原有</label><label class="radio-item"><input type="radio" name="br-gs"> 全部开启</label><label class="radio-item"><input type="radio" name="br-gs"> 全部关闭</label></div></div></div>
+        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc"><div class="cascade-wrap" id="br-guide-cascade"><div class="cascade-input" onclick="toggleCascadeById('br-guide-cascade-dd')"><span style="color:#bfbfbf;font-size:13px">请选择渠道</span><span style="color:#bbb;font-size:11px">▼</span></div><div class="cascade-dropdown" id="br-guide-cascade-dd"><div class="cascade-col" style="width:160px;border-right:1px solid #f0f0f0"><div class="cascade-col-hd">推广商</div><div class="cascade-row active" onclick="selCascadePromoter(this,'bgcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> FB-22</label><span style="color:#0961BD;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bgcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 106-快手</label><span style="color:#bbb;font-size:11px">›</span></div></div><div class="cascade-col" id="bgcd" style="flex:1"><div class="cascade-col-hd">渠道</div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" checked> TK22-BR007</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22-127B</label></div></div></div></div><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;margin-left:8px"><input type="checkbox"> 全选</label></div></div>
+      </div>
+
+      <!-- ── 更换跳转域名 ── -->
+      <div id="br-domain" style="display:none">
+        <div class="fi"><span class="fl req">选择跳转域名：</span><div class="fc"><select class="fs"><option>www.kk678.ac</option><option>www.kk678.bz</option><option>www.kk678.cc</option></select></div></div>
+        <div class="fi"><span class="fl req">替换渠道：</span><div class="fc"><div class="cascade-wrap" id="br-domain-cascade"><div class="cascade-input" onclick="toggleCascadeById('br-domain-cascade-dd')"><span style="color:#bfbfbf;font-size:13px">请选择渠道</span><span style="color:#bbb;font-size:11px">▼</span></div><div class="cascade-dropdown" id="br-domain-cascade-dd"><div class="cascade-col" style="width:160px;border-right:1px solid #f0f0f0"><div class="cascade-col-hd">推广商</div><div class="cascade-row" onclick="selCascadePromoter(this,'bdcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1000</label><span style="color:#bbb;font-size:11px">›</span></div><div class="cascade-row" onclick="selCascadePromoter(this,'bdcd')"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> FB-22</label><span style="color:#bbb;font-size:11px">›</span></div></div><div class="cascade-col" id="bdcd" style="flex:1"><div class="cascade-col-hd">渠道</div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1001</label></div><div class="cascade-row"><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox"> 短信1002</label></div></div></div></div><label style="display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;margin-left:8px"><input type="checkbox"> 全选</label></div></div>
+        <div class="fi"><span class="fl req">替换后跳转域名：</span><div class="fc"><select class="fs"><option value="">请选择</option><option>www.kk678.ac</option><option>www.kk678.bz</option><option>www.kk678.cc</option></select></div></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-blue" onclick="closeM('m-batch-replace');toast('批量替换成功')">确定</button></div>
+  </div>
+</div>
+
+<!-- Mafia Package Sub Modal -->
+<div class="sub-overlay" id="m-mafia-pkg">
+  <div class="modal modal-sm">
+    <div class="mh"><span class="mt">选择马甲包</span><span class="mc" onclick="closeSub('m-mafia-pkg')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl">马甲包：</span><div class="fc"><select class="fs" id="mafia-select"><option value="">请选择</option><option value="APK新12.24|https://upload-us.f-1-g-h.com/s4/apk1224|kk678.bet_1224.apk">APK新12.24</option><option value="APK新|https://upload-us.f-1-g-h.com/s4/apknew|kk678.bet_new.apk">APK新</option><option value="apk|https://upload-us.f-1-g-h.com/s4/apkbase|kk678.bet_400165.apk">apk</option></select></div></div>
+    </div>
+    <div class="mf"><button class="btn btn-blue" onclick="confirmMafia()">确定</button></div>
+  </div>
+</div>
+
+<!-- Batch Add Channel -->
+<div class="overlay" id="m-batch-add">
+  <div class="modal modal-lg" style="width:740px">
+    <div class="mh"><span class="mt">批量新增渠道</span><span class="mc" onclick="closeM('m-batch-add')">×</span></div>
+    <div class="mb">
+      <div class="fi"><span class="fl req">地区：</span><div class="fc"><select class="fs"><option>巴西</option></select></div></div>
+      <div class="fi"><span class="fl req">所属商户：</span><div class="fc"><select class="fs"><option>762</option></select></div></div>
+      <div class="fi" style="align-items:flex-start">
+        <span class="fl req" style="line-height:28px;padding-top:4px">渠道信息：</span>
+        <div class="fc">
+          <div style="display:grid;grid-template-columns:1.5fr 1fr 1.3fr 1.2fr 28px 28px;gap:5px;margin-bottom:5px;font-size:11px;color:#8c8c8c;padding:0 2px">
+            <span>渠道名称</span><span>落地指向</span><span>跳转域名</span><span>推广商</span><span></span><span></span>
+          </div>
+          <div id="batch-rows"></div>
+        </div>
+      </div>
+      <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ba-track" onchange="baTrackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option></select></div></div>
+      <div id="ba-track-extra"></div>
+      <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="batchTab(this,'ba-and')">安卓</button><button class="tab-b" onclick="batchTab(this,'ba-ios')">苹果</button></div></div></div>
+      <!-- 安卓 fields -->
+      <div id="ba-and">
+      <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+      <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ba-guide" onchange="gcond('ba-guide-fields',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
+      <div id="ba-guide-fields" class="cond">
+        <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ba-popup" onchange="gcond('ba-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+        <div id="ba-bonus" class="cond">
+          <div class="fi"><span class="fl req">赠送金额类型：</span><div class="fc"><select class="fs" id="ba-bt" onchange="bonusAmt('ba-ba',this.value)"><option>固定金额</option><option>随机金额</option></select></div></div>
+          <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc" id="ba-ba"><input class="fin" placeholder="请输入金额"></div></div>
+        </div>
+        <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+        <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+        <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ba-itype" onchange="gcond('ba-apk',this.value.includes('apk')||this.value.includes('APK'))"><option>pwa(快速安装)</option><option>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
+        <div id="ba-apk" class="cond">
+          <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="ba-and-apkaddr" placeholder="请输入" oninput="baAndAddrChange()"></div></div>
+          <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="ba-and-apkname" disabled></div></div>
+          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','ba-and')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
+        </div>
+      </div>
+      <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ba-and-gift" onchange="gcond('ba-and-gift-fields',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+      <div id="ba-and-gift-fields" class="cond">
+        <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+      </div>
+      </div>
+      <!-- 苹果 fields -->
+      <div id="ba-ios" style="display:none">
+        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ba-ios-guide" onchange="gcond('ba-ios-guide-fields',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
+        <div id="ba-ios-guide-fields" class="cond">
+          <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ba-ios-popup" onchange="gcond('ba-ios-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
+          <div id="ba-ios-bonus" class="cond">
+            <div class="fi"><span class="fl req">赠送金额类型：</span><div class="fc"><select class="fs"><option>固定金额</option><option>随机金额</option></select></div></div>
+            <div class="fi"><span class="fl req">显示赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入金额"></div></div>
+          </div>
+          <div class="fi"><span class="fl req">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
+          <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ba-ios-it" onchange="gcond('ba-ios-store',this.value==='苹果商店')"><option>保存桌面</option><option>苹果商店</option></select></div></div>
+          <div id="ba-ios-store" class="cond">
+            <div class="fi"><span class="fl req">上架包地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="ba-ios-at" value="普通" checked onchange="gcond('ba-ios-normal',this.value==='普通');gcond('ba-ios-onelink',this.value==='OneLink')"> 普通地址</label><label class="radio-item"><input type="radio" name="ba-ios-at" value="OneLink" onchange="gcond('ba-ios-normal',this.value==='普通');gcond('ba-ios-onelink',this.value==='OneLink')"> OneLink地址</label></div></div></div>
+            <div id="ba-ios-normal" class="cond on"><div class="fi"><span class="fl req">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
+            <div id="ba-ios-onelink" class="cond"><div class="fi"><span class="fl">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi"><span class="fl req">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+          </div>
+        </div>
+        <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ba-ios-gift" onchange="gcond('ba-ios-gift-fields',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
+        <div id="ba-ios-gift-fields" class="cond">
+          <div class="fi"><span class="fl req">赠送金额：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+          <div class="fi"><span class="fl req">打码倍数：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-blue" onclick="batchSubmit()">确定</button></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───
+const channels=[
+  {id:1,name:'短信1001',region:'巴西',merchant:'762',promoter:'短信1000',chId:'84049',track:'常规推广',link:'https://xq7mlp2.com?ch=84049',guide:false,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'https://xq7mlp2.com?ch=84049'},
+  {id:2,name:'短信1002',region:'巴西',merchant:'762',promoter:'短信1000',chId:'84050',track:'常规推广',link:'https://vr8kan1.com?ch=84050',guide:false,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'https://vr8kan1.com?ch=84050'},
+  {id:3,name:'短信1003',region:'巴西',merchant:'762',promoter:'短信1000',chId:'84051',track:'常规推广',link:'https://trw6aq9.com?ch=84051',guide:false,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:4,name:'短信1004',region:'巴西',merchant:'762',promoter:'短信1000',chId:'84052',track:'常规推广',link:'https://zmqd7x5.com?ch=84052',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:5,name:'短信1005',region:'巴西',merchant:'762',promoter:'短信1000',chId:'84053',track:'常规推广',link:'https://bxvlp84.com?ch=84053',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:6,name:'短信1006',region:'巴西',merchant:'762',promoter:'短信1000',chId:'84922',track:'常规推广',link:'https://xq7mlp2.com?ch=84922',guide:false,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:7,name:'TK22-BR007',region:'巴西',merchant:'762',promoter:'FB-22',chId:'18518',track:'tiktok-click-api',link:'https://www.kk678.ac?ch=18518&ttPix=D4UV9BRC',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(优先)+apk(推荐使用)',iMethod:'https://upload-us.f-1-g-h.com/s4/6112906/kk'},
+  {id:8,name:'FB-22-127B',region:'巴西',merchant:'762',promoter:'FB-22',chId:'19765',track:'facebook-api',link:'https://www.kk678.ac?ch=19765&fbPix=822365',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(优先)+apk(推荐使用)',iMethod:'https://upload-us.f-1-g-h.com/s4/7865432/fb'},
+  {id:9,name:'DALI5-001',region:'巴西',merchant:'762',promoter:'DALI 5',chId:'21001',track:'常规推广',link:'https://abc123.com?ch=21001',guide:false,pTime:'用户充值',pGap:'1小时',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:10,name:'DALI5-002',region:'巴西',merchant:'762',promoter:'DALI 5',chId:'21002',track:'常规推广',link:'https://abc124.com?ch=21002',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'apk(需要自己封装)',iMethod:'https://upload-us.f-1-g-h.com/s4/3345678/dali'},
+  {id:11,name:'KW-BR001',region:'巴西',merchant:'762',promoter:'106-快手',chId:'33201',track:'kwai-click',link:'https://kw1001.com?ch=33201',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(优先)+apk(推荐使用)',iMethod:'https://upload-us.f-1-g-h.com/s4/9981234/kw'},
+  {id:12,name:'KW-BR002',region:'巴西',merchant:'762',promoter:'106-快手',chId:'33202',track:'kwai-click',link:'https://kw1002.com?ch=33202',guide:false,pTime:'首次提现',pGap:'6小时',iType:'pwa(快速安装)',iMethod:'-'},
+];
+
+const evMap={
+  'Facebook-API':{title:'Facebook API（Facebook服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','SubmitApplication'],['充值','Purchase（仅在首充时触发）']]},
+  'facebook-api':{title:'Facebook API（Facebook服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','SubmitApplication'],['充值','Purchase（仅在首充时触发）']]},
+  'TikTok-click-API':{title:'TK API（TikTok服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','Login'],['充值','Purchase（仅在首充时触发）']]},
+  'tiktok-click-api':{title:'TK API（TikTok服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','Login'],['充值','Purchase（仅在首充时触发）']]},
+  'Kwai-API':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
+  'kwai-click':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
+};
+
+// ─── RENDER TABLE ───
+function renderTable(){
+  const tb=document.getElementById('ch-tbody');
+  tb.innerHTML=channels.map((c,i)=>{
+    const hasEv=c.track!=='常规推广';
+    const uid='sw-'+i;
+    return`<tr>
+      <td>${i+1}</td>
+      <td style="white-space:nowrap">${c.name}</td>
+      <td>${c.region}</td>
+      <td>${c.merchant}</td>
+      <td>${c.promoter}</td>
+      <td>${c.chId}</td>
+      <td style="white-space:nowrap">${c.track}</td>
+      <td style="width:130px;min-width:130px;max-width:130px;word-break:break-all;white-space:normal">
+        <a style="color:#52c41a;font-size:11px;word-break:break-all;white-space:normal;line-height:1.4;cursor:pointer;text-decoration:none" href="${c.link}" target="_blank" title="${c.link}">${c.link}</a>
+        <span class="copy-icon" onclick="copyTxt('${c.link}')" title="复制链接">⧉</span>
+      </td>
+      <td>
+        <div id="sw-${i}" onclick="toggleGuide(${i})" style="cursor:pointer;display:inline-flex;align-items:center;user-select:none">
+          <div id="sw-track-${i}" style="position:relative;width:52px;height:22px;border-radius:11px;background:${c.guide?'#0961BD':'#d9d9d9'};transition:background .2s;flex-shrink:0;overflow:hidden">
+            <div id="sw-knob-${i}" style="position:absolute;top:2px;left:${c.guide?'28px':'2px'};width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:left .2s"></div>
+            <span id="sw-txt-${i}" style="position:absolute;${c.guide?'left:5px':'right:4px'};top:50%;transform:translateY(-50%);font-size:10px;color:${c.guide?'#fff':'rgba(0,0,0,.45)'};white-space:nowrap">${c.guide?'开启':'关闭'}</span>
+          </div>
+        </div>
+      </td>
+      <td style="white-space:nowrap">${c.pTime}</td>
+      <td style="white-space:nowrap">${c.pGap}</td>
+      <td style="white-space:nowrap">${c.iType}</td>
+      <td style="max-width:90px">${(()=>{const m=c.iMethod&&c.iMethod!=='-'&&c.iMethod.startsWith('http');if(!m)return '<span style="color:#bbb">-</span>';const short=c.iMethod.length>12?c.iMethod.substring(0,12)+'...':c.iMethod;return '<a style="color:#52c41a;font-size:11px;cursor:pointer;text-decoration:none" href="'+c.iMethod+'" target="_blank" title="'+c.iMethod+'">'+short+'</a><span class="copy-icon" onclick="copyTxt(\''+c.iMethod+'\')" title="复制">⧉</span>'})()}</td>
+      <td>
+        <div class="tbl-actions">
+          <span class="tip act-btn act-edit" onclick="openEditChannel(${i})" style="padding:2px 7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span class="tiptext">编辑</span></span>
+          <span class="tip act-btn act-test" onclick="openTest(${i})">Test<span class="tiptext">测试</span></span>
+          ${hasEv?`<span class="tip act-btn act-event" onclick="openEvent('${c.track}')">说明<span class="tiptext">事件说明</span></span>`:''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('pg-total').textContent=channels.length;
+}
+
+function toggleGuide(i){
+  channels[i].guide=!channels[i].guide;
+  const on=channels[i].guide;
+  const track=document.getElementById('sw-track-'+i);
+  const knob=document.getElementById('sw-knob-'+i);
+  const txt=document.getElementById('sw-txt-'+i);
+  if(track){track.style.background=on?'#0961BD':'#d9d9d9'}
+  if(knob){knob.style.left=on?'28px':'2px'}
+  if(txt){
+    txt.textContent=on?'开启':'关闭';
+    txt.style.color=on?'#fff':'rgba(0,0,0,.45)';
+    txt.style.left=on?'5px':'';
+    txt.style.right=on?''  :'4px';
+  }
+  toast(on?'安卓引导已开启':'安卓引导已关闭');
+}
+
+function copyTxt(t){
+  try{navigator.clipboard.writeText(t)}catch(e){}
+  toast('链接已复制');
+}
+
+function openTest(i){
+  const c=channels[i];
+  document.getElementById('t-name').value=c.name;
+  document.getElementById('t-type').value=c.track;
+  document.getElementById('t-pixel').value=c.chId;
+  document.getElementById('t-link').value=c.link;
+  openM('m-test');
+}
+
+function openEvent(track){
+  const info=evMap[track];
+  if(!info)return;
+  document.getElementById('event-body').innerHTML=
+    `<h3 style="font-size:15px;font-weight:700;margin-bottom:16px">${info.title}</h3>`+
+    info.ev.map(([cn,en])=>`<p style="margin-bottom:12px;font-size:13px">${cn} - <strong>${en}</strong></p>`).join('');
+  openM('m-event');
+}
+
+// ─── PAGE SWITCH ───
+
+function toggleMenu(el, subId){
+  const isOpen = el.classList.contains('open');
+  // Accordion: close all open menus first
+  document.querySelectorAll('.menu-item.open').forEach(function(m){
+    m.classList.remove('open');
+    var s = m.nextElementSibling;
+    if(s && s.classList.contains('submenu')) s.style.display='none';
+  });
+  // Also close by subId method (items using id-based submenu)
+  document.querySelectorAll('.submenu').forEach(function(s){
+    s.style.display='none';
+  });
+  // If clicked item was closed, open it
+  if(!isOpen){
+    el.classList.add('open');
+    if(subId){
+      var sub = document.getElementById(subId);
+      if(sub) sub.style.display='block';
+    } else {
+      var sub2 = el.nextElementSibling;
+      if(sub2 && sub2.classList.contains('submenu')) sub2.style.display='block';
+    }
+  }
+}
+
+// ─── TAGS ───
+function selTag(el){
+  el.closest('.quick-filter').querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── MODALS ───
+function openM(id){document.getElementById(id).classList.add('show')}
+function closeM(id){document.getElementById(id).classList.remove('show')}
+function openSub(id,target){if(target!==undefined)mafiaTarget=target||'br';document.getElementById(id).classList.add('show')}
+function closeSub(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click',function(e){if(e.target===this)closeM(this.id)});
+});
+
+function openEditP(name,sort,status){
+  document.getElementById('ep-name').value=name;
+  document.getElementById('ep-sort').value=sort;
+  document.querySelectorAll('input[name="ep-s"]').forEach(r=>r.checked=r.value===status);
+  openSub('m-edit-promoter');
+}
+
+// ─── FORM LOGIC ───
+function gcond(id,show){
+  const el=document.getElementById(id);
+  if(el)el.classList.toggle('on',show);
+}
+
+function landChange(){
+  const v=document.getElementById('ac-land').value;
+  const d=document.getElementById('ac-domain');
+  const map={'仿谷歌页':['www.kk678.ac','www.kk678.bz'],'官网首页':['www.kk678.bz','www.kk678.cc'],'官网注册页':['www.kk678.bz'],'主域名':['www.kk678.ac','www.kk678.bz','www.kk678.cc'],'防封下载页':['dl.kk678.ac','dl.kk678.bz']};
+  d.innerHTML=(map[v]||['www.kk678.ac']).map(x=>`<option>${x}</option>`).join('');
+}
+
+function trackChange(){
+  const v=document.getElementById('ac-track').value;
+  const cont=document.getElementById('ac-track-extra');
+  let h='';
+  if(v==='Facebook-API'||v==='TikTok-click-API'||v==='Kwai-API'){
+    h=`<div class="fi"><span class="fl req">pixel Id：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">访问令牌TOKEN：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">test_event_code事件测试：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div style="color:#ff4d4f;font-size:12px;line-height:1.6;margin:4px 0 10px 140px">test_event_code事件测试：仅供测试使用，测试完成后注意删除该<br>输入框填入的内容</div>`;
+  }
+  cont.innerHTML=h;
+}
+
+function chTab(btn,prefix,tab){
+  btn.parentElement.querySelectorAll('.tab-b').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(prefix+'-and').style.display=tab==='and'?'block':'none';
+  document.getElementById(prefix+'-ios').style.display=tab==='ios'?'block':'none';
+}
+
+function bonusAmt(id,val){
+  const el=document.getElementById(id);
+  el.innerHTML=val==='随机金额'
+    ?'<div style="display:flex;gap:6px"><input class="fin" placeholder="最小金额" style="flex:1"><input class="fin" placeholder="最大金额" style="flex:1"></div>'
+    :'<input class="fin" placeholder="请输入金额">';
+}
+
+function gbonus(){bonusAmt('g-ba',document.getElementById('g-bt').value)}
+
+function iosAddr(v){
+  gcond('ac-ios-normal',v==='普通');
+  gcond('ac-ios-onelink',v==='OneLink');
+}
+
+// ─── BATCH REPLACE ───
+function brType(v){
+  document.getElementById('br-pkg').style.display=v==='pkg'?'block':'none';
+  document.getElementById('br-guide').style.display=v==='guide'?'block':'none';
+  document.getElementById('br-domain').style.display=v==='domain'?'block':'none';
+}
+
+// 更换安装包 - 渠道安装类型切换
+function brPkgType(v){
+  const apkF=document.getElementById('br-pkg-apk-fields');
+  const iosF=document.getElementById('br-pkg-ios-fields');
+  if(v==='苹果商店'){apkF.style.display='none';iosF.style.display='block';}
+  else{apkF.style.display='block';iosF.style.display='none';}
+}
+
+// 更换安装包 - iOS地址类型切换
+function brIosAddr(v){
+  gcond('br-ios-normal',v==='普通');
+  gcond('br-ios-onelink',v==='OneLink');
+}
+
+// 马甲包当前调用者
+let mafiaTarget='';
+function openSub(id,target){
+  mafiaTarget=target||'br';
+  document.getElementById(id).classList.add('show');
+}
+
+// 确认选择马甲包
+function confirmMafia(){
+  const sel=document.getElementById('mafia-select');
+  const val=sel.value;
+  if(!val){closeSub('m-mafia-pkg');return;}
+  const parts=val.split('|');
+  const name=parts[0],addr=parts[1]||'',pkg=parts[2]||'';
+  const targetMap={
+    'br':   {addr:'br-pkg-apkaddr',   name:'br-pkg-apkname'},
+    'brg':  {addr:'br-guide-apkaddr', name:'br-guide-apkname'},
+    'ac-and':{addr:'ac-and-apkaddr',  name:'ac-and-apkname'},
+    'ba-and':{addr:'ba-and-apkaddr',  name:'ba-and-apkname'},
+    'guide':{addr:'g-apk-addr',       name:'g-apk-name'},
+  };
+  const t=targetMap[mafiaTarget];
+  if(t){
+    const addrEl=document.getElementById(t.addr);
+    const nameEl=document.getElementById(t.name);
+    if(addrEl){addrEl.value=addr;addrEl.dataset.fromMafia='1';}
+    if(nameEl){nameEl.value=pkg;}
+  }
+  closeSub('m-mafia-pkg');
+  toast('已选择: '+name);
+}
+
+// 手动修改APK包地址时清空APK包名
+function brPkgAddrChange(){
+  const el=document.getElementById('br-pkg-apkaddr');
+  if(el && el.dataset.fromMafia==='1'){
+    el.dataset.fromMafia='0';
+    const nm=document.getElementById('br-pkg-apkname');
+    if(nm) nm.value='';
+  }
+}
+function brGuideAddrChange(){
+  const el=document.getElementById('br-guide-apkaddr');
+  if(el && el.dataset.fromMafia==='1'){
+    el.dataset.fromMafia='0';
+    const nm=document.getElementById('br-guide-apkname');
+    if(nm) nm.value='';
+  }
+}
+
+// 更换安装引导 - 渠道安装类型切换 (安卓/苹果)
+function brGuideChType(v){
+  const isIos=(v==='保存桌面'||v==='苹果商店');
+  document.getElementById('br-guide-android-fields').style.display=isIos?'none':'block';
+  document.getElementById('br-guide-ios-fields').style.display=isIos?'block':'none';
+}
+
+// 更换安装引导 - 弹框内容切换
+function brGuidePopup(v){
+  gcond('br-guide-bonus-fields',v==='赠送彩金升级');
+  gcond('br-guide-ios-bonus',v==='赠送彩金升级');
+}
+
+// 赠送金额类型切换
+function brGuideBonusType(v,baId){
+  const id=baId||'br-guide-ba';
+  bonusAmt(id,v);
+}
+
+// 弹框安装类型切换
+function brGuideInstallType(v){
+  const show=(v==='APK'||v==='PWA+APK');
+  gcond('br-guide-apk-fields',show);
+}
+
+// iOS地址类型
+function brGuideIosAddr(v){
+  gcond('br-guide-ios-normal',v==='普通');
+  gcond('br-guide-ios-onelink',v==='OneLink');
+}
+
+// 安装送彩金
+function brGuideGift(v){
+  gcond('br-guide-gift-fields',v!=='关闭');
+}
+
+// ─── BATCH ADD ───
+function mkRow(){
+  const d=document.createElement('div');
+  d.className='ch-row';
+  d.innerHTML=`
+    <input class="ri" placeholder="渠道名称">
+<select class="rs"><option>仿谷歌页</option><option>官网首页</option><option>官网注册页</option><option>主域名</option><option>防封下载页</option></select>
+    <select class="rs"><option>www.kk678.ac</option><option>www.kk678.bz</option></select>
+    <select class="rs"><option>短信1000</option><option>DALI 5</option><option>FB-22</option><option>106-快手</option></select>
+    <button class="row-add" onclick="addRow()">+</button>
+    <button class="row-del" onclick="delRow(this)">−</button>`;
+  return d;
+}
+function addRow(){document.getElementById('batch-rows').appendChild(mkRow())}
+function delRow(btn){
+  const rows=document.querySelectorAll('#batch-rows .ch-row');
+  if(rows.length<=2){toast('至少需要创建两个渠道',true);return}
+  btn.closest('.ch-row').remove();
+}
+function initRows(){
+  const c=document.getElementById('batch-rows');
+  c.innerHTML='';
+  c.appendChild(mkRow());c.appendChild(mkRow());
+}
+function batchSubmit(){closeM('m-batch-add');toast('批量新增成功')}
+
+// ─── INSTALL GUIDE ───
+function loadGuide(){
+  document.getElementById('guide-form').style.display='block';
+}
+
+// ─── TOAST ───
+function toast(msg,isErr=false){
+  const t=document.getElementById('g-toast');
+  t.textContent=msg;
+  t.className='toast show '+(isErr?'toast-err':'toast-ok');
+  setTimeout(()=>t.className='toast toast-ok',2400);
+}
+
+
+// ─── CASCADE CHANNEL SELECTOR ───
+function toggleCascade(){
+  const d=document.getElementById('ch-cascade-dropdown');
+  d.style.display=d.style.display==='none'?'flex':'none';
+}
+function selPromoter(el,name){
+  document.querySelectorAll('#promoter-col .cas-item').forEach(i=>{
+    i.style.background='';i.style.color='';
+    i.querySelector('span:last-child').style.color='#bbb';
+  });
+  el.style.background='#e6f4ff';
+  el.querySelector('span:last-child').style.color='#0961BD';
+}
+function selAllChannels(cb){
+  document.querySelectorAll('#ch-cascade-dropdown input[type=checkbox]').forEach(i=>i.checked=cb.checked);
+}
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('ch-cascade-wrap');
+  if(wrap&&!wrap.contains(e.target)){
+    const d=document.getElementById('ch-cascade-dropdown');
+    if(d)d.style.display='none';
+  }
+});
+
+// ─── SET DEFAULT DATE ───
+function setDefaultDates(){
+  const today=new Date().toISOString().split('T')[0];
+  const f=document.getElementById('eff-date-from');
+  const t=document.getElementById('eff-date-to');
+  if(f)f.value=today;
+  if(t)t.value=today;
+}
+
+// ─── OPEN EDIT CHANNEL ───
+function openNewChannel(){
+  document.getElementById('ac-modal-title').textContent='新增渠道';
+  // reset channel name
+  const nameEl=document.getElementById('ac-ch-name');
+  if(nameEl){nameEl.value='';showClearBtn('ac-ch-name-clear',false);}
+  openM('m-add-ch');
+}
+
+function openEditChannel(i){
+  const ch=channels[i];
+  document.getElementById('ac-modal-title').textContent='编辑渠道';
+  // prefill channel name with clear button
+  const nameEl=document.getElementById('ac-ch-name');
+  if(nameEl){nameEl.value=ch.name;showClearBtn('ac-ch-name-clear',true);}
+  const land=document.getElementById('ac-land');
+  if(land){land.value='仿谷歌页';landChange();}
+  const track=document.getElementById('ac-track');
+  if(track){
+    const tm={'常规推广':'常规推广','tiktok-click-api':'TikTok-click-API','facebook-api':'Facebook-API','kwai-click':'Kwai-API'};
+    track.value=tm[ch.track]||'常规推广';
+    trackChange();
+  }
+  openM('m-add-ch');
+}
+
+function showClearBtn(id,show){
+  const el=document.getElementById(id);
+  if(el)el.style.display=show?'flex':'none';
+}
+
+// ─── iOS ADDR (guide page) ───
+function gIosAddr(v){
+  gcond('g-ios-normal',v==='普通');
+  gcond('g-ios-onelink',v==='OneLink');
+}
+
+
+// ─── BATCH ADD TRACK CHANGE ───
+function baTrackChange(){
+  const v=document.getElementById('ba-track').value;
+  const cont=document.getElementById('ba-track-extra');
+  let h='';
+  if(v==='Facebook-API'||v==='TikTok-click-API'||v==='Kwai-API'){
+    h=`<div class="fi"><span class="fl req">pixel Id：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">访问令牌TOKEN：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">test_event_code事件测试：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div style="color:#ff4d4f;font-size:12px;line-height:1.6;margin:4px 0 10px 140px">test_event_code事件测试：仅供测试使用，测试完成后注意删除该<br>输入框填入的内容</div>`;
+  }
+  cont.innerHTML=h;
+}
+
+// ─── CASCADE DROPDOWN TOGGLE ───
+function toggleCascadeById(id){
+  const d=document.getElementById(id);
+  if(!d)return;
+  const isOpen=d.classList.contains('open');
+  document.querySelectorAll('.cascade-dropdown.open').forEach(el=>el.classList.remove('open'));
+  if(!isOpen)d.classList.add('open');
+}
+function selCascadePromoter(row,channelColId){
+  const col=row.closest('.cascade-dropdown').querySelector('[id]');
+  row.closest('.cascade-col').querySelectorAll('.cascade-row').forEach(r=>{r.classList.remove('active');r.querySelector('span:last-child').style.color='#bbb';});
+  row.classList.add('active');
+  row.querySelector('span:last-child').style.color='#0961BD';
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.cascade-wrap')){
+    document.querySelectorAll('.cascade-dropdown.open').forEach(el=>el.classList.remove('open'));
+  }
+});
+
+// ─── BATCH ADD TAB ───
+function batchTab(btn,tab){
+  btn.parentElement.querySelectorAll('.tab-b').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ba-and').style.display=tab==='ba-and'?'block':'none';
+  document.getElementById('ba-ios').style.display=tab==='ba-ios'?'block':'none';
+}
+
+// ─── APK addr change handlers ───
+function acAndAddrChange(){
+  const el=document.getElementById('ac-and-apkaddr');
+  if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('ac-and-apkname');if(n)n.value='';}
+}
+function baAndAddrChange(){
+  const el=document.getElementById('ba-and-apkaddr');
+  if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('ba-and-apkname');if(n)n.value='';}
+}
+function guideAddrChange(){
+  const el=document.getElementById('g-apk-addr');
+  if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('g-apk-name');if(n)n.value='';}
+}
+
+
+// ─── SWITCH PAGE (extend for activity-list) ───
+const _origSwitchPage = switchPage;
+function switchPage(page, el){
+  // hide all pages
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list'].forEach(function(id){
+    var p=document.getElementById(id); if(p) p.style.display='none';
+  });
+  // show requested
+  const pg = document.getElementById('pg-'+page);
+  if(pg) pg.style.display='block';
+  // update nav active state
+  document.querySelectorAll('.menu-item,.submenu-item').forEach(m=>m.classList.remove('active'));
+  if(el) el.classList.add('active');
+  // breadcrumb
+  const bcMap = {
+    'channel':'推广渠道管理 / 渠道列表',
+    'effect':'推广渠道管理 / 推广效果',
+    'guide':'推广渠道管理 / 安装引导页',
+    'activity-list':'福利中心 / 活动列表'
+  };
+  const bcSec = {'channel':'推广渠道管理','effect':'推广渠道管理','guide':'推广渠道管理','activity-list':'福利中心'};
+  const bcEl = document.getElementById('breadcrumb');
+  if(bcEl){
+    const txt = document.getElementById('bc-text');
+    const sec = document.getElementById('bc-section');
+    if(txt) txt.textContent = bcMap[page]||page;
+    if(sec) sec.textContent = bcSec[page]||'';
+  }
+}
+
+// ─── ACTIVITY LIST secondary tabs ───
+function actSecTab(el, tabId){
+  el.closest('.sec-tabs-bar').querySelectorAll('.sec-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  // hide all al-panels directly by id
+  ['al-main','al-pending','al-reviewed'].forEach(function(id){
+    var p=document.getElementById(id); if(p) p.style.display='none';
+  });
+  const panel = document.getElementById(tabId);
+  if(panel) panel.style.display='block';
+}
+
+// ─── OPEN ADD ACTIVITY ───
+function openAddActivity(){
+  document.getElementById('aa-modal-title').textContent = '增加活动';
+  aaInitDays();
+  aaInitBgGallery();
+  aaLogoTab(document.querySelector('#aa-logo-sys .logo-cat-tab'), '棋牌');
+  // reset claim to auto
+  document.querySelector('input[name="aa-claim"][value="auto"]').checked = true;
+  aaClaimToggle('auto');
+  // reset expire
+  document.querySelector('input[name="aa-expire"][value="2"]').checked = true;
+  aaExpireToggle('2');
+  // reset participant
+  document.querySelector('input[name="aa-participant"][value="all"]').checked = true;
+  aaParticipantToggle('all');
+  // reset name to sys
+  document.querySelector('input[name="aa-name-t"][value="sys"]').checked = true;
+  aaNameToggle('sys');
+  // reset time to forever
+  document.querySelector('input[name="aa-time"][value="forever"]').checked = true;
+  aaTimeToggle(false);
+  // reset bg
+  document.querySelector('input[name="aa-bg-style"][value="sys"]').checked = true;
+  aaBgStyleToggle('sys');
+  // reset logo
+  document.querySelector('input[name="aa-logo-style"][value="sys"]').checked = true;
+  aaLogoStyleToggle('sys');
+  // reset detail page
+  document.querySelector('input[name="aa-page-style"][value="skin"]').checked = true;
+  aaDetailPageToggle('skin');
+  openM('m-add-activity');
+}
+
+// ─── OPEN EDIT ACTIVITY ───
+function openEditActivity(idx){
+  document.getElementById('aa-modal-title').textContent = '修改活动';
+  aaInitDays();
+  aaInitBgGallery();
+  aaLogoTab(document.querySelector('#aa-logo-sys .logo-cat-tab'), '棋牌');
+  aaClaimToggle('manual');
+  document.querySelector('input[name="aa-claim"][value="manual"]').checked = true;
+  openM('m-add-activity');
+}
+
+// ─── OPEN VIEW ACTIVITY ───
+function openViewActivity(idx){
+  // Populate read-only tier area with sample data
+  const vt = document.getElementById('va-tier-area');
+  if(vt && vt.innerHTML.trim() === '') {
+    vt.innerHTML = aaBuildViewTier();
+  }
+  openM('m-view-activity');
+}
+
+function aaBuildViewTier(){
+  const tiers = [
+    {charge:'30.00',dMin:'0.30',dMax:'88.00',conds:[{m:'0',a:'0.50',b:'0.51'},{m:'3',a:'0.50',b:'0.52'},{m:'5',a:'0.50',b:'0.53'}]},
+    {charge:'70.00',dMin:'0.50',dMax:'177.00',conds:[{m:'0',a:'0.50',b:'1.00'},{m:'2',a:'0.75',b:'1.50'},{m:'5',a:'1.00',b:'2.00'}]}
+  ];
+  let html2 = '';
+  tiers.forEach(function(t,i){
+    html2 += `<div class="aa-tier-block"><div class="aa-tier-hd"><span>第${i+1}档位</span></div><div class="aa-tier-body">`;
+    html2 += `<div class="aa-tier-row"><span class="aa-tier-label">充值金额(≥)：</span><input class="aa-s-inp" style="width:100px;background:#f5f5f5" value="${t.charge}" readonly></div>`;
+    html2 += `<div class="aa-tier-row"><span class="aa-tier-label">显示奖励：</span><input class="aa-s-inp" style="width:80px;background:#f5f5f5" value="${t.dMin}" readonly><span style="margin:0 4px;color:#8c8c8c">~</span><input class="aa-s-inp" style="width:80px;background:#f5f5f5" value="${t.dMax}" readonly></div>`;
+    html2 += `<div class="aa-cond-hd"><span style="font-size:12px;color:#595959">领取条件</span><span style="font-size:12px;color:#8c8c8c">打码倍数(≥)</span><span style="font-size:12px;color:#8c8c8c;margin-left:40px">奖励金额</span></div>`;
+    t.conds.forEach(function(c){
+      html2 += `<div class="aa-cond-row"><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.m}" readonly><span style="font-size:12px;color:#8c8c8c;margin:0 4px"></span><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.a}" readonly><span class="aa-cond-range">~</span><input class="aa-s-inp" style="width:70px;background:#f5f5f5" value="${c.b}" readonly></div>`;
+    });
+    html2 += '</div></div>';
+  });
+  return html2;
+}
+
+// ─── DAY TAB SWITCH ───
+function aaDaySwitch(el, idx){
+  el.closest('.day-tabs').querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('.aa-fc').querySelectorAll('.aa-day-panel').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('aa-day-'+idx);
+  if(panel) panel.classList.add('active');
+}
+
+// ─── TIER DEFAULT DATA ───
+const AA_TIER_DEFAULTS = [
+  {charge:'30.00',dMin:'0.20',dMax:'77.00',conds:[{m:'0',a:'0.20',b:'0.80'},{m:'2',a:'0.30',b:'1.20'},{m:'5',a:'0.40',b:'1.60'}]},
+  {charge:'70.00',dMin:'0.50',dMax:'177.00',conds:[{m:'0',a:'0.50',b:'1.00'},{m:'2',a:'0.75',b:'1.50'},{m:'5',a:'1.00',b:'2.00'}]},
+  {charge:'150.00',dMin:'2.00',dMax:'377.00',conds:[{m:'0',a:'2.00',b:'4.00'},{m:'2',a:'3.00',b:'6.00'},{m:'5',a:'4.00',b:'8.00'}]},
+  {charge:'300.00',dMin:'5.00',dMax:'666.00',conds:[{m:'0',a:'5.00',b:'10.00'},{m:'2',a:'7.50',b:'15.00'},{m:'5',a:'10.00',b:'20.00'}]},
+  {charge:'600.00',dMin:'10.00',dMax:'999.00',conds:[{m:'0',a:'10.00',b:'20.00'},{m:'2',a:'15.00',b:'30.00'},{m:'5',a:'20.00',b:'40.00'}]},
+  {charge:'1000.00',dMin:'15.00',dMax:'1555.00',conds:[{m:'0',a:'15.00',b:'30.00'},{m:'2',a:'22.50',b:'45.00'},{m:'5',a:'30.00',b:'60.00'}]},
+  {charge:'2000.00',dMin:'20.00',dMax:'2888.00',conds:[{m:'0',a:'20.00',b:'40.00'},{m:'2',a:'30.00',b:'60.00'},{m:'5',a:'40.00',b:'80.00'}]},
+  {charge:'5000.00',dMin:'75.00',dMax:'8888.00',conds:[{m:'0',a:'75.00',b:'150.00'},{m:'2',a:'112.50',b:'225.00'},{m:'5',a:'150.00',b:'300.00'}]}
+];
+
+// ─── BUILD TIER BLOCK ───
+function aaBuildTier(dayIdx, tierIdx){
+  const d = AA_TIER_DEFAULTS[tierIdx] || {charge:'',dMin:'',dMax:'',conds:[{m:'0',a:'',b:''}]};
+  const div = document.createElement('div');
+  div.className = 'aa-tier-block';
+  div.dataset.day = dayIdx;
+  div.dataset.tier = tierIdx;
+  let condsHtml = '';
+  d.conds.forEach(function(c){
+    condsHtml += `<div class="aa-cond-row">
+      <input class="aa-s-inp" type="number" value="${c.m}" style="width:70px">
+      <input class="aa-s-inp" type="number" value="${c.a}" style="width:80px">
+      <span class="aa-cond-range">~</span>
+      <input class="aa-s-inp" type="number" value="${c.b}" style="width:80px">
+      <button class="aa-cond-del" onclick="aaCondDel(this)">−</button>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="aa-tier-hd">
+      <span>第${tierIdx+1}档位</span>
+      <button class="aa-tier-btn-del" onclick="aaTierDel(this)">− 删除档位</button>
+    </div>
+    <div class="aa-tier-body">
+      <div class="aa-tier-row">
+        <span class="aa-tier-label">充值金额(≥)：</span>
+        <input class="aa-s-inp" type="number" value="${d.charge}" style="width:110px">
+      </div>
+      <div class="aa-tier-row">
+        <span class="aa-tier-label">显示奖励：</span>
+        <input class="aa-s-inp" type="number" value="${d.dMin}" style="width:90px">
+        <span style="margin:0 4px;color:#8c8c8c">~</span>
+        <input class="aa-s-inp" type="number" value="${d.dMax}" style="width:90px">
+      </div>
+      <div class="aa-cond-hd">
+        <span>领取条件 &nbsp; <span style="color:#8c8c8c">打码倍数(≥)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#8c8c8c">奖励金额</span></span>
+        <button class="aa-cond-add" onclick="aaCondAdd(this)">+ 添加条件</button>
+      </div>
+      <div class="aa-cond-wrap">${condsHtml}</div>
+    </div>`;
+  return div;
+}
+
+// ─── TIER ADD / DEL (acts on last) ───
+function aaTierAdd(el){
+  const panel = el.closest('.aa-day-panel');
+  const dayIdx = parseInt(panel.id.replace('aa-day-',''));
+  const blocks = panel.querySelectorAll('.aa-tier-block');
+  const nextIdx = blocks.length;
+  if(nextIdx >= 8) return;
+  const nb = aaBuildTier(dayIdx, nextIdx);
+  panel.insertBefore(nb, el);
+  aaRenumberTiers(panel);
+}
+function aaTierDel(el){
+  const panel = el.closest('.aa-day-panel');
+  const blocks = panel.querySelectorAll('.aa-tier-block');
+  if(blocks.length <= 1) return;
+  blocks[blocks.length-1].remove();
+  aaRenumberTiers(panel);
+}
+function aaRenumberTiers(panel){
+  panel.querySelectorAll('.aa-tier-block').forEach(function(b,i){
+    const hd = b.querySelector('.aa-tier-hd span');
+    if(hd) hd.textContent = '第'+(i+1)+'档位';
+  });
+}
+
+// ─── COND ADD / DEL ───
+function aaCondAdd(el){
+  const wrap = el.closest('.aa-tier-body').querySelector('.aa-cond-wrap');
+  const row = document.createElement('div');
+  row.className = 'aa-cond-row';
+  row.innerHTML = `
+    <input class="aa-s-inp" type="number" value="0" style="width:70px">
+    <input class="aa-s-inp" type="number" placeholder="最小" style="width:80px">
+    <span class="aa-cond-range">~</span>
+    <input class="aa-s-inp" type="number" placeholder="最大" style="width:80px">
+    <button class="aa-cond-del" onclick="aaCondDel(this)">−</button>`;
+  wrap.appendChild(row);
+}
+function aaCondDel(el){
+  const row = el.closest('.aa-cond-row');
+  const wrap = row.parentElement;
+  if(wrap.querySelectorAll('.aa-cond-row').length > 1) row.remove();
+}
+
+// ─── INIT DAY PANELS (8 tiers × 3 conditions) ───
+function aaInitDays(){
+  for(let i=0;i<5;i++){
+    const panel = document.getElementById('aa-day-'+i);
+    if(!panel) continue;
+    panel.innerHTML='';
+    for(let t=0;t<8;t++){
+      panel.appendChild(aaBuildTier(i, t));
+    }
+    const addBtn = document.createElement('button');
+    addBtn.className='aa-tier-btn-add';
+    addBtn.textContent='+ 添加档位';
+    addBtn.onclick=function(){aaTierAdd(this);};
+    panel.appendChild(addBtn);
+  }
+}
+
+// ─── BG GALLERY ───
+const AA_BG_GRADS = [
+  'linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 55%,#3ab8d8 100%)',
+  'linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)',
+  'linear-gradient(135deg,#7b2ff7 0%,#f107a3 100%)',
+  'linear-gradient(135deg,#f093fb 0%,#f5576c 100%)',
+  'linear-gradient(135deg,#4facfe 0%,#00f2fe 100%)',
+  'linear-gradient(135deg,#43e97b 0%,#38f9d7 100%)',
+  'linear-gradient(135deg,#fa709a 0%,#fee140 100%)',
+  'linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%)',
+  'linear-gradient(135deg,#ff9a9e 0%,#fad0c4 100%)',
+  'linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)',
+  'linear-gradient(135deg,#2193b0 0%,#6dd5ed 100%)',
+  'linear-gradient(135deg,#cc2b5e 0%,#753a88 100%)'
+];
+function aaInitBgGallery(){
+  const g = document.getElementById('aa-bg-gallery');
+  if(!g) return;
+  g.innerHTML='';
+  AA_BG_GRADS.forEach(function(grad,i){
+    const item=document.createElement('div');
+    item.className='aa-bg-item'+(i===0?' selected':'');
+    item.style.background=grad;
+    item.onclick=function(){aaSelectBg(this,grad);};
+    g.appendChild(item);
+  });
+}
+function aaSelectBg(el,grad){
+  el.closest('.aa-bg-gallery').querySelectorAll('.aa-bg-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  const banner=document.getElementById('aa-banner');
+  if(banner) banner.style.background=grad;
+}
+
+// ─── LOGO GALLERY ───
+const AA_LOGO_CATS = {
+  '棋牌':['🃏','♠️','♥️','♦️','♣️','🀄','🎴','🎰','🎲'],
+  '捕鱼':['🐟','🦈','🐠','🦑','🐙','🦀','🐡','🦞','🐚'],
+  '彩票':['🎟️','🏆','🎯','🍀','💰','💎','🎁','🎊','🎉'],
+  '体育':['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🏓','🥊'],
+  '视讯':['🎬','📺','🎥','📷','🔴','📡','🎞️','📽️','🎦'],
+  '老虎机':['🎰','🍒','🍋','🍊','🍇','⭐','💎','🔔','7️⃣'],
+  '活动':['🎪','🎠','🎡','🎢','🎭','🎨','🎶','🎤','🎸'],
+  '节日':['🎄','🎆','🎇','🧨','🎑','🎃','🎋','🎍','🎎'],
+  '礼物':['🎁','🎀','🛍️','💝','💌','🎊','🥳','🎈','🎉']
+};
+function aaLogoTab(el, cat){
+  if(el){
+    el.closest('.logo-cat-tabs').querySelectorAll('.logo-cat-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  const g = document.getElementById('aa-logo-gallery');
+  if(!g) return;
+  g.innerHTML='';
+  const icons = AA_LOGO_CATS[cat]||AA_LOGO_CATS['棋牌'];
+  icons.forEach(function(icon,i){
+    const item=document.createElement('div');
+    item.className='aa-logo-item';
+    item.textContent=icon;
+    item.onclick=function(){aaSelectLogo(this,icon);};
+    g.appendChild(item);
+  });
+}
+function aaSelectLogo(el,icon){
+  el.closest('.aa-logo-gallery').querySelectorAll('.aa-logo-item').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  const bl=document.getElementById('aa-banner-logo');
+  if(bl) bl.textContent=icon;
+}
+
+// ─── FIELD TOGGLES ───
+function aaNameToggle(val){
+  const inp=document.getElementById('aa-name-inp');
+  if(!inp) return;
+  if(val==='sys'){
+    inp.disabled=true; inp.style.background='#f5f5f5'; inp.placeholder='请输入活动名称';
+  } else {
+    inp.disabled=false; inp.style.background='#fff';
+  }
+}
+function aaTimeToggle(show){
+  const r=document.getElementById('aa-time-range');
+  if(r) r.style.display=show?'flex':'none';
+  const sw=document.getElementById('aa-show-time-wrap');
+  if(sw) sw.style.display=show?'flex':'none';
+}
+function aaRuleToggle(val){
+  document.getElementById('aa-rule-sys').style.display=val==='sys'?'block':'none';
+  document.getElementById('aa-rule-custom').style.display=val==='custom'?'block':'none';
+}
+function aaAllTier(checked){
+  document.querySelectorAll('.aa-tier-cb').forEach(cb=>cb.checked=checked);
+}
+function aaTypeChange(val){
+  const isMystery=(val==='mystery');
+  document.getElementById('aa-reset-mystery').style.display=isMystery?'flex':'none';
+  document.getElementById('aa-reset-normal').style.display=isMystery?'none':'flex';
+  const mult=document.getElementById('aa-audit-mult');
+  if(mult) mult.disabled=isMystery;
+}
+function aaClaimToggle(val){
+  const termSec = document.getElementById('aa-terminal-sec');
+  const restSec = document.getElementById('aa-restrict-sec');
+  if(val==='auto'){
+    if(termSec) termSec.style.opacity='0.45';
+    if(restSec) restSec.style.opacity='0.45';
+    if(termSec) termSec.style.pointerEvents='none';
+    if(restSec) restSec.style.pointerEvents='none';
+  } else {
+    if(termSec) { termSec.style.opacity='1'; termSec.style.pointerEvents=''; }
+    if(restSec) { restSec.style.opacity='1'; restSec.style.pointerEvents=''; }
+  }
+}
+function aaExpireToggle(val){
+  const wrap = document.getElementById('aa-expire-days-wrap');
+  if(wrap) wrap.style.display=(val==='3'||val==='4')?'flex':'none';
+}
+function aaParticipantToggle(val){
+  const note = document.getElementById('aa-new-member-note');
+  if(note) note.style.display=(val==='new')?'block':'none';
+}
+function aaDetailPageToggle(val){
+  const wrap = document.getElementById('aa-preview-btn-wrap');
+  if(wrap) wrap.style.display=(val==='style1')?'block':'none';
+}
+function aaBgStyleToggle(val){
+  const sys=document.getElementById('aa-bg-sys');
+  const custom=document.getElementById('aa-bg-custom');
+  if(sys) sys.style.display=(val==='sys')?'block':'none';
+  if(custom) custom.style.display=(val==='custom')?'block':'none';
+}
+function aaLogoStyleToggle(val){
+  const sys=document.getElementById('aa-logo-sys');
+  const custom=document.getElementById('aa-logo-custom');
+  if(sys) sys.style.display=(val==='sys')?'block':'none';
+  if(custom) custom.style.display=(val==='custom')?'block':'none';
+}
+function aaPlatToggle(val){
+  const list=document.getElementById('aa-plat-list');
+  if(list) list.style.display=(val==='limited')?'block':'none';
+}
+function aaPlatTab(el, panelId){
+  el.closest('.plat-tabs').querySelectorAll('.plat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('plat-panel-e') && (document.getElementById('plat-panel-e').style.display='none');
+  document.getElementById('plat-panel-s') && (document.getElementById('plat-panel-s').style.display='none');
+  const panel = panelId==='electronic' ? document.getElementById('plat-panel-e') : document.getElementById('plat-panel-s');
+  if(panel) panel.style.display='block';
+}
+function aaPlatCheckAll(type, checked){
+  document.querySelectorAll('.plat-cb-'+type).forEach(cb=>cb.checked=checked);
+}
+
+// ─── PREVIEW POPUP ───
+function aaOpenPreview(){
+  document.getElementById('preview-overlay').classList.add('show');
+  document.getElementById('preview-overlay').classList.remove('maximized');
+}
+function aaClosePreview(e){
+  if(e.target===document.getElementById('preview-overlay'))
+    document.getElementById('preview-overlay').classList.remove('show','maximized');
+}
+function aaToggleMaxPreview(e){
+  e.stopPropagation();
+  document.getElementById('preview-overlay').classList.toggle('maximized');
+}
+
+// ─── CALENDAR ───
+let calBaseYear=2026, calBaseMonth=5; // June 2026 (0-indexed)
+let calStart=null, calEnd=null;
+function aaOpenCal(){
+  const btn = document.getElementById('aa-date-range-btn');
+  const popup = document.getElementById('cal-popup');
+  const overlay = document.getElementById('cal-overlay');
+  if(btn && popup){
+    const rect = btn.getBoundingClientRect();
+    popup.style.top = (rect.bottom+4)+'px';
+    popup.style.left = rect.left+'px';
+  }
+  calRender();
+  overlay.classList.add('show');
+}
+function aaCloseCal(e){
+  if(e.target===document.getElementById('cal-overlay'))
+    document.getElementById('cal-overlay').classList.remove('show');
+}
+function calNav(dir){
+  calBaseMonth += dir;
+  if(calBaseMonth > 11){ calBaseMonth=0; calBaseYear++; }
+  if(calBaseMonth < 0){ calBaseMonth=11; calBaseYear--; }
+  calRender();
+}
+function calRender(){
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const m2y = calBaseMonth===11 ? calBaseYear+1 : calBaseYear;
+  const m2m = (calBaseMonth+1) % 12;
+  document.getElementById('cal-title1').textContent = calBaseYear+'年'+months[calBaseMonth];
+  document.getElementById('cal-title2').textContent = m2y+'年'+months[m2m];
+  calRenderGrid('cal-grid1', calBaseYear, calBaseMonth);
+  calRenderGrid('cal-grid2', m2y, m2m);
+}
+function calRenderGrid(gridId, y, m){
+  const grid = document.getElementById(gridId);
+  const dows = ['日','一','二','三','四','五','六'];
+  let html2 = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const firstDay = new Date(y,m,1).getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  for(let i=0;i<firstDay;i++) html2 += '<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr = y+'-'+(m+1<10?'0':'')+(m+1)+'-'+(d<10?'0':'')+d;
+    let cls = 'cal-day';
+    if(calStart===dateStr || calEnd===dateStr) cls += ' selected';
+    html2 += `<div class="${cls}" onclick="calSelect('${dateStr}')">${d}</div>`;
+  }
+  grid.innerHTML = html2;
+}
+function calSelect(dateStr){
+  if(!calStart || (calStart && calEnd)){
+    calStart=dateStr; calEnd=null;
+  } else if(dateStr < calStart){
+    calEnd=calStart; calStart=dateStr;
+  } else {
+    calEnd=dateStr;
+  }
+  calRender();
+  if(calStart && calEnd){
+    const s=document.getElementById('aa-date-start');
+    const e=document.getElementById('aa-date-end');
+    if(s) s.textContent=calStart; if(s) s.style.color='rgba(0,0,0,.88)';
+    if(e) e.textContent=calEnd; if(e) e.style.color='rgba(0,0,0,.88)';
+    document.getElementById('cal-overlay').classList.remove('show');
+  }
+}
+
+// ─── INIT ───
+renderTable();
+initRows();
+setDefaultDates();
+
+</script>
+</body>
+</html>
