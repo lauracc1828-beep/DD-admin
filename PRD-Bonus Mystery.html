@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>神秘彩金活动 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#f0f0f5;line-height:1.7}
+.page{max-width:980px;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#1a0a40 0%,#3a1878 60%,#6a3aaa 100%);border-radius:12px;padding:60px 48px;color:#fff;margin-bottom:28px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.75;margin-bottom:28px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.65}
+.toc{background:#fff;border-radius:10px;padding:22px 28px;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#3a1878;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e8e0f8}
+.toc ol{padding-left:20px}.toc li{margin:4px 0}.toc a{color:#5a2aaa;text-decoration:none;font-size:13px}.toc a:hover{text-decoration:underline}.toc ol ol{padding-left:16px}.toc ol ol li{margin:2px 0;opacity:.82}
+.section{background:#fff;border-radius:10px;padding:28px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#1a0a40;padding-bottom:10px;border-bottom:2px solid #e8e0f8;margin-bottom:20px}
+h2{font-size:15px;font-weight:600;color:#3a1878;margin:22px 0 10px;padding-left:10px;border-left:3px solid #7a3aee}
+h3{font-size:14px;font-weight:600;color:#5a2aaa;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}ul,ol{padding-left:20px;margin-bottom:10px}li{margin-bottom:4px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#f0ebff}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#3a1878;border:1px solid #ddd}
+td{padding:8px 12px;border:1px solid #e0e0e0;vertical-align:top}
+tr:nth-child(even) td{background:#fafafa}
+.notice{display:flex;gap:10px;background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-color:#4a7aee;color:#1a3a8a}
+code{background:#f0ebff;color:#5a2aaa;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin:10px 0;font-size:13px;color:#444;border-radius:4px}
+.fc-wrap{overflow:hidden;padding:24px 0}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">神秘彩金活动</div>
+  <div class="cover-sub">PRD 产品需求文档</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>日期：2026-06-22</span><span>作者：产品团队</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景</a></li>
+    <li><a href="#s2">二、名词解释</a></li>
+    <li><a href="#s3">三、后台功能说明</a>
+      <ol>
+        <li><a href="#s31">3.1 活动列表页</a></li>
+        <li><a href="#s32">3.2 新增/编辑活动弹框</a></li>
+      </ol>
+    </li>
+    <li><a href="#s4">四、活动逻辑流程图</a></li>
+    <li><a href="#s5">五、前台功能说明</a>
+      <ol>
+        <li><a href="#s51">5.1 入口与页面结构</a></li>
+        <li><a href="#s52">5.2 活动日标签区</a></li>
+        <li><a href="#s53">5.3 内容区</a></li>
+        <li><a href="#s54">5.4 未登录交互</a></li>
+        <li><a href="#s55">5.5 领取交互（手动领取）</a></li>
+        <li><a href="#s56">5.6 按钮文案规则</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">六、中文 / 葡语字段对照表</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景</h1>
+  <p>神秘彩金是一种面向注册会员的留存激励活动，通过在31天周期内设置5个特定活动日（第2/3/7/15/30天），以充值金额和打码量双维度条件匹配档位，给予会员区间随机奖励，达成提升留存率、促进充值转化的经营目标。</p>
+  <p>本活动适用于以下场景：</p>
+  <ul>
+    <li><strong>新会员激励：</strong>从注册当日起算周期，引导新会员在关键节点完成充值与打码，形成活跃习惯。</li>
+    <li><strong>老会员激活：</strong>以活动开始时间为周期起点，通过阶梯奖励刺激沉默用户回流。</li>
+    <li><strong>长周期留存：</strong>31天跨越用户从尝鲜到依赖的关键周期，有效降低早期流失率。</li>
+  </ul>
+  <p>活动支持两种重置模式：<strong>一次性</strong>（参与一次后结束）与<strong>循环</strong>（每32天自动续期），满足不同运营策略需求。</p>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、名词解释</h1>
+  <table>
+    <thead><tr><th>术语</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>活动周期</td><td>本活动的计算周期，共31天。第32天触发重置。</td></tr>
+      <tr><td>周期起点</td><td>新会员 = 实际注册时间；老会员首次参与 = 活动开始时间；老会员重入 = 再次进入活动时间（详见 5.3）</td></tr>
+      <tr><td>活动日</td><td>周期内指定的可领取彩金日，共5个：第2/3/7/15/30天</td></tr>
+      <tr><td>可领取时间</td><td>周期起点 + (N-1) 天 00:00:00，即对应活动日当天零点整</td></tr>
+      <tr><td>档位</td><td>后台配置的充值门槛分级，每个档位以充值金额下限(≥)区分</td></tr>
+      <tr><td>领取条件</td><td>档位内的打码维度子规则：打码倍数(≥) + 对应奖励金额区间。同一档位可设置多条，不同打码倍数对应不同奖励区间</td></tr>
+      <tr><td>显示奖励</td><td>档位在前台展示的奖励区间（最小~最大），仅用于吸引展示，非实际发放金额</td></tr>
+      <tr><td>稽核倍数</td><td>领取奖励后提款前提：须完成 奖励金额 × 稽核倍数 的打码量。全局统一配置</td></tr>
+      <tr><td>领取方式</td><td>自动：可领取时间到达后系统直接发放；手动：需会员主动点击领取</td></tr>
+      <tr><td>申领终端</td><td>仅手动领取时有效，限制允许发起领取操作的终端类型</td></tr>
+      <tr><td>申领限制</td><td>除终端外的额外申领门槛，如绑定收款方式、IP唯一性、充值条件等</td></tr>
+      <tr><td>稽核限定平台</td><td>稽核打码量仅计算指定游戏平台的有效投注</td></tr>
+      <tr><td>区间随机奖励</td><td>系统在可领取时间到达时，按匹配档位及领取条件确定奖励区间后随机生成固定金额，非点击时随机</td></tr>
+      <tr><td>降档</td><td>当前档位不满足时，自动降至下一档位重新判断</td></tr>
+      <tr><td>待领取（Pendente）</td><td>平台已有的奖励待领取页面；可领取时间到达且系统已确定奖励金额后，该页面自动生成对应记录，会员可在此查看确定的奖励金额并发起领取</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、后台功能说明</h1>
+
+  <h2 id="s31">3.1 活动列表页</h2>
+  <p>路径：后台管理 &gt; 福利中心</p>
+  <p>本需求涉及以下三个操作入口：</p>
+  <ul>
+    <li><strong>新增活动：</strong>点击"新增活动"按钮，弹出活动类型选择弹框，选择"神秘彩金"后进入配置弹框（详见 3.2）。</li>
+    <li><strong>查看活动：</strong>点击列表中的"查看"操作，以只读方式展示活动完整配置，字段与新增/编辑弹框一致，不可修改。</li>
+    <li><strong>修改活动：</strong>点击列表中的"编辑"操作，进入与新增相同的配置弹框，字段可修改。</li>
+  </ul>
+
+  <h2 id="s32">3.2 新增/编辑活动弹框</h2>
+  <p>弹框为单一滚动表单，字段按以下顺序展示：</p>
+
+  <table>
+    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>活动分类</td><td>下拉选择</td><td>综合 / 存款 / 投注</td></tr>
+      <tr><td>活动类型</td><td>下拉选择</td><td>固定选择"神秘彩金"</td></tr>
+      <tr><td>活动名称</td><td>单选 + 文本</td><td>系统默认（自动填入"神秘彩金活动"）或自定义输入</td></tr>
+      <tr><td>活动时间</td><td>单选 + 日期</td><td>永久 / 自定义；选择自定义时需填写活动时间范围及展示时间范围</td></tr>
+      <tr><td>重置方式</td><td>单选</td><td>一次性：会员完成一个周期后不再参与；循环：每31天自动开启新周期</td></tr>
+      <tr><td>派发方式</td><td>单选</td><td>自动派发（固定，玩家申请选项当前不可用）</td></tr>
+      <tr><td>审核方式</td><td>单选</td><td>系统(周期内)（固定，其他选项当前不可用）</td></tr>
+      <tr><td>派奖时间</td><td>单选</td><td>立即到账（固定，延迟到账当前不可用）</td></tr>
+      <tr><td>领取方式</td><td>单选</td><td>自动领取 / 手动领取；选择手动领取时，下方显示申领终端与申领限制配置</td></tr>
+      <tr><td>奖励作废</td><td>单选 + 数字</td><td>过期自动派发 / 过期作废 / 奖励保留天数自动派发 / 奖励保留天数作废；后两项需填写保留天数</td></tr>
+      <tr><td>稽核倍数</td><td>数字输入</td><td>奖励金额 × 稽核倍数 = 提款所需打码量；全局统一，适用于所有活动日</td></tr>
+      <tr><td>参与条件</td><td>单选 + 档位配置</td><td>全部会员 / 新注册会员（活动时间内注册玩家）；下方为活动日档位配置区，详见下文</td></tr>
+      <tr><td>申领终端</td><td>多选</td><td>仅领取方式为"手动领取"时显示。可选：苹果H5 / 安卓H5 / PWA / APK / 苹果包 / 苹果书签 / APK上架包 / 电脑系统</td></tr>
+      <tr><td>申领限制</td><td>多选 + 条件输入</td><td>仅领取方式为"手动领取"时显示。可选：绑定收款方式 / 完成首充可申领 / 同姓名只能申领1次 / 同登录IP只能申领1次 / 同注册IP只能申领1次 / 最近N天内充值次数≥N次 / 最近N天内充值金额≥N</td></tr>
+      <tr><td>稽核限定平台</td><td>单选 + 多选</td><td>不限制 / 仅限以下平台；选择限定时，可按电子/体育分类选择具体游戏平台</td></tr>
+      <tr><td>规则说明</td><td>单选 + 文本域</td><td>系统默认（使用内置规则文案）/ 自定义（可编辑规则内容）</td></tr>
+      <tr><td>显示排序</td><td>数字输入</td><td>控制活动在列表中的展示顺序</td></tr>
+      <tr><td>活动详情页选择</td><td>单选</td><td>跟随皮肤 / 样式一；选择样式一后可点击预览</td></tr>
+      <tr><td>背景样式</td><td>单选 + 选图/上传</td><td>系统默认（从预设渐变色图库中选择）/ 自定义（上传图片，建议尺寸 660×220px，支持 JPG/PNG/SVG）</td></tr>
+      <tr><td>LOGO样式</td><td>单选 + 选图/上传</td><td>仅背景样式为"系统默认"时显示。系统默认（按分类从图标库选择）/ 自定义（上传图片，建议尺寸 300×300px）</td></tr>
+      <tr><td>宣传图预览</td><td>实时预览</td><td>实时合成展示背景 + LOGO + 活动名称叠加效果</td></tr>
+    </tbody>
+  </table>
+
+  <h3>档位配置区（参与条件下方，按活动日分别配置）</h3>
+  <p>顶部固定5个活动日标签（第2日 / 第3日 / 第7日 / 第15日 / 第30日），点击切换对应配置，各活动日相互独立。每个活动日默认展示8个档位，可新增/删除，系统按充值金额从高到低自动排序。</p>
+  <p>每个档位采用两级结构：</p>
+  <table>
+    <thead><tr><th>层级</th><th>字段</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="2"><strong>第一层 — 档位</strong></td><td>充值金额(≥)</td><td>该档位充值门槛下限</td></tr>
+      <tr><td>显示奖励（最小值 ~ 最大值）</td><td>前台展示的奖励区间，仅用于吸引展示</td></tr>
+      <tr><td rowspan="3"><strong>第二层 — 领取条件</strong>（每档可配置多行）</td><td>打码倍数(≥)</td><td>满足该条件所需的打码倍数下限</td></tr>
+      <tr><td>奖励金额（最小值）</td><td>实际发放奖励区间下限</td></tr>
+      <tr><td>奖励金额（最大值）</td><td>实际发放奖励区间上限；系统在此区间内随机生成固定金额</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">📌 可领取时间到达时，系统先按充值金额从高档向低档匹配档位，再按打码倍数从高到低匹配领取条件，在命中条件的奖励区间内随机生成固定金额。奖励金额在可领取时间点即已确定，非会员点击时随机。</div>
+</div>
+
+<!-- 四 流程图 -->
+<div class="section" id="s4">
+  <h1>四、活动逻辑流程图</h1>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 600 700" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:600px;display:block;margin:0 auto">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,1 L9,5 L0,9 z" fill="#888"/>
+    </marker>
+  </defs>
+
+  <!-- 1. START OVAL -->
+  <rect x="175" y="20" width="250" height="36" rx="18" fill="#1a0a40"/>
+  <text x="300" y="43" text-anchor="middle" fill="#fff" font-size="13" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">会员打开活动页</text>
+
+  <!-- Arrow ↓ -->
+  <line x1="300" y1="56" x2="300" y2="74" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- 2. DIAMOND: 是否已登录 center=(300,98) top=76 bottom=120 -->
+  <polygon points="300,76 395,98 300,120 205,98" fill="#7a5a00"/>
+  <text x="300" y="102" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif">是否已登录？</text>
+
+  <!-- 否 left arrow -->
+  <line x1="205" y1="98" x2="157" y2="98" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="182" y="91" text-anchor="middle" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">否</text>
+  <!-- Left box: 未登录态 -->
+  <rect x="10" y="70" width="145" height="56" rx="6" fill="#7a2a00"/>
+  <text x="82" y="89" text-anchor="middle" fill="#fff" font-size="11" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">未登录态</text>
+  <text x="82" y="103" text-anchor="middle" fill="#fcc" font-size="10" font-family="'PingFang SC',Arial,sans-serif">显示"立即参与"</text>
+  <text x="82" y="117" text-anchor="middle" fill="#fcc" font-size="10" font-family="'PingFang SC',Arial,sans-serif">点击→首页+登录弹窗</text>
+
+  <!-- 是 down arrow -->
+  <line x1="300" y1="120" x2="300" y2="138" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="313" y="133" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">是</text>
+
+  <!-- 3. ACTION: 确定周期起点 y=140 h=50 -->
+  <rect x="190" y="140" width="220" height="50" rx="6" fill="#5a2aaa"/>
+  <text x="300" y="160" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">确定周期起点</text>
+  <text x="300" y="178" text-anchor="middle" fill="#ddd" font-size="10" font-family="'PingFang SC',Arial,sans-serif">（新会员/老会员/重入，详见名词解释）</text>
+
+  <!-- Arrow ↓ -->
+  <line x1="300" y1="190" x2="300" y2="208" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- 4. ACTION: 计算可领取时间 y=210 h=44 -->
+  <rect x="190" y="210" width="220" height="44" rx="6" fill="#0a4a7a"/>
+  <text x="300" y="228" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">计算各活动日可领取时间</text>
+  <text x="300" y="244" text-anchor="middle" fill="#adf" font-size="10" font-family="'PingFang SC',Arial,sans-serif">周期起点 + (N-1) 天 00:00:00</text>
+
+  <!-- Arrow ↓ -->
+  <line x1="300" y1="254" x2="300" y2="272" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- 5. DIAMOND: 当前时间≥可领取时间 center=(300,294) top=272 bottom=316 -->
+  <polygon points="300,272 395,294 300,316 205,294" fill="#7a5a00"/>
+  <text x="300" y="298" text-anchor="middle" fill="#fff" font-size="11" font-family="'PingFang SC',Arial,sans-serif">当前时间 ≥ 可领取时间？</text>
+
+  <!-- 否 right arrow -->
+  <line x1="395" y1="294" x2="443" y2="294" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="418" y="287" text-anchor="middle" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">否</text>
+  <!-- Right box: 待解锁 -->
+  <rect x="445" y="274" width="145" height="40" rx="6" fill="#555"/>
+  <text x="517" y="290" text-anchor="middle" fill="#fff" font-size="11" font-family="'PingFang SC',Arial,sans-serif">待解锁状态</text>
+  <text x="517" y="305" text-anchor="middle" fill="#ccc" font-size="10" font-family="'PingFang SC',Arial,sans-serif">显示可领取时间</text>
+
+  <!-- 是 down arrow -->
+  <line x1="300" y1="316" x2="300" y2="334" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="313" y="329" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">是</text>
+
+  <!-- 6. ACTION: 系统匹配档位 y=336 h=44 -->
+  <rect x="190" y="336" width="220" height="44" rx="6" fill="#0a4a7a"/>
+  <text x="300" y="354" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">系统匹配档位</text>
+  <text x="300" y="370" text-anchor="middle" fill="#adf" font-size="10" font-family="'PingFang SC',Arial,sans-serif">按充值+打码匹配，确定奖励金额</text>
+
+  <!-- Arrow ↓ -->
+  <line x1="300" y1="380" x2="300" y2="398" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- 7. DIAMOND: 是否已领取 center=(300,420) top=398 bottom=442 -->
+  <polygon points="300,398 395,420 300,442 205,420" fill="#7a5a00"/>
+  <text x="300" y="424" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif">是否已领取？</text>
+
+  <!-- 已领取 right arrow -->
+  <line x1="395" y1="420" x2="443" y2="420" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="418" y="413" text-anchor="middle" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">已领取</text>
+  <!-- Right box: 已领取 -->
+  <rect x="445" y="400" width="145" height="40" rx="6" fill="#1a6a3a"/>
+  <text x="517" y="416" text-anchor="middle" fill="#fff" font-size="11" font-family="'PingFang SC',Arial,sans-serif">已领取状态</text>
+  <text x="517" y="431" text-anchor="middle" fill="#cfc" font-size="10" font-family="'PingFang SC',Arial,sans-serif">领取按钮禁用</text>
+
+  <!-- 未领取 down arrow -->
+  <line x1="300" y1="442" x2="300" y2="460" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="318" y="455" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">未领取</text>
+
+  <!-- 8. DIAMOND: 领取方式 center=(300,482) top=460 bottom=504 -->
+  <polygon points="300,460 395,482 300,504 205,482" fill="#7a5a00"/>
+  <text x="300" y="486" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif">领取方式？</text>
+
+  <!-- 自动 right arrow -->
+  <line x1="395" y1="482" x2="443" y2="482" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="418" y="475" text-anchor="middle" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">自动</text>
+  <!-- Right box: 自动发放 -->
+  <rect x="445" y="462" width="145" height="40" rx="6" fill="#1a6a3a"/>
+  <text x="517" y="478" text-anchor="middle" fill="#fff" font-size="11" font-family="'PingFang SC',Arial,sans-serif">自动领取</text>
+  <text x="517" y="493" text-anchor="middle" fill="#cfc" font-size="10" font-family="'PingFang SC',Arial,sans-serif">系统发放，无领取按钮</text>
+
+  <!-- 手动 down arrow -->
+  <line x1="300" y1="504" x2="300" y2="522" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="313" y="517" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">手动</text>
+
+  <!-- 9. ACTION: 会员点击领取 y=524 h=44 -->
+  <rect x="190" y="524" width="220" height="44" rx="6" fill="#5a2aaa"/>
+  <text x="300" y="542" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">会员点击「领取」</text>
+  <text x="300" y="558" text-anchor="middle" fill="#ddd" font-size="10" font-family="'PingFang SC',Arial,sans-serif">系统验证申领条件</text>
+
+  <!-- Arrow ↓ -->
+  <line x1="300" y1="568" x2="300" y2="586" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+
+  <!-- 10. DIAMOND: 申领条件满足 center=(300,608) top=586 bottom=630 -->
+  <polygon points="300,586 395,608 300,630 205,608" fill="#7a5a00"/>
+  <text x="300" y="612" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif">申领条件满足？</text>
+
+  <!-- 不满足 left arrow -->
+  <line x1="205" y1="608" x2="157" y2="608" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="181" y="601" text-anchor="middle" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">不满足</text>
+  <!-- Left box: 显示限制提示 -->
+  <rect x="10" y="588" width="145" height="40" rx="6" fill="#7a2a00"/>
+  <text x="82" y="604" text-anchor="middle" fill="#fff" font-size="11" font-family="'PingFang SC',Arial,sans-serif">显示申领限制</text>
+  <text x="82" y="619" text-anchor="middle" fill="#fcc" font-size="10" font-family="'PingFang SC',Arial,sans-serif">悬浮提示卡片</text>
+
+  <!-- 满足 down arrow -->
+  <line x1="300" y1="630" x2="300" y2="650" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="313" y="645" fill="#888" font-size="11" font-family="'PingFang SC',Arial,sans-serif">满足</text>
+
+  <!-- 11. END OVAL -->
+  <rect x="150" y="652" width="300" height="36" rx="18" fill="#1a6a3a"/>
+  <text x="300" y="675" text-anchor="middle" fill="#fff" font-size="12" font-family="'PingFang SC',Arial,sans-serif" font-weight="600">发放奖励 / 弹出恭喜弹窗</text>
+
+  </svg>
+  </div>
+  <div class="notice notice-info" style="margin-top:16px">ℹ️ 以上流程适用于<strong>手动领取</strong>模式。自动领取模式下，系统在可领取时间到达时直接发放奖励，前台无领取按钮及领取交互（对应流程图第8步右侧分支）。</div>
+</div>
+
+<!-- 五 前台 -->
+<div class="section" id="s5">
+  <h1>五、前台功能说明</h1>
+
+  <h2 id="s51">5.1 入口与页面结构</h2>
+  <p>神秘彩金活动入口位于平台<strong>优惠列表</strong>，会员点击进入活动详情页。</p>
+  <p>页面整体结构从上至下依次为：</p>
+  <table>
+    <thead><tr><th>层级</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>顶部导航栏</td><td>返回按钮 + 页面标题"神秘彩金活动"</td></tr>
+      <tr><td>宣传图</td><td>由后台上传配置生成的横幅，合成展示背景图、LOGO 与活动名称</td></tr>
+      <tr><td>活动日标签区</td><td>5个活动日标签，横向排列，详见 5.2</td></tr>
+      <tr><td>内容区</td><td>个人信息栏 → 可领取时间框 → 档位表 → 活动规则，详见 5.3</td></tr>
+      <tr><td>底部按钮</td><td>固定于页面底部，详见 5.6</td></tr>
+    </tbody>
+  </table>
+  <p><strong>页面样式</strong>：提供两种视觉样式（跟随皮肤 / 样式一），内容与交互完全一致，仅视觉设计不同，由后台"活动详情页选择"字段控制。</p>
+
+  <h2 id="s52">5.2 活动日标签区</h2>
+  <p>横向排列5个活动日标签（第2天 / 第3天 / 第7天 / 第15天 / 第30天）。每个标签为全圆角矩形，当前<strong>选中</strong>标签高亮显示，其下方显示倒三角指示符（在标签框外）。</p>
+
+  <p><strong>红点规则：</strong>有可领取奖励（即已到达可领取时间且尚未领取）的活动日，标签右上角显示小圆点。<strong>仅已登录状态下显示</strong>，未登录时不显示红点。红点与选中高亮相互独立，互不影响。</p>
+
+  <p><strong>默认选中规则：</strong></p>
+  <ul>
+    <li>若会员已在周期内：默认选中<strong>下一个即将到达可领取时间</strong>的活动日</li>
+    <li>若会员首次打开活动（尚未开始周期）：默认选中<strong>第一个标签（第2天）</strong></li>
+  </ul>
+
+  <p><strong>标签视觉样式：</strong>仅有两种视觉状态——正常（默认）与高亮（当前选中）。待解锁、可领取、已领取为逻辑状态，不对应独立的视觉样式，逻辑状态仅影响红点是否显示。</p>
+
+  <table>
+    <thead><tr><th>逻辑状态</th><th>触发条件</th><th>视觉表现</th></tr></thead>
+    <tbody>
+      <tr><td>待解锁</td><td>可领取时间未到达</td><td>标签正常；无红点</td></tr>
+      <tr><td>可领取</td><td>可领取时间已到达，尚未领取</td><td>标签正常；已登录时右上角显示红点</td></tr>
+      <tr><td>已领取</td><td>已成功领取</td><td>标签正常；红点消失</td></tr>
+      <tr><td>选中（叠加）</td><td>当前激活标签</td><td>标签高亮 + 下方倒三角指示符</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s53">5.3 内容区</h2>
+  <p>切换活动日标签后，内容区更新展示以下四个模块：</p>
+
+  <h3>个人信息栏</h3>
+  <table>
+    <thead><tr><th>字段</th><th>已登录</th><th>未登录</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>注册时间</td>
+        <td>
+          新会员 = 实际注册时间<br>
+          老会员首次参与 = 活动开始时间<br>
+          老会员重入（开始新周期）= 再次进入活动的时刻
+        </td>
+        <td>本次打开活动页的时刻（页面加载时确定，切换标签不刷新）</td>
+      </tr>
+      <tr>
+        <td>前X天累积充值</td>
+        <td>从注册时间起，统计截至当前选中活动日可领取时间前的全部充值金额</td>
+        <td>R$0,00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>可领取时间框</h3>
+  <p>所有状态下格式统一，内容如下：</p>
+  <table>
+    <thead><tr><th>展示元素</th><th>内容说明</th></tr></thead>
+    <tbody>
+      <tr><td>标题</td><td>固定文案"可领取时间"</td></tr>
+      <tr>
+        <td>时间值</td>
+        <td>
+          按公式计算：<strong>注册时间（周期起点）+ (N-1) 天 00:00:00</strong>，格式 YYYY-MM-DD HH:MM:SS。<br>
+          已登录时，注册时间由系统按用户类型确定（见上方个人信息栏说明）；<br>
+          未登录时，以本次页面打开时刻作为注册时间代入公式推算。<br>
+          示例（注册日 = 06-16）：第2天→06-17 00:00:00；第3天→06-18 00:00:00；第7天→06-22 00:00:00；第15天→06-30 00:00:00；第30天→07-15 00:00:00
+        </td>
+      </tr>
+      <tr><td>奖励标签</td><td>固定文案"神秘彩金"</td></tr>
+      <tr><td>奖励金额</td><td>当前活动日所有档位中显示奖励最大值（最高档的显示奖励上限），各活动日若档位配置不同则各自显示对应最大值</td></tr>
+    </tbody>
+  </table>
+
+  <h3>档位表</h3>
+  <p>列出后台为当前活动日配置的各档位显示奖励区间，两列：充值金额（≥）/ 神秘彩金。数据来源为后台各档位的"显示奖励"配置值。</p>
+
+  <h3>活动规则</h3>
+  <p>展示后台配置的规则说明文案（系统默认或自定义）。</p>
+
+  <h2 id="s54">5.4 未登录交互</h2>
+  <p>未登录用户进入活动页后，底部展示"立即参与（Participe agora）"按钮，内容区注册时间与可领取时间均按本次页面打开时刻推算展示，档位表与规则正常展示，无领取交互。</p>
+  <p>点击"立即参与"后：<strong>跳转至首页，并同时弹出登录弹窗</strong>。</p>
+
+  <h2 id="s55">5.5 领取交互（手动领取）</h2>
+  <div class="notice notice-info">ℹ️ 本节仅适用于后台配置为<strong>手动领取</strong>模式。自动领取模式下，系统在可领取时间到达时直接发放奖励，前台不显示领取按钮。</div>
+
+  <p><strong>领取途径：</strong>会员可通过以下两个入口发起领取：</p>
+  <ul>
+    <li><strong>活动详情页：</strong>点击底部"领取"按钮</li>
+    <li><strong>待领取（Pendente）页面：</strong>可领取时间到达且系统已确定奖励金额后，平台待领取页面自动生成一条记录，会员可在此查看确定的奖励金额并点击领取。本需求仅说明此为领取路径之一，Pendente 页面为平台已有功能，不在本需求开发范围内。</li>
+  </ul>
+  <p>两个入口触发相同的申领条件验证逻辑。</p>
+
+  <table>
+    <thead><tr><th>场景</th><th>触发条件</th><th>前台响应</th></tr></thead>
+    <tbody>
+      <tr><td>申领条件不满足</td><td>申领终端不在允许范围，或申领限制条件未满足</td><td>显示圆角悬浮卡片，提示可申领的终端列表；点击卡片外任意区域关闭</td></tr>
+      <tr><td>正常领取</td><td>满足所有申领条件</td><td>弹出恭喜弹窗，显示"恭喜您获得 [金额] 神秘彩金"；点击确认关闭；按钮变为禁用态；红点消失</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>申领限制提示卡片：</strong>圆角悬浮卡片，浮于活动日标签区正下方，文案居中。示例文案：</p>
+  <blockquote>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</blockquote>
+
+  <h2 id="s56">5.6 按钮文案规则</h2>
+  <table>
+    <thead><tr><th>状态</th><th>按钮文案（中文）</th><th>按钮文案（葡语）</th><th>样式</th></tr></thead>
+    <tbody>
+      <tr><td>未登录</td><td>立即参与</td><td>Participe agora</td><td>主色强调态</td></tr>
+      <tr><td>已登录 + 可领取（手动）</td><td>领取</td><td>Reclamar</td><td>主色强调态</td></tr>
+      <tr><td>已登录 + 待解锁</td><td>领取</td><td>Reclamar</td><td>禁用态</td></tr>
+      <tr><td>已登录 + 已领取</td><td>领取</td><td>Reclamar</td><td>禁用态</td></tr>
+      <tr><td>自动领取模式</td><td colspan="2">不显示按钮</td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 六 对照表 -->
+<div class="section" id="s6">
+  <h1>六、中文 / 葡语字段对照表</h1>
+  <p>以下为前台展示文案的中文与葡语（巴西葡萄牙语）对照，供开发与多语言配置参考。</p>
+
+  <h2>6.1 页面通用文案</h2>
+  <table>
+    <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
+    <tbody>
+      <tr><td>神秘彩金活动</td><td>Bônus Misterioso</td><td>页面标题 / 宣传图</td></tr>
+      <tr><td>注册时间</td><td>Data de Cadastro</td><td>个人信息栏</td></tr>
+      <tr><td>前X天累积充值</td><td>Depósito acumulado (X dias)</td><td>个人信息栏</td></tr>
+      <tr><td>活动规则</td><td>Regras da Atividade</td><td>规则区域标题</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.2 活动日标签文案</h2>
+  <table>
+    <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
+    <tbody>
+      <tr><td>第X天</td><td>Dia X</td><td>活动日标签</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.3 可领取时间框文案</h2>
+  <table>
+    <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
+    <tbody>
+      <tr><td>可领取时间</td><td>Horário de resgate</td><td>框体标题</td></tr>
+      <tr><td>神秘彩金</td><td>Bônus Misterioso</td><td>奖励标签</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.4 档位表文案</h2>
+  <table>
+    <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
+    <tbody>
+      <tr><td>充值金额</td><td>Valor do Depósito</td><td>档位表列标题</td></tr>
+      <tr><td>神秘彩金</td><td>Bônus Misterioso</td><td>档位表列标题</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.5 按钮文案</h2>
+  <table>
+    <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
+    <tbody>
+      <tr><td>立即参与</td><td>Participe agora</td><td>未登录状态按钮</td></tr>
+      <tr><td>领取</td><td>Reclamar</td><td>可领取 / 禁用态按钮</td></tr>
+      <tr><td>确认</td><td>Confirmar</td><td>成功弹窗确认按钮</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.6 弹窗与提示文案</h2>
+  <table>
+    <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
+    <tbody>
+      <tr><td>恭喜您获得 [金额] 神秘彩金</td><td>Parabéns por ganhar [valor] em fichas de bônus</td><td>领取成功弹窗正文</td></tr>
+      <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, acesse pelo iOS H5, Android H5, PWA, APK, iOS App, iOS Bookmark, APK Release para resgatar</td><td>申领限制悬浮卡片</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
