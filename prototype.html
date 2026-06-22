@@ -225,6 +225,10 @@ tr:hover td{background:#f5f8ff}
 /* ── PLACEHOLDER COLOR ── */
 .fs::placeholder,.fin::placeholder,.f-select::placeholder,.f-input::placeholder{color:#bfbfbf}
 input::placeholder,textarea::placeholder{color:#bfbfbf}
+/* ── HIDE number input spinners globally ── */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
 select.fs option:first-child{color:#bfbfbf}
 /* select placeholder via CSS trick */
 select.fs.ph{color:#bfbfbf}
@@ -354,17 +358,9 @@ select.fs.ph{color:#bfbfbf}
 /* ── 查看活动 read-only ── */
 .aa-readonly select,.aa-readonly input,.aa-readonly textarea{background:#f5f5f5!important;color:rgba(0,0,0,.45)!important;pointer-events:none}
 .aa-readonly .radio-item input,.aa-readonly label{pointer-events:none}
-/* ── preview popup ── */
-.preview-overlay{display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.6);align-items:center;justify-content:center}
+/* ── preview popup (base) ── */
+.preview-overlay{display:none;position:fixed;inset:0;z-index:8000;align-items:center;justify-content:center}
 .preview-overlay.show{display:flex}
-.preview-box{position:relative;display:flex;align-items:flex-start;justify-content:center}
-.preview-phone{width:320px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4);background:#1a0a3e}
-.preview-phone img{width:100%;display:block}
-.preview-ctrl{position:absolute;top:8px;right:8px;display:flex;gap:6px}
-.preview-ctrl-btn{width:28px;height:28px;border-radius:4px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.4);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.preview-ctrl-btn:hover{background:rgba(0,0,0,.7)}
-.preview-overlay.maximized .preview-box{width:100%;height:100%;justify-content:center;align-items:center}
-.preview-overlay.maximized .preview-phone{width:360px}
 /* ── upload area ── */
 .upload-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #d9d9d9;border-radius:4px;padding:5px 14px;cursor:pointer;font-size:13px;background:#fff;color:rgba(0,0,0,.88)}
 .upload-btn:hover{border-color:#4096ff;color:#1677ff}
@@ -954,7 +950,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="aa-fi">
           <span class="aa-fl">稽核倍数：</span>
           <div class="aa-fc" style="display:flex;align-items:center;gap:6px">
-            <input class="fin" type="number" id="aa-audit-mult" value="1" style="width:100px" disabled>
+            <input class="fin" type="number" id="aa-audit-mult" value="1" style="width:100px">
           </div>
         </div>
         <!-- 参与条件 -->
@@ -989,14 +985,14 @@ select.fs.ph{color:#bfbfbf}
           <span class="aa-fl" style="line-height:22px;padding-top:0">申领终端：</span>
           <div class="aa-fc">
             <div style="display:flex;flex-wrap:wrap;gap:14px;row-gap:10px">
-              <label class="radio-item"><input type="checkbox" checked> 苹果H5</label>
-              <label class="radio-item"><input type="checkbox" checked> 安卓H5</label>
-              <label class="radio-item"><input type="checkbox" checked> PWA</label>
-              <label class="radio-item"><input type="checkbox" checked> APK</label>
-              <label class="radio-item"><input type="checkbox" checked> 苹果包</label>
-              <label class="radio-item"><input type="checkbox" checked> 苹果书签</label>
-              <label class="radio-item"><input type="checkbox" checked> APK上架包</label>
-              <label class="radio-item"><input type="checkbox" checked> 电脑系统</label>
+              <label class="radio-item"><input type="checkbox"> 苹果H5</label>
+              <label class="radio-item"><input type="checkbox"> 安卓H5</label>
+              <label class="radio-item"><input type="checkbox"> PWA</label>
+              <label class="radio-item"><input type="checkbox"> APK</label>
+              <label class="radio-item"><input type="checkbox"> 苹果包</label>
+              <label class="radio-item"><input type="checkbox"> 苹果书签</label>
+              <label class="radio-item"><input type="checkbox"> APK上架包</label>
+              <label class="radio-item"><input type="checkbox"> 电脑系统</label>
             </div>
           </div>
         </div>
@@ -1535,7 +1531,7 @@ select.fs.ph{color:#bfbfbf}
       <span class="preview-ctrl-btn has-tip tip-bottom" onclick="document.getElementById('preview-overlay').classList.remove('show','maximized');aaResetMaxBtn()">✕<span class="tip-box">关闭</span></span>
     </div>
     <div class="preview-body">
-      <img src="神秘彩金活动截图/image 37.png" style="max-height:100%;max-width:100%;width:auto;height:auto;display:block;object-fit:contain">
+      <img src="神秘彩金活动截图/image 37.png" style="height:calc(90vh - 0px);width:auto;max-width:100%;display:block;object-fit:contain">
     </div>
   </div>
 </div>
@@ -2428,6 +2424,8 @@ function openAddActivity(){
   // reset detail page
   document.querySelector('input[name="aa-page-style"][value="skin"]').checked = true;
   aaDetailPageToggle('skin');
+  // reset terminal checkboxes (新增时全不选)
+  document.querySelectorAll('#aa-terminal-sec input[type=checkbox]').forEach(function(cb){ cb.checked=false; });
   openM('m-add-activity');
 }
 
@@ -2451,6 +2449,8 @@ function openEditActivity(idx){
   if(expDaysInp){ expDaysInp.value='7'; }
   var audMult = document.getElementById('aa-audit-mult');
   if(audMult){ audMult.value='2'; }
+  // 修改活动时预填申领终端（模拟已保存数据：全选）
+  document.querySelectorAll('#aa-terminal-sec input[type=checkbox]').forEach(function(cb){ cb.checked=true; });
   openM('m-add-activity');
 }
 
@@ -2548,7 +2548,6 @@ function aaTierAdd(el){
   const dayIdx = parseInt(panel.id.replace('aa-day-',''));
   const blocks = panel.querySelectorAll('.aa-tier-block');
   const nextIdx = blocks.length;
-  if(nextIdx >= 8) return;
   const nb = aaBuildTier(dayIdx, nextIdx);
   panel.appendChild(nb);
   aaRenumberTiers(panel);
@@ -2666,7 +2665,7 @@ function aaTypeChange(val){
   document.getElementById('aa-reset-mystery').style.display=isMystery?'flex':'none';
   document.getElementById('aa-reset-normal').style.display=isMystery?'none':'flex';
   const mult=document.getElementById('aa-audit-mult');
-  if(mult) mult.disabled=isMystery;
+  if(mult) mult.disabled=false;
 }
 function aaClaimToggle(val){
   const termSec = document.getElementById('aa-terminal-sec');
