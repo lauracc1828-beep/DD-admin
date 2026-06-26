@@ -14,7 +14,7 @@ body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;
 .cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.65}
 .toc{background:#fff;border-radius:10px;padding:22px 28px;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
 .toc-title{font-size:15px;font-weight:600;color:#3a1878;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e8e0f8}
-.toc ol{padding-left:20px}.toc li{margin:4px 0}.toc a{color:#5a2aaa;text-decoration:none;font-size:13px}.toc a:hover{text-decoration:underline}.toc ol ol{padding-left:16px}.toc ol ol li{margin:2px 0;opacity:.82}
+.toc ol{padding-left:20px;list-style:none}.toc li{margin:4px 0}.toc a{color:#5a2aaa;text-decoration:none;font-size:13px}.toc a:hover{text-decoration:underline}.toc ol ol{padding-left:16px}.toc ol ol li{margin:2px 0;opacity:.82}
 .section{background:#fff;border-radius:10px;padding:28px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
 h1{font-size:20px;font-weight:700;color:#1a0a40;padding-bottom:10px;border-bottom:2px solid #e8e0f8;margin-bottom:20px}
 h2{font-size:15px;font-weight:600;color:#3a1878;margin:22px 0 10px;padding-left:10px;border-left:3px solid #7a3aee}
@@ -30,6 +30,8 @@ tr:nth-child(even) td{background:#fafafa}
 code{background:#f0ebff;color:#5a2aaa;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
 blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin:10px 0;font-size:13px;color:#444;border-radius:4px}
 .fc-wrap{overflow:hidden;padding:24px 0}
+.tag-common{display:inline-block;background:#e8f0ff;color:#2a5aaa;border-radius:3px;font-size:11px;padding:1px 5px;margin-left:4px;font-weight:600;vertical-align:middle}
+.tag-special{display:inline-block;background:#fff0e8;color:#aa4a00;border-radius:3px;font-size:11px;padding:1px 5px;margin-left:4px;font-weight:600;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -119,32 +121,33 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   </ul>
 
   <h2 id="s32">3.2 新增/编辑活动弹框</h2>
-  <p>弹框为单一滚动表单，字段按以下顺序展示：</p>
+  <p>弹框为单一滚动表单，字段按以下顺序展示。字段名后标注 <span class="tag-common">通用</span> 表示所有活动类型共用的配置项；标注 <span class="tag-special">专属</span> 表示神秘彩金活动特有的配置项。</p>
 
   <table>
     <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td>活动分类</td><td>下拉选择</td><td>读取系统活动分类配置，下拉选择。<strong>编辑已生效活动时不可修改。</strong></td></tr>
-      <tr><td>活动类型</td><td>下拉选择</td><td>固定选择"神秘彩金"，决定活动的业务逻辑和配置项。<strong>编辑已生效活动时不可修改。</strong></td></tr>
-      <tr><td>活动名称</td><td>单选 + 文本</td><td>系统默认：自动填入"神秘彩金活动"，前台展示该名称；自定义：可手动输入活动名称</td></tr>
-      <tr><td>活动时间</td><td>单选 + 日期</td><td>永久：活动长期有效，无结束时间；自定义：需填写活动时间范围（控制活动是否有效）及展示时间范围（控制活动在前台的显示时段，可与活动时间不同）</td></tr>
-      <tr><td>重置方式</td><td>单选</td><td>一次性：一个会员只可以参与一次，周期长度为31天，周期结束后不再参与；循环：每31天为一个周期，一个周期结束后自动进入下一个周期</td></tr>
-      <tr><td>派发方式</td><td>单选</td><td>自动派发：系统检测到会员满足奖励条件后，自动将彩金发放至会员账户，无需会员操作（神秘彩金固定使用此方式）；玩家申请：会员需主动发起申请后才能领取（当前不支持，选项置灰）</td></tr>
-      <tr><td>审核方式</td><td>单选</td><td>系统(周期内)：在活动周期内由系统自动完成审核并派发奖励（神秘彩金固定使用此方式）；系统(过期时)：到达奖励过期时间时系统统一审核（当前不支持）；人工审核：由运营人员手动审核后派发（当前不支持）</td></tr>
-      <tr><td>派奖时间</td><td>单选</td><td>立即到账：奖励审核通过后即时发放至会员账户（神秘彩金固定使用此方式）；延迟到账：在指定时间后到账（当前不支持）</td></tr>
-      <tr><td>领取方式</td><td>单选</td><td>自动领取：系统检测到会员满足活动日条件后自动发放彩金，会员无需进入前台操作；手动领取：会员需在活动详情页主动点击"领取"按钮，系统再进行审核派发；选择手动领取时，下方显示申领终端与申领限制配置</td></tr>
-      <tr><td>奖励作废</td><td>单选 + 数字</td><td>过期自动派发：到达过期时间后，不满足条件的奖励自动派发给会员；过期作废：到达过期时间后，不满足条件的奖励自动作废；奖励保留天数自动派发：在设定的保留天数内满足条件后自动派发奖励（选中后需填写保留天数）；奖励保留天数作废：超过保留天数后不满足条件则奖励自动作废（选中后需填写保留天数）</td></tr>
-      <tr><td>稽核倍数</td><td>数字输入</td><td>奖励金额 × 稽核倍数 = 提款所需打码量；全局统一，适用于所有活动日</td></tr>
-      <tr><td>参与条件</td><td>单选 + 档位配置</td><td>全部会员 / 新注册会员（活动时间内注册玩家）；下方为活动日档位配置区，详见下文</td></tr>
-      <tr><td>申领终端</td><td>多选</td><td>仅领取方式为"手动领取"时显示。可选：苹果H5 / 安卓H5 / PWA</td></tr>
-      <tr><td>申领限制</td><td>多选 + 条件输入</td><td>仅领取方式为"手动领取"时显示。各选项说明：<br>• 完成首充可申领：账号需完成首次充值，才能领取奖励<br>• 同登录IP只能申领1次：若不同账号登录时的IP相同，某个账号领取奖励后，其他账号在同一活动中无法领取<br>• 同注册IP只能申领1次：若不同账号注册时的IP相同，某个账号领取奖励后，其他账号在同一活动中无法领取<br>• 最近N天内充值次数≥N次：领奖当日前N天（含当天）内累计充值N次，才能领取奖励<br>• 最近N天内充值金额≥N：领奖当日前N天（含当天）累计充值金额满N元，才能领取奖励<br><strong>注：</strong>「绑定收款方式」与「同姓名只能申领1次」因系统暂不支持，始终置灰不可选。</td></tr>
-      <tr><td>稽核限定平台</td><td>单选 + 多选</td><td>不限制 / 仅限以下平台；选择限定时，可按电子/体育分类选择具体游戏平台</td></tr>
-      <tr><td>规则说明</td><td>单选 + 文本域</td><td>系统默认（使用内置规则文案）/ 自定义（可编辑规则内容）</td></tr>
-      <tr><td>显示排序</td><td>数字输入</td><td>控制活动在列表中的展示顺序</td></tr>
-      <tr><td>活动详情页选择</td><td>单选</td><td>跟随皮肤：活动详情页样式跟随商户整体UI皮肤设置；样式一：使用固定的活动详情页模板（即前台原型所展示的页面），选择后可点击预览</td></tr>
-      <tr><td>背景样式</td><td>单选 + 选图/上传</td><td>系统默认（从预设渐变色图库中选择）/ 自定义（上传图片，建议尺寸 660×220px，支持 JPG/PNG/SVG）</td></tr>
-      <tr><td>LOGO样式</td><td>单选 + 选图/上传</td><td>仅背景样式为"系统默认"时显示。系统默认（按分类从图标库选择）/ 自定义（上传图片，建议尺寸 300×300px）</td></tr>
-      <tr><td>宣传图预览</td><td>实时预览</td><td>实时合成展示背景 + LOGO + 活动名称叠加效果</td></tr>
+      <tr><td>活动分类 <span class="tag-common">通用</span></td><td>下拉选择</td><td>读取系统活动分类配置，下拉选择。<strong>编辑已生效活动时不可修改。</strong></td></tr>
+      <tr><td>活动类型 <span class="tag-common">通用</span></td><td>下拉选择</td><td>固定选择"神秘彩金"，决定活动的业务逻辑和配置项。<strong>编辑已生效活动时不可修改。</strong></td></tr>
+      <tr><td>活动名称 <span class="tag-common">通用</span></td><td>单选 + 文本</td><td>系统默认：自动填入"神秘彩金活动"，前台展示该名称；自定义：可手动输入活动名称</td></tr>
+      <tr><td>活动时间 <span class="tag-common">通用</span></td><td>单选 + 日期</td><td>永久：活动长期有效，无结束时间；自定义：需填写活动时间范围（控制活动是否有效）及展示时间范围（控制活动在前台的显示时段，可与活动时间不同）</td></tr>
+      <tr><td>重置方式 <span class="tag-special">专属</span></td><td>单选</td><td>一次性：一个会员只可以参与一次，周期长度为31天，周期结束后不再参与；循环：每31天为一个周期，一个周期结束后自动进入下一个周期</td></tr>
+      <tr><td>派发方式 <span class="tag-common">通用</span></td><td>单选</td><td>自动派发：系统检测到会员满足奖励条件后，自动将彩金发放至会员账户，无需会员操作（神秘彩金固定使用此方式）；玩家申请：会员需主动发起申请后才能领取（当前不支持，选项置灰）</td></tr>
+      <tr><td>审核方式 <span class="tag-common">通用</span></td><td>单选</td><td>系统(周期内)：在活动周期内由系统自动完成审核并派发奖励（神秘彩金固定使用此方式）；系统(过期时)：到达奖励过期时间时系统统一审核（当前不支持）；人工审核：由运营人员手动审核后派发（当前不支持）</td></tr>
+      <tr><td>派奖时间 <span class="tag-common">通用</span></td><td>单选</td><td>立即到账：奖励审核通过后即时发放至会员账户（神秘彩金固定使用此方式）；延迟到账：在指定时间后到账（当前不支持）</td></tr>
+      <tr><td>领取方式 <span class="tag-common">通用</span></td><td>单选</td><td>自动领取：系统检测到会员满足活动日条件后自动发放彩金，会员无需进入前台操作；手动领取：会员需在活动详情页主动点击"领取"按钮，系统再进行审核派发；选择手动领取时，下方显示申领终端与申领限制配置</td></tr>
+      <tr><td>奖励作废 <span class="tag-common">通用</span></td><td>单选 + 数字</td><td>过期自动派发：到达过期时间后，不满足条件的奖励自动派发给会员；过期作废：到达过期时间后，不满足条件的奖励自动作废；奖励保留天数自动派发：在设定的保留天数内满足条件后自动派发奖励（选中后需填写保留天数）；奖励保留天数作废：超过保留天数后不满足条件则奖励自动作废（选中后需填写保留天数）</td></tr>
+      <tr><td>稽核倍数 <span class="tag-common">通用</span></td><td>数字输入</td><td>奖励金额 × 稽核倍数 = 提款所需打码量；全局统一，适用于所有活动日</td></tr>
+      <tr><td>参与条件 <span class="tag-common">通用</span></td><td>单选 + 档位配置</td><td>全部会员 / 新注册会员（活动时间内注册玩家）；下方为活动日档位配置区，详见下文</td></tr>
+      <tr><td>档位配置区 <span class="tag-special">专属</span></td><td>复合配置</td><td>神秘彩金特有的奖励档位配置，按5个活动日分别配置，详见下方"档位配置区"说明</td></tr>
+      <tr><td>申领终端 <span class="tag-common">通用</span></td><td>多选</td><td>仅领取方式为"手动领取"时显示。可选：苹果H5 / 安卓H5 / PWA</td></tr>
+      <tr><td>申领限制 <span class="tag-common">通用</span></td><td>多选 + 条件输入</td><td>仅领取方式为"手动领取"时显示。各选项说明：<br>• 完成首充可申领：账号需完成首次充值，才能领取奖励<br>• 同登录IP只能申领1次：若不同账号登录时的IP相同，某个账号领取奖励后，其他账号在同一活动中无法领取<br>• 同注册IP只能申领1次：若不同账号注册时的IP相同，某个账号领取奖励后，其他账号在同一活动中无法领取<br>• 最近N天内充值次数≥N次：领奖当日前N天（含当天）内累计充值N次，才能领取奖励<br>• 最近N天内充值金额≥N：领奖当日前N天（含当天）累计充值金额满N元，才能领取奖励<br><strong>注：</strong>「绑定收款方式」与「同姓名只能申领1次」因系统暂不支持，始终置灰不可选。</td></tr>
+      <tr><td>稽核限定平台 <span class="tag-common">通用</span></td><td>单选 + 多选</td><td>不限制 / 仅限以下平台；选择限定时，可按电子/体育分类选择具体游戏平台</td></tr>
+      <tr><td>规则说明 <span class="tag-common">通用</span></td><td>单选 + 文本域</td><td>系统默认（使用内置规则文案）/ 自定义（可编辑规则内容）</td></tr>
+      <tr><td>显示排序 <span class="tag-common">通用</span></td><td>数字输入</td><td>控制活动在列表中的展示顺序</td></tr>
+      <tr><td>活动详情页选择 <span class="tag-common">通用</span></td><td>单选</td><td>跟随皮肤：活动详情页样式跟随商户整体UI皮肤设置；样式一：使用固定的活动详情页模板（即前台原型所展示的页面），选择后可点击预览</td></tr>
+      <tr><td>背景样式 <span class="tag-common">通用</span></td><td>单选 + 选图/上传</td><td>系统默认（从预设渐变色图库中选择）/ 自定义（上传图片，建议尺寸 660×220px，支持 JPG/PNG/SVG）</td></tr>
+      <tr><td>LOGO样式 <span class="tag-common">通用</span></td><td>单选 + 选图/上传</td><td>仅背景样式为"系统默认"时显示。系统默认（按分类从图标库选择）/ 自定义（上传图片，建议尺寸 300×300px）</td></tr>
+      <tr><td>宣传图预览 <span class="tag-common">通用</span></td><td>实时预览</td><td>实时合成展示背景 + LOGO + 活动名称叠加效果</td></tr>
     </tbody>
   </table>
 
@@ -443,10 +446,10 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
-      <tr><td>神秘彩金活动</td><td>Bônus Misterioso</td><td>页面标题 / 宣传图</td></tr>
-      <tr><td>注册时间</td><td>Data de Cadastro</td><td>个人信息栏</td></tr>
-      <tr><td>前X天累积充值</td><td>Depósito acumulado (X dias)</td><td>个人信息栏</td></tr>
-      <tr><td>活动规则</td><td>Regras da Atividade</td><td>规则区域标题</td></tr>
+      <tr><td>神秘彩金活动</td><td>Evento de Bônus Misterioso</td><td>页面标题 / 宣传图</td></tr>
+      <tr><td>注册时间</td><td>Hora de registo</td><td>个人信息栏</td></tr>
+      <tr><td>前X天累积充值</td><td>Depósito total de X Dias</td><td>个人信息栏</td></tr>
+      <tr><td>活动规则</td><td>Regras do evento</td><td>规则区域标题</td></tr>
     </tbody>
   </table>
 
@@ -454,7 +457,7 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
-      <tr><td>第X天</td><td>Dia X</td><td>活动日标签</td></tr>
+      <tr><td>第X天</td><td>Dia X</td><td>活动日标签（如 Dia 2、Dia 3、Dia 7、Dia 15、Dia 30）</td></tr>
     </tbody>
   </table>
 
@@ -462,8 +465,8 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
-      <tr><td>可领取时间</td><td>Horário de resgate</td><td>框体标题</td></tr>
-      <tr><td>神秘彩金</td><td>Bônus Misterioso</td><td>奖励标签</td></tr>
+      <tr><td>可领取时间说明</td><td>O momento em que os bônus podem ser reclamados:</td><td>时间框标题文案</td></tr>
+      <tr><td>神秘彩金（奖励标签）</td><td>Prêmio Misterioso</td><td>时间框内奖励名称</td></tr>
     </tbody>
   </table>
 
@@ -471,8 +474,8 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
-      <tr><td>充值金额</td><td>Valor do Depósito</td><td>档位表列标题</td></tr>
-      <tr><td>神秘彩金</td><td>Bônus Misterioso</td><td>档位表列标题</td></tr>
+      <tr><td>充值金额（档位表列头）</td><td>Âmbito do depósito</td><td>档位表左列标题</td></tr>
+      <tr><td>神秘彩金（档位表列头）</td><td>Prêmio Misterioso</td><td>档位表右列标题</td></tr>
     </tbody>
   </table>
 
@@ -480,8 +483,8 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
-      <tr><td>立即参与</td><td>Participe agora</td><td>未登录状态按钮</td></tr>
-      <tr><td>领取</td><td>Reclamar</td><td>可领取 / 禁用态按钮</td></tr>
+      <tr><td>立即参与</td><td>Participe agora</td><td>参与按钮（登录前 / 存款不足时）</td></tr>
+      <tr><td>领取</td><td>Reclamar</td><td>领取按钮（激活 / 置灰共用同一文案）</td></tr>
       <tr><td>确认</td><td>Confirmar</td><td>成功弹窗确认按钮</td></tr>
     </tbody>
   </table>
@@ -490,8 +493,8 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
-      <tr><td>恭喜您获得 [金额] 神秘彩金</td><td>Parabéns por ganhar [valor] em fichas de bônus</td><td>领取成功弹窗正文</td></tr>
-      <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, acesse pelo iOS H5, Android H5, PWA, APK, iOS App, iOS Bookmark, APK Release para resgatar</td><td>申领限制悬浮卡片</td></tr>
+      <tr><td>恭喜您获得 [金额] 神秘彩金</td><td>Parabéns por ganhar R$[valor] em fichas de bônus</td><td>领取成功弹窗正文</td></tr>
+      <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, resgate usando o iOSH5,AndroidH5,PWA,APK,iOSApp,iOSBookmark,APKRelease</td><td>申领限制悬浮卡片</td></tr>
     </tbody>
   </table>
 </div>
