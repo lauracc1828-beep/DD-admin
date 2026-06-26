@@ -500,12 +500,12 @@ select.fs.ph{color:#bfbfbf}
   <!-- 推广渠道管理 -->
   <div class="menu-item open" id="menu-promo" onclick="toggleMenu(this,'promo-sub')"><div class="menu-item-left"><span class="menu-icon">📡</span>推广渠道管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="promo-sub" style="display:block">
-    <div class="submenu-item active" onclick="switchPage('channel',this)">推广渠道管理</div>
+    <div class="submenu-item active" id="si-channel" onclick="switchPage('channel',this)">推广渠道管理</div>
     <div class="submenu-item disabled">仿应用商店</div>
     <div class="submenu-item disabled">推广渠道报表</div>
     <div class="submenu-item disabled">推广渠道报表新</div>
-    <div class="submenu-item" onclick="switchPage('effect',this)">推广效果报表</div>
-    <div class="submenu-item" onclick="switchPage('guide',this)">安装引导</div>
+    <div class="submenu-item" id="si-effect" onclick="switchPage('effect',this)">推广效果报表</div>
+    <div class="submenu-item" id="si-guide" onclick="switchPage('guide',this)">安装引导</div>
   </div>
   <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🎯</span>子平台游戏管理</div><span class="arrow">›</span></div>
   <div class="sidebar-version">V: 2026/06/18 14:29:18</div>
@@ -2750,6 +2750,8 @@ function switchPage(page, el){
   // update nav active state
   document.querySelectorAll('.menu-item,.submenu-item').forEach(m=>m.classList.remove('active'));
   if(el) el.classList.add('active');
+  // sync URL hash (enables deep-linking)
+  history.replaceState(null,'','#'+page);
   // breadcrumb
   const bcMap = {
     'channel':'推广渠道管理 / 渠道列表',
@@ -2766,6 +2768,20 @@ function switchPage(page, el){
     if(sec) sec.textContent = bcSec[page]||'';
   }
 }
+
+// ─── HASH ROUTING — deep-link support ───
+// Usage: prototype.html#channel / #effect / #guide / #activity-list
+(function(){
+  var validPages = ['channel','effect','guide','activity-list'];
+  function hashRoute(){
+    var hash = location.hash.replace('#','');
+    if(validPages.indexOf(hash) !== -1){
+      var navEl = document.getElementById('si-'+hash);
+      switchPage(hash, navEl);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', hashRoute);
+})();
 
 // ─── ACTIVITY LIST secondary tabs ───
 function actSecTab(el, tabId){
