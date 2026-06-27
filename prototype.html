@@ -3147,8 +3147,8 @@ function updateRuleText(){
     var expText;
     if(expireVal==='1') expText='过期后彩金将自动派发';
     else if(expireVal==='2') expText='过期后彩金将作废';
-    else if(expireVal==='3') expText=days+'天内未领取将自动派发';
-    else expText=days+'天内未领取将作废';
+    else if(expireVal==='3') expText='彩金保留'+days+'天后自动派发';
+    else expText='彩金保留'+days+'天后作废';
     l1.textContent='1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；';
     l2.textContent='2. 活动于报名后第32天'+endWord+'，'+claimWord+'，'+expText+'；';
     l3.textContent='3. 彩金（不含本金）需要1倍有效投注才能提现；';
