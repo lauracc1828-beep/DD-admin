@@ -375,7 +375,13 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
       <tr>
         <td>规则说明 <span class="tag-common">通用</span></td>
         <td>单选 + 文本域</td>
-        <td>系统默认：使用平台内置的活动规则文案，自动展示在前台活动详情页；自定义：运营人员手动编辑规则内容，替换系统默认文案</td>
+        <td>
+          <strong>系统默认：</strong>使用平台内置规则文案，根据当前配置自动生成并展示在前台。文案随以下字段实时联动变化：<br>
+          • 第1条：随<strong>重置方式</strong>变化——"本活动为每<em>{月/周/日}</em>会员答谢活动，参与活动可领取平台答谢奖励。"<br>
+          • 第2条：随<strong>奖励作废</strong>变化——"奖励须在会员日当天手动领取，<em>{过期自动派发。/ 过期自动作废，不予补发。}</em>"<br>
+          • 第3–5条：固定文案，不随配置变化<br>
+          <strong>自定义：</strong>运营人员手动编辑规则内容，替换系统默认文案
+        </td>
       </tr>
       <tr>
         <td>显示排序 <span class="tag-common">通用</span></td>
@@ -456,8 +462,16 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <h1>五、前台功能说明</h1>
 
   <h2 id="s51">5.1 入口与页面结构</h2>
-  <p>前台活动详情页由活动 Banner（宣传图）、活动说明区（显示最高可获得奖励、活动规则）、领取按钮区三部分组成。会员进入福利中心后点击会员答谢活动卡片进入详情页。</p>
-  <p>页面顶部展示活动倒计时或当前会员日状态；底部固定显示"领取"按钮，按钮状态随活动逻辑实时变化。</p>
+  <p>会员进入福利中心后点击会员答谢活动卡片进入详情页。页面由以下 7 个区块组成：</p>
+  <ol style="line-height:2">
+    <li><strong>活动 Banner（宣传图）：</strong>展示活动视觉，取自后台"背景样式 + LOGO样式"合成图</li>
+    <li><strong>活动标题：</strong>显示活动名称（即后台配置的活动名称字段）</li>
+    <li><strong>倒计时区：</strong>会员日期间显示"奖励领取截止"倒计时（距次日0点）；非会员日显示"即将开启"倒计时（距下次会员日）</li>
+    <li><strong>活动信息栏：</strong>展示"领取时间"（重置方式对应的会员日频率）和"活动结束时间"</li>
+    <li><strong>最高可获得奖励：</strong>展示后台配置的最高奖励金额（展示用，非实际上限）</li>
+    <li><strong>活动规则文案：</strong>展示系统默认或自定义规则说明</li>
+    <li><strong>底部固定按钮：</strong>"领取"按钮，激活或置灰状态随活动逻辑实时变化</li>
+  </ol>
 
   <h2 id="s52">5.2 状态说明</h2>
   <p>前台按钮有两种视觉状态：<strong>激活</strong>（可点击）和<strong>置灰</strong>（不可点击），具体样式以UI设计为准。以下为完整的前台状态列表：</p>
@@ -480,8 +494,18 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
         <td>领取按钮激活，会员可点击领取</td>
       </tr>
       <tr>
+        <td>已登录 · 会员日 · 申领限制不符</td>
+        <td>点击领取后，系统检测到申领限制条件不满足（如终端限制、IP限制等）</td>
+        <td>展示悬浮提示卡片，说明具体未满足的限制条件；按钮维持激活，会员可再次尝试</td>
+      </tr>
+      <tr>
+        <td>已登录 · 会员日 · 领取成功（金额为0）</td>
+        <td>申领限制通过，但该会员当前奖励计算结果为 R$0,00（不满足阶梯条件）</td>
+        <td>弹出领取成功弹窗，显示 R$0,00；会员点击"确认"后按钮置灰（已领取）</td>
+      </tr>
+      <tr>
         <td>已登录 · 会员日 · 已领取</td>
-        <td>当前为会员日，会员已完成领取</td>
+        <td>当前为会员日，会员已完成领取（含金额为0的情况）</td>
         <td>领取按钮置灰不可点，与"不满足条件"视觉样式相同</td>
       </tr>
       <tr>
@@ -491,7 +515,7 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
       </tr>
     </tbody>
   </table>
-  <div class="notice notice-info">ℹ️ "已领取"与"不满足条件"两个状态的按钮视觉样式完全一致（均为置灰），系统不在按钮上区分两者；实际发放状态可在会员的奖励记录页查看。</div>
+  <div class="notice notice-info">ℹ️ "已领取"与"不满足条件"两个状态的按钮视觉样式完全一致（均为置灰），系统不在按钮上区分两者；实际发放状态可在会员的奖励记录页查看。领取金额为 R$0,00 时仍视为"已领取"，按钮同样置灰。</div>
 
   <h2 id="s53">5.3 领取交互</h2>
   <p>会员点击激活状态的"领取"按钮后，系统验证申领条件（终端限制、申领限制等）：</p>
@@ -523,6 +547,8 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <table>
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
+      <tr><td>奖励领取截止</td><td>Expirando em breve</td><td>会员日期间倒计时标签（距次日0点）</td></tr>
+      <tr><td>即将开启</td><td>Em breve</td><td>非会员日倒计时标签（距下次会员日）</td></tr>
       <tr><td>天</td><td>DAY</td><td>倒计时单位</td></tr>
       <tr><td>时</td><td>Hora</td><td>倒计时单位</td></tr>
       <tr><td>分</td><td>Minuto</td><td>倒计时单位</td></tr>

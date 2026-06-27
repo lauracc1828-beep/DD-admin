@@ -113,9 +113,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue'
       <button id="btn-login" class="active" onclick="setLogin(true)">已登录</button>
       <button id="btn-nologin" onclick="setLogin(false)">未登录</button>
     </div></div>
+  <div class="ctrl-group"><label>会员日状态</label>
+    <div class="toggle-btn">
+      <button id="btn-memberday" class="active" onclick="setMemberDay(true)">会员日</button>
+      <button id="btn-nonmemberday" onclick="setMemberDay(false)">非会员日</button>
+    </div></div>
   <div class="ctrl-group"><label>领取结果</label>
     <div class="toggle-btn">
       <button id="btn-success" class="active" onclick="setResult('success')">成功领取</button>
+      <button id="btn-zero" onclick="setResult('zero')">金额为0</button>
       <button id="btn-restrict" onclick="setResult('restrict')">申领限制</button>
     </div></div>
   <div class="ctrl-group"><label>重置时间</label>
@@ -140,7 +146,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue'
   </div>
   <div class="countdown-section">
     <div class="cd-row">
-      <div class="cd-base">即将开启</div>
+      <div class="cd-base" id="cd-label">奖励领取截止</div>
       <div class="cd-date" id="cd-date">2026-06-27 00:00:00</div>
     </div>
     <div class="cd-timer">
@@ -197,25 +203,85 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue'
 </div>
 </div>
 <script>
-var isLoggedIn=true,claimResult='success',resetMode='monthly';
+var isLoggedIn=true, isMemberDay=true, hasClaimed=false;
+var claimResult='success', resetMode='monthly';
+
+// Non-member-day countdown targets (next occurrence)
 var targets={
-  daily:new Date('2026-06-26T10:00:00').getTime(),
+  daily:new Date('2026-06-28T10:00:00').getTime(),
   weekly:new Date('2026-07-01T00:00:00').getTime(),
-  monthly:new Date('2026-06-27T00:00:00').getTime()
+  monthly:new Date('2026-07-07T00:00:00').getTime()
 };
-var dateLabels={daily:'2026-06-26 10:00:00',weekly:'2026-07-01 00:00:00',monthly:'2026-06-27 00:00:00'};
+var dateLabels={daily:'2026-06-28 10:00:00',weekly:'2026-07-01 00:00:00',monthly:'2026-07-07 00:00:00'};
 var collectLabels={daily:'每日10点',weekly:'每周三',monthly:'每月7,17,27日'};
-function setLogin(v){isLoggedIn=v;document.getElementById('btn-login').classList.toggle('active',v);document.getElementById('btn-nologin').classList.toggle('active',!v);updateBtn();}
-function setResult(v){claimResult=v;document.getElementById('btn-success').classList.toggle('active',v==='success');document.getElementById('btn-restrict').classList.toggle('active',v==='restrict');}
-function setReset(v){resetMode=v;['daily','weekly','monthly'].forEach(function(k){document.getElementById('btn-'+k).classList.toggle('active',k===v);});document.getElementById('collect-time').textContent=collectLabels[v];document.getElementById('cd-date').textContent=dateLabels[v];updateBtn();}
-function updateBtn(){document.getElementById('claim-btn').className=isLoggedIn?'main-btn active-btn':'main-btn gray-btn';}
-function onClaim(){if(!isLoggedIn)return;if(claimResult==='success')openCongratsModal();else openRestrictOverlay();}
+
+function getMidnightTarget(){var d=new Date();d.setHours(24,0,0,0);return d.getTime();}
+function getMidnightLabel(){var d=new Date();d.setDate(d.getDate()+1);return d.toISOString().slice(0,10)+' 00:00:00';}
+
+function setLogin(v){
+  isLoggedIn=v;
+  document.getElementById('btn-login').classList.toggle('active',v);
+  document.getElementById('btn-nologin').classList.toggle('active',!v);
+  updateBtn();
+}
+function setMemberDay(v){
+  isMemberDay=v;
+  hasClaimed=false;
+  document.getElementById('btn-memberday').classList.toggle('active',v);
+  document.getElementById('btn-nonmemberday').classList.toggle('active',!v);
+  document.getElementById('cd-label').textContent = v ? '奖励领取截止' : '即将开启';
+  document.getElementById('cd-date').textContent = v ? getMidnightLabel() : dateLabels[resetMode];
+  updateBtn();
+}
+function setResult(v){
+  claimResult=v;
+  document.getElementById('btn-success').classList.toggle('active',v==='success');
+  document.getElementById('btn-zero').classList.toggle('active',v==='zero');
+  document.getElementById('btn-restrict').classList.toggle('active',v==='restrict');
+}
+function setReset(v){
+  resetMode=v;
+  ['daily','weekly','monthly'].forEach(function(k){document.getElementById('btn-'+k).classList.toggle('active',k===v);});
+  document.getElementById('collect-time').textContent=collectLabels[v];
+  if(!isMemberDay) document.getElementById('cd-date').textContent=dateLabels[v];
+  updateBtn();
+}
+function updateBtn(){
+  var canClaim=isLoggedIn && isMemberDay && !hasClaimed;
+  document.getElementById('claim-btn').className=canClaim?'main-btn active-btn':'main-btn gray-btn';
+}
+function onClaim(){
+  if(!isLoggedIn || !isMemberDay || hasClaimed) return;
+  if(claimResult==='restrict'){openRestrictOverlay();}
+  else{
+    document.getElementById('cg-amt').textContent=(claimResult==='zero')?'R$0,00':'R$1.07';
+    openCongratsModal();
+  }
+}
 function openCongratsModal(){document.getElementById('ov-congrats').classList.add('show');}
-function closeCongratsModal(){document.getElementById('ov-congrats').classList.remove('show');}
+function closeCongratsModal(){
+  document.getElementById('ov-congrats').classList.remove('show');
+  hasClaimed=true;
+  updateBtn();
+}
 function openRestrictOverlay(){document.getElementById('restrict-overlay').classList.add('show');}
 function closeRestrict(){document.getElementById('restrict-overlay').classList.remove('show');}
-function tick(){var diff=Math.max(0,targets[resetMode]-Date.now());var d=Math.floor(diff/86400000);var h=Math.floor((diff%86400000)/3600000);var m=Math.floor((diff%3600000)/60000);var s=Math.floor((diff%60000)/1000);document.getElementById('cd-d').textContent=String(d).padStart(2,'0');document.getElementById('cd-h').textContent=String(h).padStart(2,'0');document.getElementById('cd-m').textContent=String(m).padStart(2,'0');document.getElementById('cd-s').textContent=String(s).padStart(2,'0');}
+function tick(){
+  var target=isMemberDay?getMidnightTarget():targets[resetMode];
+  var diff=Math.max(0,target-Date.now());
+  var d=Math.floor(diff/86400000);
+  var h=Math.floor((diff%86400000)/3600000);
+  var m=Math.floor((diff%3600000)/60000);
+  var s=Math.floor((diff%60000)/1000);
+  document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
 tick();setInterval(tick,1000);
+// Init: member day — set label and date
+document.getElementById('cd-label').textContent='奖励领取截止';
+document.getElementById('cd-date').textContent=getMidnightLabel();
 </script>
 </body>
 </html>

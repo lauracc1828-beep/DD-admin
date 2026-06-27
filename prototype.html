@@ -930,8 +930,8 @@ select.fs.ph{color:#bfbfbf}
           <span class="aa-fl">重置方式：</span>
           <div class="aa-fc">
             <div id="aa-reset-mystery" class="radio-g">
-              <label class="radio-item"><input type="radio" name="aa-reset-m" checked> 一次性</label>
-              <label class="radio-item"><input type="radio" name="aa-reset-m"> 循环</label>
+              <label class="radio-item"><input type="radio" name="aa-reset-m" value="once" checked onchange="updateRuleText()"> 一次性</label>
+              <label class="radio-item"><input type="radio" name="aa-reset-m" value="loop" onchange="updateRuleText()"> 循环</label>
               <span class="has-tip" style="margin-left:4px">ⓘ<span class="tip-box">一次性：一个会员只可以参与一次。周期长度为31天。
 循环：每31天一个周期，一个周期结束后自动进入下一个周期。</span></span>
             </div>
@@ -1031,7 +1031,7 @@ select.fs.ph{color:#bfbfbf}
             </div>
             <div id="aa-expire-days-wrap" style="display:none;align-items:center;gap:8px;margin-top:8px;font-size:13px">
               <span style="color:rgba(0,0,0,.88)">奖励领取过期天数：</span>
-              <input class="fin" type="number" value="0" style="width:80px">
+              <input class="fin" type="number" id="aa-expire-days-inp" value="0" style="width:80px" oninput="updateRuleText()">
             </div>
           </div>
         </div>
@@ -1237,11 +1237,11 @@ select.fs.ph{color:#bfbfbf}
               <label class="radio-item"><input type="radio" name="aa-rule" onchange="aaRuleToggle('custom')"> 自定义</label>
             </div>
             <div id="aa-rule-sys" style="background:#f8f8f8;border-radius:4px;padding:12px 14px;font-size:12px;color:#595959;line-height:2;border:1px solid #f0f0f0">
-              <div>1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；</div>
-              <div>2. 活动于报名后第32天结束，彩金自动领取，过期后彩金将作废；</div>
-              <div>3. 彩金（不含本金）需要1倍有效投注才能提现；</div>
-              <div>4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；</div>
-              <div>5. 为避免文字理解差异，平台将保留本活动最终解释权。</div>
+              <div id="aa-rule-line1">1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；</div>
+              <div id="aa-rule-line2">2. 活动于报名后第32天结束，彩金自动领取，过期后彩金将作废；</div>
+              <div id="aa-rule-line3">3. 彩金（不含本金）需要1倍有效投注才能提现；</div>
+              <div id="aa-rule-line4">4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；</div>
+              <div id="aa-rule-line5">5. 为避免文字理解差异，平台将保留本活动最终解释权。</div>
             </div>
             <textarea id="aa-rule-custom" class="fin" placeholder="请输入" style="display:none;width:100%;height:140px;resize:vertical;padding:8px;line-height:1.8;font-size:13px;box-sizing:border-box"></textarea>
           </div>
@@ -3109,6 +3109,52 @@ function aaTimeToggle(show){
 function aaRuleToggle(val){
   document.getElementById('aa-rule-sys').style.display=val==='sys'?'block':'none';
   document.getElementById('aa-rule-custom').style.display=val==='custom'?'block':'none';
+  if(val==='sys') updateRuleText();
+}
+function updateRuleText(){
+  var sysPre=document.getElementById('aa-rule-sys');
+  if(!sysPre||sysPre.style.display==='none') return;
+  var typeEl=document.getElementById('aa-type');
+  var type=typeEl?typeEl.value:'mystery';
+  var l1=document.getElementById('aa-rule-line1');
+  var l2=document.getElementById('aa-rule-line2');
+  var l3=document.getElementById('aa-rule-line3');
+  var l4=document.getElementById('aa-rule-line4');
+  var l5=document.getElementById('aa-rule-line5');
+  if(!l1) return;
+  var expireEl=document.querySelector('input[name="aa-expire"]:checked');
+  var expireVal=expireEl?expireEl.value:'2';
+  var daysInp=document.getElementById('aa-expire-days-inp');
+  var days=daysInp?(parseInt(daysInp.value)||0):0;
+  if(type==='member'){
+    var resetEl=document.querySelector('input[name="aa-reset-mem"]:checked');
+    var resetVal=resetEl?resetEl.value:'month';
+    var pMap={daily:'日',week:'周',month:'月'};
+    var period=pMap[resetVal]||'月';
+    var expText2=(expireVal==='1')?'过期自动派发。':'过期自动作废，不予补发。';
+    l1.textContent='1. 本活动为每'+period+'会员答谢活动，参与活动可领取平台答谢奖励。';
+    l2.textContent='2. 奖励须在会员日当天手动领取，'+expText2;
+    l3.textContent='3. 奖励（不含本金）须满足规定有效投注流水倍数方可申请提款。';
+    l4.textContent='4. 仅账户持有人可进行正常充提操作，否则奖励将被取消或列入黑名单。';
+    l5.textContent='5. 如对本活动条文理解存在差异，以平台最终解释为准。';
+  } else {
+    var mResetEl=document.querySelector('input[name="aa-reset-m"]:checked');
+    var mReset=mResetEl?mResetEl.value:'once';
+    var endWord=(mReset==='loop')?'重置':'结束';
+    var claimEl=document.getElementById('aa-claim-auto');
+    var isAuto=claimEl&&claimEl.checked;
+    var claimWord=isAuto?'彩金自动领取':'彩金需手动领取';
+    var expText;
+    if(expireVal==='1') expText='过期后彩金将自动派发';
+    else if(expireVal==='2') expText='过期后彩金将作废';
+    else if(expireVal==='3') expText=days+'天内未领取将自动派发';
+    else expText=days+'天内未领取将作废';
+    l1.textContent='1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；';
+    l2.textContent='2. 活动于报名后第32天'+endWord+'，'+claimWord+'，'+expText+'；';
+    l3.textContent='3. 彩金（不含本金）需要1倍有效投注才能提现；';
+    l4.textContent='4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；';
+    l5.textContent='5. 为避免文字理解差异，平台将保留本活动最终解释权。';
+  }
 }
 function aaAllTier(checked){
   const allCb = document.getElementById('aa-all-tier');
@@ -3195,10 +3241,12 @@ function aaClaimToggle(val){
       if(lbl){ lbl.disabled=true; lbl.closest('label').style.opacity='0.4'; lbl.closest('label').style.cursor='not-allowed'; }
     });
   }
+  updateRuleText();
 }
 function aaExpireToggle(val){
   const wrap = document.getElementById('aa-expire-days-wrap');
   if(wrap) wrap.style.display=(val==='3'||val==='4')?'flex':'none';
+  updateRuleText();
 }
 function aaParticipantToggle(val){
   const note = document.getElementById('aa-new-member-note');
@@ -3400,6 +3448,7 @@ function aaMemberResetToggle(val){
   if(c) c.innerHTML='';
   // Init daily table on switch
   if(val==='daily') maDUpdate();
+  updateRuleText();
 }
 
 // ─── MULTI-SELECT RENDER ───
