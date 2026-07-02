@@ -277,7 +277,7 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
           决定会员日的时间维度和循环节奏：<br>
           • <strong>每日：</strong>每天固定在指定时间点开放奖励领取，选择后需配置"时间"字段（0～23点，整点选择）<br>
           • <strong>每周：</strong>每周的指定星期开放奖励领取，选择后需通过"添加会员日"配置具体星期（周一～周日，可多选）<br>
-          • <strong>每月：</strong>每月的指定日期开放奖励领取，选择后需通过"添加会员日"配置具体日期（1～31日，可多选）
+          • <strong>每月：</strong>每月的指定日期开放奖励领取，选择后需通过"添加会员日"配置具体日期（1～30日，可多选）
         </td>
       </tr>
       <tr>
@@ -290,7 +290,7 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
         <td>多选标签</td>
         <td>仅重置方式为"每周"或"每月"时显示。<br>
           • 每周模式：从周一至周日中多选，选中的星期即为会员日；可配置多个星期，每个星期对应一套独立的奖励配置<br>
-          • 每月模式：从1日至31日中多选，选中的日期即为会员日；可配置多个日期，每个日期对应一套独立的奖励配置
+          • 每月模式：从1日至30日中多选，选中的日期即为会员日；可配置多个日期，每个日期对应一套独立的奖励配置
         </td>
       </tr>
       <tr>
@@ -377,9 +377,10 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
         <td>单选 + 文本域</td>
         <td>
           <strong>系统默认：</strong>使用平台内置规则文案，根据当前配置自动生成并展示在前台。文案随以下字段实时联动变化：<br>
-          • 第1条：随<strong>重置方式</strong>变化——"本活动为每<em>{月/周/日}</em>会员答谢活动，参与活动可领取平台答谢奖励。"<br>
-          • 第2条：随<strong>奖励作废</strong>变化——"奖励须在会员日当天手动领取，<em>{过期自动派发。/ 过期自动作废，不予补发。}</em>"<br>
-          • 第3–5条：固定文案，不随配置变化<br>
+          • 第1条：固定文案，不随配置变化——"本活动为"会员答谢"活动，在会员日参与活动可获得相应彩金。"<br>
+          • 第2条：随<strong>奖励作废</strong>变化——"奖励须在会员日当天手动领取，过期后彩金将<em>{作废。/ 自动派发。}</em>"<br>
+          • 第3条：随<strong>稽核倍数</strong>变化——"彩金（不含本金）需<em>{N}</em>倍有效投注才能提现；"<br>
+          • 第4–5条：固定文案，不随配置变化<br>
           <strong>自定义：</strong>运营人员手动编辑规则内容，替换系统默认文案
         </td>
       </tr>
@@ -406,7 +407,12 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
       <tr>
         <td>宣传图预览 <span class="tag-common">通用</span></td>
         <td>实时预览</td>
-        <td>实时合成展示背景 + LOGO + 活动名称的叠加效果，用于确认视觉呈现是否符合预期</td>
+        <td>实时合成展示背景 + LOGO + 活动名称的叠加效果，用于确认视觉呈现是否符合预期。<br>
+          <strong>系统默认背景：</strong>预览区在图片上叠加3行动态文案——<br>
+          &nbsp;&nbsp;• 第1行：最高奖励 R$<em>{显示最高可获得奖励}</em><br>
+          &nbsp;&nbsp;• 第2行：每<em>{日/周/月}</em>重置（随重置方式联动）<br>
+          &nbsp;&nbsp;• 第3行：<em>{奖励作废文案}</em>（随奖励作废选项联动）<br>
+          <strong>自定义背景：</strong>仅展示上传图片，不叠加文案</td>
       </tr>
     </tbody>
   </table>
@@ -425,12 +431,21 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
           • <strong>充值：</strong>以选定时间段内的充值金额作为阶梯条件<br>
           • <strong>盈亏：</strong>以选定时间段内的盈亏金额（输赢差值）作为阶梯条件<br>
           • <strong>有效投注：</strong>以选定时间段内的有效投注金额作为阶梯条件<br>
-          • <strong>无限制：</strong>无条件直接发放，不需要统计任何数据；选择此项后"选择时间"字段隐藏
+          • <strong>无限制：</strong>无条件直接发放，不需要统计任何数据。选择此项后联动效果如下：① "选择时间"字段隐藏；② 条件→奖励表的条件列显示为置灰的"--"（仅填写奖励金额即可）。反向联动：当奖励类型选择"固定比例"或"随机比例"时，"无限制"选项自动隐藏（比例类型须以条件金额为基数，不支持无条件发放）
         </td>
       </tr>
       <tr>
         <td>选择时间</td>
-        <td>奖励条件的统计时间范围，仅当条件维度不为"无限制"时显示。可选项：历史-会员日（活动开启至今的历史数据）、当日-会员日（当天数据）、昨日、上周、上月、近七天(不含当日)、近三十天(不含当日)、自定义时间（指定近N天）</td>
+        <td>奖励条件的统计时间范围，仅当条件维度不为"无限制"时显示。各选项含义如下：<br>
+          • <strong>历史-会员日：</strong>统计会员从注册日起至当次会员日（含当日）的累计数据<br>
+          • <strong>当日-会员日：</strong>仅统计当次会员日当天的数据<br>
+          • <strong>昨日：</strong>统计昨天全天的数据<br>
+          • <strong>上周：</strong>统计上周一至上周日的数据<br>
+          • <strong>上月：</strong>统计上月1日至上月最后一日的数据<br>
+          • <strong>近七天(不含当日)：</strong>统计过去7天（不含今日）的数据<br>
+          • <strong>近三十天(不含当日)：</strong>统计过去30天（不含今日）的数据<br>
+          • <strong>自定义时间：</strong>统计近N天（含当日）的数据，N由运营人员在输入框中填写
+        </td>
       </tr>
       <tr>
         <td>奖励类型</td>
@@ -464,7 +479,7 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <h2 id="s51">5.1 入口与页面结构</h2>
   <p>会员进入福利中心后点击会员答谢活动卡片进入详情页。页面由以下 7 个区块组成：</p>
   <ol style="line-height:2">
-    <li><strong>活动 Banner（宣传图）：</strong>展示活动视觉，取自后台"背景样式 + LOGO样式"合成图</li>
+    <li><strong>活动 Banner（宣传图）：</strong>展示活动视觉。使用系统默认背景时，取自后台"背景样式 + LOGO样式"合成图；使用自定义背景时，直接展示运营人员上传的图片</li>
     <li><strong>活动标题：</strong>显示活动名称（即后台配置的活动名称字段）</li>
     <li><strong>倒计时区：</strong>会员日期间显示"奖励领取截止"倒计时（距次日0点）；非会员日显示"即将开启"倒计时（距下次会员日）</li>
     <li><strong>活动信息栏：</strong>展示"领取时间"（重置方式对应的会员日频率）和"活动结束时间"</li>
@@ -499,9 +514,9 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
         <td>展示悬浮提示卡片，说明具体未满足的限制条件；按钮维持激活，会员可再次尝试</td>
       </tr>
       <tr>
-        <td>已登录 · 会员日 · 领取成功（金额为0）</td>
-        <td>申领限制通过，但该会员当前奖励计算结果为 R$0,00（不满足阶梯条件）</td>
-        <td>弹出领取成功弹窗，显示 R$0,00；会员点击"确认"后按钮置灰（已领取）</td>
+        <td>已登录 · 会员日 · 领取成功</td>
+        <td>申领限制通过，系统完成奖励判定并弹出领取成功弹窗（含金额为 R$0,00 的情况）</td>
+        <td>弹出领取成功弹窗，展示本次获得的奖励金额（含 R$0,00）；会员点击"确认"后按钮转为已领取态（置灰）</td>
       </tr>
       <tr>
         <td>已登录 · 会员日 · 已领取</td>
@@ -518,10 +533,12 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
   <div class="notice notice-info">ℹ️ "已领取"与"不满足条件"两个状态的按钮视觉样式完全一致（均为置灰），系统不在按钮上区分两者；实际发放状态可在会员的奖励记录页查看。领取金额为 R$0,00 时仍视为"已领取"，按钮同样置灰。</div>
 
   <h2 id="s53">5.3 领取交互</h2>
-  <p>会员点击激活状态的"领取"按钮后，系统验证申领条件（终端限制、申领限制等）：</p>
+  <p><strong>领取逻辑：</strong>奖励判定发生于会员点击"领取"按钮时，系统此时实时计算当前会员是否满足奖励条件并确定奖励金额。每次会员日每位会员仅能领取一次，若判定结果为 R$0.00（不满足阶梯条件），该次领取依然计入已领取，会员当日不可再次领取。</p>
+  <p>点击后，系统验证申领条件（终端限制、申领限制等）：</p>
   <ul>
     <li><strong>条件不满足：</strong>页面展示悬浮提示卡片，说明未满足的具体申领条件（如：请通过 iOS H5、Android H5、PWA 申领）。</li>
-    <li><strong>条件满足：</strong>弹出领取成功弹窗，展示本次获得的奖励金额（如：恭喜您获得 R$X.XX 奖金），会员点击"确认"关闭弹窗，按钮变为已领取态（置灰）。</li>
+    <li><strong>条件满足：</strong>系统实时计算奖励金额并弹出领取成功弹窗，展示本次奖励金额。会员点击"确认"关闭弹窗，按钮转为已领取态（置灰）。<br>
+    若奖励判定结果为 R$0,00，本次领取不产生账变（不记入会员账户流水），但记为已领取，当次会员日不可再次领取。</li>
   </ul>
 </div>
 
@@ -573,6 +590,39 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
       <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, resgate usando o iOSH5,AndroidH5,PWA,APK,iOSApp,iOSBookmark,APKRelease</td><td>申领限制悬浮卡片</td></tr>
     </tbody>
   </table>
+
+  <h2>6.5 活动规则文案</h2>
+  <p>以下为系统默认规则说明的完整5条中葡对照。葡语取自产品参考图原文，动态部分以 <em>{}</em> 标注。</p>
+  <table>
+    <thead><tr><th style="width:40%">中文</th><th style="width:40%">葡语（PT-BR）</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>1. 本活动为"会员答谢"活动，在会员日参与活动可获得相应彩金。</td>
+        <td>1. Este é um evento de "Agradecimento aos Membros (Vários Dias)". Participe nos Dias do Membro para receber bônus em dinheiro;</td>
+        <td>固定文案；不随重置方式变化</td>
+      </tr>
+      <tr>
+        <td>2. 奖励须在会员日当天手动领取，过期后彩金将<em>{作废。/ 自动派发。}</em></td>
+        <td>2. O bônus deve ser coletado manualmente e <em>{será cancelado após o vencimento / será distribuído automaticamente após o vencimento}</em>;</td>
+        <td>随<strong>奖励作废</strong>联动：过期作废→"será cancelado após o vencimento"；过期自动派发→"será distribuído automaticamente após o vencimento"</td>
+      </tr>
+      <tr>
+        <td>3. 彩金（不含本金）需<em>{N}</em>倍有效投注才能提现；</td>
+        <td>3. O bônus (excluindo valor principal) requer <em>{N}</em> vezes de apostas válidas para sacar;</td>
+        <td>随<strong>稽核倍数</strong>联动，{N} 替换为实际配置值</td>
+      </tr>
+      <tr>
+        <td>4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；</td>
+        <td>4. Somente o proprietário da conta pode realizar operações manuais normais, caso contrário, o bônus é cancelado ou deduzido, congelado ou até mesmo colocado na lista negra;</td>
+        <td>固定文案</td>
+      </tr>
+      <tr>
+        <td>5. 为避免文字理解差异，平台将保留本活动最终解释权。</td>
+        <td>5. Para evitar diferenças na compreensão do texto, a plataforma se reserva o direito final de interpretação desta atividade.</td>
+        <td>固定文案</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- 七 -->
@@ -582,6 +632,9 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
     <thead><tr><th>版本</th><th>日期</th><th>作者</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td>v1.0</td><td>2026-06-26</td><td>Laura</td><td>初版发布</td></tr>
+      <tr><td>v1.1</td><td>2026-07-02</td><td>Laura</td><td>补充领取逻辑说明（5.3）；完善选择时间各选项说明（4.3）；规则说明同步第3条稽核倍数联动及宣传图预览动态内容（4.2）；新增规则说明中葡对照表（6.5）</td></tr>
+      <tr><td>v1.2</td><td>2026-07-02</td><td>Laura</td><td>修正6.5规则文案（第1/3/4/5条措辞）；修正4.3自定义时间说明；补充无限制双向联动说明；完善5.1活动图来源描述</td></tr>
+      <tr><td>v1.3</td><td>2026-07-02</td><td>Laura</td><td>同步4.2规则说明联动文案（第1-3条）；修正4.2每月模式会员日范围（31日→30日）；合并5.2"金额为0"状态至"领取成功"；5.3补充零金额不计账变说明</td></tr>
     </tbody>
   </table>
 </div>

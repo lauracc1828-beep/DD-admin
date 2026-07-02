@@ -237,8 +237,15 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield;appearance:textfield}
 /* ── 最高可获得奖励：恢复 spinner ── */
 #ma-max-reward::-webkit-inner-spin-button,
-#ma-max-reward::-webkit-outer-spin-button{-webkit-appearance:inner-spin-button;opacity:1;margin-left:2px}
-#ma-max-reward{-moz-appearance:number-input;appearance:auto}
+#ma-max-reward::-webkit-outer-spin-button{-webkit-appearance:none;display:none}
+#ma-max-reward{-moz-appearance:textfield;appearance:textfield;border:none;height:100%;outline:none;border-radius:0;padding:0 8px;font-size:13px;color:#333;font-family:inherit;background:#fff}
+.ma-max-wrap{display:inline-flex;align-items:stretch;border:1px solid #d9d9d9;border-radius:4px;overflow:hidden;background:#fff;height:32px}
+.ma-max-wrap:focus-within{border-color:#0961BD;box-shadow:0 0 0 2px rgba(9,97,189,.1)}
+.ma-max-btns{display:none;flex-direction:column;border-left:1px solid #d9d9d9}
+.ma-max-wrap:focus-within .ma-max-btns{display:flex}
+.ma-max-btn{width:22px;flex:1;border:none;background:#fafafa;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:9px;color:#595959;line-height:1}
+.ma-max-btn:hover{background:#e6f0ff;color:#0961BD}
+.ma-max-btn:first-child{border-bottom:1px solid #d9d9d9}
 select.fs option:first-child{color:#bfbfbf}
 /* select placeholder via CSS trick */
 select.fs.ph{color:#bfbfbf}
@@ -949,9 +956,9 @@ select.fs.ph{color:#bfbfbf}
             <!-- 会员答谢重置方式 -->
             <div id="aa-reset-member" style="display:none">
               <div class="radio-g">
-                <label class="radio-item"><input type="radio" name="aa-reset-mem" value="daily" onchange="aaMemberResetToggle('daily')"> 每日</label>
+                <label class="radio-item"><input type="radio" name="aa-reset-mem" value="daily" checked onchange="aaMemberResetToggle('daily')"> 每日</label>
                 <label class="radio-item"><input type="radio" name="aa-reset-mem" value="week" onchange="aaMemberResetToggle('week')"> 每周</label>
-                <label class="radio-item"><input type="radio" name="aa-reset-mem" value="month" checked onchange="aaMemberResetToggle('month')"> 每月</label>
+                <label class="radio-item"><input type="radio" name="aa-reset-mem" value="month" onchange="aaMemberResetToggle('month')"> 每月</label>
               </div>
             </div>
           </div>
@@ -1045,7 +1052,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="aa-fi">
           <span class="aa-fl">稽核倍数：</span>
           <div class="aa-fc" style="display:flex;align-items:center;gap:6px">
-            <input class="fin" type="number" id="aa-audit-mult" value="1" style="width:100px">
+            <input class="fin" type="number" id="aa-audit-mult" value="1" style="width:100px" oninput="updateRuleText()">
           </div>
         </div>
         <!-- 参与条件 -->
@@ -1082,7 +1089,15 @@ select.fs.ph{color:#bfbfbf}
           <div class="aa-fi">
             <span class="aa-fl">显示最高可获得奖励：</span>
             <div class="aa-fc">
-              <input class="fin" type="number" id="ma-max-reward" value="1.00" step="1" min="0" style="width:160px" onblur="this.value=parseFloat(this.value||1).toFixed(2)" onchange="this.value=parseFloat(this.value||1).toFixed(2)">
+              <div class="ma-max-wrap">
+                <input type="number" id="ma-max-reward" value="1.00" min="0" style="width:130px"
+                  onblur="this.value=parseFloat(this.value||1).toFixed(2);updateBannerPreview()"
+                  oninput="updateBannerPreview()">
+                <div class="ma-max-btns">
+                  <button type="button" class="ma-max-btn" onclick="maMaxStep(1)">▲</button>
+                  <button type="button" class="ma-max-btn" onclick="maMaxStep(-1)">▼</button>
+                </div>
+              </div>
             </div>
           </div>
           <!-- 奖励配置: 每日模式 (直接显示, 无卡片) -->
@@ -1095,6 +1110,7 @@ select.fs.ph{color:#bfbfbf}
                   <label class="radio-item"><input type="radio" name="ma-d-cond" value="pnl" onchange="maDUpdate()"> 盈亏</label>
                   <label class="radio-item" id="ma-d-nolimit-opt"><input type="radio" name="ma-d-cond" value="none" onchange="maDUpdate()"> 无限制</label>
                   <label class="radio-item"><input type="radio" name="ma-d-cond" value="bet" onchange="maDUpdate()"> 有效投注</label>
+                  <span class="has-tip" style="font-size:13px;color:#8c8c8c;margin-left:2px">ⓘ<span class="tip-box">选择盈亏后，在盈亏金额中，输入正数表示盈利，输入负数表示亏损。</span></span>
                 </div>
               </div>
             </div>
@@ -2991,7 +3007,7 @@ function aaBuildTier(dayIdx, tierIdx){
         <span class="aa-tier-label">显示奖励：</span>
         <input class="aa-s-inp" type="number" value="${d.dMin}" style="width:90px">
         <span style="margin:0 4px;color:#8c8c8c">~</span>
-        <input class="aa-s-inp" type="number" value="${d.dMax}" style="width:90px">
+        <input class="aa-s-inp" type="number" value="${d.dMax}" style="width:90px" oninput="updateBannerPreview()">
       </div>
       <div class="aa-cond-hd">
         <span style="width:72px;flex-shrink:0">领取条件</span><span style="width:70px;flex-shrink:0">打码倍数(≥)</span><span>奖励金额</span>
@@ -3043,6 +3059,16 @@ function aaCondDel(el){
   const row = el.closest('.aa-cond-row');
   const wrap = row.parentElement;
   if(wrap.querySelectorAll('.aa-cond-row').length > 1) row.remove();
+}
+
+// ─── MAX REWARD CUSTOM SPINNER ───
+function maMaxStep(dir){
+  var inp=document.getElementById('ma-max-reward');
+  if(!inp) return;
+  var v=parseFloat(inp.value)||0;
+  v=Math.max(0,Math.round((v+dir)*100)/100);
+  inp.value=v.toFixed(2);
+  updateBannerPreview();
 }
 
 // ─── INIT DAY PANELS (8 tiers × 3 conditions) ───
@@ -3132,17 +3158,19 @@ function updateRuleText(){
   var expireVal=expireEl?expireEl.value:'2';
   var daysInp=document.getElementById('aa-expire-days-inp');
   var days=daysInp?(parseInt(daysInp.value)||0):0;
+  var auditEl=document.getElementById('aa-audit-mult');
+  var auditN=auditEl?(parseInt(auditEl.value)||1):1;
   if(type==='member'){
     var resetEl=document.querySelector('input[name="aa-reset-mem"]:checked');
     var resetVal=resetEl?resetEl.value:'month';
     var pMap={daily:'日',week:'周',month:'月'};
     var period=pMap[resetVal]||'月';
-    var expText2=(expireVal==='1')?'过期自动派发。':'过期自动作废，不予补发。';
-    l1.textContent='1. 本活动为每'+period+'会员答谢活动，参与活动可领取平台答谢奖励。';
+    var expText2=(expireVal==='1')?'过期后彩金将自动派发。':'过期后彩金将作废。';
+    l1.textContent='1. 本活动为"会员答谢"活动，在会员日参与活动可获得相应彩金。';
     l2.textContent='2. 奖励须在会员日当天手动领取，'+expText2;
-    l3.textContent='3. 奖励（不含本金）须满足规定有效投注流水倍数方可申请提款。';
-    l4.textContent='4. 仅账户持有人可进行正常充提操作，否则奖励将被取消或列入黑名单。';
-    l5.textContent='5. 如对本活动条文理解存在差异，以平台最终解释为准。';
+    l3.textContent='3. 彩金（不含本金）需'+auditN+'倍有效投注才能提现；';
+    l4.textContent='4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；';
+    l5.textContent='5. 为避免文字理解差异，平台将保留本活动最终解释权。';
   } else {
     var mResetEl=document.querySelector('input[name="aa-reset-m"]:checked');
     var mReset=mResetEl?mResetEl.value:'once';
@@ -3157,9 +3185,75 @@ function updateRuleText(){
     else expText='彩金保留'+days+'天后作废';
     l1.textContent='1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；';
     l2.textContent='2. 活动于报名后第32天'+endWord+'，'+claimWord+'，'+expText+'；';
-    l3.textContent='3. 彩金（不含本金）需要1倍有效投注才能提现；';
+    l3.textContent='3. 彩金（不含本金）需要'+auditN+'倍有效投注才能提现；';
     l4.textContent='4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；';
     l5.textContent='5. 为避免文字理解差异，平台将保留本活动最终解释权。';
+  }
+  updateBannerPreview();
+}
+
+// ─── BANNER PREVIEW UPDATE ───
+function updateBannerPreview(){
+  var bgSel=document.querySelector('input[name="aa-bg-style"]:checked');
+  var isCustomBg=bgSel&&bgSel.value==='custom';
+  var bannerText=document.querySelector('#aa-banner .aa-banner-text');
+  if(bannerText) bannerText.style.visibility=isCustomBg?'hidden':'';
+
+  var bannerTitle=document.getElementById('aa-banner-title');
+  if(!bannerTitle) return;
+  var bannerRules=bannerTitle.closest('.aa-banner-text')&&bannerTitle.closest('.aa-banner-text').querySelector('.aa-banner-rules');
+
+  var typeEl=document.getElementById('aa-type');
+  var type=typeEl?typeEl.value:'mystery';
+  var expireEl=document.querySelector('input[name="aa-expire"]:checked');
+  var expireVal=expireEl?expireEl.value:'2';
+  var daysInp=document.getElementById('aa-expire-days-inp');
+  var days=daysInp?(parseInt(daysInp.value)||0):0;
+
+  function expText(){
+    if(expireVal==='1') return '过期自动派发';
+    if(expireVal==='2') return '过期作废';
+    if(expireVal==='3') return '奖励保留'+days+'天后自动派发';
+    return '奖励保留'+days+'天后作废';
+  }
+  function fmtAmt(v){
+    var n=parseFloat(v)||0;
+    var parts=n.toFixed(2).split('.');
+    parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    return 'R$'+parts[0]+'.'+parts[1];
+  }
+
+  if(type==='member'){
+    bannerTitle.textContent='会员答谢活动';
+    if(bannerRules){
+      var maxREl=document.getElementById('ma-max-reward');
+      var maxR=maxREl?maxREl.value:'1.00';
+      var resetEl=document.querySelector('input[name="aa-reset-mem"]:checked');
+      var resetVal=resetEl?resetEl.value:'month';
+      var pMap={daily:'日',week:'周',month:'月'};
+      var period=pMap[resetVal]||'月';
+      bannerRules.innerHTML='<div>1. 最高奖励 '+fmtAmt(maxR)+'</div>'
+        +'<div>2. 每'+period+'重置</div>'
+        +'<div>3. '+expText()+'</div>';
+    }
+  } else {
+    bannerTitle.textContent='神秘彩金活动';
+    if(bannerRules){
+      var maxDisplay=0;
+      document.querySelectorAll('#aa-mystery-days .aa-tier-body').forEach(function(body){
+        var rows=body.querySelectorAll('.aa-tier-row');
+        if(rows[1]){
+          var inps=rows[1].querySelectorAll('input');
+          if(inps[1]){ var v=parseFloat(inps[1].value)||0; if(v>maxDisplay) maxDisplay=v; }
+        }
+      });
+      var mResetEl=document.querySelector('input[name="aa-reset-m"]:checked');
+      var mReset=mResetEl?mResetEl.value:'once';
+      var html='<div>1. 最高奖励 '+fmtAmt(maxDisplay)+'</div>';
+      if(mReset==='once') html+='<div>2. 一次性</div>';
+      html+='<div>'+(mReset==='once'?'3':'2')+'. '+expText()+'</div>';
+      bannerRules.innerHTML=html;
+    }
   }
 }
 function aaAllTier(checked){
@@ -3186,11 +3280,8 @@ function aaTypeChange(val){
   document.getElementById('aa-member-reward-sec').style.display=isMember?'block':'none';
   if(isMember){
     const resetSel=document.querySelector('input[name="aa-reset-mem"]:checked');
-    const resetVal=resetSel?resetSel.value:'month';
-    const dailyR=document.getElementById('ma-daily-reward');
-    const cardR=document.getElementById('ma-card-reward');
-    if(dailyR) dailyR.style.display=(resetVal==='daily')?'block':'none';
-    if(cardR) cardR.style.display=(resetVal!=='daily')?'block':'none';
+    const resetVal=resetSel?resetSel.value:'daily';
+    aaMemberResetToggle(resetVal);
   }
   // ── 领取方式约束 ──
   const autoLbl=document.getElementById('aa-claim-auto');
@@ -3210,16 +3301,7 @@ function aaTypeChange(val){
   // ── 活动名称默认值 ──
   const nameMode=document.querySelector('input[name="aa-name-t"]:checked');
   if(nameMode&&nameMode.value==='sys') aaNameToggle('sys');
-  // ── 宣传图预览 ──
-  const bannerTitle=document.getElementById('aa-banner-title');
-  const bannerRules=bannerTitle&&bannerTitle.closest('.aa-banner-text')&&bannerTitle.closest('.aa-banner-text').querySelector('.aa-banner-rules');
-  if(isMember){
-    if(bannerTitle) bannerTitle.textContent='会员答谢活动';
-    if(bannerRules) bannerRules.innerHTML='<div>1. 最高奖励 ...</div><div>2. 过期作废</div>';
-  } else {
-    if(bannerTitle) bannerTitle.textContent='神秘彩金活动';
-    if(bannerRules) bannerRules.innerHTML='<div>1. 最高奖励 8,888...</div><div>2. 一次性</div><div>3. 过期作废</div>';
-  }
+  // ── 宣传图预览 (由 updateBannerPreview 统一处理，通过 aaExpireToggle→updateRuleText 触发) ──
   // ── 奖励作废选项启用/禁用 ──
   var expCfg = ACTIVITY_EXPIRE_CONFIG[val] || ACTIVITY_EXPIRE_CONFIG['mystery'];
   [1,2,3,4].forEach(function(v){
@@ -3271,6 +3353,7 @@ function aaBgStyleToggle(val){
   if(sys) sys.style.display=(val==='sys')?'block':'none';
   if(custom) custom.style.display=(val==='custom')?'block':'none';
   if(logoSec) logoSec.style.display=(val==='custom')?'none':'flex';
+  updateBannerPreview();
 }
 function aaLogoStyleToggle(val){
   const sys=document.getElementById('aa-logo-sys');
@@ -3422,14 +3505,9 @@ function aaMemberReset(){
   maMsRender('month');
   var c=document.getElementById('ma-cards-container');
   if(c) c.innerHTML='';
-  var mr=document.querySelector('input[name="aa-reset-mem"][value="month"]');
-  if(mr){ mr.checked=true; }
-  var df=document.getElementById('ma-daily-field');
-  var wf=document.getElementById('ma-week-field');
-  var mf=document.getElementById('ma-month-field');
-  if(df) df.style.display='none';
-  if(wf) wf.style.display='none';
-  if(mf) mf.style.display='none';
+  var dr=document.querySelector('input[name="aa-reset-mem"][value="daily"]');
+  if(dr){ dr.checked=true; }
+  aaMemberResetToggle('daily');
 }
 
 // ─── RESET TOGGLE ───
@@ -3556,6 +3634,7 @@ function maMsAddCard(type, idx){
     +'<label class="radio-item"><input type="radio" name="'+prefix+'-cond" value="pnl" onchange="maCardUpdate(\''+prefix+'\')"> 盈亏</label>'
     +'<label class="radio-item" id="'+prefix+'-nolimit"><input type="radio" name="'+prefix+'-cond" value="none" onchange="maCardUpdate(\''+prefix+'\')"> 无限制</label>'
     +'<label class="radio-item"><input type="radio" name="'+prefix+'-cond" value="bet" onchange="maCardUpdate(\''+prefix+'\')"> 有效投注</label>'
+    +'<span class="has-tip" style="font-size:13px;color:#8c8c8c;margin-left:2px">ⓘ<span class="tip-box">选择盈亏后，在盈亏金额中，输入正数表示盈利，输入负数表示亏损。</span></span>'
     +'</div>'
     +'<div class="ma-reward-row" id="'+prefix+'-time-row">'
     +'<span class="ma-reward-label" style="">选择时间：</span>'

@@ -155,14 +155,20 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
           &nbsp;&nbsp;"活动于报名后第32天<em>{结束/重置}</em>，彩金<em>{自动领取/需手动领取}</em>，<em>{过期文案}</em>；"<br>
           &nbsp;&nbsp;其中：重置方式=一次性→"结束"；循环→"重置"；领取方式=自动领取→"彩金自动领取"；手动领取→"彩金需手动领取"<br>
           &nbsp;&nbsp;奖励作废过期文案：①过期后彩金将自动派发 ②过期后彩金将作废 ③彩金保留N天后自动派发 ④彩金保留N天后作废<br>
-          • 第1、3–5条：固定文案，不随配置变化<br>
+          • 第3条：随<strong>稽核倍数</strong>联动——"彩金（不含本金）需要<em>{N}</em>倍有效投注才能提现；"<br>
+          • 第1、4–5条：固定文案，不随配置变化<br>
           <strong>自定义：</strong>运营人员手动编辑规则内容，替换系统默认文案
       </td></tr>
       <tr><td>显示排序 <span class="tag-common">通用</span></td><td>数字输入</td><td>控制活动在列表中的展示顺序</td></tr>
       <tr><td>活动详情页选择 <span class="tag-common">通用</span></td><td>单选</td><td>跟随皮肤：活动详情页样式跟随商户整体UI皮肤设置；样式一：使用固定的活动详情页模板（即前台原型所展示的页面），选择后可点击预览</td></tr>
       <tr><td>背景样式 <span class="tag-common">通用</span></td><td>单选 + 选图/上传</td><td>系统默认（从预设渐变色图库中选择）/ 自定义（上传图片，建议尺寸 660×220px，支持 JPG/PNG/SVG）</td></tr>
       <tr><td>LOGO样式 <span class="tag-common">通用</span></td><td>单选 + 选图/上传</td><td>仅背景样式为"系统默认"时显示。系统默认（按分类从图标库选择）/ 自定义（上传图片，建议尺寸 300×300px）</td></tr>
-      <tr><td>宣传图预览 <span class="tag-common">通用</span></td><td>实时预览</td><td>实时合成展示背景 + LOGO + 活动名称叠加效果</td></tr>
+      <tr><td>宣传图预览 <span class="tag-common">通用</span></td><td>实时预览</td><td>实时合成展示背景 + LOGO + 活动名称叠加效果。<br>
+          <strong>系统默认背景：</strong>预览区在图片上叠加动态文案——<br>
+          &nbsp;&nbsp;• 第1行：最高奖励 R$<em>{所有活动日"显示奖励最大值"中的最高值}</em><br>
+          &nbsp;&nbsp;• 第2行：仅重置方式为"一次性"时显示"一次性"；循环模式下该行隐藏<br>
+          &nbsp;&nbsp;• 第3行（循环模式为第2行）：<em>{奖励作废文案}</em>（随奖励作废选项联动）<br>
+          <strong>自定义背景：</strong>仅展示上传图片，不叠加文案</td></tr>
     </tbody>
   </table>
 
@@ -510,6 +516,39 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
     <tbody>
       <tr><td>恭喜您获得 [金额] 神秘彩金</td><td>Parabéns por ganhar R$[valor] em fichas de bônus</td><td>领取成功弹窗正文</td></tr>
       <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, resgate usando o iOSH5,AndroidH5,PWA,APK,iOSApp,iOSBookmark,APKRelease</td><td>申领限制悬浮卡片</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.7 活动规则文案</h2>
+  <p>以下为系统默认规则说明的完整5条中葡对照。葡语取自产品参考图原文，动态部分以 <em>{}</em> 标注。</p>
+  <table>
+    <thead><tr><th style="width:40%">中文</th><th style="width:40%">葡语（PT-BR）</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>1. 活动期间，会员主动报名参与活动，完成存款和有效投注，可获得相应彩金；</td>
+        <td>1. Durante o evento, os membros que se inscreverem ativamente para participar do evento, concluírem depósitos e apostas válidas, podem receber bônus correspondentes.</td>
+        <td>固定文案</td>
+      </tr>
+      <tr>
+        <td>2. 活动于报名后第32天<em>{结束/重置}</em>，彩金<em>{自动领取/需手动领取}</em>，<em>{过期文案}</em>；</td>
+        <td>2. O evento será reiniciado no 32° dia após o registro. O bônus deve ser coletado manualmente e será cancelado após o vencimento;</td>
+        <td>随<strong>重置方式</strong>、<strong>领取方式</strong>、<strong>奖励作废</strong>三字段联动；葡语"32°"为硬编码固定值</td>
+      </tr>
+      <tr>
+        <td>3. 彩金（不含本金）需要<em>{N}</em>倍有效投注才能提现；</td>
+        <td>3. O bônus (excluindo valor principal) requer <em>{N}</em> vezes de apostas válidas para sacar;</td>
+        <td>随<strong>稽核倍数</strong>联动，{N} 替换为实际配置值</td>
+      </tr>
+      <tr>
+        <td>4. 仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；</td>
+        <td>4. Somente o proprietário da conta pode realizar operações manuais normais, caso contrário, o bônus será cancelado ou deduzido, congelado ou até mesmo colocado na lista negra;</td>
+        <td>固定文案</td>
+      </tr>
+      <tr>
+        <td>5. 为避免文字理解差异，平台将保留本活动最终解释权。</td>
+        <td>5. Para evitar diferenças na compreensão do texto, a plataforma se reserva o direito final de interpretação desta atividade.</td>
+        <td>固定文案</td>
+      </tr>
     </tbody>
   </table>
 </div>
