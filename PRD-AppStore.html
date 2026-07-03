@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD · 仿应用商店模块 v1.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
+.page{max-width:980px;margin:0 auto;padding:40px 20px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:32px;display:flex;gap:20px;flex-wrap:wrap}
+.meta span{display:flex;align-items:center;gap:4px}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:40px 0 16px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:600;color:#262626;margin:28px 0 12px}
+h4{font-size:14px;font-weight:600;color:#444;margin:20px 0 10px}
+p{margin-bottom:12px;color:#444}
+.note{background:#fff7e6;border-left:3px solid #fa8c16;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#7d4f00}
+.info{background:#e6f4ff;border-left:3px solid #0961BD;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#003a8c}
+.tip{background:#f6ffed;border-left:3px solid #52c41a;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#135200}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+th{background:#f0f5ff;padding:9px 12px;text-align:left;font-weight:600;color:#0961BD;border-bottom:2px solid #d6e4ff;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcff}
+td:first-child{white-space:nowrap;font-weight:500}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.tag-req{background:#fff0f0;color:#cf1322;border:1px solid #ffa39e}
+.tag-opt{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.tag-cond{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
+.toc{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:32px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.toc h3{margin:0 0 12px;font-size:14px;color:#888}
+.toc ol{padding-left:20px}
+.toc li{margin-bottom:6px}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc .sub{padding-left:16px;margin-top:4px}
+.section-card{background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.indent{padding-left:24px !important}
+.flow-wrap{background:#f8f9ff;border-radius:8px;padding:20px;margin:12px 0;overflow-x:auto}
+code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#c0392b}
+.err{color:#cf1322;font-weight:500}
+/* 中葡对照表：固定列宽并允许中文换行，避免长句撑破页面宽度 */
+#i18n table{table-layout:fixed;width:100%}
+#i18n th:nth-child(1),#i18n td:nth-child(1){width:42%}
+#i18n th:nth-child(2),#i18n td:nth-child(2){width:44%}
+#i18n th:nth-child(3),#i18n td:nth-child(3){width:14%}
+#i18n td{white-space:normal !important;word-break:break-word}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>仿应用商店模块 · PRD</h1>
+<div class="meta">
+  <span>📄 版本：v1.1</span>
+  <span>✏️ 作者：Laura</span>
+  <span>📅 更新日期：2026-07-03</span>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#overview">模块概述</a></li>
+    <li><a href="#backend">后台配置</a>
+      <ol class="sub">
+        <li><a href="#b-behavior">页面行为与列表</a></li>
+        <li><a href="#b-fields">模板配置字段规格</a></li>
+        <li><a href="#b-reviews">用户评论管理</a></li>
+      </ol>
+    </li>
+    <li><a href="#frontend">前台显示逻辑</a>
+      <ol class="sub">
+        <li><a href="#f-scope">生效条件</a></li>
+        <li><a href="#f-google">仿谷歌页逐区块</a></li>
+        <li><a href="#f-apple">仿苹果页逐区块</a></li>
+        <li><a href="#f-rate">评分星级与分布条算法</a></li>
+      </ol>
+    </li>
+    <li><a href="#interaction">下载与安装交互</a>
+      <ol class="sub">
+        <li><a href="#i-rule">交互总则</a></li>
+        <li><a href="#i-dialog">下载确认弹框与下载中状态</a></li>
+        <li><a href="#i-android">安卓后续分支</a></li>
+        <li><a href="#i-ios">iOS 后续分支</a></li>
+        <li><a href="#i-layer">弹框层级与常驻规则</a></li>
+        <li><a href="#i-reuse">与安装引导模块的复用关系</a></li>
+      </ol>
+    </li>
+    <li><a href="#flowchart">活动逻辑流程图</a></li>
+    <li><a href="#i18n">中葡文案对照</a></li>
+  </ol>
+</div>
+
+<!-- 一、模块概述 -->
+<div class="section-card" id="overview">
+<h2>一、模块概述</h2>
+<p>仿应用商店模块用于配置「仿谷歌商店页」与「仿苹果商店页」两类下载落地页。页面高度仿真官方应用商店的视觉与交互，让用户误以为进入 Google Play / App Store，从而提升信任感、提高 APP 下载转化。</p>
+<p>页面属于<strong>下载页类</strong>落地，唯一核心功能为「下载 / 安装 APP」；其安装交互与《安装引导模块 PRD》的下载组件完全共用。</p>
+<table>
+  <tr><th>项目</th><th>说明</th></tr>
+  <tr><td>菜单位置</td><td>商户后台 → 推广渠道管理 → 仿应用商店</td></tr>
+  <tr><td>页面类型</td><td>仿谷歌商店页、仿苹果商店页（同一模块，按模板类型区分样式）</td></tr>
+  <tr><td>落地关系</td><td>作为「防封谷歌页 / 防封苹果页」域名的落地样式；用户经推广渠道链接，或经安装引导 iOS-Safari 流程进入</td></tr>
+  <tr><td>配置粒度</td><td>以商户为单位，按模板逐条配置</td></tr>
+</table>
+</div>
+
+<!-- 二、后台配置 -->
+<div class="section-card" id="backend">
+<h2>二、后台配置</h2>
+
+<h3 id="b-behavior">2.1 页面行为与列表</h3>
+<ul style="padding-left:20px;color:#444;font-size:13px;line-height:2">
+  <li>筛选区：地区（下拉单选，默认当前地区）/ 商户（下拉单选，随地区联动）/ 模板类型（下拉：全部 / 仿谷歌商店 / 仿苹果商店）/ 查询按钮</li>
+  <li>模板列表：模板类型、模板名称、模板样式、APP名字、APP图标、APP简介、用户评论、操作（编辑）</li>
+  <li>点击「+新增模板」打开新增弹窗；点击列表「编辑」打开编辑弹窗并回填当前配置</li>
+  <li>保存成功后给出轻提示（<code>保存成功</code> / <code>新增成功</code>）；校验不通过时以红色轻提示汇总错误文案</li>
+</ul>
+
+<h3 id="b-fields">2.2 模板配置字段规格</h3>
+<div class="info">下表为后台字段的完整工程规格，供后台前端控制输入限制与交互。必填判定以后台保存校验为准。前台每个可见元素均对应下表字段；未列为配置项的固定文案/装饰为前台固定内容（见第六章）。</div>
+
+<p><strong>通用字段（谷歌 / 苹果模板共用）</strong></p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>输入要求</th><th>业务逻辑与联动</th><th>过滤与更正规则</th><th>错误提示</th><th>前台效果</th></tr>
+  <tr><td>模板类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：仿谷歌商店 / 仿苹果商店</td><td>决定前台页面样式；仅「仿谷歌商店」展示「认证选择」字段</td><td>下拉，默认有值</td><td>—</td><td>采用对应页面样式</td></tr>
+  <tr><td>模板样式</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：样式一（当前唯一，预留扩展）</td><td>页面视觉版式</td><td>下拉，默认有值</td><td>—</td><td>页面版式</td></tr>
+  <tr><td>模板名称</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>文本；后台标识用</td><td>用于列表区分模板</td><td>保存时去除首尾空格；非空校验</td><td class="err">请输入模板名称</td><td>不在前台展示</td></tr>
+  <tr><td>APP域名</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>域名字符串，如 <code>kk678.com</code></td><td>头部域名副标题；「添加到主屏幕」浮层域名；苹果页「更新内容」中的域名</td><td>去首尾空格；当前仅非空校验（暂不强制域名格式）</td><td class="err">请输入APP域名</td><td>头部域名、浮层域名</td></tr>
+  <tr><td>APP图标</td><td><span class="tag tag-req">必填</span></td><td>上传图片</td><td>JPG/PNG，建议尺寸 512×512</td><td>头部 App 图标</td><td>仅允许 JPG/PNG；上传成功提示 <code>图片上传成功</code></td><td class="err">请上传APP图标</td><td>头部图标</td></tr>
+  <tr><td>APP名字</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>文本，如 <code>kk678</code></td><td>头部 App 名称</td><td>去首尾空格；非空校验</td><td class="err">请输入APP名字</td><td>头部名称</td></tr>
+  <tr><td>APP评分</td><td><span class="tag tag-req">必填</span></td><td>数字输入</td><td>数值，范围 <strong>1.0–5.0</strong>，保留 1 位小数</td><td>决定统计行评分、评分区大号分值与星级（按 评分÷5.0 比例点亮，支持半星）、分布条计算（见 3.4）</td><td>输入时仅允许数字与小数点；失焦更正：空/非数字→清空、&lt;1.0→1.0、&gt;5.0→5.0、结果保留 1 位小数</td><td class="err">请输入1.0～5.0的APP评分</td><td>评分、星级、分布条</td></tr>
+  <tr><td>显示评分人数</td><td><span class="tag tag-req">必填</span></td><td>数字输入</td><td>正整数</td><td>统计行「X 条评价」、评分区人数</td><td>输入时仅允许数字；失焦更正为 max(1, 四舍五入取整)</td><td class="err">显示评分人数必须大于0</td><td>评价条数</td></tr>
+  <tr><td>显示下载量</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>18 档：1+ / 5+ / 10+ / 50+ / 100+ / 500+ / 1K+ / 5K+ / 10K+ / 50K+ / 100K+（默认）/ 500K+ / 1M+ / 5M+ / 10M+ / 50M+ / 100M+ / 500M+（后台每档括号内附下载量区间说明）</td><td>统计行下载量</td><td>下拉，默认 100K+</td><td>—</td><td>统计行仅展示档位标签括号前部分（如「100K+」），不展示区间说明</td></tr>
+  <tr><td>显示更新日期</td><td><span class="tag tag-opt">非必填</span></td><td>日期选择</td><td>年 / 月 / 日</td><td>「更新日期」区展示</td><td>—</td><td>—</td><td>已配置则展示所选日期；<strong>未配置则展示为当前年份的 1 月 1 日</strong></td></tr>
+  <tr><td>APP简介</td><td><span class="tag tag-req">必填</span></td><td>文本域</td><td>营销描述文案</td><td>「关于此应用」正文</td><td>去首尾空格；非空校验</td><td class="err">请输入APP简介</td><td>「关于此应用」正文</td></tr>
+  <tr><td>APP宣传图</td><td><span class="tag tag-opt">非必填</span></td><td>多图上传</td><td>点击「+添加宣传图」逐张添加，<strong>最多 8 张</strong>；谷歌页与苹果页宣传图比例一致</td><td>宣传图区展示</td><td>超出上限提示 <code>最多只能添加8张宣传图</code>；上传成功提示 <code>图片上传成功</code></td><td>—</td><td>按配置的宣传图数量与顺序依次横向展示，未配置则不展示该区块</td></tr>
+</table>
+
+<p><strong>谷歌专属字段</strong></p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>输入要求</th><th>业务逻辑与联动</th><th>过滤与更正规则</th><th>错误提示</th><th>前台效果</th></tr>
+  <tr><td>认证选择</td><td><span class="tag tag-cond">谷歌专属·必填</span></td><td>单选（Radio）</td><td>可选：标准安装类（推荐使用）/ 谷歌原生（不建议使用）；默认「标准安装类」</td><td>仅模板类型=仿谷歌商店时展示；<strong>不影响本页安装交互</strong>，仅控制页顶信息条</td><td>单选，默认有值</td><td>—</td><td>「标准安装类」=标准仿谷歌页；「谷歌原生」=页顶拼接一条带 Google Play logo 的信息条（含 Top Developer 徽标）</td></tr>
+</table>
+<div class="note">苹果模板无「认证选择」字段。</div>
+
+<h3 id="b-reviews">2.3 用户评论管理</h3>
+<p>在模板列表「用户评论」列点击「新增 / 编辑」进入评论管理，逐条配置，<strong>最多 99 条</strong>（超出提示 <code>最多只能添加99条评论</code>）。</p>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>输入要求 / 逻辑</th><th>过滤与更正</th><th>错误提示</th><th>前台效果</th></tr>
+  <tr><td>头像</td><td><span class="tag tag-req">必填</span></td><td>上传图片</td><td>评论者头像</td><td>上传成功提示 <code>头像上传成功</code></td><td class="err">请上传用户头像</td><td>评论条左侧头像</td></tr>
+  <tr><td>用户姓名</td><td><span class="tag tag-req">必填</span></td><td>文本输入</td><td>评论者昵称</td><td>去首尾空格；非空校验</td><td class="err">用户姓名不能为空</td><td>评论条姓名</td></tr>
+  <tr><td>评分</td><td>—</td><td>—</td><td><strong>后台固定为 5 颗星，不可编辑</strong></td><td>—</td><td>—</td><td>评论条星级恒 5 星</td></tr>
+  <tr><td>日期</td><td><span class="tag tag-req">必填</span></td><td>日期选择</td><td>评论日期</td><td>—</td><td class="err">请选择评论日期</td><td>评论条日期</td></tr>
+  <tr><td>评论内容</td><td><span class="tag tag-req">必填</span></td><td>文本域</td><td>评论正文</td><td>去首尾空格；非空校验</td><td class="err">请填写评论内容</td><td>评论条正文</td></tr>
+</table>
+</div>
+
+<!-- 三、前台显示逻辑 -->
+<div class="section-card" id="frontend">
+<h2>三、前台显示逻辑</h2>
+
+<h3 id="f-scope">3.1 生效条件</h3>
+<p>本页为「下载页类」落地：《安装引导模块》的<strong>「下载按钮」「引导安装」两项配置在本页不生效</strong>（本页无顶部横幅、无底部安装浮层）；但<strong>「安装类型」「安装包地址」等字段生效</strong>——点击本页安装入口时，按后台配置的安卓/苹果安装类型走后续流程。</p>
+
+<h3 id="f-google">3.2 仿谷歌页逐区块</h3>
+<table>
+  <tr><th>区块</th><th>内容</th><th>数据来源</th><th>交互</th></tr>
+  <tr><td>① 谷歌原生信息条</td><td>Google Play logo + 文字 + Top Developer 徽标</td><td>仅「认证选择=谷歌原生」时展示</td><td>仅展示、无交互</td></tr>
+  <tr><td>② 头部</td><td>App 图标、名称、绿色域名副标题、「已通过应用验证」+对勾</td><td>图标=APP图标；名称=APP名字；域名=APP域名；验证行为固定文案（与认证选择无关）</td><td>无交互</td></tr>
+  <tr><td>③ 统计行</td><td>评分+★ ｜ 下载量 ｜ 21+ 分级</td><td>评分=APP评分；「X 条评价」=显示评分人数；下载量=显示下载量（去括号）；「下载量/适用21岁以上」为固定文案</td><td>仅展示</td></tr>
+  <tr><td>④ CTA 按钮</td><td>绿色「⚡ 快速安装」，按钮内含副标题「15 秒内完成安装」</td><td>固定文案</td><td><strong>点击 → 下载流程（第四章）</strong></td></tr>
+  <tr><td>⑤ 操作行</td><td>分享、加入心愿单（含图标）</td><td>固定文案</td><td><strong>仅展示、无交互</strong></td></tr>
+  <tr><td>⑥ 宣传图</td><td>横向滑动卡片</td><td>APP宣传图</td><td>可横滑</td></tr>
+  <tr><td>⑦ 关于此应用</td><td>标题 + 右侧箭头 + 正文</td><td>正文=APP简介；标题为固定文案</td><td>箭头仅展示、无交互</td></tr>
+  <tr><td>⑧ 更新日期</td><td>标题 + 日期</td><td>显示更新日期（无则当年 1 月 1 日）</td><td>仅展示</td></tr>
+  <tr><td>⑨ 评分与评价</td><td>手机/平板分段、大号评分+星级、分布条、用户评论</td><td>评分/星级/分布=APP评分（算法 3.4）；人数=显示评分人数；评论=用户评论配置</td><td>分段标签、评论右侧三点菜单仅展示、无交互</td></tr>
+</table>
+
+<h3 id="f-apple">3.3 仿苹果页逐区块</h3>
+<p>字段来源与谷歌页一致，差异在样式（蓝色主色）及以下额外区块：</p>
+<table>
+  <tr><th>区块</th><th>内容</th><th>数据来源</th><th>交互</th></tr>
+  <tr><td>头部 / 统计行</td><td>同谷歌页；统计行评分左侧显示<strong>整排 5 颗星</strong></td><td>同 3.2</td><td>无认证选择、无谷歌原生信息条</td></tr>
+  <tr><td>CTA 按钮</td><td>蓝色「前往 App Store 获取」</td><td>固定文案</td><td><strong>点击 → 下载流程</strong></td></tr>
+  <tr><td>关于此应用</td><td>标题（<strong>无箭头</strong>）+ 正文</td><td>正文=APP简介</td><td>仅展示</td></tr>
+  <tr><td>分类 chips</td><td>#1 免费动作应用、动作、平台游戏、休闲、多人、风格化</td><td>固定文案</td><td>仅展示</td></tr>
+  <tr><td>数据安全</td><td>标题+箭头、说明段、边框卡片内 4 条数据说明 + 「查看详情」</td><td>说明为固定文案</td><td><strong>「查看详情」点击 → 下载流程</strong>；标题箭头仅展示</td></tr>
+  <tr><td>评分与评价</td><td>说明段、分段、大号评分+5 蓝星、蓝色分布条、用户评论</td><td>同谷歌评分区</td><td>评论条含 helpful 区（见下）</td></tr>
+  <tr><td class="indent">↳ 评论 helpful 区</td><td>「有 N 人认为该评价有用 · X」在上；「这条评价对您有帮助吗？ + 有用 / 没用」同一行在下</td><td>固定文案</td><td><strong>「有用/没用」点击 → 下载流程</strong>；评论右侧三点菜单仅展示、无交互</td></tr>
+  <tr><td>查看全部评价</td><td>蓝色链接</td><td>固定文案</td><td><strong>点击 → 下载流程</strong></td></tr>
+  <tr><td>更新内容</td><td>标题 + 正文（含域名）</td><td>正文为固定文案，其中域名=APP域名</td><td>仅展示</td></tr>
+  <tr><td>相似游戏</td><td>标题 + 箭头 + 游戏列表（图标/名称/开发者/评分）</td><td>固定装饰内容</td><td>列表本身无交互；<strong>仅标题箭头点击 → 下载流程</strong></td></tr>
+  <tr><td>底部</td><td>「举报不当内容」纯文字、蓝色「在 App Store 下载」按钮、App Store 标签、语言地区</td><td>固定文案</td><td>「举报不当内容」及语言地区仅展示；<strong>底部按钮点击 → 下载流程</strong></td></tr>
+</table>
+
+<h3 id="f-rate">3.4 评分星级与分布条算法</h3>
+<p><strong>星级</strong>：5 颗星按 <code>APP评分 ÷ 5.0</code> 的比例点亮（支持半星）。如评分 4.0 亮 4 颗，评分 3.1～3.9 亮 3 颗半。</p>
+<p><strong>评分分布条</strong>：因「平均分」无法唯一反推 5 档分布，前端按固定算法根据 APP评分动态生成，使加权平均恰等于配置评分（改评分时分布条自动匹配，无需后台额外配置）：</p>
+<div class="info">
+设配置评分为 <code>r</code>。固定「低分块」内部比例 4★:3★:2★:1★ = 10:4:3:3（即 0.5 / 0.2 / 0.15 / 0.15，内部均值 m≈3.05）。<br>
+5★ 占比：<code>p5 = (r − m) / (5 − m)</code>；其余 <code>(1 − p5)</code> 按上述比例分配给 4★～1★；<code>r &lt; m</code> 时 p5 取 0。<br>
+条形长度：各档占比相对「最大档」归一，5★ 满宽。
+</div>
+<p>示例（r=4.8）：5★≈89.7% / 4★≈5.1% / 3★≈2.1% / 2★≈1.5% / 1★≈1.5%，加权平均正好 4.8。</p>
+</div>
+
+<!-- 四、下载与安装交互 -->
+<div class="section-card" id="interaction">
+<h2>四、下载与安装交互</h2>
+
+<h3 id="i-rule">4.1 交互总则（按设备 / 安装类型 / 浏览器区分）</h3>
+<p>交互逻辑<strong>按设备类型、安装类型、浏览器区分，而非按页面模板区分</strong>。仿谷歌页与仿苹果页仅样式不同，两个页面都能被安卓和 iOS 设备打开下载。统一触发点：CTA 按钮，以及数据安全「查看详情」、评论「有用/没用」、「查看全部评价」、相似游戏标题箭头、底部「在 App Store 下载」按钮，点击后均触发同一套下载流程。</p>
+<table>
+  <tr><th>设备</th><th>进入页面时</th><th>点击 CTA / 触发点后</th></tr>
+  <tr><td>安卓</td><td>正常展示页面</td><td>下载确认弹框（圆弧 0→100%）→ 完成 → 按安卓安装类型走后续（见 4.3）</td></tr>
+  <tr><td>iOS</td><td><strong>加载时即判定浏览器</strong>：若非 Safari，页面加载同步弹出复制链接弹框</td><td>下载确认弹框（圆弧 0→100%）→ 完成 → 「添加到主屏幕」说明浮层（见 4.4）</td></tr>
+</table>
+
+<h3 id="i-dialog">4.2 下载确认弹框与「下载中」状态</h3>
+<p><strong>下载确认弹框</strong>：点击触发点后居中弹出，含标题「快速安装」、速度标签、「已激活」标签、圆弧进度条（0%→100%）。进度达 100% 后，圆弧区替换为绿色「安装」按钮。</p>
+<p><strong>「下载中」状态（仅安卓 APK 下载阶段）</strong>：进入 APK 下载时，弹框内原「安装」按钮区域替换为<strong>线形进度条</strong>（0%→100%），满格后变回绿色「安装」按钮，满格同时自动下载 APK 文件。全过程下载确认弹框保留不关闭。该状态<strong>仅出现在两个商店页的安卓设备 APK 下载场景</strong>；APK 下载成功不额外弹出提示浮层。</p>
+
+<h3 id="i-android">4.3 安卓后续分支（确认弹框「安装」按钮点击后）</h3>
+<table>
+  <tr><th>安装类型 / 条件</th><th>交互</th></tr>
+  <tr><td>纯 PWA · 支持 PWA</td><td>弹出 PWA 系统安装提示（带遮罩，见 4.5）；确认→安装 PWA，取消→关闭提示</td></tr>
+  <tr><td>纯 PWA · 不支持 PWA</td><td>弹出「复制链接到 Chrome」弹框</td></tr>
+  <tr><td>纯 APK</td><td>直接进入「下载中」线形进度（0→100%），完成后自动下载 APK</td></tr>
+  <tr><td>PWA+APK · 支持 PWA</td><td>先弹 PWA 系统提示；确认→安装 PWA；取消→弹「下载 APP」确认弹框，确认→进入「下载中」线形进度下载 APK</td></tr>
+  <tr><td>PWA+APK · 不支持 PWA</td><td>直接进入「下载中」线形进度下载 APK</td></tr>
+</table>
+
+<h3 id="i-ios">4.4 iOS 后续分支</h3>
+<table>
+  <tr><th>浏览器 / 步骤</th><th>交互</th></tr>
+  <tr><td>非 Safari</td><td>页面<strong>加载时即弹出</strong>复制链接（Safari）弹框，引导用户在 Safari 打开</td></tr>
+  <tr><td>Safari · 点击 CTA</td><td>下载确认弹框（圆弧进度 0→100%）→ 完成 → 「安装」按钮</td></tr>
+  <tr><td>Safari · 点击「安装」</td><td>弹出「添加到主屏幕」说明浮层（3 步：点击分享/菜单图标 → 选择「添加到主屏幕」→ 在主屏幕选择 App 图标），下载确认弹框保留于背景</td></tr>
+</table>
+
+<h3 id="i-layer">4.5 弹框层级与常驻规则</h3>
+<p><strong>常驻</strong>：下载确认弹框弹出后<strong>始终不关闭、保持显示</strong>，后续弹框叠加于其上层。</p>
+<p><strong>层级（由低到高）</strong>：商店页 &lt; 下载确认弹框 &lt; 「添加到主屏幕」浮层 &lt; PWA 系统提示 / APK 确认弹框 / 复制链接弹框 &lt; 轻提示(toast)。</p>
+<div class="note">PWA 系统提示弹出时带独立遮罩，<strong>遮罩盖住原页面及下载确认弹框，PWA 提示本身位于最上层</strong>；即 PWA 提示弹出时其下所有信息都处于遮罩之下。APK 确认弹框、复制链接弹框自带暗色背景，同样覆盖于下载确认弹框之上。</div>
+
+<h3 id="i-reuse">4.6 与安装引导模块的复用关系</h3>
+<p>本模块与《安装引导模块》共用同一套下载组件：下载确认弹框、PWA 系统提示（含遮罩）、APK 确认弹框、复制链接弹框（Chrome / Safari）+「复制成功」提示、「添加到主屏幕」说明浮层。</p>
+<div class="info">《安装引导模块》中「下载按钮 / 底部浮层」在 <strong>iOS·Safari</strong> 点击安装后跳转的页面，复用本模块的<strong>仿苹果页</strong>；页内点击安装后弹出的下载确认弹框与「添加到主屏幕」说明浮层，即本模块的同一套组件。</div>
+</div>
+
+<!-- 五、流程图 -->
+<div class="section-card" id="flowchart">
+<h2>五、活动逻辑流程图</h2>
+<div class="flow-wrap">
+<svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1000px;font-family:-apple-system,'PingFang SC',sans-serif;font-size:12px">
+  <defs>
+    <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0961BD"/></marker>
+    <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#888"/></marker>
+  </defs>
+
+  <!-- start -->
+  <rect x="370" y="16" width="260" height="36" rx="18" fill="#0961BD"/>
+  <text x="500" y="39" text-anchor="middle" fill="#fff" font-weight="600">进入仿应用商店页（谷歌/苹果）</text>
+  <line x1="500" y1="52" x2="500" y2="74" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- device diamond -->
+  <polygon points="500,74 600,96 500,118 400,96" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="500" y="93" text-anchor="middle" fill="#003a8c" font-weight="600">设备类型？</text>
+  <text x="500" y="108" text-anchor="middle" fill="#003a8c" font-size="11">安卓 / iOS</text>
+
+  <!-- ===== ANDROID (left, cx=250) ===== -->
+  <line x1="400" y1="96" x2="250" y2="96" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="250" y1="96" x2="250" y2="150" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="325" y="88" text-anchor="middle" fill="#003a8c" font-size="11">安卓</text>
+
+  <rect x="140" y="150" width="220" height="34" rx="6" fill="#fff7e6" stroke="#ffd591"/>
+  <text x="250" y="171" text-anchor="middle" fill="#7d4f00">点 CTA / 各触发点</text>
+  <line x1="250" y1="184" x2="250" y2="204" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <rect x="120" y="204" width="260" height="38" rx="6" fill="#fff" stroke="#91caff"/>
+  <text x="250" y="228" text-anchor="middle" fill="#003a8c">下载确认弹框（圆弧 0→100%）</text>
+  <line x1="250" y1="242" x2="250" y2="262" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <rect x="150" y="262" width="200" height="34" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="250" y="283" text-anchor="middle" fill="#135200">完成 → 点「安装」</text>
+  <line x1="250" y1="296" x2="250" y2="318" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <polygon points="250,318 360,348 250,378 140,348" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="250" y="345" text-anchor="middle" fill="#003a8c" font-weight="600" font-size="11">安卓安装类型？</text>
+  <text x="250" y="360" text-anchor="middle" fill="#003a8c" font-size="10">PWA / APK / PWA+APK</text>
+  <line x1="250" y1="378" x2="250" y2="400" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <rect x="30" y="400" width="440" height="120" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="46" y="424" fill="#334155" font-size="11.5">• 纯 APK / PWA+APK(不支持 PWA)</text>
+  <text x="58" y="440" fill="#64748b" font-size="11">→ 「下载中」线形 0→100%，自动下载 APK</text>
+  <text x="46" y="464" fill="#334155" font-size="11.5">• 纯 PWA(支持) / PWA+APK(支持)</text>
+  <text x="58" y="480" fill="#64748b" font-size="11">→ PWA 系统提示（带遮罩）</text>
+  <text x="58" y="495" fill="#64748b" font-size="11">　PWA+APK 取消 → APK 确认 → 「下载中」</text>
+  <text x="46" y="513" fill="#334155" font-size="11.5">• 纯 PWA(不支持) → Chrome 复制链接弹框</text>
+
+  <!-- ===== iOS (right, cx=750) ===== -->
+  <line x1="600" y1="96" x2="750" y2="96" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="750" y1="96" x2="750" y2="150" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="675" y="88" text-anchor="middle" fill="#003a8c" font-size="11">iOS</text>
+
+  <polygon points="750,150 862,178 750,206 638,178" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="750" y="175" text-anchor="middle" fill="#003a8c" font-weight="600" font-size="11">加载判定浏览器</text>
+  <text x="750" y="190" text-anchor="middle" fill="#003a8c" font-size="11">Safari？</text>
+
+  <line x1="862" y1="178" x2="884" y2="178" stroke="#888" stroke-width="1.3" marker-end="url(#a2)"/>
+  <text x="873" y="170" text-anchor="middle" fill="#888" font-size="10">否</text>
+  <rect x="886" y="160" width="104" height="40" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="938" y="177" text-anchor="middle" fill="#595959" font-size="10">加载即弹</text>
+  <text x="938" y="191" text-anchor="middle" fill="#595959" font-size="10">复制链接弹框</text>
+
+  <line x1="750" y1="206" x2="750" y2="240" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="764" y="226" fill="#003a8c" font-size="10">是</text>
+
+  <rect x="620" y="240" width="260" height="38" rx="6" fill="#fff" stroke="#91caff"/>
+  <text x="750" y="264" text-anchor="middle" fill="#003a8c" font-size="11.5">点 CTA → 确认弹框（圆弧 0→100%）</text>
+  <line x1="750" y1="278" x2="750" y2="298" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <rect x="650" y="298" width="200" height="34" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="750" y="319" text-anchor="middle" fill="#135200">完成 → 点「安装」</text>
+  <line x1="750" y1="332" x2="750" y2="354" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <rect x="630" y="354" width="240" height="44" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="750" y="373" text-anchor="middle" fill="#135200" font-size="11.5">「添加到主屏幕」说明浮层</text>
+  <text x="750" y="389" text-anchor="middle" fill="#135200" font-size="11">（3 步引导）</text>
+
+  <!-- note -->
+  <rect x="210" y="556" width="580" height="46" rx="6" fill="#eef1ff" stroke="#c7d2fe"/>
+  <text x="500" y="576" text-anchor="middle" fill="#3730a3" font-size="11">下载确认弹框弹出后始终常驻；PWA / APK / 复制链接弹框带遮罩，</text>
+  <text x="500" y="592" text-anchor="middle" fill="#3730a3" font-size="11">盖住页面及下载确认弹框，位于最上层</text>
+</svg>
+</div>
+</div>
+
+<!-- 六、中葡文案对照 -->
+<div class="section-card" id="i18n">
+<h2>六、中葡文案对照</h2>
+<div class="note">「中文」列为前台展示文案；「葡语（参考图原文）」列为参考图原文，仅供对照。品牌专有名词 Google Play、App Store、Top Developer 保留原文。带 <code>[域名]</code> 处动态读取 APP域名。</div>
+
+<h4>6.1 头部与统计行</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>已通过应用验证</td><td>Verificado pelo aplicativo</td><td>头部验证行</td></tr>
+  <tr><td>条评价</td><td>reviews</td><td>统计行 / 评分区</td></tr>
+  <tr><td>下载量</td><td>Baixando</td><td>统计行</td></tr>
+  <tr><td>适用 21 岁以上</td><td>Rated for 21+</td><td>统计行</td></tr>
+</table>
+
+<h4>6.2 CTA 与操作行</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>快速安装</td><td>Instalação Rápida</td><td>谷歌 CTA 主文案</td></tr>
+  <tr><td>15 秒内完成安装</td><td>Baixe dentro de 15 segundos</td><td>谷歌 CTA 副文案</td></tr>
+  <tr><td>分享</td><td>Share</td><td>谷歌操作行</td></tr>
+  <tr><td>加入心愿单</td><td>Add to wishlist</td><td>谷歌操作行</td></tr>
+  <tr><td>前往 App Store 获取</td><td>Obtenha app na App Store</td><td>苹果 CTA</td></tr>
+</table>
+
+<h4>6.3 关于此应用 / 更新日期 / 评分区通用</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>关于此应用</td><td>Sobre este aplicativo</td><td>简介标题</td></tr>
+  <tr><td>更新日期</td><td>Atualizado em</td><td>更新日期标题</td></tr>
+  <tr><td>评分与评价</td><td>Classificações e revisões</td><td>评分区标题</td></tr>
+  <tr><td>手机</td><td>Telephone</td><td>评分区分段</td></tr>
+  <tr><td>平板</td><td>Tablet</td><td>评分区分段</td></tr>
+  <tr><td>评分和评价均已核实，来自使用与您相同设备类型的用户。</td><td>As avaliações e avaliações são verificadas e de pessoas que usam o mesmo tipo de dispositivo que você usa.</td><td>苹果评分区说明段</td></tr>
+</table>
+
+<h4>6.4 苹果页 · 分类标签</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>#1 免费动作应用</td><td>#1 principais apps gratuitos ação</td><td>分类 chip</td></tr>
+  <tr><td>动作</td><td>Ação</td><td>分类 chip</td></tr>
+  <tr><td>平台游戏</td><td>Jogos de plataforma</td><td>分类 chip</td></tr>
+  <tr><td>休闲</td><td>Casual</td><td>分类 chip</td></tr>
+  <tr><td>多人</td><td>Multiplayer</td><td>分类 chip</td></tr>
+  <tr><td>风格化</td><td>Estilizado</td><td>分类 chip</td></tr>
+</table>
+
+<h4>6.5 苹果页 · 数据安全</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>数据安全</td><td>Segurança dos dados</td><td>标题</td></tr>
+  <tr><td>要确保安全，首先要了解开发者如何收集和分享您的数据。数据安全和隐私措施可能会因您的使用情况、所在地区和年龄而异。开发者提供了以下信息，且未来可能会更新。</td><td>Sua segurança começa com o entendimento de como os desenvolvedores coletam e compartilham seus dados. As práticas de segurança e privacidade de dados podem variar de acordo com o uso, a região e a idade. O desenvolvedor forneceu as informações a seguir, que podem ser atualizadas ao longo do tempo.</td><td>说明段</td></tr>
+  <tr><td>此应用可能会与第三方分享以下类型的数据：位置信息、财务信息、设备标识符及其他</td><td>Este app pode compartilhar estes tipos de dados com terceiros: Local, Informações financeiras e Identificadores do dispositivo e outros</td><td>数据项 1</td></tr>
+  <tr><td>此应用可能会收集以下类型的数据：位置信息、个人信息及另外 5 项</td><td>Este app pode coletar estes tipos de dados: Local, Informações pessoais e mais 5</td><td>数据项 2</td></tr>
+  <tr><td>数据未加密</td><td>Os dados não são criptografados</td><td>数据项 3</td></tr>
+  <tr><td>您可以请求删除数据</td><td>Você pode solicitar a exclusão dos dados</td><td>数据项 4</td></tr>
+  <tr><td>查看详情</td><td>Ver detalhes</td><td>链接</td></tr>
+</table>
+
+<h4>6.6 苹果页 · 评论 helpful 区</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>这条评价对您有帮助吗？</td><td>Você achou isso útil?</td><td>helpful 提问</td></tr>
+  <tr><td>有用</td><td>Sim</td><td>helpful 按钮</td></tr>
+  <tr><td>没用</td><td>Não</td><td>helpful 按钮</td></tr>
+  <tr><td>有 [N] 人认为该评价有用 · [X]</td><td>Essa avaliação foi marcada como útil por [N] pessoas · [X]</td><td>helpful 说明</td></tr>
+  <tr><td>查看全部评价</td><td>Ver todas as avaliações</td><td>评论区链接</td></tr>
+</table>
+
+<h4>6.7 苹果页 · 更新内容 / 相似游戏 / 底部</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>更新内容</td><td>O que há de novo</td><td>标题</td></tr>
+  <tr><td>各位玩家好，新版本上线啦！这里有一些惊喜等着您！- 新增游戏：[域名] - 新增活动 - 修复了已知问题 现在正是转起来、赢起来的好时机！</td><td>Olá amantes do, uma nova versão chegou! Aqui estão algumas surpresas para você! - Novos jogo: [域名] - Nova atividade - Erro corrigido Agora é a hora de girar e vencer!</td><td>更新内容正文</td></tr>
+  <tr><td>相似游戏</td><td>Jogos semelhantes</td><td>标题</td></tr>
+  <tr><td>财富老虎机 / 梦幻俱乐部</td><td>Cash Hoard Slots / Fantacy XClub</td><td>相似游戏 1（名称/开发者）</td></tr>
+  <tr><td>赢家老虎机 / 三重七娱乐城</td><td>Winning Slots Las / Triple Sevens: Casino</td><td>相似游戏 2</td></tr>
+  <tr><td>777 老虎机 / 三个愿望</td><td>Slot 777 - jogos de / Three wishes slot</td><td>相似游戏 3</td></tr>
+  <tr><td>豪华现金娱乐城 / 游戏之家</td><td>Grand Cash Casino / Gamehaus Network</td><td>相似游戏 4</td></tr>
+  <tr><td>娱乐城老虎机 / 旋转游戏</td><td>Slots Casino - Jack / SpinX Games Limited</td><td>相似游戏 5</td></tr>
+  <tr><td>现金风暴老虎机 / 特里赢</td><td>Cash Storm Slots / TRIWIN</td><td>相似游戏 6</td></tr>
+  <tr><td>举报不当内容</td><td>Sinalizar como impróprio</td><td>底部</td></tr>
+  <tr><td>在 App Store 下载</td><td>Baixe na App Store</td><td>底部按钮</td></tr>
+  <tr><td>巴西（葡萄牙语）</td><td>Brasil (Português)</td><td>底部语言地区</td></tr>
+</table>
+
+<h4>6.8 下载 / 安装弹框（共用组件）</h4>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>快速安装</td><td>Instalação Rápida</td><td>下载确认弹框标题</td></tr>
+  <tr><td>快 6 倍</td><td>6 vezes mais rápido</td><td>下载确认弹框速度标签</td></tr>
+  <tr><td>已激活</td><td>Ativado</td><td>下载确认弹框状态标签</td></tr>
+  <tr><td>安装</td><td>Instalar</td><td>下载确认弹框安装按钮</td></tr>
+  <tr><td>安装应用</td><td>Instalar o aplicativo</td><td>PWA 提示 / 添加主屏幕标题</td></tr>
+  <tr><td>添加到主屏幕</td><td>Adicionar à Tela de Início</td><td>添加主屏幕步骤 2</td></tr>
+  <tr><td>是否要下载并安装该 APP？</td><td>Deseja baixar e instalar este aplicativo?</td><td>APK 确认弹框</td></tr>
+  <tr><td>复制下载链接并在 Safari 浏览器中打开。</td><td>Copie o link de download e abra-o no navegador Safari.</td><td>iOS 复制链接弹框</td></tr>
+  <tr><td>复制链接并在 Chrome 浏览器中打开。</td><td>Copie o link e abra-o no navegador Chrome.</td><td>安卓复制链接弹框</td></tr>
+  <tr><td>取消</td><td>Cancelar</td><td>弹框取消按钮</td></tr>
+  <tr><td>复制链接</td><td>Copiar link</td><td>复制链接按钮</td></tr>
+  <tr><td>复制成功</td><td>Cópia Bem-sucedida</td><td>复制成功提示</td></tr>
+</table>
+<div class="note">「安装应用」「是否要下载并安装该 APP？」等下载组件文案沿用《安装引导模块》，其葡语以安装引导参考图为准（此处为对齐译文）。</div>
+
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">仿应用商店模块 PRD v1.1 · 2026-07-03</p>
+</div>
+</div>
+</body>
+</html>

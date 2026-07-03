@@ -191,11 +191,12 @@ tr:hover td{background:#f5f8ff}
 .tip:hover .tiptext{opacity:1}
 
 /* ── TOAST ── */
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:6px;font-size:13px;z-index:9999;display:none;pointer-events:none}
-.toast.show{display:block;animation:fadeio 2.2s forwards}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:8px 18px;border-radius:6px;font-size:13px;z-index:9999;display:none;pointer-events:none}
+.toast.show{display:flex;align-items:center;gap:8px;animation:fadeio 3s forwards}
 .toast-ok{background:#333;color:#fff}
-.toast-err{background:#ff4d4f;color:#fff}
-@keyframes fadeio{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0}}
+.toast-err{background:#fff;color:#333;border:1px solid #ffd6d6;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.toast-err-icon{width:18px;height:18px;border-radius:50%;background:#ff4d4f;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;line-height:1}
+@keyframes fadeio{0%{opacity:0}8%{opacity:1}75%{opacity:1}100%{opacity:0}}
 
 /* ── INDENTED FORM ITEMS ── */
 .fi-title{display:flex;align-items:center;margin-bottom:12px;margin-top:4px}
@@ -479,6 +480,84 @@ select.fs.ph{color:#bfbfbf}
 .ma-tbl-btn-add:hover{background:#e6f0ff}
 .ma-tbl-btn-del{border-color:#d9d9d9;color:#595959}
 .ma-tbl-btn-del:hover{border-color:#ff4d4f;color:#ff4d4f}
+
+/* ══ APP STORE PAGE ══ */
+.tpl-type-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:500;white-space:nowrap}
+.tpl-type-google{background:#e6f4ea;color:#137333}
+.tpl-type-apple{background:#f0f0f0;color:#1c1c1e}
+
+/* Upload area (icon) */
+.as-upload-area{width:88px;height:88px;border:2px dashed #d9d9d9;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#bbb;font-size:26px;background:#fafafa;position:relative;overflow:hidden;flex-shrink:0;transition:border-color .15s}
+.as-upload-area:hover{border-color:#0961BD}
+.as-upload-area.uploaded{border:none}
+.as-upload-area .upload-plus{font-size:28px;color:#bbb;line-height:1}
+.as-upload-btn{height:32px;padding:0 14px;border-radius:4px;font-size:13px;cursor:pointer;border:1px solid #0961BD;color:#fff;background:#0961BD;transition:all .15s;white-space:nowrap;font-family:inherit}
+.as-upload-btn:hover{background:#0752a8}
+.upload-hint-red{font-size:11px;color:#ff4d4f;margin-top:5px}
+
+/* Style select + preview thumb */
+.style-sel-row{display:flex;align-items:center;gap:10px}
+.preview-thumb{width:50px;height:50px;border:1px solid #d9d9d9;border-radius:4px;cursor:pointer;overflow:hidden;flex-shrink:0;background:#f5f5f5;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+.preview-thumb:hover{border-color:#0961BD}
+.preview-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Promo images */
+.promo-row{display:flex;align-items:flex-start;gap:0;margin-bottom:12px}
+.promo-lbl{width:auto;flex-shrink:0;text-align:right;padding-right:12px;padding-top:8px;color:#595959;font-size:13px;line-height:1.4;white-space:nowrap}
+.promo-body{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.promo-controls{display:flex;align-items:center;width:100%}
+.promo-img-box{width:120px;height:160px;border:2px dashed #d9d9d9;border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fafafa;color:#bbb;font-size:28px;flex-shrink:0;cursor:pointer;overflow:hidden;position:relative;transition:border-color .15s}
+.promo-img-box:hover{border-color:#0961BD}
+.promo-img-box.uploaded{border:none}
+.promo-btns-row{display:flex;align-items:center;gap:6px}
+.promo-hint{font-size:11px;color:#ff4d4f;margin-top:4px}
+.btn-promo-plus{width:32px;height:32px;background:#0961BD;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:18px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
+.btn-promo-minus{width:32px;height:32px;background:#0961BD;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:22px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;line-height:1}
+.btn-add-promo{height:32px;padding:0 14px;border-radius:4px;font-size:13px;cursor:pointer;border:1px solid #0961BD;color:#fff;background:#0961BD;font-family:inherit;transition:all .15s}
+.btn-add-promo:hover{background:#0752a8}
+
+/* Comment cards */
+.cc-wrap{position:relative;border:1px solid #e0e0e0;border-radius:6px;background:#f8f9fa;padding:14px;margin-top:16px}
+.comment-card-del{position:absolute;top:8px;right:10px;cursor:pointer;color:#ff4d4f;font-size:17px;background:none;border:none;padding:2px 4px;line-height:1;border-radius:3px}
+.comment-card-del:hover{background:#ffe8e8;border-radius:3px}
+.cc-body{display:flex;gap:20px;margin-top:4px}
+.cc-left{flex:1;min-width:0}
+.cc-right{flex-shrink:0;padding-right:36px}
+.c-fi{display:flex;align-items:center;margin-bottom:10px}
+.c-fl{width:76px;flex-shrink:0;text-align:right;padding-right:10px;line-height:32px;color:#595959;font-size:13px;white-space:nowrap}
+.c-fl.req::before{content:'* ';color:#ff4d4f}
+.c-fc{flex:1;min-width:0}
+.c-stars{display:flex;align-items:center;gap:1px;height:32px}
+.c-star{color:#faad14;font-size:17px}
+.avatar-box{width:80px;height:80px;border:2px dashed #d9d9d9;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#bbb;background:#fafafa;position:relative;overflow:hidden;transition:border-color .15s}
+.avatar-box:hover{border-color:#0961BD}
+.avatar-box.uploaded{border:none}
+.avatar-box .av-plus{font-size:22px;color:#bbb}
+.avatar-note{font-size:11px;color:#8c8c8c;max-width:200px;text-align:left;line-height:1.4;margin-top:6px}
+.c-fi-full{display:flex;align-items:flex-start;margin-top:6px}
+.c-fl-full{width:76px;flex-shrink:0;text-align:right;padding-right:10px;padding-top:6px;color:#595959;font-size:13px;line-height:1.5;white-space:nowrap}
+.c-fl-full.req::before{content:'* ';color:#ff4d4f}
+
+/* Table comment cell */
+.td-comment-text{font-size:12px;color:#333;line-height:1.5;word-break:break-all}
+.tbl-comment-link{color:#0961BD;cursor:pointer;font-size:12px;white-space:nowrap;text-decoration:none;background:none;border:none;padding:0;font-family:inherit}
+.tbl-comment-link:hover{text-decoration:underline}
+
+/* App store table overrides */
+#pg-appstore table{font-size:13px}
+#pg-appstore th{font-weight:700;text-align:center;vertical-align:middle}
+#pg-appstore td{vertical-align:middle;text-align:center}
+#pg-appstore .action-bar{justify-content:flex-start;align-items:center;gap:10px}
+#pg-appstore .pagination{justify-content:flex-start;gap:8px}
+#pg-appstore .pg-controls{display:flex;align-items:center;gap:5px}
+
+/* Promo img box — larger */
+.promo-img-box{width:120px!important;height:160px!important}
+
+/* Date input with icon */
+.date-text-wrap{position:relative;display:block}
+.date-text-wrap input{width:100%;padding-right:32px!important;box-sizing:border-box}
+.date-text-wrap .date-icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#bbb;font-size:14px;pointer-events:none}
 </style>
 </head>
 <body>
@@ -514,7 +593,7 @@ select.fs.ph{color:#bfbfbf}
   <div class="menu-item open" id="menu-promo" onclick="toggleMenu(this,'promo-sub')"><div class="menu-item-left"><span class="menu-icon">📡</span>推广渠道管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="promo-sub" style="display:block">
     <div class="submenu-item active" id="si-channel" onclick="switchPage('channel',this)">推广渠道管理</div>
-    <div class="submenu-item disabled">仿应用商店</div>
+    <div class="submenu-item" onclick="switchPage('appstore',this)">仿应用商店</div>
     <div class="submenu-item disabled">推广渠道报表</div>
     <div class="submenu-item disabled">推广渠道报表新</div>
     <div class="submenu-item" id="si-effect" onclick="switchPage('effect',this)">推广效果报表</div>
@@ -866,6 +945,54 @@ select.fs.ph{color:#bfbfbf}
       </div>
       <div id="al-pending" style="display:none;padding:40px 20px;text-align:center;color:#8c8c8c;background:#fff">暂无待审核奖励记录</div>
       <div id="al-reviewed" style="display:none;padding:40px 20px;text-align:center;color:#8c8c8c;background:#fff">暂无已审核奖励记录</div>
+    </div>
+
+    <!-- ══════════ PAGE: 仿应用商店 ══════════ -->
+    <div id="pg-appstore" style="display:none">
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>762</option><option>763</option><option>764</option></select></div>
+          <div class="filter-item"><span class="filter-label">模板类型：</span>
+            <select class="f-select" id="as-type-filter">
+              <option value="">全部</option>
+              <option value="google">仿谷歌商店</option>
+              <option value="apple">仿苹果商店</option>
+            </select>
+          </div>
+          <button class="btn btn-query" onclick="asFilter()">查询</button>
+        </div>
+      </div>
+      <div class="action-bar">
+        <span style="font-size:13px;color:#333">模板列表：</span>
+        <button class="btn btn-blue" onclick="asOpenNew()">+ 新增模板</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>模板类型</th>
+                <th>模板名称</th>
+                <th>模板样式</th>
+                <th>APP名字</th>
+                <th>APP图标</th>
+                <th style="min-width:200px">APP简介</th>
+                <th style="min-width:160px">用户评论</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="as-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <div class="pg-info">共 <span id="as-pg-total">0</span> 条数据</div>
+          <div class="pg-controls">
+            <div class="pg-btn active">1</div>
+            <select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -1970,6 +2097,142 @@ select.fs.ph{color:#bfbfbf}
 
 <!-- ═══════════════ MODALS ═══════════════ -->
 
+<!-- APP STORE: 新增 / 编辑模板 -->
+<div class="overlay" id="m-as-tpl">
+  <div class="modal" style="width:580px">
+    <div class="mh"><span class="mt" id="as-tpl-title">新增</span><span class="mc" onclick="closeM('m-as-tpl')">×</span></div>
+    <div class="mb" style="max-height:calc(90vh - 130px);overflow-y:auto;padding:20px 32px 16px">
+      <!-- 模板类型 -->
+      <div class="fi">
+        <span class="fl req">模板类型：</span>
+        <div class="fc"><select class="fs" id="as-f-type" onchange="asTplTypeChange(this.value)">
+          <option value="google">仿谷歌商店</option>
+          <option value="apple">仿苹果商店</option>
+        </select></div>
+      </div>
+      <!-- 模板样式 + 预览缩略图 -->
+      <div class="fi">
+        <span class="fl req">模板样式：</span>
+        <div class="fc">
+          <div class="style-sel-row">
+            <select class="fs" style="flex:1"><option>样式一</option></select>
+            <div class="preview-thumb" onclick="asOpenPreview()" title="点击预览">
+              <img id="as-thumb-img" alt="预览" style="width:100%;height:100%;object-fit:cover;display:none">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 模板名称 -->
+      <div class="fi"><span class="fl req">模板名称：</span><div class="fc"><input class="fin" id="as-f-name" placeholder="请输入"></div></div>
+      <!-- APP域名 -->
+      <div class="fi"><span class="fl req">APP域名：</span><div class="fc"><input class="fin" id="as-f-domain" placeholder="请输入"></div></div>
+      <!-- 认证选择（仅谷歌） -->
+      <div class="fi" id="as-auth-row">
+        <span class="fl req">认证选择：</span>
+        <div class="fc"><div class="radio-g">
+          <label class="radio-item"><input type="radio" name="as-auth" value="standard" checked onchange="asAuthChange('standard')"> 标准安装页（推荐使用）</label>
+          <label class="radio-item"><input type="radio" name="as-auth" value="native" onchange="asAuthChange('native')"> 谷歌原生（不建议使用）</label>
+        </div></div>
+      </div>
+      <!-- APP图标 -->
+      <div class="fi" style="align-items:flex-start">
+        <span class="fl req" style="padding-top:8px">APP图标：</span>
+        <div class="fc">
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div class="as-upload-area" id="as-icon-area" onclick="asSimUploadIcon()">
+              <span id="as-icon-plus" class="upload-plus">＋</span>
+            </div>
+            <button class="as-upload-btn" onclick="asSimUploadIcon()">上传图片</button>
+          </div>
+          <div class="upload-hint-red">支持JPG/PNG格式的图片（建议尺寸：512 x 512）</div>
+        </div>
+      </div>
+      <!-- APP名字 -->
+      <div class="fi"><span class="fl req">APP名字：</span><div class="fc"><input class="fin" id="as-f-appname" placeholder="请输入"></div></div>
+      <!-- APP评分 -->
+      <div class="fi"><span class="fl req">APP评分：</span><div class="fc"><input class="fin" id="as-f-rating" placeholder="请输入" onblur="asFixRating(this)"></div></div>
+      <!-- 显示评分人数 -->
+      <div class="fi"><span class="fl req">显示评分人数：</span><div class="fc"><input class="fin" id="as-f-ratingcnt" placeholder="请输入" onblur="asFixRatingCnt(this)"></div></div>
+      <!-- 显示下载量 -->
+      <div class="fi">
+        <span class="fl req">显示下载量：</span>
+        <div class="fc">
+          <select class="fs" id="as-f-downloads">
+            <option>1+（下载量1~4）</option><option>5+（下载量5~9）</option>
+            <option>10+（下载量10~49）</option><option>50+（下载量50~99）</option>
+            <option>100+（下载量100~499）</option><option>500+（下载量500~999）</option>
+            <option>1K+（下载量1千+）</option><option>5K+（下载量5千+）</option>
+            <option>10K+（下载量1万+）</option><option>50K+（下载量5万+）</option>
+            <option selected>100K+（下载量10万+）</option>
+            <option>500K+（下载量50万+）</option><option>1M+（下载量100万+）</option>
+            <option>5M+（下载量500万+）</option><option>10M+（下载量1000万+）</option>
+            <option>50M+（下载量5000万+）</option><option>100M+（下载量1亿+）</option>
+            <option>500M+（下载量5亿+）</option>
+          </select>
+        </div>
+      </div>
+      <!-- 显示更新日期 -->
+      <div class="fi">
+        <span class="fl">显示更新日期：</span>
+        <div class="fc">
+          <div class="date-text-wrap" style="position:relative;display:inline-block">
+            <input type="text" id="as-f-date" class="fin" placeholder="年/月/日" readonly style="padding-right:32px;cursor:default;width:200px" onfocus="this.blur()">
+            <input type="date" id="as-f-date-picker" style="position:absolute;opacity:0;width:0;height:0;top:0;left:0;pointer-events:none" onchange="var t=document.getElementById('as-f-date');if(t)t.value=this.value;">
+            <span class="date-icon" onclick="var p=document.getElementById('as-f-date-picker');if(p.showPicker)p.showPicker();else p.click();" style="cursor:pointer;pointer-events:auto">📅</span>
+          </div>
+        </div>
+      </div>
+      <!-- APP简介 -->
+      <div class="fi" style="align-items:flex-start">
+        <span class="fl req" style="padding-top:6px;line-height:1.5">APP简介：</span>
+        <div class="fc"><textarea class="fin" id="as-f-intro" placeholder="请输入" style="height:96px;resize:vertical;padding:8px 12px;line-height:1.6"></textarea></div>
+      </div>
+      <!-- 宣传图区域 -->
+      <div id="as-promo-wrap">
+        <div id="as-promo-add-entry" style="padding-left:96px;margin-bottom:16px">
+          <button class="btn-add-promo" onclick="asAddFirstPromo()">+ 添加宣传图</button>
+        </div>
+        <div id="as-promo-list"></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-blue" style="min-width:96px" onclick="asTplSave()">保存配置</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP STORE: 用户评论 -->
+<div class="overlay" id="m-as-comment">
+  <div class="modal" style="width:720px">
+    <div class="mh"><span class="mt">用户评论</span><span class="mc" onclick="closeM('m-as-comment')">×</span></div>
+    <div class="mb" style="max-height:calc(90vh - 130px);overflow-y:auto;padding:20px 24px 16px">
+      <div style="margin-bottom:14px">
+        <button class="btn btn-blue" onclick="asAddComment()">新增评论</button>
+      </div>
+      <div id="as-comment-empty" style="display:none;text-align:center;padding:40px 0;color:#8c8c8c;font-size:13px">暂无评论，请点击"新增评论"按钮添加。</div>
+      <div id="as-comment-list"></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-blue" style="min-width:80px" onclick="asCommentSave()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP STORE: 预览 -->
+<div class="overlay" id="m-as-preview">
+  <div class="modal" style="width:400px">
+    <div class="mh">
+      <span class="mt" id="as-preview-modal-title">预览</span>
+      <span class="mc" onclick="closeM('m-as-preview')">×</span>
+    </div>
+    <div class="preview-modal-body">
+      <div class="preview-phone-frame">
+        <img id="as-preview-img" src="" alt="预览图" style="width:100%;display:block">
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Promoter -->
 <div class="overlay" id="m-promoter">
   <div class="modal modal-lg">
@@ -2628,9 +2891,14 @@ function loadGuide(){
 // ─── TOAST ───
 function toast(msg,isErr=false){
   const t=document.getElementById('g-toast');
-  t.textContent=msg;
-  t.className='toast show '+(isErr?'toast-err':'toast-ok');
-  setTimeout(()=>t.className='toast toast-ok',2400);
+  if(isErr){
+    t.innerHTML='<span class="toast-err-icon">✕</span><span>'+msg+'</span>';
+    t.className='toast show toast-err';
+  } else {
+    t.innerHTML=msg;
+    t.className='toast show toast-ok';
+  }
+  setTimeout(()=>{t.className='toast toast-ok';t.innerHTML='';},3000);
 }
 
 
@@ -2763,7 +3031,7 @@ function guideAddrChange(){
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -2779,9 +3047,10 @@ function switchPage(page, el){
     'channel':'推广渠道管理 / 渠道列表',
     'effect':'推广渠道管理 / 推广效果',
     'guide':'推广渠道管理 / 安装引导页',
-    'activity-list':'福利中心 / 活动列表'
+    'activity-list':'福利中心 / 活动列表',
+    'appstore':'推广渠道管理 / 仿应用商店'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -2789,12 +3058,13 @@ function switchPage(page, el){
     if(txt) txt.textContent = bcMap[page]||page;
     if(sec) sec.textContent = bcSec[page]||'';
   }
+  if(page==='appstore') asRenderTable();
 }
 
 // ─── HASH ROUTING — deep-link support ───
-// Usage: prototype.html#channel / #effect / #guide / #activity-list
+// Usage: prototype.html#channel / #effect / #guide / #activity-list / #appstore
 (function(){
-  var validPages = ['channel','effect','guide','activity-list'];
+  var validPages = ['channel','effect','guide','activity-list','appstore'];
   function hashRoute(){
     var hash = location.hash.replace('#','');
     if(validPages.indexOf(hash) !== -1){
@@ -3826,6 +4096,471 @@ document.addEventListener('click',function(){
   maMsRender('week');
   maMsRender('month');
 })();
+
+// ════════════════════════════════════════════
+// 仿应用商店 — App Store Template Manager
+// ════════════════════════════════════════════
+
+// 示例数据
+const asTemplates = [
+  {
+    type:'google', name:'1kk678', style:'样式一',
+    appname:'kk678', domain:'kk678.com', auth:'standard',
+    iconUploaded:true, rating:'4.8', ratingCnt:'37215',
+    downloads:'100K+（下载量10万+）', date:'',
+    intro:'🌟 KK678 — A sorte está ao seu alcance! 🌟\nDescubra o KK678, a plataforma que transforma cada dia em uma nova chance de ganhar!\n💰 Destaques do KK678\n🎁 Recompensas Diárias: Ganhe até R$678 todos os dias.\n👥 Convide e Ganhe: Indique 1 amigo e receba R$65 instantaneamente.\n🎉 Mais Convites, Mais Prêmios: Convide outro amigo e receba R$100 extra!\n🎭 Bônus Misterioso: Surpresas especiais com prêmios de até R$8.888!\n🎊 Noite de Carnaval: Participe e concorra a até R$777.777 em recompensas incríveis!\nCom o KK678, cada dia é uma nova chance de ganhar. Baixe agora e viva a diversão e oportunidades sem fim!',
+    comments:[{name:'wuming',date:'2026-02-04',content:'nice',avatarUploaded:true}],
+    promos:3
+  },
+  {
+    type:'apple', name:'2kk678', style:'样式一',
+    appname:'kk678.com', domain:'kk678.com', auth:null,
+    iconUploaded:true, rating:'4.9', ratingCnt:'8000000',
+    downloads:'500M+（下载量5亿+）', date:'',
+    intro:'🌟 KK678 — A sorte está ao seu alcance! 🌟\nO KK678 é o aplicativo perfeito para quem gosta de diversão, recompensas e prêmios reais todos os dias!\nParticipe das promoções, convide amigos e descubra um mundo de oportunidades e sorte.\n🎯 Principais recursos:\nRecompensas Diárias: Ganhe até R$678 todos os dias.\nConvide e Ganhe: Indique 1 amigo e receba R$56 instantaneamente.\nMais Amigos, Mais Prêmios: Convide outro amigo e receba R$100 extra!\nBônus Misterioso: Surpresas especiais com prêmios de até R$8.888!',
+    comments:[],
+    promos:3
+  }
+];
+
+// 状态变量
+let asEditIdx = -1;
+let asCommentTplIdx = -1;
+let asPromoCount = 0;
+let asIconUploaded = false;
+let asCurrentType = 'google';
+let asCurrentAuth = 'standard';
+
+// 预览图路径（全图，thumb 通过 object-fit:cover 裁中心正方形）
+const asPreviewFull = {
+  'google-standard': '仿应用商店/预览11.jpg',
+  'google-native':   '仿应用商店/预览22.jpg',
+  'apple':           '仿应用商店/仿苹果预览11.jpg'
+};
+const asPreviewThumb = {
+  'google-standard': '仿应用商店/预览11.jpg',
+  'google-native':   '仿应用商店/预览22.jpg',
+  'apple':           '仿应用商店/仿苹果预览11.jpg'
+};
+
+function asPreviewKey(){
+  if(asCurrentType==='apple') return 'apple';
+  return asCurrentAuth==='native' ? 'google-native' : 'google-standard';
+}
+
+function asUpdateThumb(){
+  const img = document.getElementById('as-thumb-img');
+  if(!img) return;
+  const src = asPreviewThumb[asPreviewKey()] || '';
+  if(src){
+    img.src = src;
+    img.style.display = 'block';
+  } else {
+    img.style.display = 'none';
+  }
+}
+
+// ── 列表渲染 ──
+function asRenderTable(){
+  const typeFilter = (document.getElementById('as-type-filter')||{}).value || '';
+  const rows = asTemplates.filter(t => !typeFilter || t.type === typeFilter);
+  const tbody = document.getElementById('as-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = rows.map((t, ri) => {
+    const realIdx = asTemplates.indexOf(t);
+    const badge = t.type==='google' ? '仿谷歌商店' : '仿苹果商店';
+    const iconHtml = t.iconUploaded
+      ? '<div style="width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,#fa8c16,#faad14);flex-shrink:0"></div>'
+      : '<div style="width:40px;height:40px;border-radius:8px;background:#f5f5f5;border:1px solid #e8e8e8;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:11px">无</div>';
+    const introHtml = '<div style="font-size:12px;line-height:1.55;color:#333;white-space:pre-wrap;word-break:break-all;max-width:220px">' + (t.intro||'').replace(/</g,'&lt;') + '</div>';
+    let commentHtml = '';
+    if(t.comments && t.comments.length > 0){
+      const latest = t.comments[t.comments.length-1];
+      commentHtml = '<span class="td-comment-text">' + (latest.content||'').replace(/</g,'&lt;') + '</span> <button class="tbl-comment-link" onclick="asOpenComment('+realIdx+')">编辑</button>';
+    } else {
+      commentHtml = '<button class="tbl-comment-link" onclick="asOpenComment('+realIdx+')">新增</button>';
+    }
+    const editBtn = '<span class="tip" style="display:inline-flex"><span class="as-edit-icon" onclick="asOpenEdit('+realIdx+')" title="编辑"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span><span class="tiptext">编辑</span></span>';
+    return '<tr><td>'+badge+'</td><td>'+t.name+'</td><td>'+t.style+'</td><td>'+t.appname+'</td><td>'+iconHtml+'</td><td>'+introHtml+'</td><td>'+commentHtml+'</td><td>'+editBtn+'</td></tr>';
+  }).join('');
+  const total = document.getElementById('as-pg-total');
+  if(total) total.textContent = rows.length;
+}
+
+function asFilter(){ asRenderTable(); }
+
+// ── 表单重置 ──
+function asResetForm(){
+  asCurrentType='google'; asCurrentAuth='standard'; asIconUploaded=false; asPromoCount=0;
+  document.getElementById('as-f-type').value='google';
+  document.getElementById('as-f-type').disabled=false;
+  document.getElementById('as-f-name').value='';
+  document.getElementById('as-f-domain').value='';
+  document.getElementById('as-f-appname').value='';
+  document.getElementById('as-f-rating').value='';
+  document.getElementById('as-f-ratingcnt').value='';
+  document.getElementById('as-f-downloads').value='100K+（下载量10万+）';
+  document.getElementById('as-f-date').value='';
+  document.getElementById('as-f-intro').value='';
+  // 认证单选重置
+  const authStd=document.querySelector('input[name="as-auth"][value="standard"]');
+  if(authStd) authStd.checked=true;
+  // 图标区域重置
+  const iconArea=document.getElementById('as-icon-area');
+  iconArea.style.background=''; iconArea.style.borderColor='';
+  iconArea.classList.remove('uploaded');
+  const iconPlus=document.getElementById('as-icon-plus');
+  if(iconPlus) iconPlus.style.display='';
+  // 宣传图重置
+  document.getElementById('as-promo-list').innerHTML='';
+  document.getElementById('as-promo-add-entry').style.display='block';
+  // auth行显示
+  document.getElementById('as-auth-row').style.display='flex';
+  asUpdateThumb();
+}
+
+// ── 新增 ──
+function asOpenNew(){
+  asEditIdx=-1;
+  asResetForm();
+  document.getElementById('as-tpl-title').textContent='新增';
+  openM('m-as-tpl');
+}
+
+// ── 编辑 ──
+function asOpenEdit(i){
+  const t=asTemplates[i];
+  asEditIdx=i;
+  asCurrentType=t.type;
+  asCurrentAuth=t.auth||'standard';
+  asIconUploaded=t.iconUploaded;
+  asPromoCount=t.promos||0;
+
+  document.getElementById('as-tpl-title').textContent='编辑';
+  const typeEl=document.getElementById('as-f-type');
+  typeEl.value=t.type; typeEl.disabled=true;
+
+  document.getElementById('as-f-name').value=t.name||'';
+  document.getElementById('as-f-domain').value=t.domain||'';
+  document.getElementById('as-f-appname').value=t.appname||'';
+  document.getElementById('as-f-rating').value=t.rating||'';
+  document.getElementById('as-f-ratingcnt').value=t.ratingCnt||'';
+  document.getElementById('as-f-downloads').value=t.downloads||'100K+（下载量10万+）';
+  document.getElementById('as-f-date').value=t.date||'';
+  document.getElementById('as-f-intro').value=t.intro||'';
+
+  // 认证
+  document.getElementById('as-auth-row').style.display=(t.type==='apple')?'none':'flex';
+  if(t.type!=='apple'){
+    const authEl=document.querySelector('input[name="as-auth"][value="'+(t.auth||'standard')+'"]');
+    if(authEl) authEl.checked=true;
+  }
+
+  // 图标
+  const iconArea=document.getElementById('as-icon-area');
+  const iconPlus=document.getElementById('as-icon-plus');
+  if(t.iconUploaded){
+    iconArea.style.background='linear-gradient(135deg,#fa8c16,#faad14)';
+    iconArea.style.border='none'; iconArea.classList.add('uploaded');
+    if(iconPlus) iconPlus.style.display='none';
+  } else {
+    iconArea.style.background=''; iconArea.style.border='';
+    iconArea.classList.remove('uploaded');
+    if(iconPlus) iconPlus.style.display='';
+  }
+
+  // 宣传图
+  const promoList=document.getElementById('as-promo-list');
+  promoList.innerHTML='';
+  if(t.promos>0){
+    document.getElementById('as-promo-add-entry').style.display='none';
+    for(let j=0;j<t.promos;j++) asAppendPromoRow(true);
+  } else {
+    document.getElementById('as-promo-add-entry').style.display='block';
+  }
+
+  asUpdateThumb();
+  openM('m-as-tpl');
+}
+
+// ── 模板类型切换 ──
+function asTplTypeChange(val){
+  asCurrentType=val;
+  document.getElementById('as-auth-row').style.display=(val==='apple')?'none':'flex';
+  asUpdateThumb();
+}
+
+// ── 认证切换 ──
+function asAuthChange(val){
+  asCurrentAuth=val;
+  asUpdateThumb();
+}
+
+// ── 点击预览缩略图 — 复用 preview-overlay ──
+function asOpenPreview(){
+  const key=asPreviewKey();
+  const src=asPreviewFull[key]||'';
+  const img=document.querySelector('#preview-overlay .preview-body img');
+  if(img) img.src=src;
+  const overlay=document.getElementById('preview-overlay');
+  if(overlay){
+    overlay.classList.add('show');
+    overlay.classList.remove('maximized');
+    aaResetMaxBtn();
+  }
+}
+
+// ── 模拟上传：APP图标 ──
+function asSimUploadIcon(){
+  asIconUploaded=true;
+  const area=document.getElementById('as-icon-area');
+  area.style.background='linear-gradient(135deg,#fa8c16,#faad14)';
+  area.style.border='none'; area.classList.add('uploaded');
+  const plus=document.getElementById('as-icon-plus');
+  if(plus) plus.style.display='none';
+  toast('图片上传成功');
+}
+
+// ── 宣传图 ──
+function asAddFirstPromo(){
+  document.getElementById('as-promo-add-entry').style.display='none';
+  asPromoCount=0;
+  asAppendPromoRow(false);
+}
+
+function asAppendPromoRow(hasImg){
+  asPromoCount++;
+  const uid='pi'+Date.now()+Math.random().toString(36).slice(2,5);
+  const num=document.getElementById('as-promo-list').children.length+1;
+  const div=document.createElement('div');
+  div.className='promo-row'; div.id='prow-'+uid;
+  div.innerHTML=
+    '<div class="promo-lbl" id="plbl-'+uid+'">APP宣传图'+num+'：</div>'+
+    '<div class="promo-body">'+
+      '<div class="promo-controls">'+
+        '<div class="promo-img-box'+(hasImg?' uploaded':'')+'" id="pimg-'+uid+'" onclick="asSimUploadPromo(\''+uid+'\')" style="'+(hasImg?'background:linear-gradient(135deg,#fa8c16,#faad14);border:none':'')+'">'+
+          '<span id="pplus-'+uid+'" style="'+(hasImg?'display:none':'')+'">＋</span>'+
+        '</div>'+
+        '<button class="as-upload-btn" style="margin-left:10px;margin-right:auto" onclick="asSimUploadPromo(\''+uid+'\')">上传图片</button>'+
+        '<button class="btn-promo-plus" style="margin-right:6px" onclick="asPromoAdd()">+</button>'+
+        '<button class="btn-promo-minus" onclick="asPromoRemove(\'prow-'+uid+'\')">−</button>'+
+      '</div>'+
+      '<div class="promo-hint">支持JPG/PNG格式的图片（建议尺寸：252 x 448）</div>'+
+    '</div>';
+  document.getElementById('as-promo-list').appendChild(div);
+  asRenumberPromos();
+}
+
+function asPromoAdd(){
+  if(asPromoCount>=8){toast('最多只能添加8张宣传图',true);return;}
+  asAppendPromoRow(false);
+}
+
+function asPromoRemove(rowId){
+  const row=document.getElementById(rowId);
+  if(row) row.remove();
+  asPromoCount=Math.max(0,asPromoCount-1);
+  if(asPromoCount===0) document.getElementById('as-promo-add-entry').style.display='block';
+  asRenumberPromos();
+}
+
+function asRenumberPromos(){
+  asPromoCount=document.getElementById('as-promo-list').children.length;
+  document.querySelectorAll('#as-promo-list .promo-row').forEach((row,i)=>{
+    const lbl=row.querySelector('.promo-lbl');
+    if(lbl) lbl.textContent='APP宣传图'+(i+1)+'：';
+  });
+}
+
+function asSimUploadPromo(uid){
+  const box=document.getElementById('pimg-'+uid);
+  if(box){box.style.background='linear-gradient(135deg,#fa8c16,#faad14)';box.style.border='none';box.classList.add('uploaded');}
+  const plus=document.getElementById('pplus-'+uid);
+  if(plus) plus.style.display='none';
+  toast('图片上传成功');
+}
+
+// ── 评分输入校验 ──
+function asRatingInput(el){el.value=el.value.replace(/[^0-9.]/g,'');}
+function asFixRating(el){
+  const v=el.value.trim();
+  if(!v||isNaN(v)){el.value='';return;}
+  let n=parseFloat(v);
+  if(n<1.0) n=1.0; if(n>5.0) n=5.0;
+  el.value=n.toFixed(1);
+}
+function asNumOnlyInput(el){el.value=el.value.replace(/[^0-9]/g,'');}
+function asFixRatingCnt(el){
+  const v=el.value.trim();
+  if(!v||isNaN(v)){el.value='';return;}
+  el.value=String(Math.max(1,Math.round(parseFloat(v))));
+}
+
+// ── 保存配置 ──
+function asTplSave(){
+  const name    =document.getElementById('as-f-name').value.trim();
+  const domain  =document.getElementById('as-f-domain').value.trim();
+  const appname =document.getElementById('as-f-appname').value.trim();
+  const rating  =document.getElementById('as-f-rating').value.trim();
+  const rcnt    =document.getElementById('as-f-ratingcnt').value.trim();
+  const intro   =document.getElementById('as-f-intro').value.trim();
+  const errs=[];
+  if(!name)    errs.push('请输入模板名称');
+  if(!domain)  errs.push('请输入APP域名');
+  if(!asIconUploaded) errs.push('请上传APP图标');
+  if(!appname) errs.push('请输入APP名字');
+  if(!rating||isNaN(rating)) errs.push('请输入1.0～5.0的APP评分');
+  if(!rcnt||parseInt(rcnt)<=0) errs.push('显示评分人数必须大于0');
+  if(!intro)   errs.push('请输入APP简介');
+  if(errs.length){toast(errs[0],true);return;}
+
+  if(asEditIdx<0){
+    asTemplates.push({
+      type:asCurrentType, name, style:'样式一',
+      appname, domain, auth:asCurrentType==='google'?asCurrentAuth:null,
+      iconUploaded:true,
+      rating, ratingCnt:rcnt,
+      downloads:document.getElementById('as-f-downloads').value,
+      date:document.getElementById('as-f-date').value,
+      intro, comments:[], promos:asPromoCount
+    });
+    toast('新增成功');
+  } else {
+    const t=asTemplates[asEditIdx];
+    Object.assign(t,{name, domain, appname, rating, ratingCnt:rcnt,
+      auth:asCurrentType==='google'?asCurrentAuth:null,
+      iconUploaded:true,
+      downloads:document.getElementById('as-f-downloads').value,
+      date:document.getElementById('as-f-date').value,
+      intro, promos:asPromoCount});
+    toast('保存成功');
+  }
+  closeM('m-as-tpl');
+  asRenderTable();
+}
+
+// ══ 用户评论 ══
+function asOpenComment(i){
+  asCommentTplIdx=i;
+  const t=asTemplates[i];
+  const list=document.getElementById('as-comment-list');
+  list.innerHTML='';
+  // 按添加顺序由近至远（最新在最上）
+  const comments=(t.comments||[]).slice().reverse();
+  comments.forEach((c)=>{list.appendChild(asMakeCommentCard(c));});
+  asToggleCommentEmpty();
+  openM('m-as-comment');
+}
+
+function asToggleCommentEmpty(){
+  const list=document.getElementById('as-comment-list');
+  const empty=document.getElementById('as-comment-empty');
+  if(!list||!empty) return;
+  empty.style.display=list.querySelectorAll('.cc-wrap').length===0?'block':'none';
+}
+
+function asMakeCommentCard(c){
+  const uid='cc'+Date.now()+Math.random().toString(36).slice(2,6);
+  const wrap=document.createElement('div');
+  wrap.className='cc-wrap';
+  // 删除按钮：位于外框线内部、灰色区域外部（顶部右侧白色区）
+  const delBtn=document.createElement('button');
+  delBtn.className='comment-card-del';
+  delBtn.title='删除';
+  delBtn.innerHTML='🗑';
+  delBtn.onclick=function(){asCommentDel(this);};
+  wrap.appendChild(delBtn);
+  const avatarBg=c&&c.avatarUploaded?'background:linear-gradient(135deg,#1890ff,#40a9ff);border:none':'';
+  const avatarPlus=c&&c.avatarUploaded?'display:none':'';
+  // 主体行：左（姓名/日期/评分）+ 右（头像）
+  const body=document.createElement('div');
+  body.className='cc-body';
+  body.innerHTML=
+    '<div class="cc-left">'+
+      '<div class="c-fi"><span class="c-fl req">用户姓名：</span><div class="c-fc"><input class="fin c-name" style="width:280px" placeholder="用户姓名" value="'+(c?c.name||'':'')+'"></div></div>'+
+      '<div class="c-fi"><span class="c-fl req">评论日期：</span><div class="c-fc"><input type="date" class="c-date" value="'+(c?c.date||'':'')+'" style="width:170px;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;outline:none;font-family:inherit;background:#fff"></div></div>'+
+      '<div class="c-fi"><span class="c-fl">用户评分：</span><div class="c-fc"><div class="c-stars"><span class="c-star">★</span><span class="c-star">★</span><span class="c-star">★</span><span class="c-star">★</span><span class="c-star">★</span></div></div></div>'+
+    '</div>'+
+    '<div class="cc-right">'+
+      '<div style="display:flex;align-items:center;gap:8px">'+
+        '<span style="font-size:12px;color:#595959;white-space:nowrap">用户头像</span>'+
+        '<div class="avatar-box c-avatar" id="av-'+uid+'" onclick="asSimUploadAvatar(\''+uid+'\')" style="'+avatarBg+'" data-uploaded="'+(c&&c.avatarUploaded?'1':'0')+'">'+
+          '<span class="av-plus" style="'+avatarPlus+'">＋</span>'+
+        '</div>'+
+      '</div>'+
+      '<div class="avatar-note">只能上传 jpg/png 格式文件，文件不能超过 500kb</div>'+
+    '</div>';
+  wrap.appendChild(body);
+  // 评论内容（同一灰色卡片内，位于主体行下方）
+  const cont=document.createElement('div');
+  cont.style.marginTop='12px';
+  cont.innerHTML='<div class="c-fi-full"><span class="c-fl-full req">评论内容：</span><div class="c-fc"><textarea class="fin c-content" placeholder="请输入评论内容" style="width:100%;height:72px;resize:vertical;padding:8px 12px;line-height:1.5">'+(c?c.content||'':'')+'</textarea></div></div>';
+  wrap.appendChild(cont);
+  return wrap;
+}
+
+function asAddComment(){
+  const list=document.getElementById('as-comment-list');
+  const cnt=list.querySelectorAll('.cc-wrap').length;
+  if(cnt>=99){toast('最多只能添加99条评论',true);return;}
+  const card=asMakeCommentCard(null);
+  list.insertBefore(card,list.firstChild);
+  asToggleCommentEmpty();
+}
+
+function asCommentDel(btn){
+  const wrapper=btn.closest('.cc-wrap');
+  if(wrapper) wrapper.remove();
+  asToggleCommentEmpty();
+}
+
+function asSimUploadAvatar(uid){
+  const box=document.getElementById('av-'+uid);
+  if(box){
+    box.style.background='linear-gradient(135deg,#1890ff,#40a9ff)';
+    box.style.border='none'; box.classList.add('uploaded');
+    box.dataset.uploaded='1';
+    const plus=box.querySelector('.av-plus');
+    if(plus) plus.style.display='none';
+  }
+  toast('头像上传成功');
+}
+
+function asCommentSave(){
+  const cards=document.querySelectorAll('#as-comment-list .cc-wrap');
+  const errs=[];
+  cards.forEach(card=>{
+    const name=(card.querySelector('.c-name')||{}).value||'';
+    const date=(card.querySelector('.c-date')||{}).value||'';
+    const content=(card.querySelector('.c-content')||{}).value||'';
+    const av=card.querySelector('.c-avatar');
+    const avUploaded=av&&av.dataset&&av.dataset.uploaded==='1';
+    if(!name.trim()) errs.push('用户姓名不能为空');
+    if(!date) errs.push('请选择评论日期');
+    if(!content.trim()) errs.push('请填写评论内容');
+    if(!avUploaded) errs.push('请上传用户头像');
+  });
+  if(errs.length){
+    const unique=[...new Set(errs)];
+    toast(unique.join('；'),true); return;
+  }
+  // 保存：按弹框顺序逆序存为时间升序
+  if(asCommentTplIdx>=0){
+    const saved=[];
+    cards.forEach(card=>{
+      saved.push({
+        name:card.querySelector('.c-name').value.trim(),
+        date:card.querySelector('.c-date').value,
+        content:card.querySelector('.c-content').value.trim(),
+        avatarUploaded:card.querySelector('.c-avatar').dataset.uploaded==='1'
+      });
+    });
+    asTemplates[asCommentTplIdx].comments=saved.reverse();
+  }
+  closeM('m-as-comment');
+  toast('保存成功');
+  asRenderTable();
+}
 
 </script>
 </body>
