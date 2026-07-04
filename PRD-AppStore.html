@@ -81,14 +81,14 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
     <li><a href="#interaction">下载与安装交互</a>
       <ol class="sub">
         <li><a href="#i-rule">交互总则</a></li>
-        <li><a href="#i-dialog">下载确认弹框与下载中状态</a></li>
+        <li><a href="#i-dialog">下载确认弹框的三种状态</a></li>
         <li><a href="#i-android">安卓设备安装流程</a></li>
         <li><a href="#i-ios">iOS 设备安装流程</a></li>
         <li><a href="#i-layer">弹框层级与常驻规则</a></li>
         <li><a href="#i-reuse">与安装引导模块的复用关系</a></li>
       </ol>
     </li>
-    <li><a href="#flowchart">活动逻辑流程图</a></li>
+    <li><a href="#flowchart">交互逻辑流程图</a></li>
     <li><a href="#i18n">中葡文案对照</a></li>
   </ol>
 </div>
@@ -220,8 +220,8 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 <p><strong>统一触发点</strong>：CTA 按钮，以及数据安全「查看详情」、评论「有用/没用」、「查看全部评价」、相似游戏标题箭头、底部「在 App Store 下载」按钮，点击后均触发同一套下载流程。</p>
 <table>
   <tr><th>设备</th><th>进入页面时</th><th>点击 CTA / 触发点后</th></tr>
-  <tr><td>安卓</td><td>正常展示页面</td><td>下载确认弹框（圆弧 0→100%）→ 完成 → 按安卓安装类型走后续（见 4.3）</td></tr>
-  <tr><td>iOS</td><td><strong>加载时即判定浏览器</strong>：若非 Safari，页面加载同步弹出复制链接弹框</td><td>下载确认弹框（圆弧 0→100%）→ 完成 → 「添加到主屏幕」说明浮层（见 4.4）</td></tr>
+  <tr><td>安卓</td><td>正常展示页面</td><td>下载确认弹框（加载状态 → 就绪状态，见 4.2）→ 按安卓安装类型走后续（见 4.3）</td></tr>
+  <tr><td>iOS</td><td><strong>加载时即判定浏览器</strong>：若非 Safari，页面加载同步弹出复制链接弹框</td><td>下载确认弹框（加载状态 → 就绪状态，见 4.2）→ 「添加到主屏幕」说明浮层（见 4.4）</td></tr>
 </table>
 
 <h3 id="i-dialog">4.2 下载确认弹框的三种状态</h3>
@@ -239,16 +239,16 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
   <tr><th>安装类型 / 条件</th><th>交互</th></tr>
   <tr><td>纯 PWA · 支持 PWA</td><td>弹出 PWA 系统安装提示（带遮罩，见 4.5）；确认→安装 PWA，取消→关闭提示</td></tr>
   <tr><td>纯 PWA · 不支持 PWA</td><td>弹出「复制链接到 Chrome」弹框</td></tr>
-  <tr><td>纯 APK</td><td>直接进入「下载中」线形进度（0→100%），完成后自动下载 APK</td></tr>
-  <tr><td>PWA+APK · 支持 PWA</td><td>先弹 PWA 系统提示；确认→安装 PWA；取消→弹「下载 APP」确认弹框，确认→进入「下载中」线形进度下载 APK</td></tr>
-  <tr><td>PWA+APK · 不支持 PWA</td><td>直接进入「下载中」线形进度下载 APK</td></tr>
+  <tr><td>纯 APK</td><td>直接进入下载状态（线形进度 0→100%，见 4.2），完成后自动下载 APK</td></tr>
+  <tr><td>PWA+APK · 支持 PWA</td><td>先弹 PWA 系统提示；确认→安装 PWA；取消→弹「下载 APP」确认弹框，确认→进入下载状态（线形进度）下载 APK</td></tr>
+  <tr><td>PWA+APK · 不支持 PWA</td><td>直接进入下载状态（线形进度）下载 APK</td></tr>
 </table>
 
 <h3 id="i-ios">4.4 iOS 设备安装流程</h3>
 <table>
   <tr><th>浏览器 / 步骤</th><th>交互</th></tr>
   <tr><td>非 Safari</td><td>页面<strong>加载时即弹出</strong>复制链接（Safari）弹框，引导用户在 Safari 打开</td></tr>
-  <tr><td>Safari · 点击 CTA</td><td>下载确认弹框（圆弧进度 0→100%）→ 完成 → 「安装」按钮</td></tr>
+  <tr><td>Safari · 点击 CTA</td><td>下载确认弹框（加载状态 → 就绪状态，见 4.2）</td></tr>
   <tr><td>Safari · 点击「安装」</td><td>弹出「添加到主屏幕」说明浮层（3 步：点击分享/菜单图标 → 选择「添加到主屏幕」→ 在主屏幕选择 App 图标），下载确认弹框保留于背景</td></tr>
 </table>
 
@@ -264,7 +264,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 
 <!-- 五、流程图 -->
 <div class="section-card" id="flowchart">
-<h2>五、活动逻辑流程图</h2>
+<h2>五、交互逻辑流程图</h2>
 <div class="flow-wrap">
 <svg viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1000px;font-family:-apple-system,'PingFang SC',sans-serif;font-size:12px">
   <defs>
@@ -292,11 +292,11 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
   <line x1="250" y1="184" x2="250" y2="204" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
 
   <rect x="120" y="204" width="260" height="38" rx="6" fill="#fff" stroke="#91caff"/>
-  <text x="250" y="228" text-anchor="middle" fill="#003a8c">下载确认弹框（圆弧 0→100%）</text>
+  <text x="250" y="228" text-anchor="middle" fill="#003a8c">下载确认弹框（加载状态）</text>
   <line x1="250" y1="242" x2="250" y2="262" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
 
   <rect x="150" y="262" width="200" height="34" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
-  <text x="250" y="283" text-anchor="middle" fill="#135200">完成 → 点「安装」</text>
+  <text x="250" y="283" text-anchor="middle" fill="#135200">就绪状态：点「安装」</text>
   <line x1="250" y1="296" x2="250" y2="318" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
 
   <polygon points="250,318 360,348 250,378 140,348" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
@@ -306,10 +306,10 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 
   <rect x="30" y="400" width="440" height="120" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
   <text x="46" y="424" fill="#334155" font-size="11.5">• 纯 APK / PWA+APK(不支持 PWA)</text>
-  <text x="58" y="440" fill="#64748b" font-size="11">→ 「下载中」线形 0→100%，自动下载 APK</text>
+  <text x="58" y="440" fill="#64748b" font-size="11">→ 下载状态：线形进度 0→100%，自动下载 APK</text>
   <text x="46" y="464" fill="#334155" font-size="11.5">• 纯 PWA(支持) / PWA+APK(支持)</text>
   <text x="58" y="480" fill="#64748b" font-size="11">→ PWA 系统提示（带遮罩）</text>
-  <text x="58" y="495" fill="#64748b" font-size="11">　PWA+APK 取消 → APK 确认 → 「下载中」</text>
+  <text x="58" y="495" fill="#64748b" font-size="11">　PWA+APK 取消 → APK 确认 → 下载状态</text>
   <text x="46" y="513" fill="#334155" font-size="11.5">• 纯 PWA(不支持) → Chrome 复制链接弹框</text>
 
   <!-- ===== iOS (right, cx=750) ===== -->
@@ -331,11 +331,11 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
   <text x="764" y="226" fill="#003a8c" font-size="10">是</text>
 
   <rect x="620" y="240" width="260" height="38" rx="6" fill="#fff" stroke="#91caff"/>
-  <text x="750" y="264" text-anchor="middle" fill="#003a8c" font-size="11.5">点 CTA → 确认弹框（圆弧 0→100%）</text>
+  <text x="750" y="264" text-anchor="middle" fill="#003a8c" font-size="11.5">点 CTA → 确认弹框（加载状态）</text>
   <line x1="750" y1="278" x2="750" y2="298" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
 
   <rect x="650" y="298" width="200" height="34" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
-  <text x="750" y="319" text-anchor="middle" fill="#135200">完成 → 点「安装」</text>
+  <text x="750" y="319" text-anchor="middle" fill="#135200">就绪状态：点「安装」</text>
   <line x1="750" y1="332" x2="750" y2="354" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
 
   <rect x="630" y="354" width="240" height="44" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
