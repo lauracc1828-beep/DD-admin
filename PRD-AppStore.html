@@ -53,7 +53,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 
 <h1>仿应用商店模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v1.1</span>
+  <span>📄 版本：v1.2</span>
   <span>✏️ 作者：Laura</span>
   <span>📅 更新日期：2026-07-03</span>
 </div>
@@ -82,8 +82,8 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
       <ol class="sub">
         <li><a href="#i-rule">交互总则</a></li>
         <li><a href="#i-dialog">下载确认弹框与下载中状态</a></li>
-        <li><a href="#i-android">安卓后续分支</a></li>
-        <li><a href="#i-ios">iOS 后续分支</a></li>
+        <li><a href="#i-android">安卓设备安装流程</a></li>
+        <li><a href="#i-ios">iOS 设备安装流程</a></li>
         <li><a href="#i-layer">弹框层级与常驻规则</a></li>
         <li><a href="#i-reuse">与安装引导模块的复用关系</a></li>
       </ol>
@@ -96,13 +96,14 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 <!-- 一、模块概述 -->
 <div class="section-card" id="overview">
 <h2>一、模块概述</h2>
-<p>仿应用商店模块用于配置「仿谷歌商店页」与「仿苹果商店页」两类下载落地页。页面高度仿真官方应用商店的视觉与交互，让用户误以为进入 Google Play / App Store，从而提升信任感、提高 APP 下载转化。</p>
+<p>仿应用商店模块用于配置「系统设置 → 域名管理」中<strong>防封谷歌页域名 / 防封苹果页域名 / 仿谷歌页</strong>等下载落地页所引用的<strong>页面样式模板</strong>。页面高度仿真官方应用商店的视觉与交互，让用户误以为进入 Google Play / App Store，从而提升信任感、提高 APP 下载转化。</p>
 <p>页面属于<strong>下载页类</strong>落地，唯一核心功能为「下载 / 安装 APP」；其安装交互与《安装引导模块 PRD》的下载组件完全共用。</p>
 <table>
   <tr><th>项目</th><th>说明</th></tr>
   <tr><td>菜单位置</td><td>商户后台 → 推广渠道管理 → 仿应用商店</td></tr>
-  <tr><td>页面类型</td><td>仿谷歌商店页、仿苹果商店页（同一模块，按模板类型区分样式）</td></tr>
-  <tr><td>落地关系</td><td>作为「防封谷歌页 / 防封苹果页」域名的落地样式；用户经推广渠道链接，或经安装引导 iOS-Safari 流程进入</td></tr>
+  <tr><td>模块产出</td><td>下载落地页的样式模板，供域名管理中防封谷歌页 / 防封苹果页 / 仿谷歌页等下载落地域名引用</td></tr>
+  <tr><td>页面类型</td><td>仿谷歌商店页、仿苹果商店页（按模板类型区分样式）</td></tr>
+  <tr><td>落地关系</td><td>域名管理中相应下载落地域名引用本模块模板；用户经推广渠道链接，或经安装引导 iOS-Safari 流程进入</td></tr>
   <tr><td>配置粒度</td><td>以商户为单位，按模板逐条配置</td></tr>
 </table>
 </div>
@@ -120,6 +121,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 </ul>
 
 <h3 id="b-fields">2.2 模板配置字段规格</h3>
+<div class="note">配置字段随所选「模板样式」不同而异。本次需求谷歌、苹果各仅实现<strong>「样式一」</strong>一套模板，后续按运营实际需求扩展更多模板样式。<strong>本节列出的谷歌 / 苹果字段仅适用于「样式一」。</strong></div>
 <div class="info">下表为后台字段的完整工程规格，供后台前端控制输入限制与交互。必填判定以后台保存校验为准。前台每个可见元素均对应下表字段；未列为配置项的固定文案/装饰为前台固定内容（见第六章）。</div>
 
 <p><strong>通用字段（谷歌 / 苹果模板共用）</strong></p>
@@ -166,6 +168,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 <p>本页为「下载页类」落地：《安装引导模块》的<strong>「下载按钮」「引导安装」两项配置在本页不生效</strong>（本页无顶部横幅、无底部安装浮层）；但<strong>「安装类型」「安装包地址」等字段生效</strong>——点击本页安装入口时，按后台配置的安卓/苹果安装类型走后续流程。</p>
 
 <h3 id="f-google">3.2 仿谷歌页逐区块</h3>
+<div class="note">以下描述的是「模板样式 = 样式一」的页面内容与样式。</div>
 <table>
   <tr><th>区块</th><th>内容</th><th>数据来源</th><th>交互</th></tr>
   <tr><td>① 谷歌原生信息条</td><td>Google Play logo + 文字 + Top Developer 徽标</td><td>仅「认证选择=谷歌原生」时展示</td><td>仅展示、无交互</td></tr>
@@ -180,6 +183,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 </table>
 
 <h3 id="f-apple">3.3 仿苹果页逐区块</h3>
+<div class="note">以下描述的是「模板样式 = 样式一」的页面内容与样式。</div>
 <p>字段来源与谷歌页一致，差异在样式（蓝色主色）及以下额外区块：</p>
 <table>
   <tr><th>区块</th><th>内容</th><th>数据来源</th><th>交互</th></tr>
@@ -211,19 +215,26 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 <div class="section-card" id="interaction">
 <h2>四、下载与安装交互</h2>
 
-<h3 id="i-rule">4.1 交互总则（按设备 / 安装类型 / 浏览器区分）</h3>
-<p>交互逻辑<strong>按设备类型、安装类型、浏览器区分，而非按页面模板区分</strong>。仿谷歌页与仿苹果页仅样式不同，两个页面都能被安卓和 iOS 设备打开下载。统一触发点：CTA 按钮，以及数据安全「查看详情」、评论「有用/没用」、「查看全部评价」、相似游戏标题箭头、底部「在 App Store 下载」按钮，点击后均触发同一套下载流程。</p>
+<h3 id="i-rule">4.1 交互总则</h3>
+<p>用户通过带参推广链接 / 域名管理配置的落地域名进入本模块的下载页（仿谷歌页 / 仿苹果页）后，页面仅提供下载安装能力。点击 CTA 或页面内各下载触发点后，系统依据【用户设备类型】与【后台安装 / 下载配置（安装类型、安装包等）】触发对应安装流程：安卓设备按安卓安装类型（PWA / APK / PWA+APK）流转，iOS 设备按苹果安装方式（保存桌面）流转，并结合浏览器环境（Safari / 非 Safari、是否支持 PWA）进入相应分支。</p>
+<p><strong>统一触发点</strong>：CTA 按钮，以及数据安全「查看详情」、评论「有用/没用」、「查看全部评价」、相似游戏标题箭头、底部「在 App Store 下载」按钮，点击后均触发同一套下载流程。</p>
 <table>
   <tr><th>设备</th><th>进入页面时</th><th>点击 CTA / 触发点后</th></tr>
   <tr><td>安卓</td><td>正常展示页面</td><td>下载确认弹框（圆弧 0→100%）→ 完成 → 按安卓安装类型走后续（见 4.3）</td></tr>
   <tr><td>iOS</td><td><strong>加载时即判定浏览器</strong>：若非 Safari，页面加载同步弹出复制链接弹框</td><td>下载确认弹框（圆弧 0→100%）→ 完成 → 「添加到主屏幕」说明浮层（见 4.4）</td></tr>
 </table>
 
-<h3 id="i-dialog">4.2 下载确认弹框与「下载中」状态</h3>
-<p><strong>下载确认弹框</strong>：点击触发点后居中弹出，含标题「快速安装」、速度标签、「已激活」标签、圆弧进度条（0%→100%）。进度达 100% 后，圆弧区替换为绿色「安装」按钮。</p>
-<p><strong>「下载中」状态（仅安卓 APK 下载阶段）</strong>：进入 APK 下载时，弹框内原「安装」按钮区域替换为<strong>线形进度条</strong>（0%→100%），满格后变回绿色「安装」按钮，满格同时自动下载 APK 文件。全过程下载确认弹框保留不关闭。该状态<strong>仅出现在两个商店页的安卓设备 APK 下载场景</strong>；APK 下载成功不额外弹出提示浮层。</p>
+<h3 id="i-dialog">4.2 下载确认弹框的三种状态</h3>
+<p>下载确认弹框居中展示，固定含标题「快速安装」、速度标签、「已激活」状态标签；其进度区在交互过程中呈现三种状态：</p>
+<table>
+  <tr><th>状态</th><th>进度区表现</th><th>触发与流转</th></tr>
+  <tr><td>① 就绪状态</td><td>展示绿色「安装」按钮</td><td>加载状态完成后进入；等待用户点击「安装」</td></tr>
+  <tr><td>② 加载状态</td><td>圆弧进度动画（0%→100%）</td><td>点击 CTA / 触发点后进入，表示极速安装准备；达 100% 后切换为就绪状态</td></tr>
+  <tr><td>③ 下载状态<br>（仅安卓 APK）</td><td>「安装」按钮区替换为线形进度条（0%→100%）</td><td>就绪状态下点击「安装」并进入 APK 下载时进入；满格后恢复为绿色「安装」按钮，并自动完成 APK 下载</td></tr>
+</table>
+<p><strong>状态流转</strong>：点击 CTA → ② 加载状态 → ① 就绪状态 →（安卓 APK）③ 下载状态 → ① 就绪状态。下载状态仅出现在两个商店页的安卓设备 APK 下载场景；全过程弹框常驻不关闭（见 4.5），APK 下载成功不额外弹出提示浮层。</p>
 
-<h3 id="i-android">4.3 安卓后续分支（确认弹框「安装」按钮点击后）</h3>
+<h3 id="i-android">4.3 安卓设备安装流程（就绪状态点击「安装」后）</h3>
 <table>
   <tr><th>安装类型 / 条件</th><th>交互</th></tr>
   <tr><td>纯 PWA · 支持 PWA</td><td>弹出 PWA 系统安装提示（带遮罩，见 4.5）；确认→安装 PWA，取消→关闭提示</td></tr>
@@ -233,7 +244,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
   <tr><td>PWA+APK · 不支持 PWA</td><td>直接进入「下载中」线形进度下载 APK</td></tr>
 </table>
 
-<h3 id="i-ios">4.4 iOS 后续分支</h3>
+<h3 id="i-ios">4.4 iOS 设备安装流程</h3>
 <table>
   <tr><th>浏览器 / 步骤</th><th>交互</th></tr>
   <tr><td>非 Safari</td><td>页面<strong>加载时即弹出</strong>复制链接（Safari）弹框，引导用户在 Safari 打开</td></tr>
@@ -442,7 +453,7 @@ code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#
 </table>
 <div class="note">「安装应用」「是否要下载并安装该 APP？」等下载组件文案沿用《安装引导模块》，其葡语以安装引导参考图为准（此处为对齐译文）。</div>
 
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">仿应用商店模块 PRD v1.1 · 2026-07-03</p>
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">仿应用商店模块 PRD v1.2 · 2026-07-03</p>
 </div>
 </div>
 </body>
