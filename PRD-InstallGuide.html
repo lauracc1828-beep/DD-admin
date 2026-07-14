@@ -50,9 +50,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h1>安装引导模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v1.4</span>
+  <span>📄 版本：v1.5</span>
   <span>✏️ 作者：Laura</span>
-  <span>📅 更新日期：2026-07-03</span>
+  <span>📅 更新日期：2026-07-14</span>
 </div>
 
 <!-- TOC -->
@@ -138,7 +138,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>苹果专属字段</strong></p>
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th><th>前台效果</th></tr>
-  <tr><td>苹果安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：保存桌面 / 苹果商店；默认「保存桌面」</td><td>「保存桌面」：引导 iOS 用户通过 Safari 将站点添加到主屏幕（PWA 方式）；非 Safari 浏览器时提示用 Safari 打开。「苹果商店」：引导用户跳转至已上架的 App Store 页面下载原生 App（当前平台暂无上架包，此选项可配置但前台暂不作为原型呈现）。</td></tr>
+  <tr><td>苹果安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：保存桌面 / 苹果商店；默认「保存桌面」。<span class="chg"><strong>注：</strong>「苹果商店」选项因当前暂不支持，暂时隐藏，下拉仅展示「保存桌面」；其下属字段（上架包地址类型 / 苹果地址 / IOS上架包名字 / 选择IOS上架包）随之暂不展示，待功能支持后恢复。</span></td><td>「保存桌面」：引导 iOS 用户通过 Safari 将站点添加到主屏幕（PWA 方式）；非 Safari 浏览器时提示用 Safari 打开。「苹果商店」：引导用户跳转至已上架的 App Store 页面下载原生 App（<span class="chg">选项当前暂时隐藏，见左侧说明</span>）。</td></tr>
   <tr><td class="indent">↳ 上架包地址类型</td><td><span class="tag tag-cond">条件必填</span></td><td>单选（Radio）</td><td>苹果安装类型选「苹果商店」后展示；可选：普通地址 / OneLink地址</td><td>「普通地址」：直接填写 App Store 页面链接，点击后跳转至对应 App 详情页。「OneLink地址」：AppsFlyer 智能跳转链接，可根据设备自动跳转并携带归因参数。</td></tr>
   <tr><td class="indent2">↳↳ 苹果地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>上架包地址类型选「普通地址」时展示；填写 App Store App 下载链接</td><td>用户点击安装后跳转至此链接。</td></tr>
   <tr><td class="indent2">↳↳ IOS上架包名字</td><td>—</td><td>自动填充</td><td>上架包地址类型选「OneLink地址」时展示；选择后自动填入</td><td>只读展示，用于确认当前选择的上架包。</td></tr>
@@ -242,7 +242,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p>iOS 设备点击底部浮层「Instalar」按钮后，根据后台配置的苹果安装类型进入对应流程。</p>
 
 <h4>3.5.1 苹果商店选项</h4>
-<p>点击安装按钮后，跳转至后台配置的 App Store 页面地址（普通地址）或 OneLink 地址。当前平台暂无苹果包上架，此选项的前台交互不在本版本原型中体现，仅作配置说明。</p>
+<p>点击安装按钮后，跳转至后台配置的 App Store 页面地址（普通地址）或 OneLink 地址。<span class="chg">因当前暂不支持，后台「苹果商店」选项已暂时隐藏（不可配置），本节流程作为功能预留说明保留，待选项恢复后生效。</span></p>
 
 <h4>3.5.2 保存桌面 — 非 Safari 浏览器</h4>
 <p>iOS 设备检测到当前浏览器非 Safari 时，点击安装按钮弹出复制链接引导弹框。</p>
@@ -556,7 +556,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>下载APP到您的桌面，额外获得R$[金额]彩金。</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[金额].</td><td>弹窗副标题（赠送彩金升级）</td></tr>
 </table>
 
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.4 · 2026-07-03</p>
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.5 · 2026-07-14</p>
 </div>
 </div>
 </body>
