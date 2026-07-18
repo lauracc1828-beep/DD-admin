@@ -63,9 +63,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h1>推广渠道管理模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v2.4</span>
+  <span>📄 版本：v2.5</span>
   <span>✅ 状态：已完成</span>
-  <span>📅 更新日期：2026-07-14</span>
+  <span>📅 更新日期：2026-07-18</span>
 </div>
 
 <!-- TOC -->
@@ -272,10 +272,11 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>替换类型：更换跳转域名</strong></p>
 <table>
   <tr><th>字段</th><th>控件</th><th>说明</th></tr>
-  <tr><td>选择跳转域名 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>下拉选项为当前商户下所有渠道已配置的跳转域名（去重展示），选择后作为筛选条件</td></tr>
-  <tr><td>替换渠道 <span class="tag tag-req">必填</span></td><td>两层级联多选 + 全选</td><td>在所选跳转域名范围内，进一步选择需要替换的渠道</td></tr>
-  <tr><td>替换后跳转域名 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>选择替换后的新跳转域名，来源于域名管理中已配置的域名</td></tr>
+  <tr><td>选择跳转域名 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td>下拉选项为当前商户下各渠道已配置的跳转域名（去重展示）；选中后作为下方「替换渠道」的筛选条件</td></tr>
+  <tr><td>替换渠道 <span class="tag tag-req">必填</span></td><td>两层级联多选 + 全选</td><td><span class="chg">仅展示跳转域名为上方所选域名的渠道；第一层为推广商列表（带勾选框），点击展开第二层渠道列表，勾选推广商等于勾选其下所有渠道，交互同更换安装包</span></td></tr>
+  <tr><td>替换后跳转域名 <span class="tag tag-req">必填</span></td><td>下拉单选</td><td><span class="chg">下拉展示系统管理-域名管理中落地指向为「主域名 / 防封下载页 / 官网首页 / 官网注册页 / 仿谷歌页」的全部已配置域名，与新增渠道时跳转域名的可选范围一致，不受原域名落地指向限制；其中「选择跳转域名」已选中的域名置灰不可选，避免替换前后域名相同</span></td></tr>
 </table>
+<div class="note"><span class="chg">落地指向联动规则：若替换后域名与原域名的落地指向不一致，视同同步修改所选渠道的落地指向——替换生效后，渠道链接按新域名的落地指向引导用户至对应落地页。</span></div>
 
 <!-- 7.2 推广商管理 -->
 <h4>3.5.2 推广商管理弹窗</h4>
@@ -442,7 +443,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 </div>
 
 <!-- 子页面三 -->
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">推广渠道管理模块 PRD v2.4 · 2026-07-14</p>
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">推广渠道管理模块 PRD v2.5 · 2026-07-18</p>
 </div>
 </body>
 </html>
