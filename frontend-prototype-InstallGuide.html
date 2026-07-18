@@ -651,18 +651,21 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
         </div>
         <button class="gp-btn-cs" onclick="goCS()">🎧</button>
       </div>
-      <div class="gp-sttl">Android应用安装说明：</div>
-      <ol class="gp-sol">
-        <li>点击上方按钮下载安装文件</li>
-        <li>适用于Android</li>
-        <li>在设备设置中允许安装未知来源的应用程序。</li>
-        <li>完成安装。</li>
-      </ol>
-      <div class="gp-warn">
-        <span class="gp-warn-ic">ℹ️</span>
-        <div class="gp-warn-tx">
-          <strong>温馨提示：</strong>
-          本应用已通过Google Play安全认证，请放心安装。
+      <!-- 安卓应用安装说明（iOS 设备下整块隐藏）-->
+      <div id="gpSteps">
+        <div class="gp-sttl">安卓应用安装说明：</div>
+        <ol class="gp-sol">
+          <li>点击上方按钮下载安装文件</li>
+          <li>适用于安卓</li>
+          <li>在设备设置中允许安装未知来源的应用程序。</li>
+          <li>完成安装。</li>
+        </ol>
+        <div class="gp-warn">
+          <span class="gp-warn-ic">ℹ️</span>
+          <div class="gp-warn-tx">
+            <strong>温馨提示：</strong>
+            本应用已通过Google Play安全认证，请放心安装。
+          </div>
         </div>
       </div>
     </div>
@@ -1067,6 +1070,13 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
       </div>
     </div>
     <div class="cs">
+      <div class="cl">设备类型</div>
+      <div class="cg">
+        <button class="cb on" id="gpDev-android" onclick="setGpDev('android')">Android</button>
+        <button class="cb" id="gpDev-ios" onclick="setGpDev('ios')">iOS</button>
+      </div>
+    </div>
+    <div class="cs" id="cs-gpType">
       <div class="cl">安装类型</div>
       <div class="cg">
         <button class="cb on" id="gpType-pwa" onclick="setGpType('pwa')">PWA</button>
@@ -1079,6 +1089,13 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
       <div class="cg">
         <button class="cb on" id="gpPwa-yes" onclick="setGpPwa(true)">支持</button>
         <button class="cb" id="dlPwa-no2" onclick="setGpPwa(false)">不支持</button>
+      </div>
+    </div>
+    <div class="cs" id="cs-gpBr" style="display:none">
+      <div class="cl">iOS 浏览器</div>
+      <div class="cg">
+        <button class="cb on" id="gpBr-safari" onclick="setGpBr('safari')">Safari</button>
+        <button class="cb" id="gpBr-other" onclick="setGpBr('other')">非 Safari</button>
       </div>
     </div>
     <div class="cs">
@@ -1154,7 +1171,7 @@ const GP_BONUS_AMT = 100;
 const S = {
   tab:'dl',
   dlDev:'android', dlType:'pwa', dlPwa:true, dlBr:'safari',
-  gpContent:'normal', gpType:'pwa', gpPwa:true, gpCanClose:false,
+  gpContent:'normal', gpDev:'android', gpType:'pwa', gpPwa:true, gpBr:'safari', gpCanClose:false,
   stPage:'google', stDev:'android', stType:'pwa', stPwa:true, stBr:'safari', stAuth:'standard',
   storeEntry:'tab',
   origin:null,
@@ -1234,7 +1251,7 @@ function closeBS(){
 
 /* ── 安装引导弹窗 ── */
 function showGP(){
-  updateGP();resetGpBtn();
+  updateGP();resetGpBtn();applyGpDevUI();
   $('gp').classList.add('on');
   showMask(S.gpCanClose);
 }
@@ -1268,6 +1285,20 @@ function onDlInstall(origin){
 /* ── 安装引导弹窗安装流程 ── */
 function onGpInstall(){
   S.origin='guide';
+  // iOS 设备：与下载按钮一致（Safari→仿苹果页；非 Safari→复制链接）
+  if(S.gpDev==='ios'){
+    if(S.gpBr==='safari'){
+      $('gp').classList.remove('on');hideMask();
+      S.storeEntry='guide';
+      S.stPage='apple';S.stDev='ios';S.stBr='safari';
+      syncStControls();
+      showStore();
+    }else{
+      showCopy('ios');
+    }
+    return;
+  }
+  // 安卓设备
   if(S.gpType==='apk'){runGpProgress();}
   else if(S.gpType==='pwa'){S.gpPwa?showPWA():showCopy('android');}
   else{S.gpPwa?showPWA():runGpProgress();}
@@ -1381,10 +1412,26 @@ function setGpContent(v){
   ['normal','bonus'].forEach(c=>$('gpCt-'+c).classList.toggle('on',c===v));
   updateGP(); // 即时刷新弹窗内容
 }
+function setGpDev(v){
+  S.gpDev=v;
+  ['android','ios'].forEach(d=>$('gpDev-'+d).classList.toggle('on',d===v));
+  $('cs-gpType').style.display=v==='android'?'':'none';
+  $('cs-gpPwa').style.display=v==='android'&&S.gpType!=='apk'?'':'none';
+  $('cs-gpBr').style.display=v==='ios'?'':'none';
+  applyGpDevUI();
+}
+/* iOS 设备：隐藏整块安卓安装说明 */
+function applyGpDevUI(){
+  $('gpSteps').style.display=S.gpDev==='ios'?'none':'';
+}
+function setGpBr(v){
+  S.gpBr=v;
+  ['safari','other'].forEach(b=>$('gpBr-'+b).classList.toggle('on',b===v));
+}
 function setGpType(v){
   S.gpType=v;
   ['pwa','apk','pwa_apk'].forEach(t=>$('gpType-'+t).classList.toggle('on',t===v));
-  $('cs-gpPwa').style.display=v!=='apk'?'':'none';
+  $('cs-gpPwa').style.display=S.gpDev==='android'&&v!=='apk'?'':'none';
 }
 function setGpPwa(v){
   S.gpPwa=v;
@@ -1395,6 +1442,8 @@ function setGpClose(v){
   S.gpCanClose=v;
   $('gpClose-force').classList.toggle('on',!v);
   $('gpClose-free').classList.toggle('on',v);
+  // GP已显示时实时同步遮罩可点击状态
+  if($('gp').classList.contains('on')) _maskOk=v;
 }
 
 /* ══════════ 仿应用商店页 ══════════ */
