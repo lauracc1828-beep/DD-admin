@@ -587,9 +587,17 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
     <thead><tr><th>中文</th><th>葡语（PT-BR）</th><th>使用位置</th></tr></thead>
     <tbody>
       <tr><td>恭喜您获得 [金额] 奖金</td><td>Parabéns por ganhar R$[valor] em fichas de bônus</td><td>领取成功弹窗正文</td></tr>
-      <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, resgate usando o iOSH5,AndroidH5,PWA,APK,iOSApp,iOSBookmark,APKRelease</td><td>申领限制悬浮卡片</td></tr>
+      <tr><td>请通过 iOS H5、Android H5、PWA、APK、iOS App、iOS Bookmark、APK Release 申领</td><td>Por favor, resgate usando o iOSH5,AndroidH5,PWA,APK,iOSApp,iOSBookmark,APKRelease</td><td>申领限制悬浮卡片（申领终端不符）</td></tr>
+      <tr style="background:#fffbe6"><td>请完成首次充值后申领</td><td>Por favor, conclua seu primeiro depósito para resgatar</td><td>申领限制悬浮卡片（完成首充可申领）</td></tr>
+      <tr style="background:#fffbe6"><td>同一登录IP仅可申领1次</td><td>Cada IP de login pode resgatar apenas 1 vez</td><td>申领限制悬浮卡片（同登录IP只能申领1次）</td></tr>
+      <tr style="background:#fffbe6"><td>同一注册IP仅可申领1次</td><td>Cada IP de cadastro pode resgatar apenas 1 vez</td><td>申领限制悬浮卡片（同注册IP只能申领1次）</td></tr>
+      <tr style="background:#fffbe6"><td>请在最近[天数]天内累计充值[次数]次后申领</td><td>Por favor, conclua [vezes] depósitos nos últimos [dias] dias para resgatar</td><td>申领限制悬浮卡片（最近N天内充值次数≥N次）</td></tr>
+      <tr style="background:#fffbe6"><td>请在最近[天数]天内累计充值满[金额]后申领</td><td>Por favor, deposite um total de R$[valor] nos últimos [dias] dias para resgatar</td><td>申领限制悬浮卡片（最近N天内充值金额≥N）</td></tr>
+      <tr style="background:#fffbe6"><td>请绑定收款方式后申领</td><td>Por favor, vincule seu método de recebimento para resgatar</td><td>申领限制悬浮卡片（绑定收款方式，暂不可选·预留）</td></tr>
+      <tr style="background:#fffbe6"><td>同一姓名仅可申领1次</td><td>Cada nome pode resgatar apenas 1 vez</td><td>申领限制悬浮卡片（同姓名只能申领1次，暂不可选·预留）</td></tr>
     </tbody>
   </table>
+  <p style="background:#fffbe6;border-radius:4px;padding:8px 12px;font-size:12px;color:#6a4a00">🟡 v1.4 同步新增：申领限制 7 项提示文案（黄色底纹行，其中「绑定收款方式」「同姓名只能申领1次」2 项后台暂置灰、文案预留），与公共文档《申领限制提示文案-中葡对照 v1.0》保持一致。占位符 [天数] [次数] [金额] / [dias] [vezes] [valor] 随后台配置动态替换；多项限制同时不满足时按后台配置项顺序提示第一条未满足项（建议方案，待研发确认）；葡语为按平台风格拟定的新文案，上线前建议葡语运营复核。</p>
 
   <h2>6.5 活动规则文案</h2>
   <p>以下为系统默认规则说明的完整5条中葡对照。葡语取自产品参考图原文，动态部分以 <em>{}</em> 标注。</p>
@@ -635,6 +643,7 @@ blockquote{background:#f5f5f5;border-left:3px solid #ccc;padding:8px 14px;margin
       <tr><td>v1.1</td><td>2026-07-02</td><td>Laura</td><td>补充领取逻辑说明（5.3）；完善选择时间各选项说明（4.3）；规则说明同步第3条稽核倍数联动及宣传图预览动态内容（4.2）；新增规则说明中葡对照表（6.5）</td></tr>
       <tr><td>v1.2</td><td>2026-07-02</td><td>Laura</td><td>修正6.5规则文案（第1/3/4/5条措辞）；修正4.3自定义时间说明；补充无限制双向联动说明；完善5.1活动图来源描述</td></tr>
       <tr><td>v1.3</td><td>2026-07-02</td><td>Laura</td><td>同步4.2规则说明联动文案（第1-3条）；修正4.2每月模式会员日范围（31日→30日）；合并5.2"金额为0"状态至"领取成功"；5.3补充零金额不计账变说明</td></tr>
+      <tr><td>v1.4</td><td>2026-07-20</td><td>Laura</td><td>6.4 新增申领限制 7 项提示文案中葡对照，其中 2 项（绑定收款方式 / 同姓名只能申领1次）后台暂置灰、文案预留（与公共文档《申领限制提示文案-中葡对照 v1.0》同步）</td></tr>
     </tbody>
   </table>
 </div>
