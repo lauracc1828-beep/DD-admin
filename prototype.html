@@ -2439,10 +2439,12 @@ select.fs.ph{color:#bfbfbf}
           </div>
           <div class="fi-sub"><span class="fl req" style="width:116px">弹框时间点：</span><div class="fc"><select class="fs"><option>访问主页</option><option>用户充值</option><option>首次提现</option></select></div></div>
           <div class="fi-sub"><span class="fl req" style="width:116px">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
-          <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs"><option>苹果商店</option></select></div></div>
+          <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs" id="br-guide-ios-it" onchange="gcond('br-guide-ios-store',this.value==='苹果商店')"><option>保存桌面</option><option>苹果商店</option></select></div></div>
+          <div id="br-guide-ios-store" class="cond">
           <div class="fi-sub"><span class="fl req" style="width:116px">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="普通" checked onchange="brGuideIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-guide-ios-at" value="OneLink" onchange="brGuideIosAddr(this.value)"> OneLink地址</label></div></div></div>
           <div id="br-guide-ios-normal" class="cond on"><div class="fi-sub"><span class="fl req" style="width:116px">苹果地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div></div>
           <div id="br-guide-ios-onelink" class="cond"><div class="fi-sub"><span class="fl" style="width:116px">IOS上架包名字：</span><div class="fc"><input class="fin" placeholder="自动填入"></div></div><div class="fi-sub"><span class="fl req" style="width:116px">选择IOS上架包：</span><div class="fc"><button class="btn btn-blue btn-sm" onclick="openSub('m-ios-pkg','')">选择IOS上架包</button></div></div></div>
+          </div>
         </div>
         <div class="fi"><span class="fl">安装送彩金：</span><div class="fc"><select class="fs" id="br-guide-gift" onchange="brGuideGift(this.value)"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
         <div id="br-guide-gift-fields" class="cond">
