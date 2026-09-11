@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公告消息 - 前台原型</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#eceff3;color:#333;padding:26px 16px 60px}
+.head{max-width:860px;margin:0 auto 22px}
+.head h1{font-size:20px;color:#1a1a2e;margin-bottom:4px}
+.head p{font-size:13px;color:#888}
+.stage{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.col-label{font-size:13px;font-weight:600;color:#0961BD}
+/* 数量控制台 */
+.console{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e3e6ec;border-radius:8px;padding:8px 12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.console .lbl{font-size:12px;color:#666}
+.seg{display:inline-flex;border:1px solid #cfd6e2;border-radius:6px;overflow:hidden}
+.seg button{border:none;background:#fff;padding:6px 13px;font-size:13px;cursor:pointer;color:#555;border-right:1px solid #e6e6e6;font-family:inherit}
+.seg button:last-child{border-right:none}
+.seg button.on{background:#0961BD;color:#fff}
+/* ── phone ── */
+.phone{width:340px;height:720px;background:#0e1016;border-radius:26px;overflow:hidden;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.28);border:8px solid #000}
+.lobby{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#2a2033 0%,#14121c 55%,#0b0a10 100%);display:flex;flex-direction:column}
+.lb-top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;color:#f0d98a;font-weight:800;font-size:16px}
+.lb-top .bal{display:flex;align-items:center;gap:6px;background:#1c1826;border:1px solid #3a3350;border-radius:20px;padding:4px 10px;font-size:12px;color:#ffd75e;font-weight:700}
+.lb-dep{background:linear-gradient(180deg,#ffd75e,#f0a825);color:#5a3b00;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800}
+.lb-grid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 14px;opacity:.55}
+.lb-tile{border-radius:10px;background:linear-gradient(150deg,#3a2b52,#241b34);border:1px solid #4a3a66}
+.lb-nav{display:flex;justify-content:space-around;align-items:center;padding:10px 0 14px;background:#120f1a;color:#8c85a0;font-size:18px}
+.lb-nav .c{width:44px;height:44px;border-radius:50%;background:linear-gradient(180deg,#ffd75e,#e79a1c);margin-top:-18px;box-shadow:0 4px 12px rgba(240,168,37,.5)}
+/* ── 弹窗 ── */
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.68);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:0 18px}
+.mask.hide{display:none}
+.pop{width:250px;background:#12161f;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.pop-img{width:100%;aspect-ratio:700/760;background:linear-gradient(180deg,#7a1f1f 0%,#c0392b 30%,#e67e22 60%,#f1c40f 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:14px}
+.pop-img .bg-badge{font-size:11px;opacity:.85;margin-bottom:8px}
+.pop-img h3{font-size:20px;font-weight:900;text-shadow:0 2px 4px rgba(0,0,0,.4);margin-bottom:6px}
+.pop-img .big{font-size:30px;font-weight:900;color:#fff2b0;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.pop-img .sub{margin-top:10px;background:rgba(0,0,0,.28);border-radius:20px;padding:5px 12px;font-size:11px}
+.pop-text{position:relative;aspect-ratio:700/760;display:flex;flex-direction:column}
+.pop-text.sysbg{background:#12161f}
+.pop-text.custombg{background:linear-gradient(180deg,#a9c7e6 0%,#e8c98d 42%,#6b7f52 66%,#2f3a24 100%)}
+.pop-text .pt-title{color:#fff;text-align:center;font-weight:800;font-size:17px;padding:14px 12px 8px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.pop-text .pt-body{flex:1;color:#fff;text-align:center;font-size:13px;line-height:1.7;padding:8px 16px 18px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+/* 底部 tab（超过3个横向滑动，每次最多显示3个） */
+.pop-tabs{display:flex;overflow-x:auto;background:#e9e1d0;border-top:1px solid #d8cfb8;scrollbar-width:none}
+.pop-tabs::-webkit-scrollbar{height:0}
+.pop-tab{flex:1 1 0;min-width:83px;text-align:center;font-size:12px;color:#5a5346;padding:11px 8px;cursor:pointer;border-right:1px solid #d8cfb8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-tab:last-child{border-right:none}
+.pop-tab.act{font-weight:800;color:#1a1a1a;background:#fff}
+.pop-foot{display:flex;flex-direction:column;align-items:center;gap:16px}
+.noremind{display:flex;align-items:center;gap:7px;color:#e6e6e6;font-size:12px;background:rgba(255,255,255,.1);padding:6px 14px;border-radius:18px;cursor:pointer;user-select:none}
+.noremind .box{width:14px;height:14px;border-radius:3px;border:1.5px solid #cfcfcf;display:flex;align-items:center;justify-content:center;font-size:10px;color:#0e1016;background:transparent}
+.noremind.on .box{background:#ffd75e;border-color:#ffd75e}
+.pop-close{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);color:#fff;background:rgba(0,0,0,.25);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.reopen{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);background:#ffd75e;color:#5a3b00;border:none;border-radius:20px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;display:none}
+/* ── 消息中心 ── */
+.mc{position:absolute;inset:0;background:#161515;display:flex;flex-direction:column}
+.mc-top{height:52px;display:flex;align-items:center;justify-content:center;position:relative;background:#1c1b1b;border-bottom:1px solid #2a2a2a;color:#fff;font-size:17px;font-weight:700}
+.mc-top .bk{position:absolute;left:14px;font-size:20px;cursor:pointer}
+.mc-tabs{display:flex;background:#1c1b1b}
+.mc-tab{flex:1;text-align:center;padding:12px 0;color:#9a9a9a;font-size:14px;cursor:pointer;position:relative}
+.mc-tab.act{color:#fff;font-weight:700}
+.mc-tab.act::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:36px;height:3px;border-radius:2px;background:#f0b429}
+.mc-badge{position:absolute;top:8px;margin-left:2px;background:#f5222d;color:#fff;font-size:10px;border-radius:9px;padding:0 5px;line-height:15px}
+.mc-list{flex:1;overflow-y:auto;padding:12px}
+.mc-card{background:#242222;border-radius:10px;padding:16px 14px;margin-bottom:12px;cursor:pointer}
+.mc-card h4{color:#fff;font-size:15px;font-weight:700;margin-bottom:7px}
+.mc-card p{color:#8f8f8f;font-size:12px;line-height:1.5;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.mc-detail{position:absolute;inset:0;background:#161515;display:none;flex-direction:column}
+.mc-detail.show{display:flex}
+.mc-dbody{padding:18px 16px;overflow-y:auto}
+.mc-dbody h3{color:#fff;font-size:17px;font-weight:700;margin-bottom:10px}
+.mc-dbody .time{color:#7a7a7a;font-size:12px;margin-bottom:14px}
+.mc-dbody .txt{color:#d6d6d6;font-size:13px;line-height:1.8}
+.mc-dbody .banner{width:100%;border-radius:8px;margin-bottom:14px;aspect-ratio:760/300;background:linear-gradient(135deg,#c0392b,#e67e22 45%,#f1c40f);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.note{max-width:860px;margin:26px auto 0;font-size:12px;color:#999;line-height:1.7}
+.note b{color:#555}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>公告消息 · 前台原型</h1>
+  <p>左：弹窗公告（多条合并为一个弹窗、底部 Tab 切换、超过 3 条可横向滑动、今日不再提示）　右：消息中心 → 公告（列表 / 详情）</p>
+</div>
+
+<div class="stage">
+  <!-- ══════ 弹窗公告 ══════ -->
+  <div class="col">
+    <div class="col-label">弹窗公告</div>
+    <div class="console">
+      <span class="lbl">展示数量：</span>
+      <div class="seg" id="seg">
+        <button onclick="anSet(1)">1 个</button>
+        <button onclick="anSet(2)">2 个</button>
+        <button onclick="anSet(3)">3 个</button>
+        <button class="on" onclick="anSet(4)">4 个</button>
+      </div>
+    </div>
+    <div class="phone" id="phoneA">
+      <div class="lobby">
+        <div class="lb-top"><span>KK678<span style="color:#f0a825">.com</span></span>
+          <div style="display:flex;gap:8px;align-items:center"><span class="bal">💰 R$ 240,04</span><span class="lb-dep">Depósito</span></div>
+        </div>
+        <div class="lb-grid">
+          <div class="lb-tile"></div><div class="lb-tile"></div><div class="lb-tile"></div>
+          <div class="lb-tile"></div><div class="lb-tile"></div><div class="lb-tile"></div>
+          <div class="lb-tile"></div><div class="lb-tile"></div><div class="lb-tile"></div>
+        </div>
+        <div class="lb-nav"><span>🏠</span><span>🎁</span><span class="c"></span><span>💬</span><span>👤</span></div>
+      </div>
+      <button class="reopen" id="reopenA" onclick="popShow()">重新打开弹窗</button>
+      <div class="mask" id="maskA">
+        <div class="pop">
+          <div id="popPane"></div>
+          <div class="pop-tabs" id="popTabs"></div>
+        </div>
+        <div class="pop-foot">
+          <div class="noremind" id="noremindA" onclick="this.classList.toggle('on')"><span class="box">✓</span> 今日不再提示</div>
+          <div class="pop-close" onclick="popHide()">✕</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ 消息中心 ══════ -->
+  <div class="col">
+    <div class="col-label">消息中心 · 公告</div>
+    <div class="phone" id="phoneB">
+      <div class="mc">
+        <div class="mc-top">消息中心</div>
+        <div class="mc-tabs">
+          <div class="mc-tab">支持</div>
+          <div class="mc-tab">通知<span class="mc-badge">4</span></div>
+          <div class="mc-tab act">公告</div>
+        </div>
+        <div class="mc-list">
+          <div class="mc-card" onclick="mcOpen(0)"><h4>每日送彩金</h4><p>每日登录即可领取彩金，最高 R$ 8.888，活动长期有效，先到先得。</p></div>
+          <div class="mc-card" onclick="mcOpen(1)"><h4>新版本上线通知</h4><p>App 已更新至最新版本，新增多款热门游戏与更流畅的充提体验。</p></div>
+          <div class="mc-card" onclick="mcOpen(2)"><h4>Sejam todos bem-vindos!</h4><p>欢迎加入 KK678！完成首充即可参与专属新人活动，惊喜好礼等你来拿。</p></div>
+          <div class="mc-card" onclick="mcOpen(3)"><h4>维护公告</h4><p>系统将于每周三凌晨进行例行维护，维护期间部分功能可能短暂不可用。</p></div>
+        </div>
+      </div>
+      <div class="mc-detail" id="mcDetail">
+        <div class="mc-top"><span class="bk" onclick="mcBack()">‹</span>消息详情</div>
+        <div class="mc-dbody" id="mcDBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <p><b>说明：</b>弹窗为图片型时整弹窗为一张图（比例 700×760）；文字型为底图（系统默认深色 / 自定义图）叠加标题与富文本正文。当有多条弹窗需要展示时，合并为一个弹窗、由底部 Tab 切换（Tab 名取公告名称）；<b>当配置公告超过 3 条时，底部标签可左右滑动，每次最多显示 3 个</b>（用左上「展示数量」控制台切换 1/2/3/4 条的样式）。勾选「今日不再提示」后当天不再弹出。收件箱公告展示在「消息中心 → 公告」列表，点击进入详情。演示文案以中文示意，实际前台按目标市场语言展示。</p>
+</div>
+
+<script>
+/* ── 弹窗（数据驱动，支持 1~4 条切换）── */
+var POPS=[
+  {name:'活动图', kind:'img', t1:'BÔNUS DE RECARGA', big:'R$ 5000', sub:'Faça sua recarga e receba mais!'},
+  {name:'签到奖励', kind:'text', bg:'custom', title:'签到奖励', body:'连续签到 7 天领取<br>最高 R$ 100 彩金'},
+  {name:'Grande Liquidação', kind:'img', t1:'GRANDE LIQUIDAÇÃO', big:'R$ 777.777', sub:'Recompensa Máxima Diária'},
+  {name:'每日彩金', kind:'text', bg:'sys', title:'每日彩金', body:'每日登录送彩金<br>最高 R$ 8.888'}
+];
+var popCount=4, popActive=0;
+function paneHTML(p){
+  if(p.kind==='img'){
+    return '<div class="pop-img"><div class="bg-badge">Oferta Exibida</div><h3>'+p.t1+'</h3><div class="big">'+p.big+'</div><div class="sub">'+p.sub+'</div></div>';
+  }
+  return '<div class="pop-text '+(p.bg==='custom'?'custombg':'sysbg')+'"><div class="pt-title">'+p.title+'</div><div class="pt-body">'+p.body+'</div></div>';
+}
+function renderPop(){
+  document.getElementById('popPane').innerHTML = paneHTML(POPS[popActive]);
+  var tabs='';
+  for(var i=0;i<popCount;i++){
+    tabs+='<div class="pop-tab'+(i===popActive?' act':'')+'" onclick="popTab('+i+')">'+POPS[i].name+'</div>';
+  }
+  document.getElementById('popTabs').innerHTML=tabs;
+}
+function anSet(n){
+  popCount=n; popActive=0; renderPop();
+  var btns=document.querySelectorAll('#seg button');
+  btns.forEach(function(b,idx){ b.classList.toggle('on', idx===n-1); });
+  popShow();
+}
+function popTab(i){ popActive=i; renderPop(); }
+function popHide(){ document.getElementById('maskA').classList.add('hide'); document.getElementById('reopenA').style.display='block'; }
+function popShow(){ document.getElementById('maskA').classList.remove('hide'); document.getElementById('reopenA').style.display='none'; }
+/* ── 消息详情 ── */
+var mcData=[
+  {t:'每日送彩金', time:'2026-09-10 09:00:00', txt:'每日登录即可领取彩金，最高 R$ 8.888。活动长期有效，先到先得，详情以活动页说明为准。'},
+  {t:'新版本上线通知', time:'2026-09-08 12:00:00', txt:'App 已更新至最新版本，新增多款热门游戏，并优化充值与提现体验，欢迎前往体验。'},
+  {t:'Sejam todos bem-vindos!', time:'2026-09-01 03:25:07', banner:true, extra:'欢迎加入 KK678！完成首充即可参与专属新人活动，惊喜好礼等你来拿。'},
+  {t:'维护公告', time:'2026-08-28 02:00:00', txt:'系统将于每周三凌晨 02:00–04:00 进行例行维护，维护期间部分功能可能短暂不可用，敬请谅解。'}
+];
+function mcOpen(i){
+  var d=mcData[i];
+  var html='<h3>'+d.t+'</h3><div class="time">'+d.time+'</div>';
+  if(d.banner) html+='<div class="banner">促销 Banner（760×任意高度）</div>';
+  html+='<div class="txt">'+(d.extra||d.txt)+'</div>';
+  document.getElementById('mcDBody').innerHTML=html;
+  document.getElementById('mcDetail').classList.add('show');
+}
+function mcBack(){ document.getElementById('mcDetail').classList.remove('show'); }
+renderPop();
+</script>
+</body>
+</html>

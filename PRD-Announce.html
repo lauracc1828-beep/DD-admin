@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公告消息 PRD</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.75}
+.page{max-width:960px;margin:0 auto;padding:40px 20px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:28px;display:flex;gap:20px;flex-wrap:wrap}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:700;color:#1a1a2e;margin:22px 0 10px}
+p{margin-bottom:12px;color:#444}
+ul,ol{padding-left:22px;margin-bottom:12px}
+li{margin-bottom:7px}
+.card{background:#fff;border-radius:8px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.hero{background:linear-gradient(135deg,#0961BD,#003a8c);color:#fff;border-radius:8px;padding:22px 26px;margin-bottom:22px}
+.hero p{color:rgba(255,255,255,.92);margin:0}
+table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:13px}
+th,td{border:1px solid #e5e8ee;padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#f0f5ff;color:#1a1a2e;font-weight:700;white-space:nowrap}
+td code,p code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#c0392b}
+.req{color:#c0392b;font-weight:700}
+.opt{color:#8c8c8c}
+strong{color:#1a1a2e}
+.tag{display:inline-block;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;border-radius:4px;padding:0 7px;font-size:12px;margin-right:4px}
+.note{background:#fffbe6;border:1px solid #ffe58f;border-radius:6px;padding:12px 16px;font-size:13px;color:#614700;margin:10px 0}
+.flow-wrap{overflow-x:auto}
+svg{display:block;margin:6px auto}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>公告消息 PRD</h1>
+<div class="meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-09-12</span></div>
+
+<div class="hero">
+<p>本模块位于后台「消息管理 → 公告消息」，用于运营向前台用户投放两类公告：<strong>弹窗公告</strong>（前台以弹窗形式展示）与<strong>公告消息</strong>（发送至前台消息中心的收件箱）。配置按「地区 + 商户」维度隔离管理。</p>
+</div>
+
+<div class="card">
+<h2>一、概述</h2>
+<p>公告消息模块提供统一的公告投放能力，页面以两个子 Tab 区分两种投放形态：</p>
+<ul>
+<li><strong>弹窗公告</strong>：用户进入前台时以弹窗形式展示，支持图片型与文字型，支持按弹窗群体、会员层级、优先级与弹窗频率精准控制展示。</li>
+<li><strong>公告消息</strong>：以站内公告形式发送至前台「消息中心 → 公告」，用户在收件箱内查看，支持按会员层级定向可见。</li>
+</ul>
+<p>页面顶部提供筛选项：<strong>地区</strong>、<strong>商户</strong>、<strong>公告名称</strong>，用于按维度检索；配置数据以选定的地区与商户为作用范围。</p>
+</div>
+
+<div class="card">
+<h2>二、名词与状态定义</h2>
+<p>公告存在两个相互独立的状态维度，配置与前台展示均须区分：</p>
+<table>
+<tr><th style="width:120px">状态维度</th><th>定义</th><th>取值</th><th>控制方</th></tr>
+<tr><td><strong>状态</strong><br>（启用状态）</td><td>表示公告当前是否启用。</td><td>开启 / 关闭</td><td>运营手动控制，可随时切换</td></tr>
+<tr><td><strong>生效状态</strong></td><td>表示公告配置变更的落地状态。系统对每次保存执行异步生效处理：定时生效的公告在到达设定生效时间前为「待生效」，到点由系统自动置为「已生效」；立即生效或已生效公告在编辑保存后会有短暂的变更同步过程，期间为「待生效」，同步完成后转为「已生效」。</td><td>待生效 / 已生效</td><td>系统按生效方式自动流转</td></tr>
+</table>
+<p><strong>二者相互独立：</strong>对已生效的公告执行开启或关闭，仅改变其启用状态，不影响、也不重置其生效状态。</p>
+</div>
+
+<div class="card">
+<h2>三、后台配置</h2>
+
+<h3>3.1 列表</h3>
+<p><strong>弹窗公告列表</strong>字段：序号、公告名称、公告类型、公告内容（图片显示缩略图 / 文字显示文本）、弹窗群体、超链接、弹窗优先级、状态（开关，即启用状态）、生效时间、生效状态、操作人、最后修改时间、创建时间、操作（编辑 / 删除）。列表右上角提供「+新增」。</p>
+<p><strong>公告消息列表</strong>字段：序号、公告名称、公告内容（「点击查看」打开只读详情）、可见层级、发送时间、操作人、操作（删除）。列表右上角提供「公告发放」。<strong>公告消息发放后不可编辑</strong>，仅支持查看与删除。</p>
+
+<h3>3.2 弹窗公告 — 新增 / 编辑</h3>
+<table>
+<tr><th style="width:104px">字段</th><th>含义</th><th style="width:96px">控件</th><th style="width:56px">必填</th><th>输入要求 / 逻辑说明</th></tr>
+<tr><td>公告名称</td><td>公告标识；文字型时作为弹窗顶部标题展示。</td><td>输入框</td><td class="req">是</td><td>为空不可保存，错误提示「请输入公告名称」。</td></tr>
+<tr><td>公告状态</td><td>是否启用（启用状态）。</td><td>开关</td><td class="req">是</td><td>默认开启；与生效状态相互独立（见第二节）。</td></tr>
+<tr><td>公告类型</td><td>公告呈现形态。</td><td>单选</td><td class="req">是</td><td>「文字」/「图片」二选一，切换后表单相应字段联动显示。</td></tr>
+<tr><td>选择底图</td><td>文字型弹窗的背景底图。</td><td>单选</td><td class="req">是</td><td>仅公告类型=文字时显示。「系统默认」使用系统默认底图；「自定义」需上传图片，支持 JPG/PNG/SVG，建议尺寸 700×760；上传后点击缩略图弹出预览大图。</td></tr>
+<tr><td>弹窗内容</td><td>文字型弹窗的正文内容。</td><td>富文本编辑器</td><td class="req">是</td><td>仅公告类型=文字时显示；可内插图片，建议尺寸 700×284，支持 jpg/gif/png。编辑器下方设「取消 / 保存」，<strong>内容或所插图片需点击「保存」后方进入右侧预览并视为已保存内容</strong>：点击「保存」时内容为空提示「请输入自定义内容」，成功提示「富文本保存成功」；点击「取消」还原至上次已保存内容。整表提交（确定）时若无已保存内容，提示「请上传公告内容」。</td></tr>
+<tr><td>上传图片</td><td>图片型弹窗的整图。</td><td>上传</td><td class="req">是</td><td>仅公告类型=图片时显示；整个弹窗即该图，支持 JPG/PNG/SVG，建议尺寸 700×760；上传后点击图片弹出预览大图。未上传不可保存，错误提示「请上传图片」。</td></tr>
+<tr><td>跳转方式</td><td>点击弹窗后的跳转行为。</td><td>单选</td><td class="opt">否</td><td>「内联链接」/「跳转链接」/「无」。选「无」则弹窗不可点击跳转。</td></tr>
+<tr><td>跳转类型</td><td>内联跳转目标。</td><td>下拉</td><td class="req">是<span class="opt">（内联时）</span></td><td>仅跳转方式=内联链接时显示。选项包含：所有<strong>启用中的活动</strong>；站内页（充值页、推广中心页、提现页、活动页、首页、VIP页、兑换码页、注册页）；<strong>Telegram 频道</strong>与 <strong>WhatsApp</strong>——其地址取值自「系统管理 → 系统设置 → 公共资源配置」的 Telegram频道地址 / WhatsApp地址。</td></tr>
+<tr><td>跳转链接</td><td>外部跳转地址。</td><td>输入框</td><td class="req">是<span class="opt">（外链时）</span></td><td>仅跳转方式=跳转链接时显示；填写完整 URL。</td></tr>
+<tr><td>弹窗优先级</td><td>多条弹窗的展示排序权重。</td><td>数字输入</td><td class="opt">否</td><td>默认 0；<strong>数值越大排序越前</strong>。</td></tr>
+<tr><td>弹窗方式</td><td>弹窗的展示频率。</td><td>下拉</td><td class="req">是</td><td>取值见 4.1 弹窗方式说明。</td></tr>
+<tr><td>弹窗群体</td><td>弹窗展示的目标人群。</td><td>单选</td><td class="req">是</td><td>「未登录用户」/「登录用户」。选择「登录用户」时，下方展开「弹窗层级」。</td></tr>
+<tr><td>弹窗层级</td><td>登录用户中可见该弹窗的会员层级范围。</td><td>多选</td><td class="req">是<span class="opt">（登录用户时）</span></td><td>仅弹窗群体=登录用户时显示。提供「全部」及各会员层级（<strong>选项取自会员层级配置</strong>）；<strong>仅勾选层级的用户可见该弹窗</strong>。</td></tr>
+<tr><td>生效方式</td><td>公告的生效时机。</td><td>单选</td><td class="req">是</td><td>「立即生效」/「定时生效」。</td></tr>
+<tr><td>生效时间</td><td>定时生效的开始时间。</td><td>日期时间选择</td><td class="req">是<span class="opt">（定时时）</span></td><td>仅生效方式=定时生效时显示；仅设开始时间，须大于当前时间 5 分钟。</td></tr>
+</table>
+
+<h3>3.3 公告消息 — 公告发放</h3>
+<table>
+<tr><th style="width:104px">字段</th><th>含义</th><th style="width:96px">控件</th><th style="width:56px">必填</th><th>输入要求 / 逻辑说明</th></tr>
+<tr><td>公告标题</td><td>收件箱公告的标题。</td><td>输入框</td><td class="req">是</td><td>为空不可发送，错误提示「请输入公告标题」。</td></tr>
+<tr><td>公告内容</td><td>收件箱公告的正文。</td><td>富文本编辑器</td><td class="req">是</td><td>可内插图片，建议宽度 760、高度不限，支持 jpg/gif/png。为空不可发送，错误提示「请输入公告内容」。</td></tr>
+<tr><td>可见层级</td><td>可收到该公告的会员层级范围。</td><td>多选</td><td class="req">是</td><td>提供「全部」及各会员层级（<strong>选项取自会员层级配置</strong>），勾选「全部」联动全选。</td></tr>
+</table>
+
+<h3>3.4 保存校验规则</h3>
+<table>
+<tr><th style="width:150px">场景</th><th>校验规则</th><th style="width:220px">错误提示</th></tr>
+<tr><td>弹窗公告 · 确定</td><td>公告名称不可为空</td><td>请输入公告名称</td></tr>
+<tr><td>弹窗公告 · 文字型 · 确定</td><td>无已保存的弹窗内容</td><td>请上传公告内容</td></tr>
+<tr><td>弹窗公告 · 图片型 · 确定</td><td>必须上传图片</td><td>请上传图片</td></tr>
+<tr><td>弹窗内容 · 编辑器保存</td><td>内容为空</td><td>请输入自定义内容</td></tr>
+<tr><td>弹窗内容 · 编辑器保存</td><td>内容非空（保存成功）</td><td>富文本保存成功</td></tr>
+<tr><td>公告消息 · 发送</td><td>公告标题不可为空</td><td>请输入公告标题</td></tr>
+<tr><td>公告消息 · 发送</td><td>公告内容不可为空</td><td>请输入公告内容</td></tr>
+<tr><td>表单 · 切换公告状态</td><td>切换启用状态成功</td><td>修改成功</td></tr>
+</table>
+<p>所有提示以 <strong>toast</strong> 形式呈现。点击「确定 / 发送」时按字段<strong>从上到下校验，仅提示第一个未通过项</strong>并阻断提交。「生效时间需大于当前时间5分钟」以字段旁固定说明常驻展示。</p>
+</div>
+
+<div class="card">
+<h2>四、前台显示逻辑</h2>
+
+<h3>4.1 弹窗公告</h3>
+<p><strong>展示条件：</strong>公告须处于启用（状态=开启）且已生效（生效状态=已生效）。命中人群按弹窗群体判定：未登录用户仅对未登录访客展示；登录用户仅对所勾选「弹窗层级」内的会员展示。</p>
+<p><strong>弹窗方式（展示频率）：</strong></p>
+<table>
+<tr><th style="width:150px">选项</th><th>说明</th></tr>
+<tr><td>每次登录或访问</td><td>每次进入网站均弹出，<strong>包含未登录访问网站时</strong>，以及每次<strong>登录成功时</strong>。</td></tr>
+<tr><td>每日一次</td><td>每个自然日内对同一用户仅弹出一次。</td></tr>
+<tr><td>只弹一次</td><td>对同一用户仅弹出一次，之后不再弹出。</td></tr>
+<tr><td>每回大厅必弹</td><td>用户每次返回大厅均弹出。</td></tr>
+</table>
+<p><strong>多条合并与排序：</strong>当同一时刻有多条弹窗需展示时，<strong>合并为一个弹窗、由底部 Tab 切换</strong>（Tab 名为公告名称），按弹窗优先级由大到小排序。<strong>当展示的公告超过 3 条时，底部 Tab 支持左右滑动，每次最多显示 3 个。</strong></p>
+<p><strong>内容形态：</strong>图片型整个弹窗为一张图；文字型为底图（系统默认深色底图 / 自定义图）叠加标题与富文本正文，标题与正文居中展示。</p>
+<p><strong>用户操作：</strong>弹窗底部提供「今日不再提示」，勾选后当天不再弹出；提供关闭按钮；若配置了跳转，点击弹窗按跳转方式跳转（内联至对应站内页 / 活动 / 联系方式，外链跳转至所填 URL）。</p>
+
+<h3>4.2 公告消息</h3>
+<p>命中可见层级的用户在「消息中心 → 公告」Tab（与「支持」「通知」并列）看到公告卡片列表，卡片展示标题与内容摘要；点击卡片进入<strong>消息详情</strong>，展示标题、发送时间与正文。</p>
+</div>
+
+<div class="card">
+<h2>五、交互逻辑流程图</h2>
+<div class="flow-wrap">
+<svg viewBox="0 0 900 620" width="900" height="620" font-family="-apple-system,'PingFang SC',sans-serif">
+<defs>
+<marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+<path d="M0 0 L8 4 L0 8 z" fill="#7a8aa0"/>
+</marker>
+</defs>
+<style>
+.bx{fill:#fff;stroke:#b9c6d9;stroke-width:1.2;rx:7}
+.hd{fill:#e6f0ff;stroke:#0961BD;stroke-width:1.4}
+.st{fill:#0961BD}
+.t{font-size:12px;fill:#333;text-anchor:middle}
+.tw{font-size:13px;fill:#fff;text-anchor:middle;font-weight:700}
+.tb{font-size:13px;fill:#0961BD;text-anchor:middle;font-weight:700}
+.ln{stroke:#7a8aa0;stroke-width:1.4;fill:none}
+</style>
+<!-- start -->
+<rect class="bx st" x="325" y="22" width="250" height="34" rx="7"/>
+<text class="tw" x="450" y="44">后台：新增 / 编辑公告</text>
+<!-- branch lines -->
+<path class="ln" d="M450 56 V72 H185 V90" marker-end="url(#arw)"/>
+<path class="ln" d="M450 56 V72 H715 V90" marker-end="url(#arw)"/>
+
+<!-- LEFT: 弹窗公告 -->
+<rect class="bx hd" x="60" y="92" width="250" height="38" rx="7"/>
+<text class="tb" x="185" y="116">弹窗公告</text>
+<rect class="bx" x="60" y="150" width="250" height="52" rx="7"/>
+<text class="t" x="185" y="171">配置：类型 · 底图 · 内容 · 跳转</text>
+<text class="t" x="185" y="189">群体 · 层级 · 弹窗方式 · 优先级</text>
+<rect class="bx" x="60" y="220" width="250" height="52" rx="7"/>
+<text class="t" x="185" y="241">保存校验</text>
+<text class="t" x="185" y="259">名称必填 · 文字非空 / 图片必传</text>
+<rect class="bx" x="60" y="290" width="250" height="52" rx="7"/>
+<text class="t" x="185" y="311">生效方式：立即 / 定时</text>
+<text class="t" x="185" y="329">（定时 ≥ 当前时间 + 5 分钟）</text>
+<rect class="bx" x="60" y="360" width="250" height="38" rx="7"/>
+<text class="t" x="185" y="384">生效状态：待生效 → 已生效</text>
+<rect class="bx" x="60" y="416" width="250" height="52" rx="7"/>
+<text class="t" x="185" y="437">前台弹窗：命中群体 + 层级</text>
+<text class="t" x="185" y="455">按优先级 · 弹窗方式弹出</text>
+<rect class="bx" x="60" y="486" width="250" height="52" rx="7"/>
+<text class="t" x="185" y="507">多条合并为一个弹窗</text>
+<text class="t" x="185" y="525">底部 Tab 切换</text>
+<rect class="bx" x="60" y="556" width="250" height="40" rx="7"/>
+<text class="t" x="185" y="580">今日不再提示 / 关闭 / 跳转</text>
+<!-- left arrows -->
+<path class="ln" d="M185 130 V150" marker-end="url(#arw)"/>
+<path class="ln" d="M185 202 V220" marker-end="url(#arw)"/>
+<path class="ln" d="M185 272 V290" marker-end="url(#arw)"/>
+<path class="ln" d="M185 342 V360" marker-end="url(#arw)"/>
+<path class="ln" d="M185 398 V416" marker-end="url(#arw)"/>
+<path class="ln" d="M185 468 V486" marker-end="url(#arw)"/>
+<path class="ln" d="M185 538 V556" marker-end="url(#arw)"/>
+
+<!-- RIGHT: 公告消息 -->
+<rect class="bx hd" x="590" y="92" width="250" height="38" rx="7"/>
+<text class="tb" x="715" y="116">公告消息（收件箱）</text>
+<rect class="bx" x="590" y="150" width="250" height="40" rx="7"/>
+<text class="t" x="715" y="174">配置：标题 · 内容 · 可见层级</text>
+<rect class="bx" x="590" y="220" width="250" height="38" rx="7"/>
+<text class="t" x="715" y="244">校验：标题 · 内容必填</text>
+<rect class="bx" x="590" y="290" width="250" height="38" rx="7"/>
+<text class="t" x="715" y="314">发送</text>
+<rect class="bx" x="590" y="360" width="250" height="40" rx="7"/>
+<text class="t" x="715" y="384">命中可见层级的用户收到</text>
+<rect class="bx" x="590" y="416" width="250" height="40" rx="7"/>
+<text class="t" x="715" y="440">消息中心 → 公告（列表）</text>
+<rect class="bx" x="590" y="486" width="250" height="40" rx="7"/>
+<text class="t" x="715" y="510">点击 → 消息详情（只读）</text>
+<!-- right arrows -->
+<path class="ln" d="M715 130 V150" marker-end="url(#arw)"/>
+<path class="ln" d="M715 190 V220" marker-end="url(#arw)"/>
+<path class="ln" d="M715 258 V290" marker-end="url(#arw)"/>
+<path class="ln" d="M715 328 V360" marker-end="url(#arw)"/>
+<path class="ln" d="M715 400 V416" marker-end="url(#arw)"/>
+<path class="ln" d="M715 456 V486" marker-end="url(#arw)"/>
+</svg>
+</div>
+</div>
+
+<div class="card">
+<h2>六、中葡文案对照</h2>
+<p>覆盖前台固定展示文案。前台展示语言按目标市场确定。</p>
+<table>
+<tr><th style="width:180px">位置</th><th style="width:200px">中文</th><th>葡语 Português</th></tr>
+<tr><td>弹窗底部</td><td>今日不再提示</td><td>Sem lembretes hoje</td></tr>
+</table>
+<div class="note">消息中心的「支持 / 通知 / 公告」Tab、「消息详情」等固定文案，参考图为中文测试环境，未取得对应葡文原文；实际以客户端多语言配置为准，需客户端确认后按参考原文补充，不作自译。</div>
+</div>
+
+<div class="card">
+<h2>七、边界与异常</h2>
+<ul>
+<li><strong>状态与生效状态独立：</strong>关闭已生效公告仅停止其前台展示，不改变生效状态；重新开启后按原生效状态继续展示。</li>
+<li><strong>弹窗群体切换：</strong>由「登录用户」切回「未登录用户」时隐藏「弹窗层级」；未登录用户不受会员层级限制。</li>
+<li><strong>多条弹窗：</strong>优先级相同时按创建 / 生效时间兜底排序，合并弹窗内 Tab 顺序与排序一致。</li>
+<li><strong>今日不再提示：</strong>按用户 + 自然日记录，跨日重置；与「弹窗方式」叠加时，以更严格者为准（如「只弹一次」则不再受当日勾选影响）。</li>
+<li><strong>跳转目标失效：</strong>内联活动若已下线或站内页不可用，点击不跳转或回落首页（以前台通用兜底为准）。</li>
+<li><strong>定时生效：</strong>未到生效时间的公告为「待生效」，前台不展示；到点由系统自动切换为「已生效」并开始展示。</li>
+<li><strong>公告消息不可编辑：</strong>发放后仅支持查看（只读）与删除；如需修改须删除后重新发放。</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>

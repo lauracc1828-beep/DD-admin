@@ -612,6 +612,60 @@ select.fs.ph{color:#bfbfbf}
 #pg-account th,#pg-account td{padding:13px 18px}
 #pg-account th:first-child,#pg-account td:first-child{padding-left:24px}
 #pg-account th:last-child,#pg-account td:last-child{padding-right:24px}
+
+/* ══ 消息管理/公告消息 页面（并入唯一后台原型，类名 an- 前缀隔离）══ */
+.an-tabs{display:flex;gap:26px;border-bottom:1px solid #f0f0f0;margin-bottom:14px;padding:0 2px}
+.an-tab{padding:9px 2px;font-size:14px;color:#595959;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500}
+.an-tab.active{color:#0961BD;border-bottom-color:#0961BD}
+.an-pane{display:none}
+.an-pane.active{display:block}
+.an-thumb{width:46px;height:46px;border-radius:4px;border:1px solid #f0f0f0;display:inline-block;vertical-align:middle;background:linear-gradient(135deg,#7a4b12,#c98a1e 45%,#f0c24a 70%,#8a5a15)}
+.an-linkcell{max-width:150px;white-space:normal;word-break:break-word;line-height:1.4}
+.an-tglink{color:#52c41a;text-decoration:none}
+.an-tglink:hover{text-decoration:underline}
+.an-eff{color:#52c41a}
+.an-pending{color:#faad14}
+.an-viewlink{color:#0961BD;cursor:pointer;text-decoration:none;font-size:12px}
+.an-viewlink:hover{text-decoration:underline}
+.an-del{color:#ff4d4f;cursor:pointer;font-size:15px}
+.an-edit2{color:#0961BD;cursor:pointer;font-size:14px;margin-right:8px}
+.an-rt{border:1px solid #d9d9d9;border-radius:4px;overflow:hidden;background:#fff}
+.an-rt-menu{display:flex;align-items:center;gap:16px;padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:13px;color:#444}
+.an-rt-menu .an-rt-hint{color:#ff4d4f;font-size:12px;margin-left:auto;margin-right:8px;white-space:nowrap}
+.an-rt-upload{background:#0961BD;color:#fff;border:none;border-radius:4px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.an-rt-tools{display:flex;flex-wrap:wrap;gap:2px;padding:6px 8px;border-bottom:1px solid #f5f5f5;background:#fff}
+.an-rt-tool{min-width:26px;height:26px;padding:0 5px;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#4a4a4a;font-size:13px;cursor:pointer}
+.an-rt-tool:hover{background:#f0f0f0}
+.an-rt-body{min-height:150px;padding:12px;font-size:13px;color:#333;outline:none;line-height:1.6}
+.an-rt-body img{max-width:100%}
+.an-rt-foot{display:flex;justify-content:space-between;padding:5px 10px;border-top:1px solid #f5f5f5;color:#8c8c8c;font-size:12px}
+.an-rt-acts{text-align:center;margin-top:12px}
+.an-pv-panel{width:300px;flex-shrink:0;border-left:1px solid #f0f0f0;padding-left:26px;margin-left:26px}
+.an-pv-title{font-size:13px;color:#595959;margin-bottom:14px}
+.an-pv{width:250px;aspect-ratio:700/760;border-radius:10px;overflow:hidden;box-shadow:0 6px 22px rgba(0,0,0,.28);margin:0 auto;background:#1b2130;position:relative;display:flex;flex-direction:column}
+.an-pv-head{color:#fff;text-align:center;font-weight:600;font-size:15px;padding:12px 10px;flex-shrink:0}
+.an-pv-content{padding:16px 14px 22px;color:#fff;text-align:center;font-size:13px;line-height:1.7;flex:1;min-height:0;overflow:auto}
+.an-pv-content img{max-width:100%;border-radius:4px;margin-bottom:8px;display:block}
+.an-pv.an-custom .an-pv-head,.an-pv.an-custom .an-pv-content{position:relative;z-index:2}
+.an-pv.an-custom{background:linear-gradient(180deg,#a9c7e6 0%,#e8c98d 42%,#6b7f52 66%,#2f3a24 100%)}
+.an-up{width:120px;height:120px;border:2px dashed #d9d9d9;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:30px;cursor:pointer;background:#fafafa;overflow:hidden}
+.an-up:hover{border-color:#0961BD}
+.an-up.an-filled{border:none;background:linear-gradient(180deg,#a9c7e6,#e8c98d 45%,#2f3a24)}
+.an-lvgrid{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:12px;padding-left:2px}
+.an-lvitem{display:flex;align-items:center;gap:6px;font-size:13px;color:#444;cursor:pointer;width:92px}
+.an-lvitem input{accent-color:#0961BD}
+.an-dt{height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;width:240px;outline:none;color:#333;background:#fff}
+.an-dt:focus{border-color:#0961BD}
+.an-hintred{color:#ff4d4f;font-size:12px;white-space:nowrap}
+.an-rt.an-ro{background:#f5f5f5}
+.an-basethumb{width:60px;aspect-ratio:700/760;background:linear-gradient(180deg,#a9c7e6,#e8c98d 45%,#2f3a24);border-radius:4px;margin-top:10px;cursor:pointer;border:1px solid #d9d9d9}
+.an-lb{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:2000;display:none;align-items:center;justify-content:center}
+.an-lb.show{display:flex}
+.an-lb-img{width:300px;aspect-ratio:700/760;background:linear-gradient(180deg,#a9c7e6,#e8c98d 45%,#2f3a24);border-radius:8px;box-shadow:0 12px 44px rgba(0,0,0,.55)}
+.an-lb-close{position:absolute;top:22px;right:28px;color:#fff;font-size:30px;cursor:pointer;line-height:1}
+.an-rt.an-ro .an-rt-menu,.an-rt.an-ro .an-rt-tools{opacity:.5;pointer-events:none}
+#an-editor{text-align:center}
+
 </style>
 </head>
 <body>
@@ -664,7 +718,14 @@ select.fs.ph{color:#bfbfbf}
     <div class="submenu-item disabled">代付商户管理</div>
     <div class="submenu-item" id="si-withdraw" onclick="switchPage('withdraw',this)">提现管理</div>
   </div>
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">💬</span>消息管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" id="menu-msg" onclick="toggleMenu(this,'sub-msg')"><div class="menu-item-left"><span class="menu-icon">💬</span>消息管理</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-msg" style="display:none">
+    <div class="submenu-item disabled">站内信</div>
+    <div class="submenu-item disabled">手机验证码</div>
+    <div class="submenu-item" id="si-announce" onclick="switchPage('announce',this)">公告消息</div>
+    <div class="submenu-item disabled">极光推送</div>
+    <div class="submenu-item disabled">平台公告</div>
+  </div>
   <!-- 福利中心 -->
   <div class="menu-item" id="menu-welfare" onclick="toggleMenu(this,'sub-welfare')"><div class="menu-item-left"><span class="menu-icon">🎁</span>福利中心</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-welfare" style="display:none">
@@ -703,6 +764,153 @@ select.fs.ph{color:#bfbfbf}
   <div class="content">
 
     <!-- PAGE: ACCOUNT (账号管理) -->
+    <!-- ══════ PAGE: 消息管理/公告消息 ══════ -->
+    <div id="pg-announce" style="display:none">
+      <!-- 筛选：地区 + 商户 -->
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">地区：</span>
+            <select class="f-select"><option>巴西</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span>
+            <select class="f-select"><option>762</option></select></div>
+        </div>
+      </div>
+      <!-- 子 Tab -->
+      <div class="an-tabs">
+        <div class="an-tab active" id="an-tab-popup" onclick="anSwitchTab('popup')">弹窗公告</div>
+        <div class="an-tab" id="an-tab-notice" onclick="anSwitchTab('notice')">公告消息</div>
+      </div>
+
+      <!-- PANE 1：弹窗公告 -->
+      <div class="an-pane active" id="an-pane-popup">
+        <div class="filter-area">
+          <div class="filter-row">
+            <div class="filter-item"><span class="filter-label">公告名称：</span>
+              <input class="f-input" placeholder="请输入"></div>
+            <button class="btn btn-white">重置</button>
+            <button class="btn btn-query">查询</button>
+          </div>
+        </div>
+        <div class="action-bar">
+          <button class="btn btn-blue" onclick="anOpenPopup('add')">+新增</button>
+        </div>
+        <div class="table-wrap"><div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>序号</th><th>公告名称</th><th>公告类型</th><th>公告内容</th><th>弹窗群体</th>
+              <th>超链接</th><th>弹窗优先级</th><th>状态</th><th>生效时间</th><th>生效状态</th>
+              <th>操作人</th><th>最后修改时间</th><th>创建时间</th><th>操作</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td><td>Até R$777.777 Hoje!</td><td>图片</td><td><span class="an-thumb"></span></td><td>登录用户</td>
+                <td class="an-linkcell">会员答谢(单日)</td><td>1</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>—</td><td class="an-eff">已生效</td><td>admin168</td><td>2026-07-09 05:15:46</td><td>2025-12-07 00:05:29</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>2</td><td>Siga o canal oficial</td><td>图片</td><td><span class="an-thumb"></span></td><td>登录用户</td>
+                <td class="an-linkcell"><a class="an-tglink" href="#" onclick="return false">https://t.me/KK678com</a></td><td>0</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>—</td><td class="an-eff">已生效</td><td>admin555</td><td>2026-07-09 05:15:46</td><td>2025-10-30 13:24:57</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>3</td><td>Apresentação do ev...</td><td>图片</td><td><span class="an-thumb"></span></td><td>登录用户</td>
+                <td class="an-linkcell">活动页</td><td>0</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>—</td><td class="an-eff">已生效</td><td>super762</td><td>2026-07-09 05:15:46</td><td>2025-10-30 15:27:52</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>4</td><td>Grande Liquidação</td><td>图片</td><td><span class="an-thumb"></span></td><td>登录用户</td>
+                <td class="an-linkcell">存款奖金</td><td>1</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>2026-09-01 04:58:01</td><td class="an-eff">已生效</td><td>kenny888</td><td>2026-09-01 04:58:05</td><td>2025-12-02 04:30:16</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>5</td><td>OFERTA DE RECARGA</td><td>图片</td><td><span class="an-thumb"></span></td><td>登录用户</td>
+                <td class="an-linkcell">Atividade Exclusiva de Retorno para Membros Antigos</td><td>1</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>—</td><td class="an-eff">已生效</td><td>super762</td><td>2026-07-09 05:15:46</td><td>2026-01-12 17:22:28</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>6</td><td>OFERTA DE RECARGA</td><td>图片</td><td><span class="an-thumb"></span></td><td>登录用户</td>
+                <td class="an-linkcell">OFERTA DE RECARGA</td><td>1</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>—</td><td class="an-eff">已生效</td><td>super762</td><td>2026-07-09 05:15:46</td><td>2026-01-12 17:23:37</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>7</td><td>11111</td><td>文字</td><td>123123</td><td>登录用户</td>
+                <td class="an-linkcell">签到奖励</td><td>0</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>2026-09-11 07:47:36</td><td class="an-eff">已生效</td><td>Laura888</td><td>2026-09-11 07:47:35</td><td>2026-09-11 07:47:35</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>8</td><td>圣诞活动预告</td><td>文字</td><td>圣诞好礼</td><td>登录用户</td>
+                <td class="an-linkcell">活动页</td><td>2</td>
+                <td><label class="sw"><input type="checkbox" class="sw-input" checked><span class="sw-track"></span><span class="sw-knob"></span></label></td>
+                <td>2026-12-01 10:00:00</td><td class="an-pending">待生效</td><td>Laura888</td><td>2026-09-12 14:20:10</td><td>2026-09-12 14:20:10</td>
+                <td style="white-space:nowrap"><span class="an-edit2" onclick="anOpenPopup('edit')">✎</span><span class="an-del">🗑</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+          <div class="pagination">
+            <div class="pg-info">共 8 条数据</div>
+            <div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANE 2：公告消息（收件箱） -->
+      <div class="an-pane" id="an-pane-notice">
+        <div class="filter-area">
+          <div class="filter-row">
+            <div class="filter-item"><span class="filter-label">公告名称：</span>
+              <input class="f-input" placeholder="请输入"></div>
+            <button class="btn btn-white">重置</button>
+            <button class="btn btn-query">查询</button>
+          </div>
+        </div>
+        <div class="action-bar">
+          <button class="btn btn-blue" onclick="anOpenNotice()">公告发放</button>
+        </div>
+        <div class="table-wrap"><div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th style="width:70px">序号</th><th>公告名称</th><th>公告内容</th><th>可见层级</th>
+              <th>发送时间</th><th>操作人</th><th style="width:90px">操作</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td><td>Sejam todos bem-vind...</td>
+                <td><span class="an-viewlink" onclick="anOpenNoticeView(1)">点击查看</span></td>
+                <td>默认层级</td><td>2026-09-01 03:25:07</td><td>kenny888</td>
+                <td><span class="an-del">🗑</span></td>
+              </tr>
+              <tr>
+                <td>2</td><td>abc</td>
+                <td><span class="an-viewlink" onclick="anOpenNoticeView(2)">点击查看</span></td>
+                <td>测试账号</td><td>2026-09-05 12:02:10</td><td>Laura888</td>
+                <td><span class="an-del">🗑</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+          <div class="pagination">
+            <div class="pg-info">共 2 条数据</div>
+            <div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="pg-account" style="display:none">
       <div class="acct-tabs">
         <div class="acct-tab active">账号管理</div>
@@ -3393,6 +3601,185 @@ select.fs.ph{color:#bfbfbf}
   </div>
 </div>
 
+<!-- ══════ MODAL：新增/编辑 弹窗公告 ══════ -->
+<div class="overlay" id="m-popup">
+  <div class="modal modal-flex" style="width:940px">
+    <div class="mh"><span class="mt" id="an-popup-title">新增弹窗公告</span><span class="mc" onclick="closeM('m-popup')">×</span></div>
+    <div class="modal-scroll"><div class="mb">
+      <div style="display:flex;align-items:flex-start">
+        <!-- 左：表单 -->
+        <div style="flex:1;min-width:0">
+          <div class="fi"><div class="fl req">公告名称：</div><div class="fc"><input class="f-input" id="an-name" style="width:100%" placeholder="请输入" oninput="anPvSync()"></div></div>
+          <div class="fi"><div class="fl">公告状态：</div><div class="fc"><label class="sw"><input type="checkbox" class="sw-input" checked onchange="toast('修改成功')"><span class="sw-track"></span><span class="sw-knob"></span></label></div></div>
+          <div class="fi"><div class="fl">公告类型：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="an-type" value="text" checked onchange="anType('text')"> 文字</label>
+            <label class="radio-item"><input type="radio" name="an-type" value="img" onchange="anType('img')"> 图片</label>
+          </div></div></div>
+          <div class="fi" id="an-base-row"><div class="fl">选择底图：</div><div class="fc">
+            <div class="radio-g">
+              <label class="radio-item"><input type="radio" name="an-base" value="sys" checked onchange="anBase('sys')"> 系统默认</label>
+              <label class="radio-item"><input type="radio" name="an-base" value="custom" onchange="anBase('custom')"> 自定义</label>
+            </div>
+            <div id="an-base-upload" style="display:none;margin-top:10px">
+              <button class="upload-btn" onclick="anBaseUpload()">上传图片</button>
+              <div class="upload-hint">支持JPG/PNG/SVG格式的图片 (建议尺寸：700 x 760)</div>
+              <div class="an-basethumb" id="an-base-thumb" style="display:none" onclick="openAnLb()" title="点击预览"></div>
+            </div>
+          </div></div>
+          <div class="fi" id="an-content-row"><div class="fl req">弹窗内容：</div><div class="fc">
+            <div class="an-rt">
+              <div class="an-rt-menu"><span>文件</span><span>编辑</span><span>插入</span><span>视图</span><span>格式</span>
+                <span class="an-rt-hint">700x284/jpg/.gif/.png</span><button class="an-rt-upload">图片上传</button></div>
+              <div class="an-rt-tools">
+                <span class="an-rt-tool" style="padding:0 8px">12pt ▾</span><span class="an-rt-tool">🔍</span>
+                <span class="an-rt-tool"><b>B</b></span><span class="an-rt-tool"><i>I</i></span><span class="an-rt-tool"><u>U</u></span><span class="an-rt-tool"><s>S</s></span>
+                <span class="an-rt-tool">≡</span><span class="an-rt-tool">≣</span><span class="an-rt-tool">”</span><span class="an-rt-tool">↶</span><span class="an-rt-tool">↷</span>
+                <span class="an-rt-tool">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
+              </div>
+              <div class="an-rt-body" id="an-editor" contenteditable="true" oninput="anWordCount()"></div>
+              <div class="an-rt-foot"><span>P</span><span id="an-wordcount">0 字</span></div>
+            </div>
+            <div class="an-rt-acts">
+              <button class="btn btn-white" onclick="anCancelContent()">取消</button>
+              <button class="btn btn-blue" style="margin-left:10px" onclick="anSaveContent()">保存</button>
+            </div>
+          </div></div>
+          <div class="fi" id="an-image-row" style="display:none"><div class="fl req">上传图片：</div><div class="fc">
+            <div class="an-up" onclick="anImgClick(this)" title="点击上传，上传后点击可预览">＋</div>
+            <div class="upload-hint">支持JPG/PNG/SVG格式的图片 (建议尺寸：700 x 760)</div>
+          </div></div>
+          <div class="fi"><div class="fl">跳转方式：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="an-jump" value="inline" onchange="anJump('inline')"> 内联链接</label>
+            <label class="radio-item"><input type="radio" name="an-jump" value="url" onchange="anJump('url')"> 跳转链接</label>
+            <label class="radio-item"><input type="radio" name="an-jump" value="none" checked onchange="anJump('none')"> 无</label>
+          </div></div></div>
+          <div class="fi" id="an-inline-row" style="display:none"><div class="fl req">跳转类型：</div><div class="fc">
+            <select class="f-select" style="width:320px">
+              <option value="">请选择</option>
+              <option>充值页</option><option>推广中心页</option><option>提现页</option><option>活动页</option>
+              <option>首页</option><option>VIP页</option><option>兑换码页</option><option>注册页</option>
+              <option>每日累计充值奖金</option><option>会员答谢(单日)</option><option>存款奖金</option><option>签到奖励</option><option>神秘彩金</option>
+              <option>Telegram 频道</option><option>WhatsApp</option>
+            </select>
+          </div></div>
+          <div class="fi" id="an-url-row" style="display:none"><div class="fl req">跳转链接：</div><div class="fc">
+            <input class="f-input" style="width:320px" placeholder="请输入"></div></div>
+          <div class="fi"><div class="fl">弹窗优先级：</div><div class="fc">
+            <input class="f-input" type="number" style="width:120px" value="0"></div></div>
+          <div class="fi"><div class="fl">弹窗方式：</div><div class="fc">
+            <select class="f-select" style="width:240px">
+              <option>每次登录或访问</option><option>每日一次</option><option>只弹一次</option><option>每回大厅必弹</option>
+            </select></div></div>
+          <div class="fi"><div class="fl">弹窗群体：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="an-aud" value="guest" checked onchange="anAud('guest')"> 未登录用户</label>
+            <label class="radio-item"><input type="radio" name="an-aud" value="user" onchange="anAud('user')"> 登录用户</label>
+          </div></div></div>
+          <div class="fi" id="an-poplevel-row" style="display:none;align-items:flex-start"><div class="fl">弹窗层级：</div><div class="fc">
+            <label class="radio-item" style="gap:6px"><input type="checkbox" id="an-plall" onchange="anToggleAllPl(this)"> 全部</label>
+            <div class="an-lvgrid" id="an-pl-grid">
+              <label class="an-lvitem"><input type="checkbox"> 默认层级</label>
+              <label class="an-lvitem"><input type="checkbox"> 10雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 20雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 50雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 100雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 200雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 500雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 1000雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 5000雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 10000雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 50000雷</label>
+              <label class="an-lvitem" style="width:104px"><input type="checkbox"> 无宝箱层级</label>
+              <label class="an-lvitem"><input type="checkbox"> 测试账号</label>
+              <label class="an-lvitem"><input type="checkbox"> 刷子套利</label>
+              <label class="an-lvitem"><input type="checkbox"> 不出款</label>
+              <label class="an-lvitem"><input type="checkbox"> 无佣金</label>
+              <label class="an-lvitem"><input type="checkbox"> 无优惠</label>
+              <label class="an-lvitem"><input type="checkbox"> 黑名单</label>
+            </div>
+          </div></div>
+          <div class="fi"><div class="fl">生效方式：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="an-eff" value="now" checked onchange="anEff('now')"> 立即生效</label>
+            <label class="radio-item"><input type="radio" name="an-eff" value="timed" onchange="anEff('timed')"> 定时生效</label>
+          </div></div></div>
+          <div class="fi" id="an-time-row" style="display:none"><div class="fl req">生效时间：</div><div class="fc" style="display:flex;align-items:center;gap:12px">
+            <input class="an-dt" placeholder="请选择生效时间" onfocus="this.type='datetime-local'" onblur="if(!this.value)this.type='text'">
+            <span class="an-hintred">生效时间需大于当前时间5分钟</span></div></div>
+        </div>
+        <!-- 右：预览 -->
+        <div class="an-pv-panel">
+          <div class="an-pv-title">预览：</div>
+          <div class="an-pv" id="an-pv">
+            <div class="an-pv-head" id="an-pv-head"></div>
+            <div class="an-pv-content" id="an-pv-content"></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <div class="mf">
+      <button class="btn btn-white" onclick="closeM('m-popup')">取消</button>
+      <button class="btn btn-blue" onclick="anSubmitPopup()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL：公告发放 / 编辑公告（收件箱） ══════ -->
+<div class="overlay" id="m-notice">
+  <div class="modal modal-flex" style="width:820px">
+    <div class="mh"><span class="mt" id="an-notice-title">新增公告</span><span class="mc" onclick="closeM('m-notice')">×</span></div>
+    <div class="modal-scroll"><div class="mb">
+      <div class="fi"><div class="fl req">公告标题：</div><div class="fc"><input class="f-input" id="an-ntitle" style="width:100%" placeholder="请输入公告标题"></div></div>
+      <div class="fi"><div class="fl req">公告内容：</div><div class="fc">
+        <div class="an-rt" id="an-nrt">
+          <div class="an-rt-menu"><span>文件</span><span>编辑</span><span>插入</span><span>视图</span><span>格式</span>
+            <span class="an-rt-hint">760x任意高度/jpg/.gif/.png</span><button class="an-rt-upload">图片上传</button></div>
+          <div class="an-rt-tools">
+            <span class="an-rt-tool" style="padding:0 8px">12pt ▾</span><span class="an-rt-tool">🔍</span>
+            <span class="an-rt-tool"><b>B</b></span><span class="an-rt-tool"><i>I</i></span><span class="an-rt-tool"><u>U</u></span><span class="an-rt-tool"><s>S</s></span>
+            <span class="an-rt-tool">≡</span><span class="an-rt-tool">≣</span><span class="an-rt-tool">”</span><span class="an-rt-tool">↶</span><span class="an-rt-tool">↷</span>
+            <span class="an-rt-tool">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
+          </div>
+          <div class="an-rt-body" id="an-neditor" contenteditable="true"></div>
+          <div class="an-rt-foot"><span>P</span><span>0 字</span></div>
+        </div>
+      </div></div>
+      <div class="fi" style="align-items:flex-start"><div class="fl">可见层级：</div><div class="fc">
+        <label class="radio-item" style="gap:6px"><input type="checkbox" id="an-nall" onchange="anToggleAllLv(this)"> 全部</label>
+        <div class="an-lvgrid" id="an-nlv-grid">
+          <label class="an-lvitem"><input type="checkbox"> 默认层级</label>
+          <label class="an-lvitem"><input type="checkbox"> 10雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 20雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 50雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 100雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 200雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 500雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 1000雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 5000雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 10000雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 50000雷</label>
+          <label class="an-lvitem"><input type="checkbox"> 测试账号</label>
+          <label class="an-lvitem" style="width:104px"><input type="checkbox"> 无宝箱层级</label>
+          <label class="an-lvitem"><input type="checkbox"> 不出款</label>
+          <label class="an-lvitem"><input type="checkbox"> 刷子套利</label>
+          <label class="an-lvitem"><input type="checkbox"> 无佣金</label>
+          <label class="an-lvitem"><input type="checkbox"> 黑名单</label>
+          <label class="an-lvitem"><input type="checkbox"> 无优惠</label>
+        </div>
+      </div></div>
+    </div></div>
+    <div class="mf" id="an-notice-foot">
+      <button class="btn btn-white" onclick="closeM('m-notice')">取消</button>
+      <button class="btn btn-blue" onclick="anSubmitNotice()">发送</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ 图片预览灯箱 ══════ -->
+<div class="an-lb" id="an-lightbox" onclick="closeAnLb()">
+  <span class="an-lb-close">×</span>
+  <div class="an-lb-img"></div>
+</div>
+
+
 <script>
 // ─── DATA ───
 const channels=[
@@ -3875,7 +4262,7 @@ function guideAddrChange(){
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-maudit','pg-worder','pg-warec'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-maudit','pg-worder','pg-warec','pg-announce'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -3898,9 +4285,10 @@ function switchPage(page, el){
     'withdraw':'商户财务配置 / 提现管理',
     'maudit':'商户财务管理 / 会员提现审核',
     'worder':'商户财务管理 / 提现订单记录',
-    'warec':'商户财务管理 / 提现审核记录'
+    'warec':'商户财务管理 / 提现审核记录',
+    'announce':'消息管理 / 公告消息'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -6446,6 +6834,148 @@ if(document.getElementById('wo-acct-panel')) woMethodChange();
   };
   wmRender();
 })();
+
+
+/* ══ 消息管理/公告消息 页面逻辑（并入唯一后台原型）══ */
+var an_savedContent='';   // 弹窗内容：点击“保存”后才进预览
+function anSwitchTab(name){
+  document.getElementById('an-tab-popup').classList.toggle('active', name==='popup');
+  document.getElementById('an-tab-notice').classList.toggle('active', name==='notice');
+  document.getElementById('an-pane-popup').classList.toggle('active', name==='popup');
+  document.getElementById('an-pane-notice').classList.toggle('active', name==='notice');
+}
+function anType(t){
+  document.getElementById('an-base-row').style.display   = t==='text' ? 'flex':'none';
+  document.getElementById('an-content-row').style.display= t==='text' ? 'flex':'none';
+  document.getElementById('an-image-row').style.display  = t==='img'  ? 'flex':'none';
+  anPvSync();
+}
+function anBase(b){
+  document.getElementById('an-base-upload').style.display = b==='custom' ? 'block':'none';
+  document.getElementById('an-pv').classList.toggle('an-custom', b==='custom');
+}
+function anFillImg(box){ box.classList.add('an-filled'); box.textContent=''; anPvSync(); }
+/* 图片型上传框：未上传→上传；已上传→点击预览大图 */
+function anImgClick(box){
+  if(box.classList.contains('an-filled')){ openAnLb(); }
+  else { anFillImg(box); }
+}
+/* 自定义底图上传后显示可点击缩略图 */
+function anBaseUpload(){ document.getElementById('an-base-thumb').style.display='inline-block'; }
+function openAnLb(){ document.getElementById('an-lightbox').classList.add('show'); }
+function closeAnLb(){ document.getElementById('an-lightbox').classList.remove('show'); }
+function anJump(j){
+  document.getElementById('an-inline-row').style.display = j==='inline' ? 'flex':'none';
+  document.getElementById('an-url-row').style.display    = j==='url'    ? 'flex':'none';
+}
+function anAud(v){ document.getElementById('an-poplevel-row').style.display = v==='user' ? 'flex':'none'; }
+function anToggleAllPl(cb){ document.querySelectorAll('#an-pl-grid input[type=checkbox]').forEach(function(x){x.checked=cb.checked;}); }
+function anEff(e){ document.getElementById('an-time-row').style.display = e==='timed' ? 'flex':'none'; }
+function anWordCount(){
+  var cnt=(document.getElementById('an-editor').textContent||'').length;
+  document.getElementById('an-wordcount').textContent = cnt+' 字';
+}
+function anHtmlEmpty(html){ var d=document.createElement('div'); d.innerHTML=html||''; return !(d.textContent.trim().length || d.querySelector('img')); }
+function anSaveContent(){
+  var ed=document.getElementById('an-editor');
+  if(anHtmlEmpty(ed.innerHTML)){ toast('请输入自定义内容',true); return; }
+  an_savedContent = ed.innerHTML; anWordCount(); anPvSync(); toast('富文本保存成功');
+}
+function anCancelContent(){ document.getElementById('an-editor').innerHTML = an_savedContent; anWordCount(); }
+function anPvSync(){
+  var type = document.querySelector('input[name="an-type"]:checked').value;
+  var head = document.getElementById('an-pv-head');
+  var body = document.getElementById('an-pv-content');
+  var pop  = document.getElementById('an-pv');
+  var name = document.getElementById('an-name').value || '';
+  if(type==='img'){
+    head.style.display='none'; pop.classList.remove('an-custom');
+    var filled = document.querySelector('#an-image-row .an-up.an-filled');
+    body.innerHTML = filled
+      ? '<div style="width:100%;height:100%;background:linear-gradient(180deg,#a9c7e6,#e8c98d 45%,#2f3a24)"></div>'
+      : '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#8c8c8c;background:#11151f">（上传图片后展示整图弹窗）</div>';
+    body.style.padding='0';
+  }else{
+    head.style.display='block'; head.textContent=name; body.style.padding='';
+    body.innerHTML = an_savedContent;
+  }
+}
+function anOpenPopup(mode){
+  document.getElementById('an-popup-title').textContent = mode==='edit' ? '编辑弹窗公告':'新增弹窗公告';
+  document.querySelector('input[name="an-type"][value="text"]').checked = true; anType('text');
+  document.querySelector('input[name="an-base"][value="sys"]').checked = true; anBase('sys');
+  document.querySelector('input[name="an-jump"][value="none"]').checked = true; anJump('none');
+  document.querySelector('input[name="an-eff"][value="now"]').checked = true; anEff('now');
+  document.getElementById('an-plall').checked=false; anToggleAllPl({checked:false});
+  var box = document.querySelector('#an-image-row .an-up'); if(box){box.classList.remove('an-filled'); box.textContent='＋';}
+  document.getElementById('an-base-thumb').style.display='none';
+  if(mode==='edit'){
+    document.getElementById('an-name').value='11111';
+    an_savedContent='123123898989<br>发动机卡拉京东卡积分';
+    document.getElementById('an-editor').innerHTML=an_savedContent;
+    document.querySelector('input[name="an-base"][value="custom"]').checked = true; anBase('custom');
+    document.getElementById('an-base-thumb').style.display='inline-block';
+    document.querySelector('input[name="an-jump"][value="inline"]').checked = true; anJump('inline');
+    document.querySelector('input[name="an-aud"][value="user"]').checked = true; anAud('user');
+  }else{
+    document.getElementById('an-name').value='';
+    an_savedContent=''; document.getElementById('an-editor').innerHTML='';
+    document.querySelector('input[name="an-aud"][value="guest"]').checked = true; anAud('guest');
+  }
+  anWordCount(); anPvSync(); openM('m-popup');
+}
+/* ── 表单校验：从上到下，仅提示第一个错误（toast）── */
+function anRichEmpty(el){ return !(el.textContent.trim().length || el.querySelector('img')); }
+function anSubmitPopup(){
+  if(!document.getElementById('an-name').value.trim()){ toast('请输入公告名称',true); return; }
+  var type=document.querySelector('input[name="an-type"]:checked').value;
+  if(type==='text'){
+    if(anHtmlEmpty(an_savedContent)){ toast('请上传公告内容',true); return; }
+  }else{
+    if(!document.querySelector('#an-image-row .an-up.an-filled')){ toast('请上传图片',true); return; }
+  }
+  closeM('m-popup'); toast('保存成功');
+}
+function anSubmitNotice(){
+  if(!document.getElementById('an-ntitle').value.trim()){ toast('请输入公告标题',true); return; }
+  if(anRichEmpty(document.getElementById('an-neditor'))){ toast('请输入公告内容',true); return; }
+  closeM('m-notice'); toast('发送成功');
+}
+/* ── 收件箱公告 ── */
+function anToggleAllLv(cb){ document.querySelectorAll('#an-nlv-grid input[type=checkbox]').forEach(function(x){x.checked=cb.checked;}); }
+function anNoticeReadonly(ro){
+  document.getElementById('an-ntitle').disabled=ro;
+  var ed=document.getElementById('an-neditor');
+  ed.contentEditable = ro ? 'false':'true';
+  ed.style.color = ro ? '#8c8c8c':'#333';
+  document.getElementById('an-nrt').classList.toggle('an-ro',ro);
+  document.querySelectorAll('#m-notice input[type=checkbox]').forEach(function(c){c.disabled=ro;});
+  document.getElementById('an-notice-foot').style.display = ro ? 'none':'flex';
+}
+function anOpenNotice(){
+  document.getElementById('an-notice-title').textContent='新增公告';
+  document.getElementById('an-ntitle').value='';
+  document.getElementById('an-neditor').innerHTML='';
+  document.getElementById('an-nall').checked=false; anToggleAllLv({checked:false});
+  anNoticeReadonly(false);
+  openM('m-notice');
+}
+var anNoticeData={
+  1:{t:'Sejam todos bem-vindos!', html:'<div style="width:100%;max-width:660px;height:150px;border-radius:6px;background:linear-gradient(135deg,#c0392b,#e67e22 45%,#f1c40f);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">促销 Banner（760×任意高度）</div>', levels:['默认层级']},
+  2:{t:'abc', html:'测试测试测试', levels:['测试账号']}
+};
+function anOpenNoticeView(id){
+  var d=anNoticeData[id];
+  document.getElementById('an-notice-title').textContent='编辑公告';
+  document.getElementById('an-ntitle').value=d.t;
+  document.getElementById('an-neditor').innerHTML=d.html;
+  document.getElementById('an-nall').checked=false;
+  document.querySelectorAll('#an-nlv-grid .an-lvitem').forEach(function(l){
+    var cb=l.querySelector('input'); cb.checked = d.levels.indexOf(l.textContent.trim())>=0;
+  });
+  anNoticeReadonly(true);
+  openM('m-notice');
+}
 
 </script>
 </body>
