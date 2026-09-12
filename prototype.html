@@ -139,6 +139,14 @@ tr:hover td{background:#f5f8ff}
 .fl{width:148px;flex-shrink:0;text-align:right;padding-right:12px;line-height:32px;color:#595959;font-size:13px}
 .fl.req::before{content:'* ';color:#ff4d4f}
 .fc{flex:1;min-width:0}
+/* 站内信发送表单 */
+.ib-form{background:#fff;border:1px solid #f0f0f0;border-radius:6px;padding:22px 24px 8px}
+.f-textarea{border:1px solid #d9d9d9;border-radius:4px;padding:8px 10px;font-size:13px;color:#333;background:#fff;outline:none;resize:vertical;font-family:inherit;line-height:1.6;box-sizing:border-box}
+.f-textarea::placeholder{color:#bfbfbf}
+/* 插入/编辑链接 弹框 */
+.rt-link-modal{width:460px}
+.rt-link-modal .fl{width:80px;text-align:left}
+.an-rt-body a{color:#0961BD;text-decoration:underline;cursor:pointer}
 .fs,.fin{width:100%;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 12px;font-size:13px;color:#333;background:#fff;outline:none;font-family:inherit}
 .fs{padding-right:28px} /* extra space for dropdown arrow */
 .fs:focus,.fin:focus{border-color:#0961BD;box-shadow:0 0 0 2px rgba(9,97,189,.1)}
@@ -720,7 +728,7 @@ select.fs.ph{color:#bfbfbf}
   </div>
   <div class="menu-item" id="menu-msg" onclick="toggleMenu(this,'sub-msg')"><div class="menu-item-left"><span class="menu-icon">💬</span>消息管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-msg" style="display:none">
-    <div class="submenu-item disabled">站内信</div>
+    <div class="submenu-item" id="si-inbox" onclick="switchPage('inbox',this)">站内信</div>
     <div class="submenu-item disabled">手机验证码</div>
     <div class="submenu-item" id="si-announce" onclick="switchPage('announce',this)">公告消息</div>
     <div class="submenu-item disabled">极光推送</div>
@@ -909,6 +917,102 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ══════ 消息管理 / 站内信 ══════ -->
+    <div id="pg-inbox" style="display:none">
+      <!-- 子 Tab：站内信发送 / 发送记录（发送记录页非本次范围，占位） -->
+      <div class="an-tabs">
+        <div class="an-tab active" id="ib-tab-send" onclick="ibSwitchTab('send')">站内信发送</div>
+        <div class="an-tab" id="ib-tab-record" onclick="ibSwitchTab('record')">发送记录</div>
+      </div>
+
+      <!-- PANE 1：站内信发送 -->
+      <div class="an-pane active" id="ib-pane-send">
+        <div class="ib-form">
+          <div class="fi"><div class="fl">地区：</div><div class="fc">
+            <select class="f-select" style="width:360px"><option>巴西站-测试</option></select></div></div>
+          <div class="fi"><div class="fl">商户：</div><div class="fc">
+            <select class="f-select" style="width:360px"><option>888</option></select></div></div>
+          <div class="fi"><div class="fl">发送类型：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="ib-sendtype" value="mid" checked onchange="ibSendType('mid')"> 会员ID</label>
+            <label class="radio-item"><input type="radio" name="ib-sendtype" value="level" onchange="ibSendType('level')"> 会员层级</label>
+          </div></div></div>
+          <div class="fi" id="ib-mid-row" style="align-items:flex-start"><div class="fl"></div><div class="fc" style="display:flex;align-items:flex-start;gap:12px">
+            <textarea class="f-textarea" style="width:520px;height:120px" placeholder="请输入会员ID，多个会员ID用英文逗号"></textarea>
+            <button class="btn btn-blue" onclick="toast('请选择要导入的文件')">批量导入</button>
+          </div></div>
+          <div class="fi" id="ib-level-row" style="display:none;align-items:flex-start"><div class="fl"></div><div class="fc">
+            <label class="radio-item" style="gap:6px"><input type="checkbox" id="ib-lvall" onchange="ibToggleAllLv(this)"> 全部</label>
+            <div class="an-lvgrid" id="ib-lv-grid">
+              <label class="an-lvitem"><input type="checkbox"> 默认层级</label>
+              <label class="an-lvitem"><input type="checkbox"> 10雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 20雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 50雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 100雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 200雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 500雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 1000雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 5000雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 10000雷</label>
+              <label class="an-lvitem"><input type="checkbox"> 50000雷</label>
+              <label class="an-lvitem" style="width:104px"><input type="checkbox"> 无宝箱层级</label>
+              <label class="an-lvitem"><input type="checkbox"> 测试账号</label>
+              <label class="an-lvitem"><input type="checkbox"> 刷子套利</label>
+              <label class="an-lvitem"><input type="checkbox"> 不出款</label>
+              <label class="an-lvitem"><input type="checkbox"> 无佣金</label>
+              <label class="an-lvitem"><input type="checkbox"> 无优惠</label>
+              <label class="an-lvitem"><input type="checkbox"> 黑名单</label>
+            </div>
+          </div></div>
+          <div class="fi"><div class="fl">标题类型：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="ib-titletype" value="text" checked onchange="ibTitleType('text')"> 文字标题</label>
+            <label class="radio-item"><input type="radio" name="ib-titletype" value="img" onchange="ibTitleType('img')"> 图片标题</label>
+          </div></div></div>
+          <div class="fi" id="ib-title-row"><div class="fl req">信件标题：</div><div class="fc">
+            <input class="f-input" id="ib-title" style="width:520px" placeholder="请输入"></div></div>
+          <div class="fi" id="ib-titleimg-row" style="display:none"><div class="fl req">标题图片：</div><div class="fc">
+            <div class="an-up" onclick="ibTitleImgClick(this)" title="点击上传，上传后点击可预览">＋</div>
+            <div class="upload-hint">支持JPG/PNG/SVG格式的图片</div>
+          </div></div>
+          <div class="fi" style="align-items:flex-start"><div class="fl req">信件内容：</div><div class="fc">
+            <div style="margin-bottom:8px"><button class="btn btn-white" onclick="ibFrontPreview()">前端展示预览</button></div>
+            <div class="an-rt" style="width:520px">
+              <div class="an-rt-menu"><span>文件</span><span>编辑</span><span>插入</span><span>视图</span><span>格式</span>
+                <span class="an-rt-hint">640x260/jpg/.gif/.png</span><button class="an-rt-upload" onclick="toast('请选择要上传的图片')">图片上传</button></div>
+              <div class="an-rt-tools">
+                <span class="an-rt-tool" style="padding:0 8px">12pt ▾</span><span class="an-rt-tool">🔍</span>
+                <span class="an-rt-tool"><b>B</b></span><span class="an-rt-tool"><i>I</i></span><span class="an-rt-tool"><u>U</u></span><span class="an-rt-tool"><s>S</s></span>
+                <span class="an-rt-tool">≡</span><span class="an-rt-tool">≣</span><span class="an-rt-tool">”</span><span class="an-rt-tool">↶</span><span class="an-rt-tool">↷</span>
+                <span class="an-rt-tool" title="插入/编辑链接" onclick="rtLinkOpen(this)">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
+              </div>
+              <div class="an-rt-body" id="ib-editor" contenteditable="true" oninput="ibWordCount()"></div>
+              <div class="an-rt-foot"><span>P</span><span id="ib-wordcount">0 字</span></div>
+            </div>
+          </div></div>
+          <div class="fi"><div class="fl">信件署名：</div><div class="fc">
+            <input class="f-input" id="ib-sign" style="width:520px" placeholder="请输入"></div></div>
+          <div class="fi"><div class="fl req">发送方式：</div><div class="fc"><div class="radio-g">
+            <label class="radio-item"><input type="radio" name="ib-sendway" value="now" checked onchange="ibSendWay('now')"> 立即发送</label>
+            <label class="radio-item"><input type="radio" name="ib-sendway" value="timed" onchange="ibSendWay('timed')"> 定时发送</label>
+          </div></div></div>
+          <div class="fi" id="ib-time-row" style="display:none"><div class="fl req">发送时间：</div><div class="fc">
+            <input class="an-dt" placeholder="请选择发送时间" onfocus="this.type='datetime-local'" onblur="if(!this.value)this.type='text'"></div></div>
+          <div class="fi"><div class="fl"></div><div class="fc">
+            <div class="an-hintred" style="max-width:520px;line-height:1.6">站内信发送时限为24小时，超时将无法发送或发送失败。立即发送：保存为草稿后，在发送记录点「继续」投递。</div></div></div>
+          <div class="fi"><div class="fl"></div><div class="fc" style="display:flex;gap:10px">
+            <button class="btn btn-white" onclick="ibReset()">取消</button>
+            <button class="btn btn-blue" onclick="ibSave()">保存</button>
+            <button class="btn btn-white" onclick="ibFrontPreview()">预览</button>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- PANE 2：发送记录（占位，页面非本次需求范围） -->
+      <div class="an-pane" id="ib-pane-record">
+        <div class="ib-form" style="text-align:center;color:#8c8c8c;padding:60px 24px">发送记录页非本次需求范围，暂未实现。</div>
+      </div>
+
     </div>
 
     <div id="pg-account" style="display:none">
@@ -1213,9 +1317,10 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="fi"><span class="fl req">安卓安装类型：</span><div class="fc"><select class="fs" id="g-at" onchange="gcond('g-apk-sub',this.value.includes('apk'))"><option>pwa(快速安装)</option><option selected>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
         <div id="g-apk-sub" class="cond on">
+          <div class="fi"><span class="fl">选择APK：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="g-apkm" value="mafia" checked onchange="apkMethod(this,'g-apk-act','g-apk-addr','g-apk-name')"> 马甲包</label><label class="radio-item"><input type="radio" name="g-apkm" value="upload" onchange="apkMethod(this,'g-apk-act','g-apk-addr','g-apk-name')"> 上传马甲包</label><label class="radio-item"><input type="radio" name="g-apkm" value="custom" onchange="apkMethod(this,'g-apk-act','g-apk-addr','g-apk-name')"> 自定义链接</label></div></div></div>
+          <div class="fi" id="g-apk-act"><span class="fl"></span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" data-m="mafia" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm" data-m="upload" style="display:none">上传</button><div class="hint" data-m="upload" style="display:none">仅支持apk文件(100MB)</div></div></div>
           <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="g-apk-addr" value="https://upload-us.f-1-g-h.com/s4/6112906/kk" oninput="guideAddrChange()"></div></div>
           <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="g-apk-name" disabled value="kk678.bet_400165.apk"></div></div>
-          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
         </div>
         <div class="fi"><span class="fl req">苹果安装类型：</span><div class="fc"><select class="fs" id="g-ios-type" onchange="gcond('g-ios-store-fields',this.value==='苹果商店')"><option selected>保存桌面</option><option>苹果商店</option></select></div></div>
         <div id="g-ios-store-fields" class="cond">
@@ -3364,9 +3469,10 @@ select.fs.ph{color:#bfbfbf}
           <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
           <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ac-and-it" onchange="gcond('ac-and-apk',this.value.includes('apk')||this.value.includes('APK'))"><option>pwa(快速安装)</option><option>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
           <div id="ac-and-apk" class="cond">
-            <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div>
-            <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" disabled placeholder="自动读取"></div></div>
-            <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','guide')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint">仅支持apk文件(100MB)</div></div></div>
+            <div class="fi"><span class="fl">选择APK：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="ac-and-apkm" value="mafia" checked onchange="apkMethod(this,'ac-and-apk-act','ac-and-apkaddr','ac-and-apkname')"> 马甲包</label><label class="radio-item"><input type="radio" name="ac-and-apkm" value="upload" onchange="apkMethod(this,'ac-and-apk-act','ac-and-apkaddr','ac-and-apkname')"> 上传马甲包</label><label class="radio-item"><input type="radio" name="ac-and-apkm" value="custom" onchange="apkMethod(this,'ac-and-apk-act','ac-and-apkaddr','ac-and-apkname')"> 自定义链接</label></div></div></div>
+            <div class="fi" id="ac-and-apk-act"><span class="fl"></span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" data-m="mafia" onclick="openSub('m-mafia-pkg','ac-and')">选择马甲包</button><button class="btn btn-blue btn-sm" data-m="upload" style="display:none">上传</button><div class="hint" data-m="upload" style="display:none">仅支持apk文件(100MB)</div></div></div>
+            <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="ac-and-apkaddr" placeholder="请输入" oninput="acAndAddrChange()"></div></div>
+            <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="ac-and-apkname" disabled placeholder="自动读取"></div></div>
           </div>
         </div>
         <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ac-and-gift" onchange="gcond('ac-and-gf',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
@@ -3450,9 +3556,10 @@ select.fs.ph{color:#bfbfbf}
         <div class="fi"><span class="fl req">渠道安装类型：</span><div class="fc"><select class="fs" id="br-pkg-type" onchange="brPkgType(this.value)"><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option><option value="苹果商店">苹果商店</option></select></div></div>
         <div id="br-pkg-apk-fields">
           <div class="fi-title"><span class="fi-title-label">目标地址</span></div>
+          <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-pkg-apkm" value="mafia" checked onchange="apkMethod(this,'br-pkg-apk-act','br-pkg-apkaddr','br-pkg-apkname')"> 马甲包</label><label class="radio-item"><input type="radio" name="br-pkg-apkm" value="upload" onchange="apkMethod(this,'br-pkg-apk-act','br-pkg-apkaddr','br-pkg-apkname')"> 上传马甲包</label><label class="radio-item"><input type="radio" name="br-pkg-apkm" value="custom" onchange="apkMethod(this,'br-pkg-apk-act','br-pkg-apkaddr','br-pkg-apkname')"> 自定义链接</label></div></div></div>
+          <div class="fi-sub" id="br-pkg-apk-act"><span class="fl" style="width:116px"></span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" data-m="mafia" onclick="openSub('m-mafia-pkg','br')">选择马甲包</button><button class="btn btn-blue btn-sm" data-m="upload" style="display:none">上传</button><div class="hint" data-m="upload" style="margin-top:0;display:none">仅支持apk文件(100MB)</div></div></div>
           <div class="fi-sub"><span class="fl" style="width:116px">APK包地址：</span><div class="fc"><input class="fin" id="br-pkg-apkaddr" placeholder="请输入" oninput="brPkgAddrChange()"></div></div>
           <div class="fi-sub"><span class="fl" style="width:116px">APK包名：</span><div class="fc"><input class="fin" id="br-pkg-apkname" disabled></div></div>
-          <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','br')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
         </div>
         <div id="br-pkg-ios-fields" style="display:none">
           <div class="fi"><span class="fl req">iOS地址类型：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-ios-at" value="普通" checked onchange="brIosAddr(this.value)"> 普通地址</label><label class="radio-item"><input type="radio" name="br-ios-at" value="OneLink" onchange="brIosAddr(this.value)"> OneLink地址</label></div></div></div>
@@ -3476,9 +3583,10 @@ select.fs.ph{color:#bfbfbf}
           <div class="fi-sub"><span class="fl req" style="width:116px">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时（强制弹窗，无法关闭）</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
           <div class="fi-sub"><span class="fl req" style="width:116px">弹框安装类型：</span><div class="fc"><select class="fs" id="br-guide-itype" onchange="brGuideInstallType(this.value)"><option value="PWA">PWA</option><option value="APK">APK</option><option value="PWA+APK">PWA+APK</option></select></div></div>
           <div id="br-guide-apk-fields" class="cond">
+            <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="br-guide-apkm" value="mafia" checked onchange="apkMethod(this,'br-guide-apk-act','br-guide-apkaddr','br-guide-apkname')"> 马甲包</label><label class="radio-item"><input type="radio" name="br-guide-apkm" value="upload" onchange="apkMethod(this,'br-guide-apk-act','br-guide-apkaddr','br-guide-apkname')"> 上传马甲包</label><label class="radio-item"><input type="radio" name="br-guide-apkm" value="custom" onchange="apkMethod(this,'br-guide-apk-act','br-guide-apkaddr','br-guide-apkname')"> 自定义链接</label></div></div></div>
+            <div class="fi-sub" id="br-guide-apk-act"><span class="fl" style="width:116px"></span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" data-m="mafia" onclick="openSub('m-mafia-pkg','brg')">选择马甲包</button><button class="btn btn-blue btn-sm" data-m="upload" style="display:none">上传</button><div class="hint" data-m="upload" style="margin-top:0;display:none">仅支持apk文件(100MB)</div></div></div>
             <div class="fi-sub"><span class="fl" style="width:116px">APK包地址：</span><div class="fc"><input class="fin" id="br-guide-apkaddr" placeholder="请输入" oninput="brGuideAddrChange()"></div></div>
             <div class="fi-sub"><span class="fl" style="width:116px">APK包名：</span><div class="fc"><input class="fin" id="br-guide-apkname" disabled></div></div>
-            <div class="fi-sub"><span class="fl" style="width:116px">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','brg')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
           </div>
         </div>
         <div id="br-guide-ios-fields" style="display:none">
@@ -3560,9 +3668,10 @@ select.fs.ph{color:#bfbfbf}
         <div class="fi"><span class="fl req">弹框间隔时间：</span><div class="fc"><select class="fs"><option>0小时(强制安装)</option><option>1小时</option><option>2小时</option><option>3小时</option><option>4小时</option><option>5小时</option><option>6小时</option><option>7小时</option><option>8小时</option><option>9小时</option><option>10小时</option><option>11小时</option><option>12小时</option><option>13小时</option><option>14小时</option><option>15小时</option><option>16小时</option><option>17小时</option><option>18小时</option><option>19小时</option><option>20小时</option><option>21小时</option><option>22小时</option><option>23小时</option><option>24小时</option></select></div></div>
         <div class="fi"><span class="fl req">弹框安装类型：</span><div class="fc"><select class="fs" id="ba-itype" onchange="gcond('ba-apk',this.value.includes('apk')||this.value.includes('APK'))"><option>pwa(快速安装)</option><option>apk(需要自己封装)</option><option>pwa(优先)+apk(推荐使用)</option></select></div></div>
         <div id="ba-apk" class="cond">
+          <div class="fi"><span class="fl">选择APK：</span><div class="fc"><div class="radio-g"><label class="radio-item"><input type="radio" name="ba-and-apkm" value="mafia" checked onchange="apkMethod(this,'ba-and-apk-act','ba-and-apkaddr','ba-and-apkname')"> 马甲包</label><label class="radio-item"><input type="radio" name="ba-and-apkm" value="upload" onchange="apkMethod(this,'ba-and-apk-act','ba-and-apkaddr','ba-and-apkname')"> 上传马甲包</label><label class="radio-item"><input type="radio" name="ba-and-apkm" value="custom" onchange="apkMethod(this,'ba-and-apk-act','ba-and-apkaddr','ba-and-apkname')"> 自定义链接</label></div></div></div>
+          <div class="fi" id="ba-and-apk-act"><span class="fl"></span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" data-m="mafia" onclick="openSub('m-mafia-pkg','ba-and')">选择马甲包</button><button class="btn btn-blue btn-sm" data-m="upload" style="display:none">上传</button><div class="hint" data-m="upload" style="margin-top:0;display:none">仅支持apk文件(100MB)</div></div></div>
           <div class="fi"><span class="fl">APK包地址：</span><div class="fc"><input class="fin" id="ba-and-apkaddr" placeholder="请输入" oninput="baAndAddrChange()"></div></div>
           <div class="fi"><span class="fl">APK包名：</span><div class="fc"><input class="fin" id="ba-and-apkname" disabled></div></div>
-          <div class="fi"><span class="fl">选择APK：</span><div class="fc" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue btn-sm" onclick="openSub('m-mafia-pkg','ba-and')">选择马甲包</button><button class="btn btn-blue btn-sm">上传</button><div class="hint" style="margin-top:0">仅支持apk文件(100MB)</div></div></div>
         </div>
       </div>
       <div class="fi"><span class="fl req">安装pwa/App赠送：</span><div class="fc"><select class="fs" id="ba-and-gift" onchange="gcond('ba-and-gift-fields',this.value!=='关闭')"><option>关闭</option><option>充值用户赠送</option><option>无需充值赠送</option></select></div></div>
@@ -3634,7 +3743,7 @@ select.fs.ph{color:#bfbfbf}
                 <span class="an-rt-tool" style="padding:0 8px">12pt ▾</span><span class="an-rt-tool">🔍</span>
                 <span class="an-rt-tool"><b>B</b></span><span class="an-rt-tool"><i>I</i></span><span class="an-rt-tool"><u>U</u></span><span class="an-rt-tool"><s>S</s></span>
                 <span class="an-rt-tool">≡</span><span class="an-rt-tool">≣</span><span class="an-rt-tool">”</span><span class="an-rt-tool">↶</span><span class="an-rt-tool">↷</span>
-                <span class="an-rt-tool">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
+                <span class="an-rt-tool" title="插入/编辑链接" onclick="rtLinkOpen(this)">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
               </div>
               <div class="an-rt-body" id="an-editor" contenteditable="true" oninput="anWordCount()"></div>
               <div class="an-rt-foot"><span>P</span><span id="an-wordcount">0 字</span></div>
@@ -3736,7 +3845,7 @@ select.fs.ph{color:#bfbfbf}
             <span class="an-rt-tool" style="padding:0 8px">12pt ▾</span><span class="an-rt-tool">🔍</span>
             <span class="an-rt-tool"><b>B</b></span><span class="an-rt-tool"><i>I</i></span><span class="an-rt-tool"><u>U</u></span><span class="an-rt-tool"><s>S</s></span>
             <span class="an-rt-tool">≡</span><span class="an-rt-tool">≣</span><span class="an-rt-tool">”</span><span class="an-rt-tool">↶</span><span class="an-rt-tool">↷</span>
-            <span class="an-rt-tool">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
+            <span class="an-rt-tool" title="插入/编辑链接" onclick="rtLinkOpen(this)">🔗</span><span class="an-rt-tool">👁</span><span class="an-rt-tool">🔖</span><span class="an-rt-tool">A▾</span><span class="an-rt-tool">⛶</span>
           </div>
           <div class="an-rt-body" id="an-neditor" contenteditable="true"></div>
           <div class="an-rt-foot"><span>P</span><span>0 字</span></div>
@@ -3769,6 +3878,26 @@ select.fs.ph{color:#bfbfbf}
     <div class="mf" id="an-notice-foot">
       <button class="btn btn-white" onclick="closeM('m-notice')">取消</button>
       <button class="btn btn-blue" onclick="anSubmitNotice()">发送</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL：插入/编辑链接（富文本通用） ══════ -->
+<div class="overlay" id="m-link">
+  <div class="modal rt-link-modal">
+    <div class="mh"><span class="mt">插入/编辑链接</span><span class="mc" onclick="closeM('m-link')">×</span></div>
+    <div class="mb">
+      <div class="fi"><div class="fl">地址</div><div class="fc"><input class="f-input" id="rtlink-url" style="width:100%" placeholder="" oninput="rtLinkUrlInput()"></div></div>
+      <div class="fi"><div class="fl">显示文字</div><div class="fc"><input class="f-input" id="rtlink-text" style="width:100%" placeholder="" oninput="rtLinkTextInput()"></div></div>
+      <div class="fi"><div class="fl">链接打开位置…</div><div class="fc">
+        <select class="f-select" id="rtlink-target" style="width:100%">
+          <option value="_blank">在新窗口打开</option>
+          <option value="_self">在当前窗口打开</option>
+        </select></div></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-white" onclick="closeM('m-link')">取消</button>
+      <button class="btn btn-blue" onclick="rtLinkSave()">保存</button>
     </div>
   </div>
 </div>
@@ -4256,13 +4385,29 @@ function guideAddrChange(){
   const el=document.getElementById('g-apk-addr');
   if(el&&el.dataset.fromMafia==='1'){el.dataset.fromMafia='0';const n=document.getElementById('g-apk-name');if(n)n.value='';}
 }
+// ─── 选择APK 三选一（马甲包/上传马甲包/自定义链接）───
+// 切换方式时：只显示当前方式的操作入口；自定义链接无操作按钮；切换即清空已填的包地址/包名
+function apkMethod(radioEl, actId, addrId, nameId){
+  const m=radioEl.value;
+  const act=document.getElementById(actId);
+  if(act){
+    act.querySelectorAll('[data-m]').forEach(function(el){
+      el.style.display=(el.getAttribute('data-m')===m)?'':'none';
+    });
+    act.style.display=(m==='custom')?'none':'';
+  }
+  const addr=document.getElementById(addrId);
+  const name=document.getElementById(nameId);
+  if(addr){addr.value='';addr.dataset.fromMafia='0';addr.placeholder=(m==='custom')?'请输入APK包地址':(m==='mafia'?'选择马甲包后自动填入':'上传APK后自动填入');}
+  if(name){name.value='';}
+}
 
 
 // ─── SWITCH PAGE (extend for activity-list) ───
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-maudit','pg-worder','pg-warec','pg-announce'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -4286,9 +4431,10 @@ function switchPage(page, el){
     'maudit':'商户财务管理 / 会员提现审核',
     'worder':'商户财务管理 / 提现订单记录',
     'warec':'商户财务管理 / 提现审核记录',
-    'announce':'消息管理 / 公告消息'
+    'announce':'消息管理 / 公告消息',
+    'inbox':'消息管理 / 站内信'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -6975,6 +7121,122 @@ function anOpenNoticeView(id){
   });
   anNoticeReadonly(true);
   openM('m-notice');
+}
+
+/* ══ 消息管理/站内信 页面逻辑（并入唯一后台原型）══ */
+function ibSwitchTab(name){
+  document.getElementById('ib-tab-send').classList.toggle('active', name==='send');
+  document.getElementById('ib-tab-record').classList.toggle('active', name==='record');
+  document.getElementById('ib-pane-send').classList.toggle('active', name==='send');
+  document.getElementById('ib-pane-record').classList.toggle('active', name==='record');
+}
+function ibSendType(v){
+  document.getElementById('ib-mid-row').style.display   = v==='mid'   ? 'flex':'none';
+  document.getElementById('ib-level-row').style.display = v==='level' ? 'flex':'none';
+}
+function ibTitleType(v){
+  document.getElementById('ib-title-row').style.display    = v==='text' ? 'flex':'none';
+  document.getElementById('ib-titleimg-row').style.display = v==='img'  ? 'flex':'none';
+}
+function ibTitleImgClick(box){
+  if(box.classList.contains('an-filled')){ openAnLb(); }
+  else { box.classList.add('an-filled'); box.textContent=''; }
+}
+function ibToggleAllLv(cb){ document.querySelectorAll('#ib-lv-grid input[type=checkbox]').forEach(function(x){x.checked=cb.checked;}); }
+function ibSendWay(v){ document.getElementById('ib-time-row').style.display = v==='timed' ? 'flex':'none'; }
+function ibWordCount(){
+  var cnt=(document.getElementById('ib-editor').textContent||'').length;
+  document.getElementById('ib-wordcount').textContent = cnt+' 字';
+}
+function ibFrontPreview(){
+  if(anRichEmpty(document.getElementById('ib-editor'))){ toast('请先输入信件内容',true); return; }
+  toast('已打开前端展示预览');
+}
+function ibReset(){
+  document.getElementById('ib-title').value='';
+  document.getElementById('ib-sign').value='';
+  document.getElementById('ib-editor').innerHTML=''; ibWordCount();
+  toast('已重置');
+}
+function ibSave(){
+  var titleType=document.querySelector('input[name="ib-titletype"]:checked').value;
+  if(titleType==='text' && !document.getElementById('ib-title').value.trim()){ toast('请输入信件标题',true); return; }
+  if(titleType==='img' && !document.querySelector('#ib-titleimg-row .an-up.an-filled')){ toast('请上传标题图片',true); return; }
+  if(anRichEmpty(document.getElementById('ib-editor'))){ toast('请输入信件内容',true); return; }
+  var way=document.querySelector('input[name="ib-sendway"]:checked').value;
+  toast(way==='now' ? '已保存为草稿，请在发送记录点「继续」投递' : '已保存，定时发送');
+}
+
+/* ══ 富文本「插入/编辑链接」通用逻辑（站内信 / 弹窗公告 / 公告消息）══ */
+var rtCurEditor=null, rtSavedRange=null, rtEditingAnchor=null, rtTextTouched=false;
+/* 地址逐字同步到显示文字：仅当显示文字未被手动输入/修改过时生效 */
+function rtLinkUrlInput(){
+  if(rtTextTouched) return;
+  document.getElementById('rtlink-text').value = document.getElementById('rtlink-url').value;
+}
+/* 用户在显示文字框内手动输入/修改，则停止同步 */
+function rtLinkTextInput(){ rtTextTouched=true; }
+function rtSaveSelection(editor){
+  var sel=window.getSelection();
+  if(sel && sel.rangeCount){
+    var r=sel.getRangeAt(0);
+    if(editor.contains(r.commonAncestorContainer)) return r.cloneRange();
+  }
+  return null;
+}
+function rtLinkOpen(icon){
+  var editor=icon.closest('.an-rt').querySelector('.an-rt-body');
+  rtCurEditor=editor; editor.focus();
+  rtSavedRange=rtSaveSelection(editor);
+  rtEditingAnchor=null;
+  var url='', text='', target='_blank';
+  var sel=window.getSelection();
+  // 若光标落在已有链接内 → 编辑该链接
+  var node=sel && sel.anchorNode ? sel.anchorNode : null;
+  var a=node ? (node.nodeType===1 ? node : node.parentNode) : null;
+  while(a && a!==editor && a.tagName!=='A') a=a.parentNode;
+  if(a && a.tagName==='A'){
+    rtEditingAnchor=a; url=a.getAttribute('href')||''; text=a.textContent||'';
+    target=a.getAttribute('target')||'_self';
+  }else if(rtSavedRange && !rtSavedRange.collapsed){
+    text=rtSavedRange.toString();
+  }
+  document.getElementById('rtlink-url').value=url;
+  document.getElementById('rtlink-text').value=text;
+  document.getElementById('rtlink-target').value=target;
+  // 打开时若显示文字已有内容（选中文字/编辑既有链接），视为已设置，地址不再覆盖；为空则允许逐字同步
+  rtTextTouched = !!text;
+  openM('m-link');
+}
+function rtLinkSave(){
+  var url=document.getElementById('rtlink-url').value.trim();
+  var text=document.getElementById('rtlink-text').value.trim();
+  var target=document.getElementById('rtlink-target').value;
+  if(!url){ toast('请输入链接地址',true); return; }
+  if(!text) text=url;
+  var href=url;
+  if(!/^([a-z]+:|\/\/|#)/i.test(href)) href='http://'+href;  // 补全协议
+  if(rtEditingAnchor){
+    rtEditingAnchor.setAttribute('href',href);
+    rtEditingAnchor.setAttribute('target',target);
+    rtEditingAnchor.textContent=text;
+  }else{
+    var a=document.createElement('a');
+    a.setAttribute('href',href); a.setAttribute('target',target); a.textContent=text;
+    rtCurEditor.focus();
+    var sel=window.getSelection();
+    if(rtSavedRange){ sel.removeAllRanges(); sel.addRange(rtSavedRange); }
+    if(sel.rangeCount){
+      var r=sel.getRangeAt(0); r.deleteContents(); r.insertNode(a);
+      // 光标移到链接后
+      r.setStartAfter(a); r.collapse(true); sel.removeAllRanges(); sel.addRange(r);
+    }else{
+      rtCurEditor.appendChild(a);
+    }
+  }
+  if(rtCurEditor && rtCurEditor.id==='ib-editor') ibWordCount();
+  if(rtCurEditor && rtCurEditor.id==='an-editor') anWordCount();
+  closeM('m-link'); toast('链接已插入');
 }
 
 </script>

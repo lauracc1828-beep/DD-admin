@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>站内信 · 信件内容富文本化 PRD</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.75}
+.page{max-width:960px;margin:0 auto;padding:40px 20px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:28px;display:flex;gap:20px;flex-wrap:wrap}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:700;color:#1a1a2e;margin:22px 0 10px}
+p{margin-bottom:12px;color:#444}
+ul,ol{padding-left:22px;margin-bottom:12px}
+li{margin-bottom:7px}
+.card{background:#fff;border-radius:8px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.hero{background:linear-gradient(135deg,#0961BD,#003a8c);color:#fff;border-radius:8px;padding:22px 26px;margin-bottom:22px}
+.hero p{color:rgba(255,255,255,.92);margin:0}
+table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:13px}
+th,td{border:1px solid #e5e8ee;padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#f0f5ff;color:#1a1a2e;font-weight:700;white-space:nowrap}
+td code,p code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#c0392b}
+.req{color:#c0392b;font-weight:700}
+.opt{color:#8c8c8c}
+strong{color:#1a1a2e}
+.tag{display:inline-block;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;border-radius:4px;padding:0 7px;font-size:12px;margin-right:4px}
+.note{background:#fffbe6;border:1px solid #ffe58f;border-radius:6px;padding:12px 16px;font-size:13px;color:#614700;margin:10px 0}
+.new{background:#e6fffb;border:1px solid #87e8de;border-radius:6px;padding:12px 16px;font-size:13px;color:#00595a;margin:10px 0}
+.flow-wrap{overflow-x:auto}
+svg{display:block;margin:6px auto}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>站内信 · 信件内容富文本化 PRD</h1>
+<div class="meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-09-12</span></div>
+
+<div class="hero">
+<p>本需求针对后台「消息管理 → 站内信」页。核心变更：将「站内信发送」表单中的<strong>信件内容</strong>由纯文本框升级为<strong>富文本编辑器</strong>，其形态、工具栏与「公告消息」模块的富文本编辑器保持一致，并额外提供<strong>「插入 / 编辑链接」功能</strong>——运营可在信件正文中插入可点击的超链接。</p>
+</div>
+
+<div class="card">
+<h2>一、背景与目标</h2>
+<p>现有站内信「信件内容」为纯文本输入框，无法排版、无法插入图片与链接，运营在发送带活动引导的站内信时只能贴出裸地址、无法做成可点击链接，体验与「公告消息」不一致。</p>
+<p>本次目标：</p>
+<ul>
+<li><strong>信件内容富文本化：</strong>信件内容改为富文本编辑器，能力与<strong>公告消息（详见《公告消息 PRD》）</strong>的富文本编辑器一致，支持字体、加粗、斜体、下划线、对齐、图片上传等。</li>
+<li><strong>新增链接功能：</strong>富文本工具栏的链接按钮可真实使用，点击弹出「插入 / 编辑链接」弹框，保存后在正文中生成可点击链接。</li>
+<li><strong>公告侧同步：</strong>为保持一致，公告模块（弹窗公告、公告消息）富文本工具栏的链接按钮同步启用为真实可用的「插入 / 编辑链接」功能。</li>
+</ul>
+<div class="note">站内信页含「站内信发送」与「发送记录」两个 Tab。本期仅交付<strong>「站内信发送」</strong>页；<strong>「发送记录」Tab 保留入口但其页面非本次需求范围</strong>，后续需求另行实现（草稿「继续」投递、发送状态流转与记录列表等均在该 Tab）。</div>
+</div>
+
+<div class="card">
+<h2>二、后台 —「站内信发送」表单</h2>
+<p>菜单位置：<strong>消息管理 → 站内信</strong>。表单沿用现有站内信页样式与字段，仅将「信件内容」控件升级为富文本编辑器。字段自上而下如下：</p>
+<table>
+<tr><th style="width:104px">字段</th><th>含义</th><th style="width:104px">控件</th><th style="width:56px">必填</th><th>输入要求 / 逻辑说明</th></tr>
+<tr><td>地区</td><td>发送作用的地区。</td><td>下拉</td><td class="opt">否</td><td>按地区维度隔离，如「巴西站-测试」。</td></tr>
+<tr><td>商户</td><td>发送作用的商户。</td><td>下拉</td><td class="opt">否</td><td>按商户维度隔离，如「888」。</td></tr>
+<tr><td>发送类型</td><td>选择投递对象的方式。</td><td>单选</td><td class="req">是</td><td>「会员ID」/「会员层级」二选一，切换后下方对象输入区联动。</td></tr>
+<tr><td>会员ID</td><td>按 ID 精准投递的会员清单。</td><td>多行文本 + 批量导入</td><td class="req">是<span class="opt">（会员ID时）</span></td><td>仅发送类型=会员ID 时显示。多个 ID 用英文逗号分隔；「批量导入」支持通过文件导入 ID 清单。</td></tr>
+<tr><td>会员层级</td><td>按层级批量投递的范围。</td><td>多选</td><td class="req">是<span class="opt">（会员层级时）</span></td><td>仅发送类型=会员层级 时显示。提供「全部」及各会员层级（<strong>选项取自会员层级配置</strong>），勾选「全部」联动全选。</td></tr>
+<tr><td>标题类型</td><td>信件标题的呈现形态。</td><td>单选</td><td class="req">是</td><td>「文字标题」/「图片标题」，切换后标题字段联动显示。</td></tr>
+<tr><td>信件标题</td><td>文字型标题文本。</td><td>输入框</td><td class="req">是<span class="opt">（文字标题时）</span></td><td>仅标题类型=文字标题 时显示；为空不可保存，提示「请输入信件标题」。</td></tr>
+<tr><td>标题图片</td><td>图片型标题图。</td><td>上传</td><td class="req">是<span class="opt">（图片标题时）</span></td><td>仅标题类型=图片标题 时显示；支持 JPG/PNG/SVG；未上传不可保存，提示「请上传标题图片」。</td></tr>
+<tr><td><strong>信件内容</strong></td><td>信件正文（<strong>本次升级项</strong>）。</td><td>富文本编辑器</td><td class="req">是</td><td>见第三节。标签右侧提供「前端展示预览」按钮，可预览前台展示效果；为空不可保存，提示「请输入信件内容」。</td></tr>
+<tr><td>信件署名</td><td>信件落款署名。</td><td>输入框</td><td class="opt">否</td><td>展示于正文末尾的署名文本。</td></tr>
+<tr><td>发送方式</td><td>信件的投递时机。</td><td>单选</td><td class="req">是</td><td>「立即发送」/「定时发送」。选「定时发送」时展开「发送时间」。</td></tr>
+<tr><td>发送时间</td><td>定时发送的时间点。</td><td>日期时间选择</td><td class="req">是<span class="opt">（定时时）</span></td><td>仅发送方式=定时发送 时显示。</td></tr>
+</table>
+<p><strong>时限说明（页面常驻）：</strong>站内信发送时限为 24 小时，超时将无法发送或发送失败。立即发送：保存为草稿后，在发送记录点「继续」投递。</p>
+<p><strong>底部操作：</strong>「取消」（重置表单）、「保存」（校验后保存）、「预览」（前端展示预览）。</p>
+</div>
+
+<div class="card">
+<h2>三、信件内容 · 富文本编辑器</h2>
+<p>信件内容编辑器与<strong>公告消息</strong>的富文本编辑器<strong>形态与工具栏一致</strong>，包括：菜单区（文件 / 编辑 / 插入 / 视图 / 格式）、字号、查找、加粗 / 斜体 / 下划线 / 删除线、对齐与缩进、引用、撤销 / 重做、<strong>插入链接</strong>、图片上传等；编辑器右上角提供「图片上传」，并标注图片规格 <code>640x260/jpg/.gif/.png</code>；底部显示字数统计。</p>
+<div class="new"><strong>与公告的差异：</strong>仅图片规格提示文案不同（站内信为 <code>640x260</code>，公告弹窗为 <code>700x284</code>、公告消息为 <code>760x任意高度</code>）；其余工具栏与交互一致。</div>
+
+<h3>3.1 插入 / 编辑链接（本次新增功能）</h3>
+<p>点击工具栏的<strong>链接按钮</strong>弹出「插入 / 编辑链接」弹框。若插入前在编辑器中<strong>选中了文字</strong>，该文字自动带入「显示文字」；若光标位于<strong>已有链接</strong>上，则进入编辑态，回填该链接的地址、显示文字与打开位置。</p>
+<table>
+<tr><th style="width:130px">字段</th><th>含义</th><th style="width:150px">控件</th><th style="width:56px">必填</th><th>输入要求 / 逻辑说明</th></tr>
+<tr><td>地址</td><td>链接跳转的目标 URL。</td><td>输入框</td><td class="req">是</td><td>为空不可保存，提示「请输入链接地址」；未带协议时系统自动补全 <code>http://</code>。</td></tr>
+<tr><td>显示文字</td><td>正文中呈现的链接文案。</td><td>输入框</td><td class="opt">否</td><td><strong>与地址联动：</strong>当显示文字<strong>未被手动输入 / 修改过</strong>时，输入或修改「地址」会<strong>逐字同步</strong>填入显示文字；一旦用户在显示文字框内手动输入或修改，则<strong>停止同步</strong>，之后修改地址不再更新显示文字。打开弹框时若显示文字已有内容（选中文字带入 / 编辑既有链接回填），视为已设置，地址不再覆盖。保存时若仍为空，默认取「地址」作为显示文字。</td></tr>
+<tr><td>链接打开位置…</td><td>点击链接的打开方式。</td><td>下拉</td><td class="req">是</td><td>「在新窗口打开」（<code>target=_blank</code>，默认）/「在当前窗口打开」（<code>target=_self</code>）。</td></tr>
+</table>
+<p><strong>弹框操作：</strong>「取消」关闭不生效；「保存」后——新增时在光标处（或替换选中文字）插入可点击链接，编辑时按新值更新原链接——并提示「链接已插入」，同步刷新字数统计。</p>
+</div>
+
+<div class="card">
+<h2>四、保存校验规则</h2>
+<table>
+<tr><th style="width:190px">场景</th><th>校验规则</th><th style="width:230px">错误 / 结果提示</th></tr>
+<tr><td>站内信发送 · 保存</td><td>文字标题时，信件标题不可为空</td><td>请输入信件标题</td></tr>
+<tr><td>站内信发送 · 保存</td><td>图片标题时，标题图片必须上传</td><td>请上传标题图片</td></tr>
+<tr><td>站内信发送 · 保存</td><td>信件内容不可为空</td><td>请输入信件内容</td></tr>
+<tr><td>站内信发送 · 保存（立即发送）</td><td>校验通过</td><td>已保存为草稿，请在发送记录点「继续」投递</td></tr>
+<tr><td>站内信发送 · 保存（定时发送）</td><td>校验通过</td><td>已保存，定时发送</td></tr>
+<tr><td>信件内容 · 前端展示预览</td><td>内容为空</td><td>请先输入信件内容</td></tr>
+<tr><td>插入链接 · 保存</td><td>地址不可为空</td><td>请输入链接地址</td></tr>
+<tr><td>插入链接 · 保存</td><td>校验通过</td><td>链接已插入</td></tr>
+</table>
+<p>所有提示以 <strong>toast</strong> 形式呈现；点击「保存」时按字段<strong>从上到下校验，仅提示第一个未通过项</strong>并阻断提交。</p>
+</div>
+
+<div class="card">
+<h2>五、交互逻辑流程图</h2>
+<div class="flow-wrap">
+<svg viewBox="0 0 900 470" width="900" height="470" font-family="-apple-system,'PingFang SC',sans-serif">
+<defs>
+<marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+<path d="M0 0 L8 4 L0 8 z" fill="#7a8aa0"/>
+</marker>
+</defs>
+<style>
+.bx{fill:#fff;stroke:#b9c6d9;stroke-width:1.2}
+.hd{fill:#e6f0ff;stroke:#0961BD;stroke-width:1.4}
+.st{fill:#0961BD}
+.t{font-size:12px;fill:#333;text-anchor:middle}
+.tw{font-size:13px;fill:#fff;text-anchor:middle;font-weight:700}
+.tb{font-size:13px;fill:#0961BD;text-anchor:middle;font-weight:700}
+.ln{stroke:#7a8aa0;stroke-width:1.4;fill:none}
+</style>
+<!-- main flow -->
+<rect class="bx st" x="325" y="22" width="250" height="34" rx="7"/>
+<text class="tw" x="450" y="44">进入 站内信 → 站内信发送</text>
+<rect class="bx" x="325" y="80" width="250" height="46" rx="7"/>
+<text class="t" x="450" y="100">选择 地区 / 商户 / 发送类型</text>
+<text class="t" x="450" y="118">填写 会员ID 或勾选 会员层级</text>
+<rect class="bx" x="325" y="150" width="250" height="46" rx="7"/>
+<text class="t" x="450" y="170">选择标题类型</text>
+<text class="t" x="450" y="188">填写信件标题 / 上传标题图片</text>
+<rect class="bx hd" x="325" y="220" width="250" height="46" rx="7"/>
+<text class="tb" x="450" y="240">编辑 信件内容（富文本）</text>
+<text class="t" x="450" y="258">排版 · 图片上传 · 插入链接</text>
+<rect class="bx" x="325" y="290" width="250" height="34" rx="7"/>
+<text class="t" x="450" y="311">填写信件署名 · 选择发送方式</text>
+<rect class="bx" x="325" y="348" width="250" height="46" rx="7"/>
+<text class="t" x="450" y="368">点击「保存」逐项校验</text>
+<text class="t" x="450" y="386">通过 → 立即发送=草稿 / 定时=待发</text>
+<!-- main arrows -->
+<path class="ln" d="M450 56 V80" marker-end="url(#arw)"/>
+<path class="ln" d="M450 126 V150" marker-end="url(#arw)"/>
+<path class="ln" d="M450 196 V220" marker-end="url(#arw)"/>
+<path class="ln" d="M450 266 V290" marker-end="url(#arw)"/>
+<path class="ln" d="M450 324 V348" marker-end="url(#arw)"/>
+<!-- link sub-flow -->
+<rect class="bx hd" x="640" y="150" width="230" height="34" rx="7"/>
+<text class="tb" x="755" y="172">点击工具栏「插入链接」</text>
+<rect class="bx" x="640" y="204" width="230" height="46" rx="7"/>
+<text class="t" x="755" y="224">弹框：地址 · 显示文字</text>
+<text class="t" x="755" y="242">· 链接打开位置</text>
+<rect class="bx" x="640" y="272" width="230" height="34" rx="7"/>
+<text class="t" x="755" y="293">保存 → 正文插入可点击链接</text>
+<path class="ln" d="M575 243 H610 V167 H640" marker-end="url(#arw)"/>
+<path class="ln" d="M755 184 V204" marker-end="url(#arw)"/>
+<path class="ln" d="M755 250 V272" marker-end="url(#arw)"/>
+<path class="ln" d="M640 289 H610 V255 H575" marker-end="url(#arw)"/>
+</svg>
+</div>
+</div>
+
+<div class="card">
+<h2>六、公告侧同步说明</h2>
+<p>为保持富文本能力一致，本次将<strong>公告模块</strong>富文本工具栏的链接按钮同步启用为真实可用的「插入 / 编辑链接」功能，弹框字段与交互与站内信一致，覆盖：</p>
+<ul>
+<li><strong>弹窗公告</strong>（新增 / 编辑弹窗公告 · 弹窗内容编辑器）。</li>
+<li><strong>公告消息</strong>（公告发放 · 公告内容编辑器）。</li>
+</ul>
+<p>公告其余字段与逻辑维持现状，详见《公告消息 PRD》，不在本次范围内变更。</p>
+</div>
+
+<div class="card">
+<h2>七、边界与异常</h2>
+<ul>
+<li><strong>发送类型切换：</strong>由「会员ID」切至「会员层级」时隐藏 ID 输入区、展示层级多选，反之亦然；两者互斥，仅提交当前所选方式的数据。</li>
+<li><strong>标题类型切换：</strong>「文字标题」与「图片标题」互斥展示，仅校验并提交当前所选。</li>
+<li><strong>链接地址协议：</strong>用户未输入协议时自动补全 <code>http://</code>；已带 <code>http(s)://</code>、<code>//</code>、<code>#</code> 或其他协议前缀的地址保持原样。</li>
+<li><strong>编辑已有链接：</strong>光标落于链接文字上再点「插入链接」进入编辑态，回填并按新值更新，不新增重复链接。</li>
+<li><strong>发送时限：</strong>站内信发送时限 24 小时，超时无法发送或发送失败；立即发送先存为草稿，需在发送记录中「继续」完成投递。</li>
+<li><strong>发送记录（本期不做）：</strong>草稿的「继续」投递、发送状态流转与记录列表属「发送记录」Tab，后续需求实现。</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>

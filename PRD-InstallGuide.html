@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD · 安装引导模块 v1.7</title>
+<title>PRD · 安装引导模块 v1.8</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
@@ -50,9 +50,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h1>安装引导模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v1.7</span>
+  <span>📄 版本：v1.8</span>
   <span>✏️ 作者：Laura</span>
-  <span>📅 更新日期：2026-09-05</span>
+  <span>📅 更新日期：2026-09-12</span>
 </div>
 
 <!-- TOC -->
@@ -130,9 +130,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th><th>前台效果</th></tr>
   <tr><td>安卓安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用)；默认「pwa(快速安装)」；<span class="chg">二期：APK / PWA+APK 选项已启用</span></td><td><span class="chg">安卓点击安装后先按浏览器路由（Chrome→新标签跳「防封谷歌页」商店页完成安装；非 Chrome→唤起 Chrome，不支持唤起则就地），见 3.4；以下为就地 / 商店页的安装机制。</span>「pwa」：引导用户将 H5 页面添加到手机桌面（PWA 方式）；前台判断当前浏览器是否支持 PWA 安装（能否触发 beforeinstallprompt 事件）：支持则触发系统 PWA 安装提示，不支持则弹出复制链接弹框，引导用户换支持 PWA 的浏览器打开安装。「apk」：引导用户下载并安装 APK 包，需商户提前上传封装好的 APK。「pwa(优先)+apk(推荐)」：优先引导安装 PWA，若浏览器不支持 PWA 则降级至 APK 下载。</td></tr>
-  <tr><td class="indent">↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>安卓安装类型含 APK 时展示</td><td>APK 文件下载地址，用户点击安装时从该地址下载 APK 包。</td></tr>
-  <tr><td class="indent">↳ APK包名</td><td>—</td><td>自动填充</td><td>含 APK 时展示；选择马甲包后自动读取，手动修改 APK 包地址后自动清空</td><td><span class="chg">APK 唯一包标识符，仅作渠道包的标识与管理记录，<strong>不用于</strong>判断用户设备是否已安装（前台不做已安装判定）。</span></td></tr>
-  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮组</td><td>含 APK 时展示；「选择马甲包」从系统管理-马甲包管理中选（自动填入地址和包名）；「上传」直接上传 apk 文件（限 100MB）。<span class="chg">二期：马甲包管理暂未上线，「选择马甲包」下拉暂空，当前用「上传」手动上传跑通。</span></td><td>马甲包是经过伪装的 APK，选择马甲包后 APK 包地址和包名自动填入。</td></tr>
+  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-req">必填</span></td><td><span class="chg">单选（三选一）</span></td><td><span class="chg">安卓安装类型含 APK 时展示；三种来源方式互斥单选，默认选中「马甲包」。可选：<br>• <strong>马甲包</strong>：展示「选择马甲包」按钮，点击从系统管理-马甲包管理中选包，选定后自动填入 APK 包地址（只读来源）与包名；<br>• <strong>上传马甲包</strong>：展示「上传」按钮（仅支持 apk 文件，限 100MB），上传解析后自动填入 APK 包地址与包名；<br>• <strong>自定义链接</strong>：无操作按钮，APK 包地址改为手动输入。<br>切换三种方式时，清空已填的 APK 包地址与 APK 包名，避免残留上一方式的数据。<span class="chg">二期：马甲包管理暂未上线，「马甲包」方式下拉暂空，当前用「上传马甲包」手动上传跑通。</span></td><td><span class="chg">原三种来源平铺同时可见，易误操作；现收敛为单选，选定方式后仅呈现对应操作入口，路径唯一。</span>马甲包是经过伪装的 APK。</td></tr>
+  <tr><td class="indent">↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>安卓安装类型含 APK 时展示，位于「选择APK」下方；「马甲包」「上传马甲包」方式下由系统自动填入，「自定义链接」方式下手动输入</td><td>APK 文件下载地址，用户点击安装时从该地址下载 APK 包。</td></tr>
+  <tr><td class="indent">↳ APK包名</td><td>—</td><td>自动填充</td><td>含 APK 时展示，位于 APK 包地址下方；选择马甲包或上传后自动读取（只读），手动修改 APK 包地址或切换选择APK方式后自动清空</td><td><span class="chg">APK 唯一包标识符，仅作渠道包的标识与管理记录，<strong>不用于</strong>判断用户设备是否已安装（前台不做已安装判定）。</span></td></tr>
 </table>
 
 <p><strong>苹果专属字段</strong></p>
@@ -544,7 +544,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>下载APP到您的桌面，额外获得R$[金额]彩金。</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[金额].</td><td>弹窗副标题（赠送彩金升级）</td></tr>
 </table>
 
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.7 · 2026-09-05</p>
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.8 · 2026-09-12</p>
 </div>
 </div>
 </body>
