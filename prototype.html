@@ -4722,9 +4722,9 @@ function acctConfirmDel(){
 }
 
 // ─── HASH ROUTING — deep-link support ───
-// Usage: prototype.html#channel / #effect / #guide / #activity-list / #appstore / #account / #mafia
+// Usage: prototype.html#channel / #effect / #guide / #activity-list / #appstore / #account / #mafia / #withdraw / #maudit / #worder / #warec / #announce / #inbox
 (function(){
-  var validPages = ['channel','effect','guide','activity-list','appstore','account','mafia'];
+  var validPages = ['channel','effect','guide','activity-list','appstore','account','mafia','withdraw','maudit','worder','warec','announce','inbox'];
   function hashRoute(){
     var hash = location.hash.replace('#','');
     if(validPages.indexOf(hash) !== -1){
