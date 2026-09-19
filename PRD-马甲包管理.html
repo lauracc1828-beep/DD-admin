@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD · 马甲包管理（一期·本地上传）</title>
+<title>PRD · 马甲包管理（一期本地上传 + 二期自动打包）</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
@@ -44,11 +44,11 @@ code{background:#f5f5f5;border-radius:3px;padding:1px 6px;font-size:12px;color:#
 <body>
 <div class="page">
 
-<h1>马甲包管理 — 一期需求文档（本地上传）</h1>
+<h1>马甲包管理 — 需求文档（一期本地上传 + 二期自动打包）</h1>
 <div class="meta">
-  <span>版本：v1.2</span>
+  <span>版本：v2.2</span>
   <span>作者：Laura</span>
-  <span>更新日期：2026-08-22</span>
+  <span>更新日期：2026-09-19</span>
 </div>
 
 <div class="toc">
@@ -56,12 +56,20 @@ code{background:#f5f5f5;border-radius:3px;padding:1px 6px;font-size:12px;color:#
   <ol>
     <li><a href="#s1">一、背景与目标</a></li>
     <li><a href="#s2">二、一期范围与边界</a></li>
-    <li><a href="#s3">三、功能设计</a></li>
-    <li><a href="#s4">四、系统解析 APK 与校验</a></li>
-    <li><a href="#s5">五、保存后列表呈现</a></li>
+    <li><a href="#s3">三、一期·功能设计</a></li>
+    <li><a href="#s4">四、一期·系统解析 APK 与校验</a></li>
+    <li><a href="#s5">五、一期·保存后列表呈现</a></li>
     <li><a href="#s6">六、与推广渠道管理的联动</a></li>
-    <li><a href="#s7">七、业务流程图</a></li>
-    <li><a href="#s8">八、异常与边界</a></li>
+    <li><a href="#s7">七、一期·业务流程图</a></li>
+    <li><a href="#s8">八、一期·异常与边界</a></li>
+    <li><a href="#s9">九、二期背景与目标（自动打包）</a></li>
+    <li><a href="#s10">十、二期范围与边界</a></li>
+    <li><a href="#s11">十一、「新增/编辑」弹窗字段说明</a></li>
+    <li><a href="#s12">十二、配置选择：默认配置 / 读取配置</a></li>
+    <li><a href="#s13">十三、打包机制与状态流转</a></li>
+    <li><a href="#s14">十四、列表呈现与操作区（二期）</a></li>
+    <li><a href="#s15">十五、二期·业务流程图</a></li>
+    <li><a href="#s16">十六、二期·校验与异常</a></li>
   </ol>
 </div>
 
@@ -75,6 +83,7 @@ code{background:#f5f5f5;border-radius:3px;padding:1px 6px;font-size:12px;color:#
   <li><b>二期（后续）：</b>完整打包功能（「新增」入口），不在本文档范围内。</li>
 </ul>
 <div class="info">目标：让运营能把现成的 APK 成品包录入系统，即刻成为推广渠道管理的可选马甲包。</div>
+<div class="note">版本说明：本文档 v1.x 仅覆盖一期（本地上传）；<b>v2.0 起补充二期（自动打包/「新增」）需求</b>，详见第九节起。一期内容保留作为历史记录，未随二期变更。</div>
 </div>
 
 <!-- 二 -->
@@ -89,8 +98,8 @@ code{background:#f5f5f5;border-radius:3px;padding:1px 6px;font-size:12px;color:#
 </ul>
 <h3>本期不做 / 界面处置</h3>
 <ul>
-  <li>完整打包功能为二期：列表操作区「<b>新增</b>」按钮本期<b>置灰禁用</b>，「<b>操作说明</b>」按钮<b>隐藏</b>。</li>
-  <li>暂仅支持 APK 包类型。</li>
+  <li>完整打包功能为二期：列表操作区「<b>新增</b>」按钮本期<b>置灰禁用</b>，「<b>操作说明</b>」按钮<b>隐藏</b>。<span class="tag tag-fixed">二期已上线</span>该限制已随二期需求解除，详见第十节。</li>
+  <li>暂仅支持 APK 包类型（二期沿用，未扩展）。</li>
 </ul>
 <div class="note">来源区分：上传记录在「备注」栏默认标记 <code>本地上传</code>。原型统一维护在 <code>prototype.html</code>（系统管理 → 马甲包管理）。</div>
 </div>
@@ -222,6 +231,7 @@ code{background:#f5f5f5;border-radius:3px;padding:1px 6px;font-size:12px;color:#
   <li>本菜单上传成功的 APK 包<b>即时可选</b>，无需额外发布操作。</li>
 </ul>
 <div class="info">删除约束：已被推广渠道或官方渠道关联的马甲包不允许删除（见 3.4）。参见《PRD · 推广渠道管理模块》。</div>
+<div class="note">二期补充：二期「自动打包」建档的记录在<b>「打包完成」之前不进入「选择马甲包」下拉</b>（「待打包」「打包中」「打包失败」状态均不可选），仅当打包成功生成下载地址后才即时加入，规则详见第十三节。</div>
 </div>
 
 <!-- 七 -->
@@ -298,6 +308,250 @@ code{background:#f5f5f5;border-radius:3px;padding:1px 6px;font-size:12px;color:#
   </tbody>
 </table>
 <div class="info">唯一性约束：仅<b>后台显示名称</b>全局唯一；包名称、APP名称等其余字段允许重复。</div>
+</div>
+
+<!-- 九 -->
+<div class="section-card" id="s9">
+<h2>九、二期背景与目标（自动打包）</h2>
+<p>一期「上传」仅支持录入<b>成品 APK</b>，运营需在系统外自行完成马甲包打包，再上传成品，效率低、依赖人工打包工具。二期在「系统管理 → 马甲包管理」开放<b>「新增」</b>入口，运营可在后台直接<b>建档配置</b>并触发<b>系统自动打包</b>，产出可供推广渠道调用的 APK 马甲包，减少对外部打包工具与人工介入的依赖。</p>
+<div class="info">目标：运营只需填写基础信息、上传 APP 图标与启动图（或复用已有配置），即可由系统自动生成马甲包并进入「选择马甲包」可选范围，全程无需离开后台。</div>
+</div>
+
+<!-- 十 -->
+<div class="section-card" id="s10">
+<h2>十、二期范围与边界</h2>
+<h3>本期做</h3>
+<ul>
+  <li>解除列表操作区「<b>新增</b>」按钮禁用，开放自动打包建档功能；展示「<b>操作说明</b>」按钮（弹窗说明各操作图标含义）。</li>
+  <li>新增「新增 / 编辑」弹窗，支持填写马甲包配置信息，含「配置选择」——<b>默认配置</b>与<b>读取配置</b>（复用已有配置的 APP 图标与启动图，见第十二节）。</li>
+  <li>保存后生成「<b>待打包</b>」记录；对「待打包」「打包失败」记录支持点击 <b>🔧 打包</b> 图标触发打包，进入「打包中」后<b>需运营手动点击「↻ 刷新」逐步推进</b>（正在准备打包素材 → 等待打包 → 打包完成），不自动切换。</li>
+  <li>自动打包建档记录支持「编辑」（复用新增弹窗预填）与「删除」（二次确认 + 关联校验，规则同一期 3.4）。</li>
+  <li>「推广渠道」在本期<b>正式启用</b>（区别于一期「暂未启用」）：新增弹窗与列表筛选区均提供真实渠道选项。</li>
+  <li>补充「打包完成」后与「选择马甲包」下拉的联动（见第六节「二期补充」）。</li>
+</ul>
+<h3>本期不做</h3>
+<ul>
+  <li>「图标工厂」为外部工具入口，本期仅做<b>跳转示意</b>，不接入真实图标生成器。</li>
+  <li>「打包失败」路径本期不在原型中主动模拟失败场景，仅预留状态与筛选项，交互上默认打包必然成功。</li>
+  <li>包类型仍暂仅支持 <code>APK</code>，未扩展其他包类型。</li>
+</ul>
+<div class="note">一期「上传」功能保留不变，与二期「新增」并列为两个独立入口：「上传」录入本地成品包（无需打包，备注「本地上传」）；「新增」建档后由系统打包（备注「-」，区分来源）。</div>
+</div>
+
+<!-- 十一 -->
+<div class="section-card" id="s11">
+<h2>十一、「新增/编辑」弹窗字段说明</h2>
+<p>点击列表「新增」按钮弹出表单；「编辑」弹窗字段与「新增」完全一致，并预填该条已有信息。字段及说明如下：</p>
+<table>
+  <thead><tr><th>字段</th><th>控件</th><th>必填</th><th>选项 / 说明</th></tr></thead>
+  <tbody>
+    <tr><td>地区</td><td>下拉</td><td><span class="tag tag-req">必填</span></td><td>选择所属地区，如「巴西」；选项与一期上传弹窗一致。</td></tr>
+    <tr><td>商户</td><td>下拉</td><td><span class="tag tag-req">必填</span></td><td>选择所属商户号，如「762」；选项随地区联动。</td></tr>
+    <tr><td>推广渠道</td><td>下拉</td><td><span class="tag tag-req">必填</span></td><td>本期<b>正式启用</b>，选项：<code>官方渠道</code> / <code>短信1000</code> / <code>DALI 5</code> / <code>DA LI 4</code> / <code>FB-22</code> / <code>106-快手</code> / <code>新kwai-快手</code>（与「渠道管理」列表渠道保持一致）；默认选中「官方渠道」。</td></tr>
+    <tr><td>包类型</td><td>下拉</td><td><span class="tag tag-req">必填</span></td><td>当前选项仅 <code>APK</code> 一项，同一期。</td></tr>
+    <tr><td>后台显示名称</td><td>输入框</td><td><span class="tag tag-req">必填</span></td><td>运营自定义识别名，<b>全局唯一</b>（校验规则同一期 3.2，编辑排除自身），展示于列表与前台「选择马甲包」下拉。</td></tr>
+    <tr><td>配置选择</td><td>单选</td><td><span class="tag tag-opt">选填</span>（默认「默认配置」）</td><td><b>默认配置：</b>APP图标、APP启动图均为空，需运营重新上传；APK包名称需点击「随机生成」写入。<br><b>读取配置：</b>选中后右侧出现「已有配置」下拉，选择后自动带入该配置的 APP图标、APP启动图，<b>APK包名称由系统静默复用该配置本身的包名</b>（界面留空且置灰，不展示、不可编辑，「随机生成」按钮同时禁用）；APP名称仍需运营手动填写。详见第十二节。</td></tr>
+    <tr><td>APP名称</td><td>输入框</td><td><span class="tag tag-req">必填</span></td><td>运营手动填写，用于列表「APP名称」列展示，不因「读取配置」自动带入。</td></tr>
+    <tr><td>APK包名称</td><td>文本域（<b>始终置灰、禁止手动输入</b>） + 「随机生成」按钮</td><td><span class="tag tag-req">必填</span>（读取配置下由系统静默填充，无需运营操作）</td><td>Android 包名格式（如 <code>com.xxx.xxx</code>）。<b>默认配置：</b>文本框禁止手动输入，仅可点击「随机生成」由系统写入形如 <code>com.随机8位.随机3位</code> 的包名（每段以字母开头）。<b>读取配置：</b>文本框置灰且始终为空，「随机生成」按钮禁用、点击不生效，保存时系统静默使用所选历史配置自身的包名。</td></tr>
+    <tr><td>APP图标</td><td>文件上传（.zip）</td><td><span class="tag tag-req">必填</span></td><td>点击「上传」选择图标压缩包（.zip），上传后以文件名（绿色下划线）展示；「下载」用于下载已上传的图标包；「图标工厂」跳转外部图标生成工具（本期示意，不接入真实工具）。提示文案：「前往图标工厂生成图标，下载压缩包，再把压缩包上传上去」。</td></tr>
+    <tr><td>APP启动图</td><td>图片上传（JPG/PNG）</td><td><span class="tag tag-req">必填</span></td><td>点击「上传图片」选择本地图片，上传后左侧缩略图预览；「预览」（绿色文字链接，仅上传后出现）弹出大图预览弹窗，支持「最大化」查看。尺寸建议：<b>750 x 1624</b>。</td></tr>
+  </tbody>
+</table>
+<div class="info">底部操作：仅一个「<b>保存配置</b>」按钮（无「取消」按钮，点击弹窗右上角「×」关闭）。校验通过后新增记录进入列表，状态为「待打包」（见第十三节）。</div>
+</div>
+
+<!-- 十二 -->
+<div class="section-card" id="s12">
+<h2>十二、配置选择：默认配置 / 读取配置</h2>
+<h3>12.1 默认配置</h3>
+<p>表单初始默认选中「默认配置」：APP图标、APP启动图均为空（显示「未上传」及空白占位框），需运营重新上传图标压缩包与启动图。</p>
+<h3>12.2 读取配置</h3>
+<ul>
+  <li>切换为「读取配置」后，右侧出现下拉框，<b>数据源为当前列表中「自动打包」来源的记录</b>（即历史通过「新增」建档的配置，含已打包完成与仍在打包中的记录），下拉默认选中第一项并即时带入。</li>
+  <li>选中某一已有配置后，带入该配置的 <b>APP图标</b>（压缩包文件名）与 <b>APP启动图</b>（缩略图 + 可预览）；<b>APK包名称同步静默复用该配置本身的包名</b>（即沿用同一「母包」身份），但界面上 APK包名称文本框保持<b>置灰、空白</b>，不展示具体包名，「随机生成」按钮同时禁用、点击不生效——因包名对该记录而言已由所选母包决定，无需也不允许运营改动。</li>
+  <li><b>APP名称</b>不会被带入，仍需运营手动填写——同一母包（图标/启动图/包名一致）可能对应多个不同 APP名称、不同后台显示名称的马甲包实例。</li>
+  <li>切回「默认配置」时，已带入的 APP图标、APP启动图将被<b>清空</b>，需重新上传；APK包名称文本框恢复为置灰空白，「随机生成」按钮恢复可用。</li>
+  <li>若当前列表尚无任何「自动打包」来源记录，切换「读取配置」时提示「暂无可复用的已有配置」，并自动回退为「默认配置」。</li>
+</ul>
+<div class="note">「编辑」已有自动打包记录时，表单直接预填该记录自身的 APP图标 / APP启动图（无需通过「读取配置」选择），「配置选择」控件此时不影响已预填内容，仅在需要更换素材时可重新上传覆盖。</div>
+</div>
+
+<!-- 十三 -->
+<div class="section-card" id="s13">
+<h2>十三、打包机制与状态流转</h2>
+<h3>13.1 打包进度状态</h3>
+<table>
+  <thead><tr><th>状态</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td><code>待打包</code></td><td>「新增」保存成功后的初始状态，或「打包中」被取消后回落的状态；母包版本与下载地址均为 <code>- -</code>（直至首次打包完成才生成，见 13.4）。</td></tr>
+    <tr><td><code>打包中</code></td><td>点击 <b>🔧 打包</b> 图标并二次确认后进入该状态（橙色文字），内部依次经过两个子阶段，见 13.2。<b>进度不自动切换，需运营手动点击「刷新」逐步推进。</b></td></tr>
+    <tr><td><code>打包完成</code></td><td>运营在「等待打包」子阶段再次点击「刷新」后完成（绿色文字）。首次由「待打包/打包中」转为「打包完成」时，系统自动生成<b>母包版本</b>与<b>下载地址</b>。</td></tr>
+    <tr><td><code>打包失败</code></td><td>预留状态与筛选项；本期原型未主动模拟失败场景。</td></tr>
+  </tbody>
+</table>
+<h3>13.2 「打包中」子阶段与备注文案</h3>
+<p>「打包中」期间，<b>备注列</b>随进程依次显示动态文案（不同于一期「本地上传」备注固定「本地上传」的用法）。<b>子阶段之间不自动切换，全部依赖运营手动点击「↻ 刷新」逐步推进：</b></p>
+<table>
+  <thead><tr><th>阶段</th><th>备注文案</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>触发打包</td><td>正在准备打包素材</td><td>点击 🔧 并二次确认后立即进入，此时长期停留在该阶段，直到运营主动点击「刷新」。</td></tr>
+    <tr><td>第 1 次点击「刷新」</td><td>等待打包</td><td>仍为「打包中」，尚未完成，需再次点击「刷新」才会进入打包完成。</td></tr>
+    <tr><td>第 2 次点击「刷新」</td><td>打包完成</td><td>「打包进度」变为<code>打包完成</code>；<b>该文案打包完成后长期保留在备注列，不会自动恢复为「-」</b>，用于告知运营该条记录已成功产出（除非再次触发打包或取消，见 13.3）。</td></tr>
+  </tbody>
+</table>
+<h3>13.3 操作图标随状态切换 · 取消打包</h3>
+<ul>
+  <li>处于「待打包」「打包完成」「打包失败」（空闲态）时，操作列显示 <b>✎ 编辑</b>、<b>🔧 打包</b>、<b>🗑 删除</b> 三个图标。</li>
+  <li>处于「打包中」时，操作列<b>切换为</b> <b>↻ 刷新</b>、<b>⊗ 取消</b> 两个图标（编辑/删除在打包中不可用）：
+    <ul>
+      <li><b>↻ 刷新：</b>手动推进打包子阶段（见 13.2），是「打包中」状态下唯一能让进度前进的操作；不点击刷新，状态会一直停留在当前子阶段，不会超时自动完成。</li>
+      <li><b>⊗ 取消：</b>点击后二次确认「确认是否要取消打包？」，可在「打包中」任意子阶段点击，确认后终止本次打包：进度打回<code>待打包</code>，备注显示<code>已取消打包</code>，操作列恢复为空闲态三图标，记录本身保留，可重新点击 🔧 发起打包。</li>
+    </ul>
+  </li>
+  <li><b>已「打包完成」的记录仍可再次点击 🔧 重新打包</b>（覆盖式演示，会重新经历 13.2 的子阶段与操作图标切换，同样需手动点击「刷新」推进；母包版本/下载地址若已存在则保持不变，不重复生成，见 13.4）。</li>
+</ul>
+<h3>13.4 母包版本与下载地址生成规则</h3>
+<ul>
+  <li><b>母包版本：</b>仅在当前值为 <code>- -</code> 时，首次打包完成生成（示意规则：<code>1.0.0.X</code>，X 为随机个位数）。</li>
+  <li><b>下载地址：</b>仅在当前值为 <code>- -</code> 时，首次打包完成生成，规则与一期「本地上传」下载地址一致（存储域名 + APP名称 + 包ID 拼接）。</li>
+</ul>
+</div>
+
+<!-- 十四 -->
+<div class="section-card" id="s14">
+<h2>十四、列表呈现与操作区（二期）</h2>
+<h3>14.1 包ID 号段区分</h3>
+<p>为区分记录来源，二期「自动打包」建档记录的<b>包ID 号段与一期「本地上传」不同</b>：</p>
+<table>
+  <thead><tr><th>来源</th><th>包ID 规则</th></tr></thead>
+  <tbody>
+    <tr><td>一期 · 上传（本地上传）</td><td>6 位数字，<code>100001</code> 起自增</td></tr>
+    <tr><td>二期 · 新增（自动打包）</td><td>6 位数字，<code>400001</code> 起自增</td></tr>
+  </tbody>
+</table>
+<h3>14.2 新增记录初始字段取值</h3>
+<table>
+  <thead><tr><th>列表列</th><th>「新增」保存后取值</th></tr></thead>
+  <tbody>
+    <tr><td>地区 / 商户 / 推广渠道 / 后台显示名称</td><td>来自新增表单填写</td></tr>
+    <tr><td>包名称 / APP名称</td><td>来自新增表单填写（APK包名称 / APP名称）</td></tr>
+    <tr><td>包ID</td><td>系统生成（6 位数字，400001 起自增）</td></tr>
+    <tr><td>包类型</td><td>APK</td></tr>
+    <tr><td>APP图标</td><td>「下载」按钮，对应表单上传的图标压缩包</td></tr>
+    <tr><td>母包版本 / 下载地址</td><td><code>- -</code>（待打包完成后生成，见 13.3）</td></tr>
+    <tr><td>打包进度</td><td><code>待打包</code></td></tr>
+    <tr><td>备注</td><td>初始为 <code>-</code>；进入打包流程后按 13.2 规则动态变化（正在准备打包素材 → 等待打包 → 打包完成，且完成后常驻）；若取消打包则显示 <code>已取消打包</code>。区别于一期「本地上传」备注固定「本地上传」标签。</td></tr>
+    <tr><td>创建时间 / 最后操作时间 / 操作人</td><td>系统按当前时间与登录账号记录</td></tr>
+  </tbody>
+</table>
+<h3>14.3 操作列图标</h3>
+<p>「自动打包」来源记录操作列图标随打包进度切换（详见 13.3）：空闲态（待打包/打包完成/打包失败）为 <b>✎ 编辑</b>、<b>🔧 打包</b>、<b>🗑 删除</b>；打包中为 <b>↻ 刷新</b>、<b>⊗ 取消</b>。一期「本地上传」记录固定仅 ✎ 编辑、🗑 删除，无打包相关图标（见一期 3.5）。图标鼠标移入均显示文字说明。</p>
+</div>
+
+<!-- 十五 -->
+<div class="section-card" id="s15">
+<h2>十五、二期·业务流程图</h2>
+<div class="flow-wrap">
+<svg width="820" height="620" viewBox="0 0 820 620" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="arw2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#0961BD"/>
+    </marker>
+  </defs>
+
+  <!-- start -->
+  <rect x="320" y="14" width="180" height="40" rx="20" fill="#0961BD"/>
+  <text x="410" y="39" fill="#fff" font-size="14" text-anchor="middle">运营点击「新增」</text>
+  <line x1="410" y1="54" x2="410" y2="78" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+
+  <!-- fill basic -->
+  <rect x="280" y="80" width="260" height="46" rx="6" fill="#e6f4ff" stroke="#91caff"/>
+  <text x="410" y="99" fill="#003a8c" font-size="13" text-anchor="middle">填写：地区/商户/推广渠道</text>
+  <text x="410" y="117" fill="#003a8c" font-size="13" text-anchor="middle">包类型/后台显示名称</text>
+  <line x1="410" y1="126" x2="410" y2="150" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+
+  <!-- config choice -->
+  <polygon points="410,152 500,190 410,228 320,190" fill="#fff7e6" stroke="#ffd591"/>
+  <text x="410" y="186" fill="#7d4f00" font-size="13" text-anchor="middle">配置选择？</text>
+  <text x="410" y="203" fill="#7d4f00" font-size="12" text-anchor="middle">默认 / 读取</text>
+
+  <!-- read branch -->
+  <line x1="500" y1="190" x2="620" y2="190" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+  <text x="560" y="182" fill="#389e0d" font-size="12" text-anchor="middle">读取配置</text>
+  <rect x="622" y="166" width="176" height="48" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="710" y="185" fill="#135200" font-size="12" text-anchor="middle">选已有配置，自动带入</text>
+  <text x="710" y="202" fill="#135200" font-size="12" text-anchor="middle">APP图标 + APP启动图</text>
+  <line x1="710" y1="214" x2="710" y2="240" stroke="#0961BD" stroke-width="2"/>
+  <line x1="710" y1="240" x2="410" y2="240" stroke="#0961BD" stroke-width="2"/>
+
+  <!-- default branch -->
+  <text x="365" y="222" fill="#389e0d" font-size="12" text-anchor="middle">默认</text>
+  <line x1="410" y1="228" x2="410" y2="240" stroke="#0961BD" stroke-width="2"/>
+
+  <!-- fill rest -->
+  <line x1="410" y1="240" x2="410" y2="264" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+  <rect x="280" y="266" width="260" height="64" rx="6" fill="#e6f4ff" stroke="#91caff"/>
+  <text x="410" y="285" fill="#003a8c" font-size="13" text-anchor="middle">填写 APP名称、APK包名称</text>
+  <text x="410" y="303" fill="#003a8c" font-size="13" text-anchor="middle">上传/确认 APP图标、APP启动图</text>
+  <text x="410" y="321" fill="#003a8c" font-size="12" text-anchor="middle">（均为必填，读取配置也需补齐名称/包名）</text>
+  <line x1="410" y1="330" x2="410" y2="354" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+
+  <!-- save -->
+  <rect x="330" y="356" width="160" height="40" rx="6" fill="#0961BD"/>
+  <text x="410" y="381" fill="#fff" font-size="13" text-anchor="middle">保存配置</text>
+  <line x1="410" y1="396" x2="410" y2="420" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+
+  <!-- into list -->
+  <rect x="260" y="422" width="300" height="44" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="410" y="441" fill="#135200" font-size="13" text-anchor="middle">入列表：打包进度「待打包」</text>
+  <text x="410" y="458" fill="#135200" font-size="12" text-anchor="middle">母包版本/下载地址均为「- -」</text>
+  <line x1="410" y1="466" x2="410" y2="490" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+
+  <!-- click build -->
+  <rect x="300" y="492" width="220" height="40" rx="6" fill="#fff7e6" stroke="#ffd591"/>
+  <text x="410" y="517" fill="#7d4f00" font-size="13" text-anchor="middle">运营点击 🔧 打包 · 二次确认</text>
+  <line x1="410" y1="532" x2="410" y2="556" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+
+  <!-- packaging -->
+  <rect x="290" y="558" width="240" height="50" rx="10" fill="#fa8c16"/>
+  <text x="410" y="577" fill="#fff" font-size="12" text-anchor="middle">打包中（点↻刷新推进：准备素材→等待打包）</text>
+  <text x="410" y="595" fill="#fff" font-size="12" text-anchor="middle">再点↻刷新 → 打包完成（不自动切换）</text>
+
+  <!-- side note -->
+  <rect x="580" y="492" width="220" height="106" rx="6" fill="#f0f5ff" stroke="#d6e4ff"/>
+  <text x="690" y="512" fill="#0961BD" font-size="12" text-anchor="middle">首次完成自动生成：</text>
+  <text x="690" y="530" fill="#0961BD" font-size="12" text-anchor="middle">母包版本 · 下载地址</text>
+  <text x="690" y="552" fill="#0961BD" font-size="12" text-anchor="middle">下载地址生成后</text>
+  <text x="690" y="570" fill="#0961BD" font-size="12" text-anchor="middle">即时加入「选择马甲包」</text>
+  <text x="690" y="588" fill="#0961BD" font-size="12" text-anchor="middle">下拉，供渠道调用</text>
+  <line x1="510" y1="578" x2="578" y2="545" stroke="#0961BD" stroke-width="2" marker-end="url(#arw2)"/>
+</svg>
+</div>
+</div>
+
+<!-- 十六 -->
+<div class="section-card" id="s16">
+<h2>十六、二期·校验与异常</h2>
+<table>
+  <thead><tr><th>触发时机</th><th>校验 / 错误场景</th><th>提示文案</th></tr></thead>
+  <tbody>
+    <tr><td>保存配置</td><td>后台显示名称未填写</td><td>请填写后台显示名称</td></tr>
+    <tr><td>保存配置</td><td>后台显示名称与已有记录重复</td><td>后台显示名称已存在，请修改</td></tr>
+    <tr><td>保存配置</td><td>APP名称未填写</td><td>请填写APP名称</td></tr>
+    <tr><td>保存配置</td><td>APK包名称未生成（默认配置，未点击随机生成）</td><td>请点击「随机生成」生成APK包名称</td></tr>
+    <tr><td>保存配置</td><td>APK包名称未获取（读取配置，异常兜底）</td><td>读取配置异常：未获取到母包包名，请重新选择</td></tr>
+    <tr><td>保存配置</td><td>APK包名称格式异常（理论上不应出现，兜底校验）</td><td>APK包名称格式异常，请重新生成</td></tr>
+    <tr><td>保存配置</td><td>未上传APP图标</td><td>请上传APP图标压缩包</td></tr>
+    <tr><td>保存配置</td><td>未上传APP启动图</td><td>请上传APP启动图</td></tr>
+    <tr><td>上传APP图标</td><td>文件非 .zip 格式</td><td>仅支持 .zip 压缩包</td></tr>
+    <tr><td>上传APP启动图</td><td>文件非 JPG/PNG 格式</td><td>仅支持 JPG/PNG 格式的图片</td></tr>
+    <tr><td>切换「读取配置」</td><td>当前列表无可复用的自动打包配置</td><td>暂无可复用的已有配置（自动回退为默认配置）</td></tr>
+    <tr><td>下载APP图标</td><td>尚未上传图标压缩包</td><td>请先前往图标工厂生成图标压缩包，并上传后再下载</td></tr>
+    <tr><td>点击 ⊗ 取消</td><td>二次确认</td><td>温馨提示 / 确认是否要取消打包？/ 取消·确定（确认后见 13.3）</td></tr>
+    <tr><td>删除</td><td>该包已被推广渠道或官方渠道关联</td><td>该包已被推广渠道或官方渠道关联，不允许删除（同一期 3.4）</td></tr>
+  </tbody>
+</table>
+<div class="info">唯一性约束与一期一致：仅<b>后台显示名称</b>全局唯一；包名称（APK包名称）、APP名称等其余字段允许重复。</div>
 </div>
 
 </div>
