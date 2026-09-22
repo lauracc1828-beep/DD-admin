@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>增加Phone提款方式 PRD v1.1</title>
+<title>增加Phone提款方式 PRD v1.3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -45,7 +45,20 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">增加Phone提款方式</div>
   <div class="cover-sub">PRD 产品需求文档 · 提款方式配置 / 取款页 / 提现报表</div>
-  <div class="cover-meta"><span>版本：v1.2</span><span>更新日期：2026-09-08</span><span>作者：Laura</span></div>
+  <div class="cover-meta"><span>版本：v1.3</span><span>更新日期：2026-09-08</span><span>作者：Laura</span></div>
+</div>
+
+<div class="section">
+  <h1>修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.3</td><td>2026-09-08</td><td><b>更新</b>绑定校验逻辑与错误提示：校验口径纳入「审核中提款订单」，新增「本人审核中」校验；绑定相关错误提示文案同步更新（见 7.2、7.3）。</td></tr>
+      <tr><td>v1.2</td><td>2026-09-08</td><td>新增三方订单号字段（6.3）；新增提现资料绑定数量与唯一性校验（第七章）。</td></tr>
+      <tr><td>v1.1</td><td>2026-09-05</td><td>增补提现报表字段（账户类型 / 手机号，第六章）；需求更名为「增加Phone提款方式」。</td></tr>
+      <tr><td>v1.0</td><td>2026-09-04</td><td>初稿：提款方式配置与前台取款页联动。</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="toc">
@@ -94,6 +107,18 @@ b,strong{color:#1a1a2e}
   <h1>一、需求背景</h1>
   <p>H5 取款页当前仅支持 CPF 单一提款方式。为支持巴西 PIX 场景下的多种收款标识（CPF、手机号等），并结合风控需要对不同方式设置开放门槛，需在后台<b>提现管理</b>页新增<b>提款方式配置</b>模块，由运营配置 H5 取款页可选的提款方式、展示顺序、启用状态及解锁条件。前台 H5 取款页原型已于前期完成，本期交付后台配置能力与相应的前台联动逻辑。</p>
   <p>本期上线的提款方式为 <b>CPF</b> 与 <b>PHONE</b> 两种。本需求「增加 PHONE 提款方式」覆盖：<b>后台提款方式配置</b>（第四章）、<b>前台 H5 取款页</b>（第五章）、<b>提现相关报表</b>字段体现（第六章：账户类型 / 手机号与三方订单号，涉及会员提现审核、提现订单记录、提现审核记录），以及<b>提现资料绑定数量与唯一性校验</b>（第七章）。</p>
+
+  <h2>本次需求范围</h2>
+  <table>
+    <thead><tr><th style="width:150px">模块</th><th>范围</th><th style="width:110px">对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>后台配置</td><td>提现管理 → <b>提款方式配置</b>（新增 tab，本期上线 CPF、PHONE，含状态 / 解锁条件 / 排序，CPF 固定兜底）；提现管理 → 其他提现配置新增「相同提现资料可绑定会员数量」。</td><td>第四章、7.1</td></tr>
+      <tr><td>前台 H5 取款页</td><td>提款方式动态展示与解锁判定；提款信息填写、保存与回填。</td><td>第五章</td></tr>
+      <tr><td>提现报表</td><td>会员提现审核、提现订单记录补充<b>账户类型 / 手机号</b>；提现订单记录新增<b>账户类型、CPF ID</b> 列及账户类型筛选联动；提现审核记录、提现订单记录新增<b>三方订单号</b>及筛选。</td><td>第六章</td></tr>
+      <tr><td>绑定与唯一性校验</td><td>提现资料<b>绑定数量上限</b>（统计口径含审核中提款订单）；取款页 / 安全中心 / 会员详情三处提交-保存校验（<b>本人审核中 + 占用上限</b>）；删除 / 更换后释放。</td><td>第七章</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">本期提款方式仅上线 CPF、PHONE；其余方式、以及本文未列的既有功能不在本次范围。</p>
 </div>
 
 <!-- 二 名词解释 -->
@@ -333,13 +358,16 @@ b,strong{color:#1a1a2e}
   </table>
 
   <h2 id="sb2">7.2 唯一性校验规则</h2>
-  <p>当某 CPF / 手机号已绑定的会员数达到上限（配置值；0 为不限制，即不做该校验）时，不允许再绑定到其他会员。<b>以下三处均在提交 / 保存时校验并拦截：</b></p>
+  <p><b>统计口径（绑定占用数）：</b>某 CPF / 手机号的绑定占用数 = 已保存该资料的会员数 + 审核中提款订单里使用该资料的会员数（按会员去重）。因提款存在「审核中」状态，<b>校验口径须纳入审核中的提款订单</b>——以防审核期间该资料被其他会员抢先绑定，或会员本人经安全中心改资料，造成信息不一致 / 绑定数超限。占用数达配置上限即不可再绑定到其他会员（配置值 0 = 不限制，不做该校验）。</p>
+  <p>以下三处在提交 / 保存时校验并拦截：</p>
   <table>
-    <thead><tr><th style="width:240px">场景</th><th>校验与处理</th></tr></thead>
+    <thead><tr><th style="width:210px">场景</th><th style="width:110px">校验项</th><th>处理与提示</th></tr></thead>
     <tbody>
-      <tr><td>客户端 · 取款页提交提现</td><td>其他会员输入已达上限的 CPF / 手机号时，<b>不允许提交</b>提现并提示错误。</td></tr>
-      <tr><td>客户端 · 提款信息管理保存</td><td>提交的 CPF / 手机号已被其他会员保存（达上限）时，<b>不允许保存</b>。</td></tr>
-      <tr><td>后台 · 会员详情修改提款信息</td><td>填写的 CPF / 手机号已被其他会员绑定（达上限）时，<b>不允许保存</b>。</td></tr>
+      <tr><td>场景1 · 客户端取款页提交提现</td><td>占用上限</td><td>该 CPF / 手机号绑定占用数（不含本人）已达上限时，不允许提交，提示「该 CPF 绑定次数已达上限」/「该手机号绑定次数已达上限」。</td></tr>
+      <tr><td rowspan="2">场景2 · 客户端安全中心-提款信息管理保存</td><td>本人审核中</td><td>本人存在审核中的提款订单时，不允许保存，提示「提款审核中，暂时无法保存」。</td></tr>
+      <tr><td>占用上限</td><td>该 CPF / 手机号绑定占用数（不含本人）已达上限时，不允许保存，提示「该 CPF / 手机号绑定次数已达上限」。</td></tr>
+      <tr><td rowspan="2">场景3 · 后台会员详情 / 个人资料保存</td><td>本人审核中</td><td>同场景2「本人审核中」。</td></tr>
+      <tr><td>占用上限</td><td>同场景2「占用上限」。</td></tr>
     </tbody>
   </table>
   <h3>绑定释放</h3>
@@ -350,10 +378,10 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:210px">场景</th><th>中文</th><th>葡语（建议）</th></tr></thead>
     <tbody>
-      <tr><td>客户端取款页 · CPF 重复</td><td>该 CPF 已被绑定</td><td>Este CPF já está vinculado.</td></tr>
-      <tr><td>客户端取款页 · 手机号重复</td><td>该手机号已被绑定</td><td>Este telefone já está vinculado.</td></tr>
-      <tr><td>客户端提款信息管理 · 保存</td><td>该 CPF / 手机号已被绑定</td><td>Este CPF / telefone já está vinculado.</td></tr>
-      <tr><td>后台会员详情 · 保存</td><td>该 CPF / 手机号已被绑定</td><td>—（后台，中文）</td></tr>
+      <tr><td>取款页 · CPF 达上限</td><td>该 CPF 绑定次数已达上限</td><td>Este CPF atingiu o limite de vínculos.</td></tr>
+      <tr><td>取款页 · 手机号达上限</td><td>该手机号绑定次数已达上限</td><td>Este telefone atingiu o limite de vínculos.</td></tr>
+      <tr><td>安全中心 / 会员详情 · 达上限</td><td>该 CPF / 手机号绑定次数已达上限</td><td>Este CPF / telefone atingiu o limite de vínculos.</td></tr>
+      <tr><td>安全中心 / 会员详情 · 本人审核中</td><td>提款审核中，暂时无法保存</td><td>Saque em análise, não é possível salvar no momento.</td></tr>
     </tbody>
   </table>
 </div>
