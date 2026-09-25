@@ -164,18 +164,97 @@
   .tab .ic { font-size: 22px; display: block; margin-bottom: 2px; }
   .tab.active { color: #f4e02a; }
   .tab.center .ic { font-size: 30px; }
+
+  /* ===== 提款审核中拦截弹窗 ===== */
+  .mask {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background: rgba(0,0,0,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 22px;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s;
+  }
+  .mask.show { opacity: 1; pointer-events: auto; }
+
+  .dialog {
+    width: 100%;
+    max-width: 330px;
+    background: #3a3a3a;
+    border-radius: 16px;
+    padding: 26px 20px 20px;
+    text-align: center;
+    transform: scale(.94);
+    transition: transform .18s;
+  }
+  .mask.show .dialog { transform: scale(1); }
+
+  .dialog .icon {
+    width: 62px; height: 62px;
+    margin: 0 auto 16px;
+    border: 2.5px solid #f4c430;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    color: #f4c430;
+  }
+  .dialog .msg {
+    font-size: 16px;
+    line-height: 1.45;
+    color: #f2f2f2;
+    margin-bottom: 22px;
+  }
+  .dialog .actions { display: flex; gap: 12px; }
+  .dialog .actions button {
+    flex: 1;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .12s;
+  }
+  .dialog .actions button:active { opacity: .82; }
+  .btn-primary { background: #fff320; color: #111; border: none; }
+  .btn-ghost { background: transparent; color: #fff; border: 1px solid #8d8d8d; font-weight: 500; }
+
+  /* ===== 提款记录页（演示跳转目标） ===== */
+  .page { display: none; }
+  .page.on { display: block; }
+  .record-list { padding: 8px 0 0; }
+  .record-item {
+    background: #1c1c1c;
+    border: 1px solid #262626;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .record-item .r1 { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .record-item .amt { font-size: 17px; font-weight: 700; color: #f4e02a; }
+  .record-item .st { font-size: 13px; font-weight: 600; color: #f4c430; }
+  .record-item .st.done { color: #55b06a; }
+  .record-item .r2 { font-size: 12px; color: #8a8a8a; display: flex; justify-content: space-between; }
+  .record-note { font-size: 12px; color: #6e6e6e; text-align: center; margin-top: 18px; line-height: 1.6; }
 </style>
 </head>
 <body>
   <div class="phone">
     <!-- 顶部导航 -->
     <div class="topbar">
-      <span class="back">‹</span>
-      <span class="title">取款</span>
-      <span class="doc">🧾</span>
+      <span class="back" id="navBack" onclick="goWithdraw()">‹</span>
+      <span class="title" id="navTitle">取款</span>
+      <span class="doc" id="navDoc" onclick="goRecord()">🧾</span>
     </div>
 
-    <div class="content">
+    <div class="content page on" id="pageWithdraw">
       <!-- 余额 -->
       <div class="balance-row"><span class="lbl">账户余额:</span><span class="val">R$ 10.529,85</span></div>
       <div class="bet-row">提款需投注:<span class="val">R$ 1.039,36</span><span class="link">查看详情</span></div>
@@ -215,7 +294,22 @@
       </div>
 
       <!-- 提交 -->
-      <button class="submit-btn">立即提现</button>
+      <button class="submit-btn" onclick="submitWithdraw()">立即提现</button>
+    </div>
+
+    <!-- 提款记录页（演示跳转目标，非本次需求改动范围） -->
+    <div class="content page" id="pageRecord">
+      <div class="record-list">
+        <div class="record-item">
+          <div class="r1"><span class="amt">R$ 300,00</span><span class="st">审核中</span></div>
+          <div class="r2"><span>PIX · CPF</span><span>2026-09-25 14:26</span></div>
+        </div>
+        <div class="record-item">
+          <div class="r1"><span class="amt">R$ 150,00</span><span class="st done">已完成</span></div>
+          <div class="r2"><span>PIX · CPF</span><span>2026-09-23 09:12</span></div>
+        </div>
+      </div>
+      <div class="record-note">原型说明：提款记录页沿用现网，<br>不在本次需求改动范围内。</div>
     </div>
 
     <!-- 底部导航 -->
@@ -225,6 +319,18 @@
       <div class="tab center"><span class="ic">👥</span>邀请</div>
       <div class="tab active"><span class="ic">💵</span>取款</div>
       <div class="tab"><span class="ic">🧑</span>我的</div>
+    </div>
+
+    <!-- 提款未完结拦截弹窗 -->
+    <div class="mask" id="pendingMask">
+      <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="pendingMsg">
+        <div class="icon" aria-hidden="true">!</div>
+        <div class="msg" id="pendingMsg">请等待上一笔提款完成后，再申请新的提款。</div>
+        <div class="actions">
+          <button type="button" class="btn-primary" onclick="goRecordFromDialog()">查看记录</button>
+          <button type="button" class="btn-ghost" onclick="closePending()">关闭</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -236,6 +342,40 @@
       // PHONE 方式在姓名与CPF之间显示手机号字段；CPF方式隐藏
       document.getElementById('field-phone').classList.toggle('hidden', method !== 'phone');
     }
+
+    /* ---------- 页面切换（原型演示） ---------- */
+    function showPage(id, title){
+      document.querySelectorAll('.page').forEach(function(p){
+        p.classList.toggle('on', p.id === id);
+      });
+      document.getElementById('navTitle').textContent = title;
+      document.getElementById('navDoc').style.visibility = (id === 'pageWithdraw') ? 'visible' : 'hidden';
+      window.scrollTo(0, 0);
+    }
+    function goWithdraw(){ showPage('pageWithdraw', '取款'); }
+    function goRecord(){ showPage('pageRecord', '提款记录'); }
+
+    /* ---------- 提交校验：存在未完结提款订单则拦截 ----------
+       未完结 = 审核中 / 处理中等一切未到终态的提款订单。
+       原逻辑为顶部 toast 提示，本次改为弹窗拦截。          */
+    var HAS_PENDING_WITHDRAW = true;   // 原型演示：模拟该会员存在未完结提款订单
+
+    function submitWithdraw(){
+      if (HAS_PENDING_WITHDRAW) { openPending(); return; }
+      // 无未完结订单时走正常提交流程（沿用现网，不在本次需求范围内）
+    }
+
+    function openPending(){
+      document.getElementById('pendingMask').classList.add('show');
+    }
+    function closePending(){
+      document.getElementById('pendingMask').classList.remove('show');
+    }
+    function goRecordFromDialog(){
+      closePending();
+      goRecord();
+    }
+    // 说明：点击遮罩不关闭弹窗，仅「查看记录」「关闭」两个按钮可关闭
   </script>
 </body>
 </html>

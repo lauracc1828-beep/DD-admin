@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Laura">
+<title>H5 取款页 · 未完结提款拦截提示改版 需求说明</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.75}
+.page{max-width:960px;margin:0 auto;padding:40px 20px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:28px;display:flex;gap:20px;flex-wrap:wrap}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h2:first-child{margin-top:0}
+h3{font-size:15px;font-weight:700;color:#1a1a2e;margin:22px 0 10px}
+p{margin-bottom:12px;color:#444}
+ul,ol{padding-left:22px;margin-bottom:12px}
+li{margin-bottom:7px}
+.card{background:#fff;border-radius:8px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.hero{background:linear-gradient(135deg,#0961BD,#003a8c);color:#fff;border-radius:8px;padding:22px 26px;margin-bottom:22px}
+.hero p{color:rgba(255,255,255,.92);margin:0}
+table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:13px}
+th,td{border:1px solid #e5e8ee;padding:9px 11px;text-align:left;vertical-align:top}
+th{background:#f0f5ff;color:#1a1a2e;font-weight:700;white-space:nowrap}
+td code,p code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#c0392b}
+strong{color:#1a1a2e}
+.tag{display:inline-block;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;border-radius:4px;padding:0 7px;font-size:12px;margin-right:4px}
+.note{background:#fffbe6;border:1px solid #ffe58f;border-radius:6px;padding:12px 16px;font-size:13px;color:#614700;margin:10px 0}
+.new{background:#e6fffb;border:1px solid #87e8de;border-radius:6px;padding:12px 16px;font-size:13px;color:#00595a;margin:10px 0}
+.flow-wrap{overflow-x:auto}
+svg{display:block;margin:6px auto}
+.old{color:#8c8c8c;text-decoration:line-through}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>H5 取款页 · 未完结提款拦截提示改版 需求说明</h1>
+<div class="meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-09-25</span></div>
+
+<div class="hero">
+<p>本需求针对<strong>客户端 H5 取款页</strong>。会员点击「立即提现」提交时，若其名下存在<strong>未完结的提款订单</strong>，现有逻辑为顶部 toast 提示；本次改为<strong>模态弹窗</strong>拦截，并<strong>修改提示文案</strong>。弹窗提供「查看记录」「关闭」两个操作，分别跳转提款记录页与关闭弹窗。</p>
+</div>
+
+<div class="card">
+<h2>一、变更点</h2>
+<table>
+<tr><th style="width:120px">项目</th><th style="width:300px">变更前</th><th>变更后（本次）</th></tr>
+<tr><td>提示形态</td><td>顶部 toast，定时自动消失，无操作入口</td><td><strong>模态弹窗</strong>（居中、带遮罩），需用户主动操作才关闭</td></tr>
+<tr><td>提示文案</td><td class="old">原 toast 文案</td><td><strong>请等待上一笔提款完成后，再申请新的提款。</strong>（葡语见第四章）</td></tr>
+<tr><td>操作入口</td><td>无</td><td>新增两个按钮：<strong>查看记录</strong>（跳转提款记录页）、<strong>关闭</strong>（关闭弹窗）</td></tr>
+<tr><td>提交结果</td><td colspan="2">不变 —— 均为<strong>拦截提交</strong>，不生成提款订单</td></tr>
+</table>
+<div class="note">本次仅调整「存在未完结提款订单」这一种拦截的提示形态与文案。取款页其他校验（如提现资料绑定数量达上限等，详见《增加 PHONE 提款方式 PRD》7.2 / 7.3）<strong>维持原有 toast 形式与文案不变</strong>。</div>
+</div>
+
+<div class="card">
+<h2>二、触发与交互规则</h2>
+
+<h3>2.1 触发时机与判定口径</h3>
+<table>
+<tr><th style="width:120px">项目</th><th>说明</th></tr>
+<tr><td>触发页面</td><td>客户端 H5 <strong>取款页</strong>。</td></tr>
+<tr><td>触发动作</td><td>点击<strong>「立即提现」</strong>提交按钮。</td></tr>
+<tr><td>判定条件</td><td>该会员名下存在<strong>未完结的提款订单</strong>。<strong>未完结</strong>指一切尚未流转到终态的提款订单状态，包含但不限于<strong>审核中、处理中（出款中）</strong>等中间态；已完成、已拒绝、已失败等终态<strong>不计入</strong>。</td></tr>
+<tr><td>判定顺序</td><td>在提交校验链路中执行；命中即<strong>中断提交</strong>并弹出弹窗，不再继续后续校验，不生成提款订单，页面已填写内容<strong>原样保留</strong>。</td></tr>
+<tr><td>判定范围</td><td>按<strong>会员</strong>维度判定，与本次选择的提款方式（CPF / PHONE）、提款渠道、提款金额均无关。</td></tr>
+</table>
+
+<h3>2.2 弹窗交互</h3>
+<table>
+<tr><th style="width:140px">元素 / 行为</th><th>规则</th></tr>
+<tr><td>遮罩</td><td>半透明黑色遮罩覆盖全页；<strong>点击遮罩不关闭弹窗</strong>，弹窗期间页面其余区域不可操作。</td></tr>
+<tr><td>系统返回键</td><td>关闭弹窗，停留在取款页（等同「关闭」）。</td></tr>
+<tr><td>左按钮「查看记录」</td><td>点击后<strong>关闭弹窗并跳转至提款记录页</strong>。提款记录页沿用现网，不在本次改动范围内。</td></tr>
+<tr><td>右按钮「关闭」</td><td>点击后<strong>仅关闭弹窗</strong>，停留在取款页，表单内容保持不变。</td></tr>
+<tr><td>关闭方式</td><td>仅上述两个按钮及系统返回键可关闭，<strong>不自动消失</strong>。</td></tr>
+<tr><td>重复触发</td><td>关闭后若会员再次点击「立即提现」且条件仍成立，<strong>再次弹出同一弹窗</strong>。</td></tr>
+</table>
+
+<div class="new">弹窗的视觉样式与元素排布<strong>以原型为准</strong>，沿用取款页现有主题，不新增设计变量。</div>
+</div>
+
+<div class="card">
+<h2>三、逻辑流程图</h2>
+<div class="flow-wrap">
+<svg width="900" height="260" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 z" fill="#8a94a6"/>
+    </marker>
+  </defs>
+
+  <rect x="14" y="98" width="128" height="46" rx="8" fill="#e6f4ff" stroke="#91caff"/>
+  <text x="78" y="126" font-size="13" fill="#0961BD" text-anchor="middle">点击「立即提现」</text>
+
+  <path d="M142,121 L186,121" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <polygon points="310,73 430,121 310,169 190,121" fill="#fffbe6" stroke="#ffd666"/>
+  <text x="310" y="115" font-size="13" fill="#614700" text-anchor="middle">存在未完结的</text>
+  <text x="310" y="133" font-size="13" fill="#614700" text-anchor="middle">提款订单？</text>
+
+  <path d="M310,73 L310,40 L560,40" stroke="#8a94a6" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <text x="332" y="62" font-size="12" fill="#8a94a6">否</text>
+  <rect x="566" y="18" width="180" height="44" rx="8" fill="#f2f4f7" stroke="#d9dee7"/>
+  <text x="656" y="45" font-size="13" fill="#555" text-anchor="middle">继续后续校验与提交</text>
+
+  <path d="M430,121 L474,121" stroke="#8a94a6" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="440" y="112" font-size="12" fill="#8a94a6">是</text>
+
+  <rect x="478" y="96" width="176" height="50" rx="8" fill="#e6fffb" stroke="#87e8de"/>
+  <text x="566" y="117" font-size="13" fill="#00595a" text-anchor="middle">拦截提交，弹出</text>
+  <text x="566" y="135" font-size="13" fill="#00595a" text-anchor="middle">未完结提款提示弹窗</text>
+
+  <path d="M654,110 L700,110 L700,84 L744,84" stroke="#8a94a6" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="748" y="62" width="138" height="44" rx="8" fill="#fff" stroke="#d9dee7"/>
+  <text x="817" y="81" font-size="12" fill="#333" text-anchor="middle">点「查看记录」→</text>
+  <text x="817" y="97" font-size="12" fill="#333" text-anchor="middle">跳转提款记录页</text>
+
+  <path d="M654,132 L700,132 L700,190 L744,190" stroke="#8a94a6" stroke-width="1.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="748" y="168" width="138" height="44" rx="8" fill="#fff" stroke="#d9dee7"/>
+  <text x="817" y="187" font-size="12" fill="#333" text-anchor="middle">点「关闭」→ 关闭弹窗</text>
+  <text x="817" y="203" font-size="12" fill="#333" text-anchor="middle">停留取款页</text>
+
+  <text x="450" y="238" font-size="12" fill="#8a94a6" text-anchor="middle">未完结 = 审核中 / 处理中等一切未到终态的提款订单状态</text>
+</svg>
+</div>
+</div>
+
+<div class="card">
+<h2>四、中文 / 葡语文案对照表</h2>
+<p>前台按客户端语言展示。</p>
+<table>
+<tr><th style="width:150px">位置</th><th style="width:300px">中文</th><th>葡语</th></tr>
+<tr><td>弹窗提示文案</td><td>请等待上一笔提款完成后，再申请新的提款。</td><td>Aguarde a conclusão do saque anterior antes de solicitar outro.</td></tr>
+<tr><td>弹窗左按钮</td><td>查看记录</td><td>Ver extrato</td></tr>
+<tr><td>弹窗右按钮</td><td>关闭</td><td>Fechar</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>五、关联需求与影响范围</h2>
+<table>
+<tr><th style="width:200px">关联项</th><th>说明</th></tr>
+<tr><td>《增加 PHONE 提款方式 PRD》7.2 唯一性校验规则</td><td>该文档「场景1 · 客户端取款页提交提现」的<strong>占用上限</strong>校验及其提示<strong>不受本次影响</strong>，仍为 toast。本需求新增/改造的是取款页提交时的<strong>「本人存在未完结提款订单」</strong>拦截。</td></tr>
+<tr><td>《增加 PHONE 提款方式 PRD》7.3 错误提示文案</td><td>其中「安全中心 / 会员详情 · 本人审核中」文案（提款审核中，暂时无法保存）<strong>维持不变</strong>，形态仍为原有提示，不改为弹窗。</td></tr>
+<tr><td>提款记录页</td><td>作为「查看记录」的跳转目标，<strong>沿用现网，不在本次改动范围内</strong>。</td></tr>
+<tr><td>后台</td><td>无后台配置项变更，弹窗文案为固定文案、不做后台可配。</td></tr>
+</table>
+<div class="note">需确认：若产品希望「安全中心保存」等其他「审核中」拦截也统一改为弹窗形态，需另行提出，本次不含。</div>
+</div>
+
+</div>
+</body>
+</html>
