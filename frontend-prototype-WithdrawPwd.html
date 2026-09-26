@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="Laura">
+<title>设置提现密码 - 前台原型</title>
+<style>
+  :root{
+    --bg:#141312;
+    --bar:#2b2826;
+    --box:#211f1d;
+    --box-active:#2a2724;
+    --box-line:#3a3733;
+    --box-line-active:#f2c400;
+    --text:#f4f4f2;
+    --muted:#8a8783;
+    --label:#8a8783;
+    --btn:#f2ef3a;
+    --btn-press:#dcd92f;
+    --btn-off:#33302c;
+    --btn-off-text:#6e6a65;
+    --err:#ff5a5a;
+    --note-bg:rgba(38,36,33,.96);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:#000;color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex;justify-content:center;
+  }
+  .screen{
+    width:100%;max-width:430px;min-height:100vh;background:var(--bg);
+    display:flex;flex-direction:column;position:relative;overflow:hidden;
+  }
+
+  /* ---------- 顶部导航 ---------- */
+  .bar{height:64px;flex-shrink:0;background:var(--bar);display:flex;align-items:center;padding:0 12px;}
+  .bar .back{width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+    font-size:26px;color:var(--text);cursor:pointer;background:none;border:none;padding:0;}
+  .bar .title{flex:1;text-align:center;font-size:22px;font-weight:600;letter-spacing:.3px;}
+  .bar .spacer{width:44px;}
+
+  /* ---------- 语言切换（演示用，非需求） ---------- */
+  .langbar{position:absolute;top:14px;right:10px;z-index:40;display:flex;
+    background:rgba(20,19,18,.8);border:1px solid var(--box-line);border-radius:14px;overflow:hidden;}
+  .langbar button{border:none;background:transparent;color:var(--muted);font-size:12px;
+    padding:5px 10px;cursor:pointer;font-weight:600;letter-spacing:.2px;}
+  .langbar button.on{background:var(--box-line-active);color:#1a1a1a;}
+
+  /* ---------- 表单区 ---------- */
+  .body{padding:26px 22px 0;flex:1;}
+  .h1{font-size:21px;font-weight:400;margin:0 0 26px;}
+  .label{font-size:16px;color:var(--label);margin:0 0 14px;}
+
+  .row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;cursor:text;}
+  #row1{margin-bottom:30px;}
+  #row2{margin-bottom:10px;}
+  .row.shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+  .cell{position:relative;aspect-ratio:1/1;border-radius:14px;background:var(--box);
+    border:1.5px solid var(--box-line);display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s,background .15s;}
+  .cell.active{border-color:var(--box-line-active);background:var(--box-active);}
+  .cell.err{border-color:var(--err);}
+  .cell .dot{width:13px;height:13px;border-radius:50%;background:var(--text);
+    transform:scale(0);transition:transform .12s;}
+  .cell.filled .dot{transform:scale(1);}
+  .cell.reveal .dot{transform:scale(0);}
+  .cell .num{position:absolute;font-size:22px;font-weight:600;color:var(--text);
+    opacity:0;transform:scale(.6);transition:opacity .1s,transform .1s;}
+  .cell.reveal .num{opacity:1;transform:scale(1);}
+  .cell .caret{position:absolute;width:2px;height:26px;border-radius:2px;
+    background:var(--box-line-active);opacity:0;}
+  .cell.active .caret{animation:blink 1.05s steps(1,start) infinite;}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+  /* 行内错误提示：固定占位一行，避免出现/消失时布局跳动 */
+  .errline{min-height:22px;line-height:22px;font-size:14px;color:var(--err);
+    margin:0 0 10px;opacity:0;transition:opacity .15s;}
+  .errline.show{opacity:1;}
+
+  .hint{font-size:15px;color:var(--muted);margin:0 0 8px;line-height:1.4;min-height:21px;}
+
+  .btn{margin:28px 4px 0;height:64px;border:none;border-radius:34px;background:var(--btn);color:#1a1a1a;
+    font-size:19px;font-weight:700;width:calc(100% - 8px);cursor:pointer;
+    transition:background .15s,color .15s,transform .05s;}
+  .btn:active:not(:disabled){background:var(--btn-press);transform:scale(.995);}
+  .btn:disabled{background:var(--btn-off);color:var(--btn-off-text);cursor:default;}
+
+  .hidden-input{position:absolute;opacity:0;pointer-events:none;height:0;width:0;}
+
+  /* ---------- 原型演示说明浮层（非需求内容） ---------- */
+  .note{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%) scale(.96);max-width:82%;
+    background:var(--note-bg);color:var(--text);padding:22px 26px;border-radius:14px;text-align:center;
+    font-size:17px;line-height:1.5;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:20;}
+  .note.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+  .note small{display:block;margin-top:8px;font-size:13px;color:var(--muted);line-height:1.45;}
+</style>
+</head>
+<body>
+  <div class="screen">
+
+    <!-- 语言切换：仅原型演示用，不属于需求 -->
+    <div class="langbar">
+      <button type="button" id="langZh" class="on" onclick="setLang('zh')">中文</button>
+      <button type="button" id="langPt" onclick="setLang('pt')">PT</button>
+    </div>
+
+    <div class="bar">
+      <button type="button" class="back" onclick="resetAll()" aria-label="返回">‹</button>
+      <div class="title" data-t="navTitle">提现密码</div>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="body">
+      <div class="h1" data-t="pageTitle">设置提现密码</div>
+
+      <div class="label" id="lb1" data-t="label1">新提现密码</div>
+      <div class="row" id="row1" data-target="pw1"></div>
+
+      <div class="label" id="lb2" data-t="label2">确认新密码</div>
+      <div class="row" id="row2" data-target="pw2"></div>
+      <div class="errline" id="errline" role="alert" aria-live="polite"></div>
+
+      <div class="hint" data-t="hint">首次提现前，请先设置提现密码</div>
+
+      <button class="btn" id="submit" data-t="submit" disabled>确认</button>
+    </div>
+
+    <div class="note" id="note"></div>
+
+    <input class="hidden-input" id="pw1" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" aria-labelledby="lb1">
+    <input class="hidden-input" id="pw2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" aria-labelledby="lb2">
+  </div>
+
+<script>
+(function(){
+  const LEN = 6;
+  const REVEAL_MS = 550;
+
+  /* ---------- 文案字典（中葡） ---------- */
+  const I18N = {
+    zh:{
+      navTitle:'提现密码',
+      pageTitle:'设置提现密码',
+      label1:'新提现密码',
+      label2:'确认新密码',
+      hint:'首次提现前，请先设置提现密码',
+      submit:'确认',
+      errMismatch:'两次输入的密码不一致',
+      back:'返回',
+      demoTitle:'已提交设置请求',
+      demoDesc:'原型说明：成功页沿用现网，不在本次需求范围内。'
+    },
+    pt:{
+      navTitle:'Saque Senha',
+      pageTitle:'Configurar Saque Senha',
+      label1:'Novo Saque Senha',
+      label2:'Confirmar Nova Senha',
+      hint:'Para o primeiro saque, você precisa definir a senha de saque primeiro',
+      submit:'Confirmar',
+      errMismatch:'As senhas inseridas duas vezes não correspondem',
+      back:'Voltar',
+      demoTitle:'Solicitação enviada',
+      demoDesc:'Nota do protótipo: a página de sucesso segue a versão atual e está fora do escopo.'
+    }
+  };
+  let lang = 'zh';
+
+  window.setLang = function(next){
+    lang = next;
+    const d = I18N[lang];
+    document.documentElement.lang = (lang === 'zh') ? 'zh-CN' : 'pt-BR';
+    document.querySelectorAll('[data-t]').forEach(el=>{
+      const k = el.dataset.t;
+      if(d[k] !== undefined) el.textContent = d[k];
+    });
+    document.querySelector('.back').setAttribute('aria-label', d.back);
+    if(errShown) errEl.textContent = d.errMismatch;
+    document.getElementById('langZh').classList.toggle('on', lang === 'zh');
+    document.getElementById('langPt').classList.toggle('on', lang === 'pt');
+  };
+
+  /* ---------- 六格输入区 ---------- */
+  function bind(rowId){
+    const row   = document.getElementById(rowId);
+    const input = document.getElementById(row.dataset.target);
+    const cells = [];
+    for(let i=0;i<LEN;i++){
+      const c = document.createElement('div');
+      c.className = 'cell';
+      c.innerHTML = '<span class="dot"></span><span class="num"></span><span class="caret"></span>';
+      row.appendChild(c);
+      cells.push(c);
+    }
+
+    let prevLen = 0, revealIdx = -1, revealTimer = null;
+
+    input.addEventListener('input', ()=>{
+      input.value = input.value.replace(/\D/g,'').slice(0,LEN);
+      const v = input.value;
+      if(v.length > prevLen){                       // 新增一位才回显明文 0.55s
+        revealIdx = v.length - 1;
+        clearTimeout(revealTimer);
+        revealTimer = setTimeout(()=>{ revealIdx = -1; render(); }, REVEAL_MS);
+      } else {                                       // 删除不回显
+        revealIdx = -1; clearTimeout(revealTimer);
+      }
+      const grew = v.length > prevLen;
+      prevLen = v.length;
+      render();
+      onChange(api, grew);
+    });
+    input.addEventListener('focus', render);
+    input.addEventListener('blur', ()=>{ revealIdx=-1; clearTimeout(revealTimer); render(); });
+    row.addEventListener('click', ()=> input.focus());
+
+    function render(){
+      const v = input.value;
+      const focused = document.activeElement === input;
+      cells.forEach((c,i)=>{
+        c.classList.toggle('filled', i < v.length);
+        c.classList.toggle('reveal', i === revealIdx);
+        c.classList.toggle('active', focused && i === v.length);
+        c.querySelector('.num').textContent = (i === revealIdx) ? v[i] : '';
+      });
+    }
+    render();
+
+    const api = {
+      input, row, cells, render,
+      markErr(on){ cells.forEach(c=> c.classList.toggle('err', on)); },
+      clear(){ input.value=''; prevLen=0; revealIdx=-1; clearTimeout(revealTimer); render(); }
+    };
+    return api;
+  }
+
+  const pw1 = bind('row1');
+  const pw2 = bind('row2');
+
+  // 第二栏为空时按删除键，回退到第一栏末位
+  pw2.input.addEventListener('keydown', e=>{
+    if(e.key === 'Backspace' && pw2.input.value === ''){ pw1.input.focus(); }
+  });
+
+  /* ---------- 行内错误提示 ---------- */
+  const errEl = document.getElementById('errline');
+  let errShown = false;
+  function showErr(){
+    errEl.textContent = I18N[lang].errMismatch;
+    errEl.classList.add('show');
+    pw1.markErr(true); pw2.markErr(true);
+    errShown = true;
+  }
+  function clearErr(){
+    if(!errShown) return;
+    errEl.classList.remove('show');
+    pw1.markErr(false); pw2.markErr(false);
+    errShown = false;
+  }
+  function shake(el){ el.classList.add('shake'); setTimeout(()=>el.classList.remove('shake'),420); }
+
+  /* ---------- 动态校验 ----------
+     ① 任一栏未满 6 位 → 「确认」置灰不可点，不校验、不提示
+     ② 两栏均满 6 位且一致 → 「确认」亮起可点
+     ③ 两栏均满 6 位但不一致 → 两栏抖动 + 第二栏下方红字提示
+        保留已输入内容，焦点停在第二栏末位，「确认」保持置灰
+     · 任一栏内容变化即清除错误提示并重新判定
+     · 第一栏内容变化时联动清空第二栏（不限于错误态）
+  ------------------------------------------------ */
+  const btn = document.getElementById('submit');
+
+  function onChange(src, grew){
+    clearErr();
+
+    // 联动清空：「新提现密码」一旦变化，上一次确认即失效，同步清空「确认新密码」
+    if(src === pw1 && pw2.input.value !== ''){ pw2.clear(); }
+
+    const a = pw1.input.value, b = pw2.input.value;
+
+    // 第一栏输满自动跳到第二栏
+    if(grew && src === pw1 && a.length === LEN && b.length < LEN){
+      pw2.input.focus();
+    }
+
+    if(a.length < LEN || b.length < LEN){ btn.disabled = true; return; }
+
+    if(a !== b){
+      btn.disabled = true;
+      shake(pw1.row); shake(pw2.row);
+      showErr();
+      pw2.input.focus();
+      return;
+    }
+    btn.disabled = false;
+  }
+
+  /* ---------- 提交（原型演示） ---------- */
+  const noteEl = document.getElementById('note');
+  let noteTimer = null;
+  btn.addEventListener('click', ()=>{
+    if(btn.disabled) return;
+    btn.disabled = true;
+    document.activeElement && document.activeElement.blur();
+    setTimeout(()=>{
+      const d = I18N[lang];
+      noteEl.innerHTML = d.demoTitle + '<small>' + d.demoDesc + '</small>';
+      noteEl.classList.add('show');
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(()=>{ noteEl.classList.remove('show'); resetAll(); }, 2600);
+    }, 500);
+  });
+
+  window.resetAll = function(){
+    noteEl.classList.remove('show');
+    clearErr();
+    pw1.clear(); pw2.clear();
+    btn.disabled = true;
+  };
+
+  setLang('zh');
+})();
+</script>
+</body>
+</html>
