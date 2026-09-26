@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>提现密码设置优化 PRD v1.2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{max-width:980px;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:56px 48px;color:#fff;margin-bottom:26px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:26px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.75}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}.toc li{margin:4px 0}.toc a{color:#0961BD;text-decoration:none;font-size:13px}.toc a:hover{text-decoration:underline}.toc ol ol{padding-left:16px}.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}ul,ol{padding-left:20px;margin-bottom:10px}li{margin-bottom:5px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top;word-break:break-word}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{display:flex;gap:10px;background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-color:#4a7aee;color:#1a3a8a}
+.notice b{color:inherit}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+.fc-wrap{overflow:hidden;padding:10px 0}
+.legend{font-size:12px;color:#888;margin-top:8px}
+b,strong{color:#1a1a2e}
+.tag{display:inline-block;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;border-radius:4px;padding:0 7px;font-size:12px;margin-right:6px}
+.pill{display:inline-block;font-size:12px;padding:1px 9px;border-radius:10px;border:1px solid;white-space:nowrap}
+.p-del{color:#c0341d;border-color:#e6a5a5;background:#fdecec}
+.p-mod{color:#7a4b00;border-color:#e0b878;background:#fdf3e3}
+.p-keep{color:#0b3f78;border-color:#9cc4ea;background:#eef4fb}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">提现密码设置优化</div>
+  <div class="cover-sub">PRD 产品需求文档 · 设置提现密码页</div>
+  <div class="cover-meta"><span>版本：v1.2</span><span>更新日期：2026-09-25</span><span>作者：Laura</span></div>
+</div>
+
+<div class="section">
+  <h1>修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.2</td><td>2026-09-25</td><td><b>新增</b>「确认新密码」联动清空规则：「新提现密码」内容发生变化时，同步清空「确认新密码」已输入内容（5.1、5.2、第九章）。</td></tr>
+      <tr><td>v1.1</td><td>2026-09-25</td><td><b>收敛</b>需求范围至「设置提现密码」单页，设置成功页沿用现网、不在本次范围；<b>明确</b>两个页面入口；<b>新增</b>移除页面自绘数字小键盘（第五章）；<b>重构</b>校验机制为输入过程动态校验 + 「确认」按钮置灰态 + 行内错误提示（5.2），随之移除原 Toast 提示形态与「密码无效」提示文案。</td></tr>
+      <tr><td>v1.0</td><td>2026-09-25</td><td>初稿：设置提现密码页的页面元素、交互与校验规则、与现网流程差异、中葡文案对照及边界异常处理。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与目标</a></li>
+    <li><a href="#s2">二、名词解释</a></li>
+    <li><a href="#s3">三、交互逻辑流程图</a></li>
+    <li><a href="#s4">四、页面说明</a>
+      <ol>
+        <li><a href="#s41">4.1 入口与页面范围</a></li>
+        <li><a href="#s42">4.2 页面元素说明</a></li>
+        <li><a href="#s43">4.3 页面状态定义</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">五、交互与校验规则</a>
+      <ol>
+        <li><a href="#s51">5.1 密码输入区交互</a></li>
+        <li><a href="#s52">5.2 动态校验规则</a></li>
+        <li><a href="#s53">5.3 提交</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">六、与现网流程差异</a></li>
+    <li><a href="#s7">七、后台配置说明</a></li>
+    <li><a href="#s8">八、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s9">九、边界与异常处理</a></li>
+    <li><a href="#s10">十、关联需求同步检查</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与目标</h1>
+  <p>会员首次发起提现前，须先设置 6 位纯数字的提现密码。现网设置页存在三处体验问题：两次密码输入通过后仍要求再次输入登录密码二次确认，设置链路长；页面使用自绘数字小键盘，唤起慢且与系统输入习惯不一致；校验在点击提交后才触发，会员需先经历一次失败提交才能得知输入有误。</p>
+  <h2>本次需求范围</h2>
+  <ol>
+    <li><b>精简设置链路</b>：两次提现密码校验通过后直接完成设置，移除「输入登录密码」二次确认环节。</li>
+    <li><b>统一输入方式</b>：移除页面自绘数字小键盘，改用设备系统原生数字键盘。</li>
+    <li><b>校验前置</b>：由「提交后校验」改为「输入过程动态校验」，配合「确认」按钮置灰态与行内错误提示，在会员点击提交前即明确可否提交。</li>
+  </ol>
+  <div class="notice notice-info"><div>本次<b>仅覆盖「设置提现密码」单页</b>。设置成功页沿用现网，不在本次需求范围；提现密码的使用（提现时校验）、找回与修改流程不在本次范围；不涉及后台配置项变更。</div></div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、名词解释</h1>
+  <table>
+    <thead><tr><th style="width:150px">名词</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>提现密码</td><td>会员发起提现时用于身份二次确认的 6 位纯数字密码，与登录密码相互独立。</td></tr>
+      <tr><td>登录密码</td><td>会员登录平台使用的账号密码。现网设置提现密码时用于二次确认，本次移除该环节。</td></tr>
+      <tr><td>新提现密码</td><td>设置页第一个输入栏，会员本次设定的提现密码。</td></tr>
+      <tr><td>确认新密码</td><td>设置页第二个输入栏，用于与「新提现密码」比对，防止误输。</td></tr>
+      <tr><td>输入格</td><td>密码输入栏中的单个字符格。每栏固定 6 格，与 6 位密码一一对应。</td></tr>
+      <tr><td>当前光标格</td><td>下一位待输入的输入格，以高亮边框与闪烁竖线光标标识。</td></tr>
+      <tr><td>明文回显</td><td>输入一位数字后短暂显示该位明文、随后转为圆点掩码的显示方式，便于会员确认输入正确。</td></tr>
+      <tr><td>动态校验</td><td>在输入过程中实时判定并反馈校验结果，不依赖会员点击提交触发。</td></tr>
+      <tr><td>行内错误提示</td><td>常驻于「确认新密码」输入栏下方的红色文字提示，区别于居中浮层提示，指向明确且不遮挡输入区。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、交互逻辑流程图</h1>
+  <p>下图描述会员在「设置提现密码」页的输入、动态校验与提交判定逻辑。</p>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 960 620" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:960px;display:block;margin:0 auto;font-family:'PingFang SC',Arial,sans-serif">
+    <defs>
+      <marker id="arw3" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L8,5 L0,10 Z" fill="#5a7ba6"/></marker>
+    </defs>
+
+    <!-- start -->
+    <rect x="240" y="20" width="200" height="42" rx="21" fill="#0961BD"/>
+    <text x="340" y="46" fill="#fff" font-size="14" text-anchor="middle">进入「设置提现密码」页</text>
+    <line x1="340" y1="62" x2="340" y2="92" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+
+    <!-- input -->
+    <rect x="190" y="92" width="300" height="46" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+    <text x="340" y="120" fill="#0b3f78" font-size="13" text-anchor="middle">输入「新提现密码」「确认新密码」</text>
+    <line x1="340" y1="138" x2="340" y2="168" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+
+    <!-- decision 1 -->
+    <polygon points="340,168 480,220 340,272 200,220" fill="#fff8e8" stroke="#e0b878"/>
+    <text x="340" y="225" fill="#6a4a00" font-size="13" text-anchor="middle">两栏是否均满 6 位？</text>
+
+    <line x1="480" y1="220" x2="610" y2="220" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+    <text x="545" y="210" fill="#c0341d" font-size="12" text-anchor="middle">否</text>
+    <rect x="610" y="190" width="280" height="62" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+    <text x="750" y="215" fill="#0b3f78" font-size="13" text-anchor="middle">「确认」按钮置灰不可点</text>
+    <text x="750" y="235" fill="#0b3f78" font-size="13" text-anchor="middle">不触发校验、不展示错误提示</text>
+
+    <line x1="340" y1="272" x2="340" y2="308" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+    <text x="354" y="294" fill="#0a7d3e" font-size="12" text-anchor="start">是</text>
+
+    <!-- decision 2 -->
+    <polygon points="340,308 480,364 340,420 200,364" fill="#fff8e8" stroke="#e0b878"/>
+    <text x="340" y="369" fill="#6a4a00" font-size="13" text-anchor="middle">两次输入是否一致？</text>
+
+    <line x1="480" y1="364" x2="610" y2="364" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+    <text x="545" y="354" fill="#c0341d" font-size="12" text-anchor="middle">否</text>
+    <rect x="610" y="322" width="280" height="84" rx="6" fill="#fdecec" stroke="#e6a5a5"/>
+    <text x="750" y="346" fill="#c0341d" font-size="13" text-anchor="middle">两栏抖动 + 第二栏下方红字提示</text>
+    <text x="750" y="365" fill="#c0341d" font-size="13" text-anchor="middle">「两次输入的密码不一致」</text>
+    <text x="750" y="384" fill="#c0341d" font-size="13" text-anchor="middle">保留已输入内容，按钮保持置灰</text>
+
+    <line x1="340" y1="420" x2="340" y2="456" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+    <text x="354" y="442" fill="#0a7d3e" font-size="12" text-anchor="start">是</text>
+
+    <!-- enabled -->
+    <rect x="200" y="456" width="280" height="46" rx="6" fill="#e8f7ef" stroke="#8fceb0"/>
+    <text x="340" y="484" fill="#0a5c3a" font-size="13" text-anchor="middle">「确认」按钮亮起，可点击</text>
+    <line x1="340" y1="502" x2="340" y2="532" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+    <rect x="230" y="532" width="220" height="42" rx="21" fill="#0961BD"/>
+    <text x="340" y="558" fill="#fff" font-size="14" text-anchor="middle">点击「确认」提交设置</text>
+
+    <!-- return trunk -->
+    <line x1="890" y1="221" x2="920" y2="221" stroke="#5a7ba6" stroke-width="1.6"/>
+    <line x1="890" y1="364" x2="920" y2="364" stroke="#5a7ba6" stroke-width="1.6"/>
+    <line x1="920" y1="364" x2="920" y2="115" stroke="#5a7ba6" stroke-width="1.6"/>
+    <line x1="920" y1="115" x2="490" y2="115" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arw3)"/>
+    <circle cx="920" cy="221" r="3.5" fill="#5a7ba6"/>
+    <text x="705" y="90" fill="#8a8a8a" font-size="12" text-anchor="middle">任一栏内容变化即清除提示并重新判定</text>
+    <text x="705" y="107" fill="#8a8a8a" font-size="12" text-anchor="middle">修改「新提现密码」时同步清空「确认新密码」</text>
+  </svg>
+  </div>
+  <p class="legend">校验在输入过程中实时执行，不依赖点击「确认」触发；「确认」按钮仅在两栏均满 6 位且内容一致时可点击。</p>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、页面说明</h1>
+
+  <h2 id="s41">4.1 入口与页面范围</h2>
+  <h3>页面入口（共两个）</h3>
+  <table>
+    <thead><tr><th style="width:230px">入口</th><th>触发条件</th></tr></thead>
+    <tbody>
+      <tr><td>提款页</td><td>会员首次进入提款页且未设置提现密码时，由提款流程引导进入本页。</td></tr>
+      <tr><td>安全中心 — 提款密码设置</td><td>会员主动从安全中心进入本页设置提现密码。</td></tr>
+    </tbody>
+  </table>
+  <h3>页面范围</h3>
+  <ul>
+    <li><b>页面</b>：单页面「设置提现密码」，包含输入态、不可提交态、错误提示态、可提交态四种状态。</li>
+    <li><b>不在本次范围</b>：设置成功页沿用现网现有实现，本次不做改动。</li>
+    <li><b>适用终端</b>：H5（含 APP 内嵌 H5）。</li>
+    <li><b>展示语言</b>：跟随客户端语言，上线以目标市场语言（葡语）为准。</li>
+  </ul>
+
+  <h2 id="s42">4.2 页面元素说明</h2>
+  <table>
+    <thead><tr><th style="width:140px">元素</th><th style="width:120px">控件类型</th><th style="width:70px">必填</th><th>含义与输入要求</th></tr></thead>
+    <tbody>
+      <tr><td>顶部导航栏</td><td>导航栏 + 返回按钮</td><td>—</td><td>左侧返回按钮，居中标题「提现密码」。点击返回退出设置流程，返回逻辑沿用现网。</td></tr>
+      <tr><td>页面主标题</td><td>文本</td><td>—</td><td>固定展示「设置提现密码」，说明当前页面用途。</td></tr>
+      <tr><td>新提现密码</td><td>6 格数字密码输入栏</td><td>必填</td><td>会员本次设定的提现密码。仅接受数字，非数字输入被过滤；固定 6 位，输满即停止接收。点击调起设备系统原生数字键盘。</td></tr>
+      <tr><td>确认新密码</td><td>6 格数字密码输入栏</td><td>必填</td><td>再次输入同一密码用于比对。输入要求与「新提现密码」一致。</td></tr>
+      <tr><td>行内错误提示区</td><td>文本（红色）</td><td>—</td><td>位于「确认新密码」输入栏正下方，仅承载「两次输入的密码不一致」提示。<b>固定预留一行高度</b>，无提示时留空，避免提示出现或消失时页面布局跳动。</td></tr>
+      <tr><td>底部说明文案</td><td>文本</td><td>—</td><td>固定展示「首次提现前，请先设置提现密码」，说明设置提现密码的必要性。</td></tr>
+      <tr><td>确认按钮</td><td>主按钮（含置灰态）</td><td>—</td><td>提交设置。<b>置灰态</b>：两栏未同时满 6 位、或两次输入不一致时，按钮灰底灰字且不可点击；<b>可点态</b>：两栏均满 6 位且内容一致时按钮亮起，点击提交。</td></tr>
+    </tbody>
+  </table>
+  <div class="notice notice-info"><div>本页不设页内自绘数字小键盘。输入框为 6 格可视控件，会员通过空白格数量可直接感知「还差几位」，因此按钮置灰态无需额外补充引导文案。</div></div>
+
+  <h2 id="s43">4.3 页面状态定义</h2>
+  <table>
+    <thead><tr><th style="width:120px">状态</th><th style="width:230px">触发条件</th><th>页面表现</th></tr></thead>
+    <tbody>
+      <tr><td>输入态</td><td>进入页面 / 输入过程中</td><td>展示两栏输入区与底部说明；当前光标格高亮并闪烁光标；已输入位显示圆点掩码。</td></tr>
+      <tr><td>不可提交态</td><td>两栏未同时满 6 位</td><td>「确认」按钮置灰不可点；不触发一致性校验，不展示任何错误提示。</td></tr>
+      <tr><td>错误提示态</td><td>两栏均满 6 位但内容不一致</td><td>两栏同时抖动；「确认新密码」下方展示红色提示「两次输入的密码不一致」，两栏输入格边框转为红色；已输入内容全部保留，焦点停留在「确认新密码」末位；「确认」按钮保持置灰。会员在此状态下修改「新提现密码」时，按 5.2 联动清空「确认新密码」。</td></tr>
+      <tr><td>可提交态</td><td>两栏均满 6 位且内容一致</td><td>清除错误提示与红色边框；「确认」按钮亮起可点击。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、交互与校验规则</h1>
+
+  <h2 id="s51">5.1 密码输入区交互</h2>
+  <table>
+    <thead><tr><th style="width:150px">交互项</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td>键盘调起</td><td><b>移除现网页面自绘数字小键盘</b>。点击任一输入栏调起设备系统原生数字键盘，焦点落在该栏的当前光标格。</td></tr>
+      <tr><td>字符限制</td><td>仅接受 0–9 数字，其余字符（字母、符号、粘贴内容中的非数字）自动过滤；单栏最多 6 位，超出部分不接收。</td></tr>
+      <tr><td>明文回显</td><td>每输入一位，该位先以明文显示约 0.55 秒，随后转为圆点掩码；删除操作不触发回显。</td></tr>
+      <tr><td>当前光标格</td><td>待输入格显示高亮边框与闪烁竖线光标；输入栏失焦时不展示光标格标识。</td></tr>
+      <tr><td>联动清空</td><td>「新提现密码」发生<b>任何</b>输入或删除操作的瞬间，同步清空「确认新密码」已输入内容并清除错误提示。该规则不限于错误提示态，两栏已一致时修改「新提现密码」同样触发。</td></tr>
+      <tr><td>自动跳栏</td><td>「新提现密码」输满 6 位后，焦点自动跳至「确认新密码」首格，键盘保持唤起状态，会员无需手动点击切换。</td></tr>
+      <tr><td>删除</td><td>按键盘删除键逐位回退，已删除位恢复为空格状态；在「确认新密码」为空时继续按删除键，焦点回退至「新提现密码」末位。</td></tr>
+      <tr><td>栏位切换</td><td>点击目标输入栏即切换焦点，已输入内容保持不变。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s52">5.2 动态校验规则</h2>
+  <p>校验在输入过程中实时执行，不依赖点击「确认」触发。每次输入或删除后按下表判定。</p>
+  <table>
+    <thead><tr><th style="width:60px">顺序</th><th style="width:200px">判定条件</th><th style="width:110px">「确认」按钮</th><th>页面处理</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>①</td>
+        <td>两栏未同时满 6 位</td>
+        <td>置灰不可点</td>
+        <td>不触发一致性校验，不展示任何错误提示。</td>
+      </tr>
+      <tr>
+        <td>②</td>
+        <td>两栏均满 6 位，且两次输入不一致</td>
+        <td>置灰不可点</td>
+        <td>两栏同时抖动；「确认新密码」下方展示红色提示<b>「两次输入的密码不一致」</b>（葡语：As senhas inseridas duas vezes não correspondem）；<b>两栏已输入内容全部保留</b>，焦点停留在「确认新密码」末位，会员按删除键即可修改。</td>
+      </tr>
+      <tr>
+        <td>③</td>
+        <td>两栏均满 6 位，且两次输入一致</td>
+        <td>亮起可点击</td>
+        <td>清除错误提示与红色边框。</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>错误提示的清除时机</h3>
+  <p>错误提示态下，会员对<b>任一输入栏</b>执行输入或删除操作，即刻清除红色提示与红色边框，并按上表重新判定；错误提示不设自动消失时间。</p>
+  <h3>「确认新密码」联动清空</h3>
+  <p>「新提现密码」内容发生变化时，其上一次确认结果即失效，须同步清空「确认新密码」已输入内容，会员补满「新提现密码」后按自动跳栏规则重新确认一次。</p>
+  <div class="notice notice-info"><div>若不联动清空，会员修改「新提现密码」后，系统将以其<b>未再触碰过的旧确认值</b>参与比对并再次判定为不一致，形成第二次错误提示，与会员「已修正第一栏」的预期相悖。该规则不限于错误提示态：两栏已一致、「确认」按钮已亮起时修改「新提现密码」，同样触发清空。</div></div>
+  <div class="notice"><div>不一致时<b>不清空</b>已输入内容。动态校验的触发时点为输入第 12 位的瞬间，非会员主动提交；此时清空输入会造成无预期的内容丢失，且最常见的误输场景（末位按错）本可通过删除一位完成修正，清空将使修正成本由 1 位放大至 6 位或 12 位，与校验前置的目标相悖。</div></div>
+
+  <h2 id="s53">5.3 提交</h2>
+  <ul>
+    <li>仅在「确认」按钮处于可点态时响应点击，提交设置请求。</li>
+    <li>请求发出后按钮立即置灰并禁用，接口返回前不响应再次点击。</li>
+    <li>设置成功后进入现网设置成功页，该页不在本次需求范围。</li>
+  </ul>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、与现网流程差异</h1>
+  <table>
+    <thead><tr><th style="width:160px">环节</th><th style="width:290px">现网</th><th>本次</th></tr></thead>
+    <tbody>
+      <tr><td>两次密码校验通过后</td><td>弹出「请输入登录密码」弹窗，会员输入登录密码并点击「确定」后才完成设置</td><td><span class="pill p-del">移除</span> 校验通过直接提交完成设置</td></tr>
+      <tr><td>数字键盘</td><td>页面自绘数字小键盘</td><td><span class="pill p-del">移除</span> 改用设备系统原生数字键盘</td></tr>
+      <tr><td>校验触发时机</td><td>点击提交后统一校验</td><td><span class="pill p-mod">调整</span> 输入过程动态校验，提交前即明确可否提交</td></tr>
+      <tr><td>未输完整时的按钮</td><td>常态可点击，点击后提示「密码无效」</td><td><span class="pill p-mod">调整</span> 按钮置灰不可点，不再展示「密码无效」提示</td></tr>
+      <tr><td>不一致时的提示形态</td><td>页面居中浮层提示，2 秒自动消失</td><td><span class="pill p-mod">调整</span> 「确认新密码」下方常驻红色行内提示，指向明确且不遮挡输入区</td></tr>
+      <tr><td>不一致时的输入内容</td><td>清空两栏</td><td><span class="pill p-mod">调整</span> 全部保留，焦点停留在「确认新密码」末位</td></tr>
+      <tr><td>不一致提示文案</td><td>两次输入的密码不一致</td><td><span class="pill p-keep">沿用</span> 文案不变，见第八章</td></tr>
+      <tr><td>设置成功页</td><td>已有</td><td><span class="pill p-keep">沿用</span> 不在本次需求范围</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、后台配置说明</h1>
+  <p>本次需求<b>不涉及后台新增或调整任何配置项</b>。提现密码位数固定 6 位纯数字，由前端与服务端硬性约定，不提供后台可配置入口。后台「提现管理」相关配置沿用现有逻辑，不受本次改动影响。</p>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、中文 / 葡语文案对照表</h1>
+  <p>覆盖「设置提现密码」页全部固定展示文案。前台上线以葡语为准，中文仅用于需求沟通与原型演示。</p>
+  <table>
+    <thead><tr><th style="width:190px">位置 / 元素</th><th style="width:240px">中文</th><th>Português</th></tr></thead>
+    <tbody>
+      <tr><td>顶部导航标题</td><td>提现密码</td><td>Saque Senha</td></tr>
+      <tr><td>页面主标题</td><td>设置提现密码</td><td>Configurar Saque Senha</td></tr>
+      <tr><td>输入栏 1 标签</td><td>新提现密码</td><td>Novo Saque Senha</td></tr>
+      <tr><td>输入栏 2 标签</td><td>确认新密码</td><td>Confirmar Nova Senha</td></tr>
+      <tr><td>行内错误提示</td><td>两次输入的密码不一致</td><td>As senhas inseridas duas vezes não correspondem</td></tr>
+      <tr><td>底部说明文案</td><td>首次提现前，请先设置提现密码</td><td>Para o primeiro saque, você precisa definir a senha de saque primeiro</td></tr>
+      <tr><td>主按钮</td><td>确认</td><td>Confirmar</td></tr>
+    </tbody>
+  </table>
+  <div class="notice"><div>输入栏 2 葡语文案按葡语语法规范修正为 <code>Confirmar Nova Senha</code>（<code>senha</code> 为阴性名词，形容词须用阴性 <code>nova</code>）。原「密码无效 / Senha inválida」提示因按钮置灰态已承担未输完整的表达，本次移除，不再出现于本页。</div></div>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:240px">场景</th><th>处理规则</th></tr></thead>
+    <tbody>
+      <tr><td>重复点击「确认」</td><td>提交请求发出后按钮立即置灰并禁用，接口返回前不响应再次点击，避免重复提交。</td></tr>
+      <tr><td>接口请求失败 / 网络异常</td><td>沿用平台通用接口异常提示，停留在设置页并<b>保留</b>两栏已输入内容，按钮恢复为可点态，会员可直接重试，不新增提示文案。</td></tr>
+      <tr><td>错误提示态下再次触发不一致</td><td>提示内容不变，重新播放一次抖动动画，不叠加多条提示。</td></tr>
+      <tr><td>中途返回或退出页面</td><td>不保存已输入内容；再次进入页面时两栏均为空态，按钮为置灰态，焦点在「新提现密码」首格。</td></tr>
+      <tr><td>提现密码已设置的会员进入本页</td><td>本页仅用于首次设置。已设置会员由安全中心进入修改流程，不落入本页。</td></tr>
+      <tr><td>粘贴内容含非数字或超过 6 位</td><td>自动过滤非数字字符并按前 6 位截断，不报错；截断后按 5.2 重新判定。</td></tr>
+      <tr><td>键盘遮挡</td><td>系统数字键盘调起后页面自动上推，保证当前输入栏、行内错误提示区与「确认」按钮均可见。</td></tr>
+      <tr><td>两栏均满 6 位后再次修改「新提现密码」</td><td>无论当前为错误提示态还是可提交态，均立即清空「确认新密码」、清除错误提示并回落至不可提交态；「新提现密码」补满 6 位后焦点自动跳至「确认新密码」首格，重新确认一次。</td></tr>
+      <tr><td>「确认新密码」已部分输入时修改「新提现密码」</td><td>同样触发联动清空，「确认新密码」已输入的不足 6 位内容一并清空，规则与上一行一致。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>十、关联需求同步检查</h1>
+  <p>本需求位于提现主流程前置环节，与下列需求存在流程衔接，改动后需同步核对：</p>
+  <table>
+    <thead><tr><th style="width:230px">关联需求</th><th style="width:200px">衔接点</th><th>同步核对项</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>《增加Phone提款方式》</td>
+        <td>提款页引导入口</td>
+        <td>取款页对「未设置提现密码」会员的引导入口，需与本页「提款页入口」的触发条件保持一致。</td>
+      </tr>
+      <tr>
+        <td>《增加Phone提款方式》第七章 提现资料绑定与校验</td>
+        <td>提现前置校验顺序</td>
+        <td>「未设置提现密码」与「未绑定提现资料」两项前置校验的触发顺序与提示口径需统一，避免会员在两个引导页之间往返。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
