@@ -1167,7 +1167,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西</option></select></div>
           <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>762</option><option>763</option><option>764</option></select></div>
-          <div class="filter-item"><span class="filter-label">埋点类型：</span><select class="f-select"><option>全部</option><option>常规推广</option><option>facebook-click</option><option>tiktok-click-api</option><option>facebook-api</option><option>kwai-click</option></select></div>
+          <div class="filter-item"><span class="filter-label">埋点类型：</span><select class="f-select"><option>全部</option><option>常规推广</option><option>facebook-click</option><option>tiktok-click-api</option><option>facebook-api</option><option>kwai-click</option><option>APK上架包</option><option>IOS上架包</option><option>APK</option></select></div>
           <div class="filter-item"><span class="filter-label">推广渠道：</span><select class="f-select"><option>全部</option><option>短信1000</option><option>DALI 5</option><option>DA LI 4</option><option>FB-22</option><option>106-快手</option></select></div>
         </div>
         <div class="filter-row">
@@ -3582,7 +3582,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="fi"><span class="fl req">渠道名称：</span><div class="fc"><div style="position:relative;display:flex;align-items:center"><input class="fin" id="ac-ch-name" placeholder="请输入" oninput="showClearBtn('ac-ch-name-clear',this.value.length>0)" style="padding-right:28px"><span id="ac-ch-name-clear" onclick="document.getElementById('ac-ch-name').value='';showClearBtn('ac-ch-name-clear',false)" style="display:none;position:absolute;right:8px;cursor:pointer;width:16px;height:16px;background:#bbb;border-radius:50%;align-items:center;justify-content:center;color:#fff;font-size:11px;line-height:1">×</span></div></div></div>
       <div class="fi"><span class="fl req">落地指向：</span><div class="fc"><select class="fs" id="ac-land" onchange="landChange()"><option>仿谷歌页</option><option>官网首页</option><option>官网注册页</option><option>主域名</option><option>防封下载页</option></select></div></div>
       <div class="fi"><span class="fl req">跳转域名：</span><div class="fc"><select class="fs" id="ac-domain"><option>www.kk678.ac</option><option>www.kk678.bz</option></select></div></div>
-      <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ac-track" onchange="trackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option></select></div></div>
+      <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ac-track" onchange="trackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option><option value="APK上架包">APK上架包</option><option value="IOS上架包">IOS上架包</option><option value="APK">APK</option></select></div></div>
       <div id="ac-track-extra"></div>
       <div class="fi"><span class="fl req">推广商：</span><div class="fc"><select class="fs"><option>短信1000</option><option>DALI 5</option><option>DA LI 4</option><option>FB-22</option><option>106-快手</option><option>谷歌上架包</option></select></div></div>
       <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="chTab(this,'ac','and')">安卓</button><button class="tab-b" onclick="chTab(this,'ac','ios')">苹果</button></div></div></div>
@@ -3782,7 +3782,7 @@ select.fs.ph{color:#bfbfbf}
           <div id="batch-rows"></div>
         </div>
       </div>
-      <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ba-track" onchange="baTrackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option></select></div></div>
+      <div class="fi"><span class="fl req">埋点类型：</span><div class="fc"><select class="fs" id="ba-track" onchange="baTrackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option><option value="APK上架包">APK上架包</option><option value="IOS上架包">IOS上架包</option><option value="APK">APK</option></select></div></div>
       <div id="ba-track-extra"></div>
       <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="batchTab(this,'ba-and')">安卓</button><button class="tab-b" onclick="batchTab(this,'ba-ios')">苹果</button></div></div></div>
       <!-- 安卓 fields -->
@@ -4055,6 +4055,9 @@ const channels=[
   {id:10,name:'DALI5-002',region:'巴西',merchant:'762',promoter:'DALI 5',chId:'21002',track:'常规推广',link:'https://abc124.com?ch=21002',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'apk(需要自己封装)',iMethod:'https://upload-us.f-1-g-h.com/s4/3345678/dali'},
   {id:11,name:'KW-BR001',region:'巴西',merchant:'762',promoter:'106-快手',chId:'33201',track:'kwai-click',link:'https://kw1001.com?ch=33201',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(优先)+apk(推荐使用)',iMethod:'https://upload-us.f-1-g-h.com/s4/9981234/kw'},
   {id:12,name:'KW-BR002',region:'巴西',merchant:'762',promoter:'106-快手',chId:'33202',track:'kwai-click',link:'https://kw1002.com?ch=33202',guide:false,pTime:'首次提现',pGap:'6小时',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:13,name:'GP-BR001',region:'巴西',merchant:'762',promoter:'谷歌上架包',chId:'40101',track:'APK上架包',kwaiId:'KW-ALL-8812',link:'https://www.kk678.ac?ch=40101',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'apk(需要自己封装)',iMethod:'https://upload-us.f-1-g-h.com/s4/4010199/gp'},
+  {id:14,name:'IOS-BR001',region:'巴西',merchant:'762',promoter:'谷歌上架包',chId:'40102',track:'IOS上架包',link:'https://www.kk678.ac?ch=40102',guide:true,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'pwa(快速安装)',iMethod:'-'},
+  {id:15,name:'APK-BR001',region:'巴西',merchant:'762',promoter:'谷歌上架包',chId:'40103',track:'APK',link:'https://www.kk678.ac?ch=40103',guide:false,pTime:'访问主页',pGap:'0小时(强制安装)',iType:'apk(需要自己封装)',iMethod:'https://upload-us.f-1-g-h.com/s4/4010399/apk'},
 ];
 
 const evMap={
@@ -4216,6 +4219,8 @@ function trackChange(){
   let h='';
   if(v==='Facebook-API'||v==='TikTok-click-API'||v==='Kwai-API'){
     h=`<div class="fi"><span class="fl req">pixel Id：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">访问令牌TOKEN：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl">test_event_code事件测试：</span><div class="fc"><input class="fin" placeholder="请输入（非必填）"></div></div><div style="color:#ff4d4f;font-size:12px;line-height:1.6;margin:4px 0 10px 152px">test_event_code事件测试：仅供测试使用，测试完成后注意删除该输入框填入的内容</div>`;
+  }else if(v==='APK上架包'){
+    h=`<div class="fi"><span class="fl">全渠道回传kwai ID：</span><div class="fc"><input class="fin" id="ac-kwai-id" placeholder="请输入"></div></div>`;
   }
   cont.innerHTML=h;
 }
@@ -4445,9 +4450,11 @@ function openEditChannel(i){
   if(land){land.value='仿谷歌页';landChange();}
   const track=document.getElementById('ac-track');
   if(track){
-    const tm={'常规推广':'常规推广','tiktok-click-api':'TikTok-click-API','facebook-api':'Facebook-API','kwai-click':'Kwai-API'};
+    const tm={'常规推广':'常规推广','tiktok-click-api':'TikTok-click-API','facebook-api':'Facebook-API','kwai-click':'Kwai-API','APK上架包':'APK上架包','IOS上架包':'IOS上架包','APK':'APK'};
     track.value=tm[ch.track]||'常规推广';
     trackChange();
+    const kw=document.getElementById('ac-kwai-id');
+    if(kw)kw.value=ch.kwaiId||'';
   }
   openM('m-add-ch');
 }
@@ -4471,6 +4478,8 @@ function baTrackChange(){
   let h='';
   if(v==='Facebook-API'||v==='TikTok-click-API'||v==='Kwai-API'){
     h=`<div class="fi"><span class="fl req">pixel Id：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">访问令牌TOKEN：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl">test_event_code事件测试：</span><div class="fc"><input class="fin" placeholder="请输入（非必填）"></div></div><div style="color:#ff4d4f;font-size:12px;line-height:1.6;margin:4px 0 10px 152px">test_event_code事件测试：仅供测试使用，测试完成后注意删除该输入框填入的内容</div>`;
+  }else if(v==='APK上架包'){
+    h=`<div class="fi"><span class="fl">全渠道回传kwai ID：</span><div class="fc"><input class="fin" id="ba-kwai-id" placeholder="请输入"></div></div>`;
   }
   cont.innerHTML=h;
 }
