@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD · 推广渠道埋点类型新增</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
+.page{padding:40px;display:inline-block;min-width:100%}
+h1{font-size:24px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:20px;display:flex;gap:20px;flex-wrap:wrap}
+table{border-collapse:collapse;margin:12px 0;font-size:13px;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+th{background:#f0f5ff;padding:9px 12px;text-align:left;font-weight:600;color:#0961BD;border-bottom:2px solid #d6e4ff;border-right:1px solid #e3ecff;vertical-align:middle}
+th:last-child{border-right:none}
+td{padding:9px 12px;border-bottom:1px solid #f0f0f0;border-right:1px solid #f2f2f2;vertical-align:top}
+td:last-child{border-right:none}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcff}
+td.land{font-weight:600;background:#f7f9fc;color:#0961BD;min-width:170px}
+td.item{font-weight:500;background:#fcfdff;min-width:130px}
+th.rule,td.rule{background:#fbfbfd}
+tr:hover td.rule{background:#f6f7fb}
+th.g1{background:#e8f1fb;color:#0050b3}
+th.g2{background:#e8f4ea;color:#237804}
+th.g3{background:#fdeee8;color:#ad4e00}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:500;white-space:nowrap}
+.t-ok{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.t-no{background:#fff1f0;color:#cf1322;border:1px solid #ffa39e}
+.t-warn{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
+.t-undef{background:#f5f5f5;color:#595959;border:1px solid #d9d9d9}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#666;margin:10px 0 16px}
+.legend span{display:flex;align-items:center;gap:6px}
+.note{background:#fff7e6;border-left:3px solid #fa8c16;padding:10px 14px;border-radius:4px;margin:14px 0;font-size:13px;color:#7d4f00;max-width:1100px}
+ul{margin:4px 0 0 0;padding-left:16px}
+li{margin-bottom:3px}
+.sublabel{display:inline-block;min-width:62px;color:#666;font-size:12px}
+.small{font-size:11.5px;color:#999}
+.mid{text-align:center;vertical-align:middle;font-weight:500}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:600;color:#262626;margin:26px 0 10px}
+h3:first-of-type{margin-top:6px}
+h4{font-size:13.5px;font-weight:600;color:#444;margin:18px 0 8px}
+p{margin-bottom:12px;color:#444;max-width:1100px}
+.section-card{background:#fff;border-radius:8px;padding:26px 30px;margin:0 0 22px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:block}
+.doc-title{font-size:21px;font-weight:700;color:#1a1a2e;margin:40px 0 6px;padding-top:28px;border-top:3px solid #e8f0ff}
+.info{background:#e6f4ff;border-left:3px solid #0961BD;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#003a8c;max-width:1100px}
+.tip{background:#f6ffed;border-left:3px solid #52c41a;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#135200;max-width:1100px}
+.danger{background:#fff1f0;border-left:3px solid #ff4d4f;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#a8071a;max-width:1100px}
+.t-fix{background:#fff1f0;color:#cf1322;border:1px solid #ffa39e}
+.t-keep{background:#e6f4ff;color:#0050b3;border:1px solid #91caff}
+.t-lock{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.t-doc{background:#f9f0ff;color:#531dab;border:1px solid #d3adf7}
+.doc-table{max-width:1400px}
+.doc-table td{min-width:0}
+.rid{font-weight:700;color:#0961BD;white-space:nowrap}
+.fid{font-weight:700;color:#cf1322;white-space:nowrap}
+.doc-ol{padding-left:20px;margin:6px 0 12px;max-width:1100px}
+.doc-ol li{margin-bottom:6px;color:#444}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>四种埋点设置下的页面交互差异对比表</h1>
+<div class="meta">
+  <span>📄 版本：v2.1</span>
+  <span>✏️ 作者：Laura</span>
+  <span>📅 更新日期：2026-09-29</span>
+</div>
+
+<div class="legend">
+  <span><span class="tag t-ok">✅ 生效</span>按配置正常表现</span>
+  <span><span class="tag t-no">❌ 不生效</span>不触发或点击无响应</span>
+  <span><span class="tag t-warn">⚠️ 差异</span>实测与熊猫规则说明不一致</span>
+  <span><span class="tag t-undef">❓ 未测</span>本轮未覆盖</span>
+</div>
+
+<table>
+  <tr>
+    <th rowspan="2" class="g1">落地指向</th>
+    <th rowspan="2" class="g1">对比项</th>
+    <th rowspan="2" class="g1" style="min-width:200px">常规推广<br><span class="small">（现有 PRD 逻辑 · 基线）</span></th>
+    <th colspan="3" class="g2">APK上架包（SD=6）</th>
+    <th colspan="3" class="g3">iOS上架包（SD=4）</th>
+    <th colspan="3" class="g1">APK（H5 套壳包）</th>
+  </tr>
+  <tr>
+    <th class="rule" style="min-width:260px">熊猫规则说明</th>
+    <th class="g2" style="min-width:200px">实测 · 安卓设备</th>
+    <th class="g2" style="min-width:230px">实测 · iOS 设备</th>
+    <th class="rule" style="min-width:260px">熊猫规则说明</th>
+    <th class="g3" style="min-width:200px">实测 · 安卓设备</th>
+    <th class="g3" style="min-width:200px">实测 · iOS 设备</th>
+    <th class="rule" style="min-width:200px">熊猫规则说明</th>
+    <th class="g1" style="min-width:180px">实测 · 安卓设备</th>
+    <th class="g1" style="min-width:180px">实测 · iOS 设备</th>
+  </tr>
+
+  <!-- H5 页类 -->
+  <tr>
+    <td class="land" rowspan="2">官网首页 /<br>官网注册页 /<br>主域名</td>
+    <td class="item">域名跳转</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>按落地指向跳转至对应 H5 页面；跳转域名随落地指向联动，逐渠道独立选择</td>
+    <td class="rule">落地指向中，只有「官网首页」、「官网注册页」生效；<br>推广渠道的「跳转域名」不生效，在【域名管理】中，推广域名-主域名（落地指向：官网首页、官网注册页）只能配置一条跳转域名，否则会因跨域导致掉登录。</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>三种落地指向（含主域名）域名跳转均正常</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>三种落地指向（含主域名）域名跳转均正常</td>
+    <td class="rule">落地指向中，只有「官网首页」、「官网注册页」生效；<br>推广渠道的「跳转域名」不生效，在【域名管理】中，推广域名-主域名（落地指向：官网首页、官网注册页）只能配置一条跳转域名，否则会因跨域导致掉登录。</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>三种落地指向（含主域名）域名跳转均正常</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>三种落地指向（含主域名）域名跳转均正常</td>
+    <td class="rule" rowspan="2">H5 套壳包（打包 URL），落地指向中，只有「官网首页」生效。</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>三种落地指向均可正常落地</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>三种落地指向均可正常落地</td>
+  </tr>
+  <tr>
+    <td class="item">下载按钮 &amp;<br>安装引导</td>
+    <td>
+      <span class="tag t-ok">✅ 均生效</span>
+      <ul>
+        <li><span class="sublabel">下载按钮</span>开启后展示顶部固定横幅 + 底部安装浮层</li>
+        <li><span class="sublabel">安装引导</span>按弹框时间点 / 间隔弹出引导弹窗</li>
+        <li><span class="sublabel">可安装</span>安卓按弹框安装类型 PWA / APK / PWA优先+APK；iOS 为保存桌面</li>
+        <li><span class="sublabel">配置来源</span>安卓 Tab 与苹果 Tab 各自独立生效</li>
+      </ul>
+    </td>
+    <td class="rule">安卓端的「下载按钮」不生效，苹果端的「下载按钮」、「引导安装」不生效；<br>安卓上架包，配置的安装引导仍然生效，可引导用户下载 PWA 或 APK。</td>
+    <td>
+      <ul>
+        <li><span class="sublabel">下载按钮</span><span class="tag t-no">❌ 不弹出</span></li>
+        <li><span class="sublabel">安装引导</span><span class="tag t-ok">✅ 正常弹出</span>可正常跳转 / 安装；非 Chrome 浏览器唤起 Chrome 正常</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li><span class="sublabel">下载按钮</span><span class="tag t-no">❌ 不弹出</span></li>
+        <li><span class="sublabel">安装引导</span><span class="tag t-warn">⚠️ 会弹出</span>iOS（苹果 Tab）配置不生效，<strong>统一读取安卓配置</strong>；Safari 与 Chrome 表现一致</li>
+        <li><span class="sublabel">可安装</span><strong>只能下载 APK，不能下载 PWA</strong></li>
+      </ul>
+    </td>
+    <td class="rule">安卓端的「下载按钮」不生效，苹果端的「下载按钮」、「引导安装」不生效；<br>安卓上架包，配置的安装引导仍然生效，可引导用户下载 PWA 或 APK。</td>
+    <td>
+      <ul>
+        <li><span class="sublabel">下载按钮</span><span class="tag t-no">❌ 不弹出</span></li>
+        <li><span class="sublabel">安装引导</span><span class="tag t-no">❌ 不弹出</span></li>
+        <li class="small">规则中「安装引导仍然生效」仅针对安卓上架包，未涉及 iOS上架包，故不计为差异</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li><span class="sublabel">下载按钮</span><span class="tag t-no">❌ 不弹出</span></li>
+        <li><span class="sublabel">安装引导</span><span class="tag t-no">❌ 不弹出</span></li>
+      </ul>
+    </td>
+    <td><span class="tag t-no">❌ 两者均不弹出</span><br>三种落地指向表现一致</td>
+    <td><span class="tag t-no">❌ 两者均不弹出</span><br>三种落地指向表现一致</td>
+  </tr>
+
+  <!-- 下载页类 -->
+  <tr>
+    <td class="land" rowspan="2">防封下载页 /<br>仿谷歌页</td>
+    <td class="item">域名跳转</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>按落地指向跳转至对应下载页；跳转域名随落地指向联动</td>
+    <td class="rule mid" rowspan="2">不生效</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>域名跳转正常，页面可正常打开</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>域名跳转正常，页面可正常打开</td>
+    <td class="rule mid" rowspan="2">不生效</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>域名跳转正常，页面可正常打开</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>域名跳转正常，页面可正常打开</td>
+    <td class="rule mid" rowspan="2">不生效</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>域名跳转正常，页面可正常打开</td>
+    <td><span class="tag t-ok">✅ 正常</span><br>域名跳转正常，页面可正常打开</td>
+  </tr>
+  <tr>
+    <td class="item">页面安装按钮</td>
+    <td><span class="tag t-ok">✅ 生效</span><br>页面自带下载交互，点击按弹框安装类型下载；此时「下载按钮」「引导安装」开关不生效</td>
+    <td><span class="tag t-no">❌ 点击不生效</span><br>页面可正常打开，但点击安装按钮无任何响应</td>
+    <td><span class="tag t-no">❌ 点击不生效</span><br>页面可正常打开，但点击安装按钮无任何响应</td>
+    <td><span class="tag t-no">❌ 点击不生效</span><br>页面可正常打开，点击安装按钮无响应</td>
+    <td><span class="tag t-no">❌ 点击不生效</span><br>页面可正常打开，点击安装按钮无响应</td>
+    <td><span class="tag t-no">❌ 点击不生效</span><br>点击安装按钮无响应</td>
+    <td><span class="tag t-no">❌ 点击不生效</span><br>点击安装按钮无响应</td>
+  </tr>
+</table>
+
+<div class="note">
+标 <span class="tag t-warn">⚠️</span> 的格子为实测与熊猫规则说明不一致：① 规则称上架包「跳转域名不生效」且落地指向未列入主域名，实测三种 H5 落地指向域名跳转均正常；② 规则称 APK上架包苹果端引导安装不生效，实测会弹出且读取安卓配置、只能装 APK；③ APK 规则称仅官网首页生效，实测注册页与主域名同样可正常落地；④ 规则称下载页类落地指向不生效，实测三种埋点下域名跳转均正常、页面可正常打开，仅页面安装按钮点击无响应。<br>
+本轮未覆盖的场景：域名管理中配置多条跳转域名时是否确实出现跨域掉登录。
+</div>
+
+<!-- ══════════════ 需求文档 ══════════════ -->
+<div class="doc-title">推广渠道埋点类型新增 · PRD</div>
+<div class="meta">
+  <span>📄 版本：v1.0</span>
+  <span>✏️ 作者：Laura</span>
+  <span>📅 更新日期：2026-10-02</span>
+</div>
+
+<div class="section-card">
+<h2>一、需求概述</h2>
+<p>推广渠道管理模块现有四种埋点类型（常规推广、Facebook API、TK API、Kwai API），均面向 H5 渠道链接的投放与回传。本需求新增三种面向独立安装包的埋点类型：<strong>APK上架包</strong>（商户自行封装并上架谷歌商店的马甲包，SD=6）、<strong>iOS上架包</strong>（商户自行封装并上架苹果商店的安装包，SD=4）、<strong>APK</strong>（H5 套壳包，打包指定 URL 后由商户自行分发）。</p>
+<p>三种新埋点与现有埋点的本质差异在于用户已处于 App 环境内，无需再被引导下载安装，因此落地指向的生效范围、下载按钮与安装引导的前台表现均与常规推广不同。本需求包含后台配置与前台交互两部分。</p>
+</div>
+
+<div class="section-card">
+<h2>二、后台配置</h2>
+
+<h3>2.1 埋点类型新增选项</h3>
+<p>「埋点类型」为渠道的必填字段，下拉单选，决定该渠道的数据追踪方式与前台落地行为。本需求在现有选项基础上新增以下三项，新增选项排列于现有四项之后。</p>
+<table class="doc-table">
+  <tr><th style="width:140px">新增选项</th><th style="width:250px">展开字段</th><th style="width:110px">事件说明</th><th>选项说明</th></tr>
+  <tr>
+    <td><strong>APK上架包</strong></td>
+    <td>全渠道回传 kwai ID <span class="tag t-ok">非必填</span>，见 2.2</td>
+    <td><span class="tag t-ok">✅ 有</span>见 2.3</td>
+    <td>商户自行封装并上架谷歌商店的马甲包，SD=6。用户可在谷歌商店中按名称搜索到该包并安装，安装后在 App 内加载落地页。</td>
+  </tr>
+  <tr>
+    <td><strong>iOS上架包</strong></td>
+    <td>无</td>
+    <td><span class="tag t-ok">✅ 有</span>见 2.3</td>
+    <td>商户自行封装并上架苹果商店的安装包，SD=4。用户从苹果商店安装后在 App 内加载落地页。</td>
+  </tr>
+  <tr>
+    <td><strong>APK</strong></td>
+    <td>无</td>
+    <td><span class="tag t-no">❌ 无</span></td>
+    <td>H5 套壳包，打包指定 URL 生成安装包，由商户自行分发，不经应用商店。用户安装后在 App 内加载打包的 URL。</td>
+  </tr>
+</table>
+<div class="info">三种新埋点均不需要填写 Pixel ID 与访问令牌 TOKEN，不涉及 test_event_code 事件测试字段。</div>
+
+<h3>2.2 APK上架包专属字段</h3>
+<table class="doc-table">
+  <tr><th style="width:160px">字段</th><th style="width:80px">必填</th><th style="width:90px">控件</th><th style="width:230px">展示条件</th><th>字段说明</th></tr>
+  <tr>
+    <td>全渠道回传 kwai ID</td>
+    <td><span class="tag t-ok">非必填</span></td>
+    <td>文本输入</td>
+    <td>埋点类型选择「APK上架包」时展示；切换为其他埋点类型时隐藏并清空已填内容</td>
+    <td>该上架包全渠道数据回传至快手平台的标识，由投流方提供。留空表示不做快手全渠道回传，不影响该渠道在我方后台的数据统计。</td>
+  </tr>
+</table>
+
+<h3>2.3 事件说明</h3>
+<p>事件说明用于展示该埋点类型的回传事件清单，内容格式为「中文事件名称 - 事件标识符」，具体以三方平台官方文档为准。入口有两处，均仅对 APK上架包与 iOS上架包展示：</p>
+<table class="doc-table">
+  <tr><th style="width:170px">入口位置</th><th style="width:250px">展示条件</th><th>交互说明</th></tr>
+  <tr>
+    <td>渠道表单内</td>
+    <td>新增渠道 / 编辑渠道 / 批量新增渠道弹窗中，「埋点类型」选择 APK上架包 或 IOS上架包 后展示；选择 APK 或其他埋点类型时不展示</td>
+    <td>在埋点类型字段下方展示事件说明入口，供运营在配置渠道时直接查看该类型的回传事件清单。</td>
+  </tr>
+  <tr>
+    <td>渠道列表操作列</td>
+    <td>渠道埋点类型为 APK上架包 或 IOS上架包 时展示「说明」按钮；埋点类型为 APK 时不展示</td>
+    <td>点击弹出事件说明弹窗，标题为该埋点类型名称，内容为回传事件列表，与表单内展示的内容一致。</td>
+  </tr>
+</table>
+<h4>回传事件清单</h4>
+<table class="doc-table">
+  <tr><th style="width:170px">埋点类型</th><th>回传事件（共 8 项）</th></tr>
+  <tr><td>APK上架包</td><td>注册 - register；注册点击 - registerClick；登录 - login；登出 - logout；开始游戏 - enterGame；拉起订单 - rechargeClick；首充 - firstrecharge；充值 - recharge</td></tr>
+  <tr><td>iOS上架包</td><td>同 APK上架包，共 8 项</td></tr>
+  <tr><td>APK</td><td>不涉及回传事件，两处入口均不展示</td></tr>
+</table>
+
+<h3>2.4 测试回传弹窗</h3>
+<p>点击渠道列表操作列「Test」按钮后弹出，用于测试该渠道的埋点回传是否正常。三种新埋点下弹窗字段表现如下：</p>
+<table class="doc-table">
+  <tr><th style="width:140px">字段</th><th style="width:130px">三种新埋点下表现</th><th>说明</th></tr>
+  <tr><td>渠道名称</td><td>只读回填</td><td>自动填入当前渠道名称。</td></tr>
+  <tr><td>类型</td><td>只读回填</td><td>自动填入当前渠道的埋点类型，即 APK上架包 / IOS上架包 / APK。</td></tr>
+  <tr><td>Pixel Id</td><td><strong>保留字段，空值置灰</strong></td><td>三种新埋点无 Pixel ID 概念，该字段保留展示但内容为空且不可编辑，以维持弹窗布局与现有埋点一致。</td></tr>
+  <tr><td>测试链接</td><td>可编辑</td><td>用于测试回传的链接，测试成功后应使用渠道链接进行投放。</td></tr>
+</table>
+
+<h3>2.5 影响范围</h3>
+<p>三个新增埋点选项需在以下位置同步生效，选项顺序与文案保持一致：渠道列表筛选区的「埋点类型」下拉（含「全部」选项）、新增渠道弹窗、编辑渠道弹窗、批量新增渠道弹窗（三者渠道设置字段一致）、渠道列表数据表格的「埋点类型」列展示、测试回传弹窗的「类型」只读字段，以及推广效果报表的埋点类型维度。现有四种埋点类型的字段展开、事件说明与前台行为不受本需求影响。</p>
+</div>
+
+<div class="section-card">
+<h2>三、前台交互</h2>
+
+<h3>3.1 落地指向生效范围</h3>
+<p>三种新埋点下，落地指向的生效范围与常规推广不同，具体如下。</p>
+<table class="doc-table">
+  <tr><th style="width:180px">落地指向</th><th style="width:110px">是否生效</th><th style="width:140px">适用埋点</th><th>前台表现</th></tr>
+  <tr>
+    <td>官网首页 / 官网注册页 / 主域名</td>
+    <td><span class="tag t-ok">✅ 生效</span></td>
+    <td>三种新埋点</td>
+    <td>域名跳转按所选跳转域名正常生效，用户可正常落地至对应 H5 页面。三种落地指向的交互表现一致。</td>
+  </tr>
+  <tr>
+    <td>仿谷歌页 / 防封下载页</td>
+    <td><span class="tag t-no">❌ 不生效</span></td>
+    <td>三种新埋点</td>
+    <td>域名跳转正常，下载页可正常打开，但<strong>页面上的安装按钮点击不生效</strong>。该组合无实际投放价值，运营配置新埋点渠道时不应选择下载页类落地指向。</td>
+  </tr>
+</table>
+
+<h3>3.2 下载按钮</h3>
+<p>三种新埋点下，安卓端与 iOS 端<strong>均不展示</strong>「下载按钮」对应的两个前台入口——顶部固定横幅与底部安装浮层。用户已处于 App 环境内，无需再引导下载，后台「下载按钮」开关的配置不作用于新埋点渠道。</p>
+
+<h3>3.3 安装引导</h3>
+<p>安装引导弹窗的生效情况按埋点类型与终端区分，仅 APK上架包的安卓端生效。</p>
+<table class="doc-table">
+  <tr><th style="width:140px">埋点类型</th><th style="width:80px">终端</th><th style="width:110px">是否生效</th><th>前台表现</th></tr>
+  <tr>
+    <td rowspan="2">APK上架包</td>
+    <td>安卓</td>
+    <td><span class="tag t-ok">✅ 生效</span></td>
+    <td>按后台安卓 Tab 配置的弹框内容、弹框时间点与弹框间隔时间正常弹出安装引导弹窗，用户可正常跳转并完成安装。弹框安装类型配置为 pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用) 时，实际可安装内容与配置一致；使用非 Chrome 浏览器点击安装时，唤起 Chrome 的逻辑正常生效。</td>
+  </tr>
+  <tr>
+    <td>iOS</td>
+    <td><span class="tag t-no">❌ 不生效</span></td>
+    <td><strong>不弹出</strong>安装引导弹窗。iOS 设备无法安装 APK 文件，弹出引导将导致无效下载，故 iOS 端不展示任何安装引导。Safari 与 Chrome 表现一致。</td>
+  </tr>
+  <tr>
+    <td>iOS上架包</td>
+    <td>安卓 / iOS</td>
+    <td><span class="tag t-no">❌ 不生效</span></td>
+    <td>两端均<strong>不弹出</strong>安装引导弹窗。iOS 端 Safari 与 Chrome 表现一致。</td>
+  </tr>
+  <tr>
+    <td>APK</td>
+    <td>安卓 / iOS</td>
+    <td><span class="tag t-no">❌ 不生效</span></td>
+    <td>两端均<strong>不弹出</strong>安装引导弹窗。</td>
+  </tr>
+</table>
+<div class="info">后台「渠道设置」中安卓 Tab 与苹果 Tab 的字段仍可正常配置与保存，但仅 APK上架包的安卓 Tab 配置会作用于前台；其余组合的配置不生效。</div>
+
+<h3>3.4 与常规推广的交互差异汇总</h3>
+<table class="doc-table">
+  <tr><th style="width:150px">交互项</th><th style="width:30%">常规推广</th><th>三种新埋点</th></tr>
+  <tr><td>落地指向生效范围</td><td>五个选项全部生效，下载页类走页面自带下载交互，H5 页类走下载按钮与安装引导</td><td>仅官网首页 / 官网注册页 / 主域名生效；下载页类页面可打开但安装按钮点击不生效</td></tr>
+  <tr><td>下载按钮</td><td>开启后展示顶部固定横幅 + 底部安装浮层</td><td>安卓与 iOS 均不展示</td></tr>
+  <tr><td>安装引导</td><td>按弹框时间点与间隔弹出，安卓 Tab 与苹果 Tab 各自独立生效</td><td>仅 APK上架包的安卓端生效，其余均不弹出</td></tr>
+  <tr><td>可安装内容</td><td>安卓按弹框安装类型为 PWA / APK / PWA优先+APK；iOS 为保存桌面</td><td>仅 APK上架包的安卓端可安装，按弹框安装类型生效</td></tr>
+</table>
+</div>
+
+<div class="section-card">
+<h2>四、验收要点</h2>
+<ol class="doc-ol">
+  <li><strong>埋点类型字段：</strong>筛选区、新增 / 编辑 / 批量新增渠道弹窗的「埋点类型」下拉均展示 APK上架包、IOS上架包、APK 三个新选项，文案与顺序一致；渠道列表「埋点类型」列与测试回传弹窗「类型」字段可正确展示三种新类型。</li>
+  <li><strong>专属字段：</strong>选择 APK上架包 展开「全渠道回传 kwai ID」且为非必填；切换至其他埋点类型时该字段隐藏并清空；iOS上架包与 APK 不展开任何子字段。</li>
+  <li><strong>事件说明：</strong>表单内选择 APK上架包 或 IOS上架包 后展示事件说明，内容为 8 项回传事件；渠道列表操作列对这两类渠道展示「说明」按钮，弹窗标题为埋点类型名称、内容与表单内一致；APK 两处均不展示。</li>
+  <li><strong>测试回传弹窗：</strong>三种新埋点下 Pixel Id 字段保留展示、内容为空且置灰不可编辑，渠道名称与类型正确只读回填。</li>
+  <li><strong>落地指向：</strong>三种新埋点配置官网首页 / 官网注册页 / 主域名时，安卓与 iOS 均可正常落地、域名跳转正常；配置仿谷歌页 / 防封下载页时页面可打开但安装按钮点击不生效。</li>
+  <li><strong>下载按钮：</strong>三种新埋点在三种 H5 落地指向下，安卓与 iOS 均不展示顶部横幅与底部安装浮层。</li>
+  <li><strong>安装引导：</strong>仅 APK上架包的安卓端弹出并可正常安装，弹框安装类型三种配置均可正确安装、非 Chrome 浏览器唤起 Chrome 正常；APK上架包 iOS 端、iOS上架包两端、APK 两端均不弹出，iOS 端需分别验证 Safari 与 Chrome。</li>
+  <li><strong>回归：</strong>常规推广、Facebook API、TK API、Kwai API 四种现有埋点的字段展开、事件说明、测试回传弹窗与前台下载按钮 / 安装引导行为均不受影响。</li>
+</ol>
+</div>
+
+</div>
+</body>
+</html>

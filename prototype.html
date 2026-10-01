@@ -4067,13 +4067,15 @@ const evMap={
   'tiktok-click-api':{title:'TK API（TikTok服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','Login'],['充值','Purchase（仅在首充时触发）']]},
   'Kwai-API':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
   'kwai-click':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
+  'APK上架包':{title:'APK上架包',ev:[['注册','register'],['注册点击','registerClick'],['登录','login'],['登出','logout'],['开始游戏','enterGame'],['拉起订单','rechargeClick'],['首充','firstrecharge'],['充值','recharge']]},
+  'IOS上架包':{title:'IOS上架包',ev:[['注册','register'],['注册点击','registerClick'],['登录','login'],['登出','logout'],['开始游戏','enterGame'],['拉起订单','rechargeClick'],['首充','firstrecharge'],['充值','recharge']]},
 };
 
 // ─── RENDER TABLE ───
 function renderTable(){
   const tb=document.getElementById('ch-tbody');
   tb.innerHTML=channels.map((c,i)=>{
-    const hasEv=c.track!=='常规推广';
+    const hasEv=!!evMap[c.track];
     const uid='sw-'+i;
     return`<tr>
       <td>${i+1}</td>
@@ -4133,11 +4135,16 @@ function copyTxt(t){
   toast('链接已复制');
 }
 
+// 无 Pixel ID 概念的埋点类型：Test弹窗 Pixel Id 保留字段但为空值且置灰
+const NO_PIXEL_TRACKS=['APK上架包','IOS上架包','APK'];
+
 function openTest(i){
   const c=channels[i];
   document.getElementById('t-name').value=c.name;
   document.getElementById('t-type').value=c.track;
-  document.getElementById('t-pixel').value=c.chId;
+  const px=document.getElementById('t-pixel');
+  px.value=NO_PIXEL_TRACKS.includes(c.track)?'':c.chId;
+  px.disabled=true;
   document.getElementById('t-link').value=c.link;
   openM('m-test');
 }
