@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD · 批量新增渠道配置优化</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
+.page{padding:40px;display:inline-block;min-width:100%}
+h1{font-size:24px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:24px;display:flex;gap:20px;flex-wrap:wrap}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:600;color:#262626;margin:26px 0 10px}
+h3:first-of-type{margin-top:6px}
+p{margin-bottom:12px;color:#444;max-width:1100px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+th{background:#f0f5ff;padding:9px 12px;text-align:left;font-weight:600;color:#0961BD;border-bottom:2px solid #d6e4ff;border-right:1px solid #e3ecff;vertical-align:middle;white-space:nowrap}
+th:last-child{border-right:none}
+td{padding:9px 12px;border-bottom:1px solid #f0f0f0;border-right:1px solid #f2f2f2;vertical-align:top}
+td:last-child{border-right:none}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcff}
+.section-card{background:#fff;border-radius:8px;padding:26px 30px;margin:0 0 22px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:block}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:500;white-space:nowrap}
+.t-ok{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.t-no{background:#fff1f0;color:#cf1322;border:1px solid #ffa39e}
+.t-new{background:#e6f4ff;color:#0958d9;border:1px solid #91caff}
+.note{background:#fff7e6;border-left:3px solid #fa8c16;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#7d4f00;max-width:1100px}
+.info{background:#e6f4ff;border-left:3px solid #0961BD;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#003a8c;max-width:1100px}
+.doc-ol{padding-left:20px;margin:6px 0 12px;max-width:1100px}
+.doc-ol li{margin-bottom:6px;color:#444}
+.small{font-size:11.5px;color:#999}
+code{background:#f5f5f5;padding:1px 5px;border-radius:3px;font-size:12px;color:#c41d7f;font-family:Menlo,Consolas,monospace}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>批量新增渠道配置优化 · PRD</h1>
+<div class="meta">
+  <span>📄 版本：v1.0</span>
+  <span>✏️ 作者：Laura</span>
+  <span>📅 更新日期：2026-10-03</span>
+</div>
+
+<div class="section-card">
+<h2>一、需求概述</h2>
+<p>推广渠道管理模块的「批量新增渠道」弹窗，当前将「埋点类型」作为整个弹窗的公共字段，选择后展开的专属字段（Pixel ID、访问令牌 TOKEN、test_event_code 事件测试、全渠道回传 kwai ID）同样是公共字段，一次批量创建的所有渠道共用同一份取值。</p>
+<p>实际业务中，同一批创建的渠道虽然埋点类型相同，但各自对应不同的广告账户与投放标识，Pixel ID、访问令牌 TOKEN、全渠道回传 kwai ID 均需逐条区分。当前形态下运营只能先批量创建，再进入编辑渠道弹窗逐条修改，批量新增的效率收益被抵消。</p>
+<p>本需求将埋点类型的展开字段由弹窗级公共字段下沉为渠道行级字段，使运营在批量新增时即可为每条渠道分别填写；同时按参考平台形态调整弹窗布局。本需求仅调整「批量新增渠道」弹窗，不改变字段的业务含义、校验规则与前台行为。</p>
+</div>
+
+<div class="section-card">
+<h2>二、需求范围</h2>
+<table>
+  <tr><th style="width:150px">范围</th><th style="width:120px">是否调整</th><th>说明</th></tr>
+  <tr><td>弹窗顶部公共字段布局</td><td><span class="tag t-new">调整</span></td><td>地区、所属商户、埋点类型三个公共字段改为同一行横向并排展示。</td></tr>
+  <tr><td>渠道信息区</td><td><span class="tag t-new">调整</span></td><td>由固定 4 列改为列数随埋点类型动态变化的横向滚动表格，埋点类型展开字段下沉至每行。</td></tr>
+  <tr><td>增删行按钮</td><td><span class="tag t-new">调整</span></td><td>移出横向滚动区域，固定展示在渠道信息表右侧，列数增多时不被挤出可视区。</td></tr>
+  <tr><td>渠道设置区</td><td><span class="tag t-no">不调整</span></td><td>安卓 / 苹果 Tab 及其下的下载按钮、引导安装、安装 pwa/App 赠送等全部字段，仍为弹窗级公共配置，批量创建的所有渠道共用同一份取值。</td></tr>
+  <tr><td>新增渠道 / 编辑渠道弹窗</td><td><span class="tag t-no">不调整</span></td><td>单条维度的弹窗本身即按条配置，形态与字段保持现状。</td></tr>
+  <tr><td>字段业务含义与校验</td><td><span class="tag t-no">不调整</span></td><td>各字段的必填性、取值范围、回传逻辑与前台行为均不变，仅改变录入位置。</td></tr>
+  <tr><td>斗篷链接相关字段</td><td><span class="tag t-no">不涉及</span></td><td>参考平台渠道信息表中的开启斗篷链接、斗篷域名、斗篷链接页面、限制真人访问四列不属于本需求范围，本期不建设。</td></tr>
+</table>
+</div>
+
+<div class="section-card">
+<h2>三、弹窗布局</h2>
+
+<h3>3.1 顶部公共字段</h3>
+<p>地区、所属商户、埋点类型三个字段横向并排于弹窗顶部同一行，均为必填。三者作用于本次批量创建的全部渠道。</p>
+<table>
+  <tr><th style="width:120px">字段</th><th style="width:80px">必填</th><th style="width:100px">控件</th><th>选项说明</th></tr>
+  <tr><td>地区</td><td>必填</td><td>下拉单选</td><td>渠道所属运营地区，取值同现有渠道筛选区的地区列表，决定渠道链接的地区归属。</td></tr>
+  <tr><td>所属商户</td><td>必填</td><td>下拉单选</td><td>渠道归属的商户编号，取值同现有商户列表，决定渠道数据归集到哪个商户。</td></tr>
+  <tr><td>埋点类型</td><td>必填</td><td>下拉单选</td><td>决定渠道的数据追踪方式与渠道信息表的展开列。可选：常规推广、Facebook API（Facebook服务器接口回传）、TK API（TikTok服务器接口回传）、Kwai API（快手服务器接口回传）、APK上架包、IOS上架包、APK。各类型含义见《推广渠道埋点类型新增 PRD》。</td></tr>
+</table>
+<div class="note">埋点类型由弹窗中部移至顶部，与地区、所属商户同为批量级公共字段；其<strong>展开字段</strong>则下沉至渠道行，二者的层级在本次调整后不再一致。</div>
+
+<h3>3.2 渠道信息表</h3>
+<p>渠道信息区为一个表格：表头为列名，其下每一行对应一条待创建的渠道，所有字段按行独立填写。列的组成由顶部「埋点类型」决定（见 3.3）。</p>
+<p>当列的总宽超出弹窗可视区时，表格区域出现横向滚动条，运营横向滚动查看与填写右侧列；表头随内容一同横向滚动。增删行按钮固定在表格右侧、不属于滚动区域，横向滚动时始终可见可点。</p>
+
+<h3>3.3 列组成规则</h3>
+<p>渠道名称、落地指向、跳转域名、推广商为基础列，任何埋点类型下均展示。其余列按埋点类型动态增减，即原「埋点类型展开字段」下沉后的形态。</p>
+<table>
+  <tr><th style="width:230px">埋点类型</th><th>渠道信息表列组成</th></tr>
+  <tr><td>常规推广</td><td>渠道名称、落地指向、跳转域名、推广商</td></tr>
+  <tr><td>Facebook API（Facebook服务器接口回传）<br>TK API（TikTok服务器接口回传）<br>Kwai API（快手服务器接口回传）</td><td>渠道名称、落地指向、跳转域名、推广商、<strong>Pixel ID</strong>、<strong>访问令牌TOKEN</strong>、<strong>test_event_code事件测试</strong></td></tr>
+  <tr><td>APK上架包</td><td>渠道名称、落地指向、跳转域名、推广商、<strong>全渠道回传kwai ID</strong></td></tr>
+  <tr><td>IOS上架包</td><td>渠道名称、落地指向、跳转域名、推广商</td></tr>
+  <tr><td>APK</td><td>渠道名称、落地指向、跳转域名、推广商</td></tr>
+</table>
+
+<h3>3.4 字段说明</h3>
+<table>
+  <tr><th style="width:170px">字段（列）</th><th style="width:70px">必填</th><th style="width:90px">控件</th><th style="width:150px">展示条件</th><th>选项说明</th></tr>
+  <tr><td>渠道名称</td><td>必填</td><td>文本输入</td><td>始终展示</td><td>该条渠道的名称，用于后台列表识别与报表维度展示，同一商户下不可重复。</td></tr>
+  <tr><td>落地指向</td><td>必填</td><td>下拉单选</td><td>始终展示</td><td>渠道链接被访问后落地的页面。可选：仿谷歌页、官网首页、官网注册页、主域名、防封下载页。</td></tr>
+  <tr><td>跳转域名</td><td>必填</td><td>下拉单选</td><td>始终展示</td><td>渠道链接实际跳转使用的域名，取值为当前地区已配置的可用域名。</td></tr>
+  <tr><td>推广商</td><td>必填</td><td>下拉单选</td><td>始终展示</td><td>该条渠道归属的推广商，用于按推广商归集渠道效果数据。</td></tr>
+  <tr><td>Pixel ID</td><td>必填</td><td>文本输入</td><td>埋点类型为 Facebook API / TK API / Kwai API 时展示</td><td>三方广告平台的像素标识，由投流方提供，用于该条渠道的事件回传定位。各条渠道可填写不同取值。</td></tr>
+  <tr><td>访问令牌TOKEN</td><td>必填</td><td>文本输入</td><td>同上</td><td>调用三方平台回传接口的鉴权令牌，与 Pixel ID 成对使用，由投流方提供。各条渠道可填写不同取值。</td></tr>
+  <tr><td>test_event_code事件测试</td><td>非必填</td><td>文本输入</td><td>同上</td><td>三方平台的测试事件码，仅在联调验证回传链路时填写。填写后回传事件进入三方平台的测试事件流，不计入正式数据，测试完成后须清空。</td></tr>
+  <tr><td>全渠道回传kwai ID</td><td>非必填</td><td>文本输入</td><td>埋点类型为 APK上架包 时展示</td><td>该上架包全渠道数据回传至快手平台的标识，由投流方提供。留空表示不做快手全渠道回传，不影响该渠道在我方后台的数据统计。</td></tr>
+</table>
+<p>埋点类型为 Facebook API / TK API / Kwai API 时，渠道信息表下方展示红色提示文案：<code>test_event_code事件测试：仅供测试使用，测试完成后注意删除该输入框填入的内容</code>。其余埋点类型下不展示该提示。</p>
+
+<h3>3.5 增删行</h3>
+<table>
+  <tr><th style="width:110px">操作</th><th>交互说明</th></tr>
+  <tr><td>默认行数</td><td>打开弹窗时默认展示 2 行空白渠道。</td></tr>
+  <tr><td>新增行（+）</td><td>在列表末尾追加一行空白渠道，列组成与当前埋点类型一致，已填写行的内容不受影响。</td></tr>
+  <tr><td>删除行（−）</td><td>删除该按钮所在行。当前仅剩 2 行时点击删除，提示「至少需要创建两个渠道」且不执行删除。</td></tr>
+  <tr><td>按钮位置</td><td>固定于渠道信息表右侧，不随表格横向滚动移动，始终与所在行水平对齐。</td></tr>
+</table>
+</div>
+
+<div class="section-card">
+<h2>四、切换埋点类型的处理</h2>
+<p>运营在已填写部分内容后切换顶部「埋点类型」，渠道信息表按新类型重建列，此时各行已填内容按下述规则处理。</p>
+<table>
+  <tr><th style="width:230px">内容</th><th style="width:110px">处理</th><th>说明</th></tr>
+  <tr><td>基础列（渠道名称、落地指向、跳转域名、推广商）</td><td>保留</td><td>四列在任何埋点类型下均存在，各行已填 / 已选取值原样保留。</td></tr>
+  <tr><td>新旧类型共有的展开列</td><td>保留</td><td>如在 Facebook API 与 TK API 之间切换，Pixel ID、访问令牌 TOKEN、test_event_code 事件测试三列的各行取值原样保留。</td></tr>
+  <tr><td>新类型不存在的展开列</td><td>清空</td><td>切换后该列不再展示，其内容一并丢弃；再切回原类型时该列为空，需重新填写。</td></tr>
+  <tr><td>新类型新增的展开列</td><td>空值</td><td>各行均为空，由运营填写。</td></tr>
+  <tr><td>行数</td><td>保留</td><td>切换前已增删的行数维持不变，不重置为默认 2 行。</td></tr>
+</table>
+<div class="note">切换埋点类型会丢弃新类型不存在的展开列内容，且无二次确认。运营应先确定埋点类型再填写渠道信息。</div>
+</div>
+
+<div class="section-card">
+<h2>五、保存</h2>
+<table>
+  <tr><th style="width:170px">项</th><th>说明</th></tr>
+  <tr><td>校验时机</td><td>点击「确定」时统一校验全部行。</td></tr>
+  <tr><td>校验内容</td><td>逐行校验各必填列是否已填写，规则与「新增渠道」弹窗对应字段一致。任一行校验不通过则不提交，定位到首个不通过的行与列并提示。</td></tr>
+  <tr><td>保存结果</td><td>校验通过后按行创建渠道，每条渠道的埋点类型、地区、所属商户及渠道设置取自弹窗公共字段，其余字段取自该渠道所在行。</td></tr>
+</table>
+</div>
+
+<div class="section-card">
+<h2>六、关联需求同步</h2>
+<p>本需求与《推广渠道埋点类型新增 PRD》存在口径交叉，两份文档需同步：</p>
+<ol class="doc-ol">
+  <li>该 PRD 2.5 节「影响范围」描述新增渠道、编辑渠道、批量新增渠道三个弹窗的渠道设置字段一致。本需求实施后，批量新增渠道弹窗中埋点类型的<strong>展开字段</strong>改为按行配置，与另两个弹窗的层级不再一致；该 PRD 2.5 节相应表述需同步修订为「批量新增渠道弹窗的埋点类型展开字段按渠道行配置，详见《批量新增渠道配置优化 PRD》」。</li>
+  <li>该 PRD 2.2 节定义的「全渠道回传 kwai ID」、2.3 节定义的事件说明入口，字段含义与展示条件在本需求下均不变，仅批量新增场景的录入位置由弹窗级变为行级。</li>
+  <li>后续若新增埋点类型并带有专属展开字段，需同步在本需求的渠道信息表中补充对应列与列组成规则。</li>
+</ol>
+</div>
+
+<div class="section-card">
+<h2>七、验收要点</h2>
+<ol class="doc-ol">
+  <li>布局：批量新增渠道弹窗顶部地区、所属商户、埋点类型三字段同行并排展示，均带必填标识。</li>
+  <li>列组成：常规推广、IOS上架包、APK 下渠道信息表为 4 列；Facebook API / TK API / Kwai API 下为 7 列，增加 Pixel ID、访问令牌 TOKEN、test_event_code 事件测试；APK上架包下为 5 列，增加全渠道回传 kwai ID。</li>
+  <li>按行填写：同一批次内各行的 Pixel ID、访问令牌 TOKEN、test_event_code 事件测试、全渠道回传 kwai ID 可填写互不相同的取值，保存后在渠道列表与编辑渠道弹窗中回显为各自取值。</li>
+  <li>横向滚动：列数超出可视区时渠道信息表出现横向滚动条，表头与数据行同步滚动；增删行按钮固定在表格右侧，滚动过程中始终可见且与所在行对齐。</li>
+  <li>增删行：默认 2 行；点击 + 追加的新行列组成与当前埋点类型一致；仅剩 2 行时点击 − 提示「至少需要创建两个渠道」且不删除；删除中间行时其余行内容不发生错位。</li>
+  <li>切换埋点类型：基础列与新旧共有展开列的各行取值保留，新类型不存在的展开列内容清空，行数不重置。</li>
+  <li>红色提示：Facebook API / TK API / Kwai API 下渠道信息表下方展示 test_event_code 提示文案，其余埋点类型下不展示。</li>
+  <li>回归：渠道设置区的安卓 / 苹果 Tab 切换及其下全部字段的联动展开正常；新增渠道、编辑渠道弹窗的埋点类型展开字段与事件说明不受影响；批量保存后的渠道在渠道列表、测试回传弹窗与推广效果报表中展示正常。</li>
+</ol>
+</div>
+
+</div>
+</body>
+</html>
