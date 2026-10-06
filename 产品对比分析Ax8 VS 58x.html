@@ -1,0 +1,196 @@
+<title>产品对比分析(Ax8 VS 58x)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* 本站=靛蓝，竞品=琥珀 */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --fg:#1b1f2a; --muted:#5d6475; --line:#dde1e8;
+  --ax:#3346c8; --ax-soft:#e7eafb; --kk:#b86e00; --kk-soft:#fbf0de;
+  --bad:#c23a2b; --bad-soft:#fbe6e3; --good:#1f8a4c; --good-soft:#e2f4ea; --warn:#a86a00; --warn-soft:#fdf1d8;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12141a; --surface:#1a1d25; --fg:#e7e9ef; --muted:#9aa1b2; --line:#2c303b;
+  --ax:#8b9bff; --ax-soft:#232846; --kk:#f0a63a; --kk-soft:#3a2c14;
+  --bad:#ff7b6b; --bad-soft:#3d1f1b; --good:#5fd08f; --good-soft:#173726; --warn:#f2bb57; --warn-soft:#3a2d12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12141a; --surface:#1a1d25; --fg:#e7e9ef; --muted:#9aa1b2; --line:#2c303b;
+  --ax:#8b9bff; --ax-soft:#232846; --kk:#f0a63a; --kk-soft:#3a2c14;
+  --bad:#ff7b6b; --bad-soft:#3d1f1b; --good:#5fd08f; --good-soft:#173726; --warn:#f2bb57; --warn-soft:#3a2d12; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h1{font-size:30px;font-weight:900;letter-spacing:-.01em}
+h2{font-size:21px;font-weight:700;margin-block:44px 14px;display:flex;gap:10px;align-items:baseline}
+h2 .k{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-weight:600}
+h3{font-size:16px;font-weight:700}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tag-ax,.tag-kk{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:4px;letter-spacing:.02em}
+.tag-ax{background:var(--ax-soft);color:var(--ax)} .tag-kk{background:var(--kk-soft);color:var(--kk)}
+header.top{display:grid;gap:12px;border-bottom:1px solid var(--line);padding-bottom:22px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--fg);font-weight:500}
+.def{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;font-size:14px}
+.lead{font-size:16px;background:var(--surface);border-left:4px solid var(--ax);padding:14px 16px;border-radius:0 8px 8px 0}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.vcard ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:13.5px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{font-size:12px;letter-spacing:.04em;color:var(--muted);font-weight:600;background:var(--bg)}
+td:first-child{font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.p-ax{background:var(--ax-soft);color:var(--ax)} .p-kk{background:var(--kk-soft);color:var(--kk)} .p-eq{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.src{font-size:11.5px;color:var(--muted);font-weight:500;white-space:nowrap}
+.issues{display:grid;gap:10px}
+.issue{display:grid;grid-template-columns:58px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.sev{font-family:var(--f-mono);font-weight:600;font-size:13px;text-align:center;border-radius:6px;padding:4px 0;align-self:start}
+.s0{background:var(--bad-soft);color:var(--bad)} .s1{background:var(--warn-soft);color:var(--warn)} .s2{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.issue h3{font-size:15px}
+.issue p{font-size:13.5px;color:var(--muted);margin-top:2px}
+.issue .fix{color:var(--fg)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:grid;gap:6px;align-content:start}
+.card p{font-size:13.5px;color:var(--muted)}
+.card .use{color:var(--fg)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.flow span{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+.flow i{color:var(--muted);font-style:normal}
+.note{font-size:13px;color:var(--muted);display:grid;gap:6px}
+.note ul{margin:0;padding-left:18px;display:grid;gap:4px}
+:focus-visible{outline:2px solid var(--ax);outline-offset:2px}
+tr.grp td{background:var(--surface);font-weight:700;color:var(--fg);white-space:normal}
+@media (max-width:600px){h1{font-size:24px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <h1>产品对比分析(Ax8 VS 58x)</h1>
+  <div class="meta">
+    <span>日期 <b class="mono">2026-10-06</b></span>
+    <span>本站 <b>ax8.com</b> <span class="tag-ax">AX8</span></span>
+    <span>竞品 <b>58x.com</b> <span class="tag-kk">58X</span></span>
+    <span>端 <b>移动端 H5 + PWA</b></span>
+  </div>
+  <div class="def"><b>调研范围</b>：两站移动端 H5 与 PWA 的完整用户路径，包括进站、首页、注册登录、充值、游戏与投注、记录查询、个人中心(VIP / 返水 / 邀请 / 安全中心 / 消息中心)、提款。只比较<b>功能和体验</b>，活动内容、活动逻辑、奖励金额、返水比例等运营配置不做对比。</div>
+</header>
+
+<h2><span class="k">01</span>结论</h2>
+<p class="lead">两站的页面结构高度相似(个人中心菜单、VIP、返水、邀请、记录、提款表单基本同构)，差异集中在<b>关键节点的处理方式、信息透明度和视觉质感</b>。ax8 胜在「进得快、用得稳」：进站零跳转、PWA 打开快、注册轻、回大厅余额实时刷新、提款有密码保护。58x 胜在「转化与留存体验」：余额为 0 也能进游戏、站内收银信息完整、提款页公开剩余流水、记录查询完整、底部导航充值一键可达，视觉和动效明显更精致。</p>
+<p class="lead">ax8 最需要优先处理的是两个阻断点：<b>未充值用户进不了游戏</b>、<b>PWA 首次打开首页显示不全</b>。两者分别卡在首充前和首次打开，都是流失最集中的时刻。</p>
+
+<div class="verdict">
+  <div class="vcard">
+    <h3><span class="tag-ax">AX8</span> 落后的地方</h3>
+    <ul>
+      <li><b>未充值进不了游戏</b>：58x 余额 0 可直接进游戏。</li>
+      <li><b>PWA 首次打开首页显示不全</b>(巴西网络)：游戏区空白，要强退重开才完整。</li>
+      <li><b>支付页跳第三方</b>：无订单号、无状态、无倒计时，页面横向溢出。58x 站内收银，信息完整。</li>
+      <li><b>提款页不透明</b>：看不到剩余流水；58x 提款页直接写「还需投注 R$X」，不足时弹窗说明。</li>
+      <li><b>记录查询弱</b>：筛选少、无按游戏汇总，首次打开标签栏被截掉。</li>
+      <li><b>个人中心和底部导航</b>：个人中心首屏先闪错误余额；底部导航放「提款」而不是「充值」；客服入口靠后。</li>
+      <li><b>视觉和动效弱</b>：58x 配色鲜艳、高曝光位置基本都是动图；ax8 精细度不够、缺少动效，首页不够抓眼球。</li>
+    </ul>
+  </div>
+  <div class="vcard">
+    <h3><span class="tag-ax">AX8</span> 领先的地方</h3>
+    <ul>
+      <li><b>进站路径短</b>：ax8.com 自动跳 H5 首页。58x 要经过中转页 → 下载 / 网页版二选一 → 新标签打开 H5，共换 4 个域名。</li>
+      <li><b>PWA 打开快</b>(巴西网络)：ax8 约 2–3 秒；58x 每次约 15 秒(约 12 秒白屏 + 3 秒黑屏)。</li>
+      <li><b>注册更轻</b>：3 字段无验证码。58x 是 Cloudflare Turnstile + 阿里云双重验证。</li>
+      <li><b>回大厅余额实时刷新</b>，投注记录立即可查；58x 要手动刷新余额。</li>
+      <li><b>提款有密码保护</b>：ax8 提交前要输入提款密码；58x 确认弹窗没有密码框。</li>
+      <li><b>访客首屏更轻、客服渠道更多</b>：24/7 在线 + WhatsApp + 两个 Telegram；58x 为在线客服 + Telegram。</li>
+    </ul>
+  </div>
+</div>
+
+<h2><span class="k">02</span>进站路径</h2>
+<div class="tbl"><table>
+<thead><tr><th>站点</th><th>路径</th><th>点击次数</th></tr></thead>
+<tbody>
+<tr><td><span class="tag-ax">AX8</span></td><td><div class="flow"><span>ax8.com</span><i>→ 自动跳转</i><span>H5 首页(轮换域名)</span></div></td><td class="mono">0</td></tr>
+<tr><td><span class="tag-kk">58X</span> H5 分支</td><td><div class="flow"><span>58x.com</span><i>→</i><span>v58x.com「Pronto para mudar de rumo」中转页</span><i>→ 点击</i><span>58x.vip 落地页：Baixe APP / Versão Web Aberta(注明 iOS 12.0+ / Android 7.0+)</span><i>→ 点击，新开标签</i><span>j58x.com / c58x.com(轮换域名)launch 页</span><i>→</i><span>首页</span></div></td><td class="mono">2</td></tr>
+<tr><td><span class="tag-kk">58X</span> APP 分支</td><td><div class="flow"><span>58x.vip 落地页</span><i>→ 点「Baixe APP」</i><span>sd58x.com <b>仿应用商店页</b>：图标、「Verificado pelo aplicativo」、4,9 星 / 69K+ 评价、100K+ 下载、21+、截图轮播、「Obtenha app na App Store」按钮</span></div></td><td class="mono">2</td></tr>
+</tbody></table></div>
+<p class="muted" style="font-size:12.5px;margin-top:8px">58x 在落地页就把 APP 和 H5 用户分流；ax8 没有分流页，直接进 H5，安装引导放在站内。</p>
+
+<h2><span class="k">03</span>功能与体验对比</h2>
+<p class="muted" style="font-size:12.5px;margin-bottom:10px">按用户路径排列。投注测试：58x 用已充值账号(初始余额 R$202,10)在 Fortune Tiger 每注 R$2,40 投注约 84 注至流水清零，提款 R$30；ax8 用已充值账号投注后提款 R$30。</p>
+<div class="tbl"><table>
+<thead><tr><th>节点</th><th>ax8(本站)</th><th>58x(竞品)</th><th>占优</th></tr></thead>
+<tbody>
+<tr class="grp"><td colspan="4">进站与首页</td></tr>
+<tr><td>首页(访客)</td><td>APP 条 + 每日活动大弹窗 + 添加到主屏，访客需连关 2 层；分类 5 个；悬浮挂件 2–3 个</td><td>APP 条 + 2 层弹窗(邀请奖励、PG 中奖榜)，都带「今日不再提醒」；再次进站只弹添加到主屏。17 个厂商分类并标游戏数(PP 489、KA 241、PG 157…)，奖池滚动数字，分类条吸顶；悬浮挂件 3 个，客服按钮压在游戏图上</td><td><span class="pill p-eq">各有得失</span></td></tr>
+<tr><td>视觉与动效</td><td>精细度不够、缺少动效；首页主视觉只有一张静态轮播，不够抓眼球</td><td>页面精美、配色鲜艳；动效多：底部导航「convidar」图标、客服浮标、悬浮宝箱(带倒计时)、活动图标、小 banner 基本都是动图</td><td><span class="pill p-kk">58X</span></td></tr>
+<tr><td>底部导航</td><td>首页 / 优惠 / 邀请(中间凸起，静态头像图标)/ <b>提款 Saque</b> / 我的；首页误写为「Iniclo」</td><td>首页 / 优惠 / 邀请(中间凸起，<b>动态宝箱图标</b>)/ <b>充值 Depósito</b> / 我的；优惠和我的带红点</td><td><span class="pill p-kk">58X</span> 充值一键可达</td></tr>
+<tr><td>PWA 启动(巴西网络)</td><td>首次打开约 2–3 秒，先弹每日活动弹窗；但<b>首页显示不全</b>(banner 和跑马灯之下的游戏区空白)，强退后第二次打开才完整</td><td>每次打开约 15 秒：约 12 秒白屏 + 3 秒黑屏，之后首页完整</td><td><span class="pill p-eq">各有得失</span> ax8 快但首开不完整</td></tr>
+<tr class="grp"><td colspan="4">注册与登录</td></tr>
+<tr><td>注册</td><td>手机 / 密码 / 确认密码，无验证码</td><td>同样 3 字段，另叠加 Cloudflare Turnstile + 阿里云验证码；有实时校验(「手机号无效」「6–16 位」)</td><td><span class="pill p-ax">AX8</span></td></tr>
+<tr><td>注册后</td><td>弹窗叠 2 层</td><td>1 层弹窗；从游戏返回大厅时用宝箱弹窗承接，奖励立即到账并显示在余额</td><td><span class="pill p-kk">58X</span> 弹窗更少</td></tr>
+<tr><td>登录 / 忘记密码</td><td>登录框记住账号密码；「忘记密码」跳客服中心：24/7 在线客服、WhatsApp 官方、Telegram 官方、Telegram 客服</td><td>登录框结构相同；「忘记密码」跳客服中心：7×24 在线客服 + Telegram 官方频道。两站都没有自助找回</td><td><span class="pill p-ax">AX8</span> 渠道更多</td></tr>
+<tr class="grp"><td colspan="4">充值</td></tr>
+<tr><td>进游戏(未充值)</td><td>弹「充值激活赠金」，进不去</td><td>余额 0 可直接进入 PG 游戏(左上角有 Lobby 返回按钮)；访客点游戏弹登录框</td><td><span class="pill p-kk">58X</span></td></tr>
+<tr><td>充值页</td><td>1 个 PIX；12 个档位(10–50.000)，默认不选；进入前闪过「Vincular agora」绑定弹窗</td><td>1 个 PIX(RECO)；9 个档位</td><td><span class="pill p-eq">持平</span></td></tr>
+<tr><td>支付页</td><td>跳第三方 PixPay：二维码 + 复制码，只显示截止时间 expireAt(48 小时)，无订单号 / 状态，页面有横向滚动条</td><td>站内收银：金额、二维码、复制码、码地址(脱敏)、24 小时倒计时、订单状态 Pendente、创建时间、订单号(可复制)、「付款后回大厅等待上分」说明、订单记录入口</td><td><span class="pill p-kk">58X</span></td></tr>
+<tr><td>到账 / 充值后</td><td>余额 R$102,18 正确；进站播礼盒动画，随后弹出安装 APP / PWA 引导</td><td>弹出安装引导，文案「你的账户 5680761563 已到账」</td><td><span class="pill p-eq">持平</span></td></tr>
+<tr class="grp"><td colspan="4">游戏与记录</td></tr>
+<tr><td>游戏进出</td><td>进出正常</td><td>进出正常；只能用游戏内 Lobby 按钮返回，浏览器后退会被「离开网站？」拦截</td><td><span class="pill p-eq">持平</span></td></tr>
+<tr><td>返回大厅的余额</td><td><b>实时刷新</b></td><td>显示旧值(R$297,70)，<b>要手动点刷新图标</b>才更新；提款页缓存也出现过旧数据</td><td><span class="pill p-ax">AX8</span></td></tr>
+<tr><td>记录查询</td><td>投注后记录<b>立即可查</b>；3 个标签(账户明细 / 投注记录 / 报表)；日期只有今天、昨天、本周、上周 4 个预设 + 类型筛选；底部汇总充值、提款、优惠总额。首次打开时页面上移，标签栏被截掉一半</td><td>投注记录每行显示输赢、注单号、状态「Liquidado」；5 个标签(账户明细 / 投注 / 体育 / 报表 / 其他)，可按日期、类型、平台、游戏筛选；报表按游戏汇总注数、有效投注、盈亏。账变明细外露后台字段「Ofertas Manuais」</td><td><span class="pill p-kk">58X</span></td></tr>
+<tr class="grp"><td colspan="4">个人中心</td></tr>
+<tr><td>个人中心布局</td><td>头部卡片：头像、ID + VIP 徽章、账号、余额 + 刷新；按钮左「Saque」(灰)、右「Depósito」(黄色高亮)。下方是<b>单行 VIP 进度条</b>。菜单 6 项：记录、邀请(带推广文案)、兑换码、客服、安全中心、退出，客服排第 4。消息中心入口在右上角信封图标。首次渲染先显示错误数据(余额 1,46、VIP 0、头像空白)，约 1 秒后才变成正确值</td><td>头部卡片：头像、手机号 + VIP 徽章、ID(可复制)；余额和「今日已领奖励」<b>左右两栏</b>；按钮左「Depósito」、右「Saque」，同等样式。下方是<b>大 VIP 卡</b>(当前等级、进度条、升级条件)+「Detalhes VIP」入口。<b>客服排菜单第一位</b>并带未读数。下滑时头部卡片吸顶，余额和充值 / 提款按钮一直可见</td><td><span class="pill p-kk">58X</span></td></tr>
+<tr><td>VIP 页</td><td>VIP 页先显示约 3 秒骨架屏；等级表、日 / 周 / 月标签、保级说明、「Coletar Tudo」一键领取和历史</td><td>等级表、日 / 周 / 月标签和「一键领取」</td><td><span class="pill p-eq">基本一致</span></td></tr>
+<tr><td>返水页</td><td>分 Slot / Live 两类，按厂商逐行列出投注额、比例、可领金额，有领取和历史；<b>只有厂商 logo 没有名字</b></td><td>按厂商逐行列出投注额、比例、可领金额；显示今日可领 / 明日可领，有领取和历史</td><td><span class="pill p-kk">58X</span> 信息更全</td></tr>
+<tr><td>邀请页</td><td>个人推广链接(外部域名 ax8fx5.com)、一键复制、9 个分享渠道、按人数阶梯宝箱、直属下级人数 + 明细入口、页内写明有效人数判定条件和规则；规则第 5 条葡语乱码</td><td>个人推广链接(外部域名)、8 个分享渠道、按人数阶梯宝箱、直属下级人数</td><td><span class="pill p-eq">基本一致</span></td></tr>
+<tr><td>安全中心</td><td>账号、登录密码、资金密码、提款账户管理；进入提款账户管理先要求设 6 位资金密码。<b>提款信息只能首次自行设置，设置后不可修改</b>。同一个密码在不同页面叫「Senha de Ativos」「Saque Senha」「senha de fundo」三种名字；没有手机 / 邮箱绑定</td><td>账号、手机、邮箱(可绑定)、登录密码、资金密码(可单独配置)；没有提款账户管理入口，收款信息在提款表单里填，<b>提交后要改只能找客服</b></td><td><span class="pill p-eq">都不可自助修改</span></td></tr>
+<tr><td>消息中心</td><td>3 个标签：客服(在线 + WhatsApp + 2 个 Telegram)/ 通知 / 公告。注册后通知为空，没有欢迎消息；个人中心「客服」旁的红点实际是公告未读数，查看后不消失</td><td>客服入口带未读数</td><td><span class="pill p-eq">持平</span></td></tr>
+<tr class="grp"><td colspan="4">提款</td></tr>
+<tr><td>提款页布局</td><td>从底部导航「Saque」直接进入的整页：余额 → PIX → 8 档金额 → 金额输入框(超额时红字提示)→ CPF / PHONE → 姓名 → CPF ID → 「Retirar Agora」跟在表单末尾；右上角是提款记录图标。PWA 下右侧出现滚动条</td><td>从个人中心点「Saque」打开，右上角有关闭按钮。顶部先放客服提示 → PIX → 余额 + 「还需投注 R$X」+「Ver detalhes」→ <b>金额输入框在档位上方</b>，带「Máx」一键全提 → 8 档金额 → CPF / EMAIL / PHONE → 表单；<b>「Retirar Agora」固定在底部</b></td><td><span class="pill p-kk">58X</span></td></tr>
+<tr><td>流水进度</td><td>提款页不显示剩余流水；流水审计放在提款记录页的「Registro de auditoria」标签里</td><td>提款页「还需投注」随投注实时下降；流水不足时提交会弹窗写明还差多少(「Você ainda precisa completar apostas válidas totalizando R$68,10…」)，可点「Ver detalhes」看按来源拆分的明细</td><td><span class="pill p-kk">58X</span></td></tr>
+<tr><td>收款信息校验</td><td>不过校验位的 CPF(12312312312)也能提交</td><td>姓名、CPF 无实时格式校验，填错后提交、被拒</td><td><span class="pill p-eq">都缺校验</span></td></tr>
+<tr><td>提款密码</td><td>首次提款先要求设 6 位资金密码；填完信息后<b>要求输入提款密码</b></td><td>不强制设置；确认弹窗标题是「Digite sua senha de saque」，但没设资金密码时<b>没有输入框</b>，只有金额、手续费 R$0 和 Confirmar</td><td><span class="pill p-ax">AX8</span> 更安全</td></tr>
+<tr><td>提交后</td><td>Toast「Saque enviado com sucesso」→ 跳「Histórico de saques」：金额、时间、订单号(可复制)、状态「Em processamento」；页顶有「Total de saques」和「Registro de auditoria」标签</td><td>跳「Registro de Saques」：状态「Desembolso em andamento」，约 40 秒后「Recusado」；详情写明原因(PIX 不存在)并引导联系客服；被拒后表单不保留已填姓名 / CPF</td><td><span class="pill p-eq">持平</span></td></tr>
+</tbody></table></div>
+
+<h2><span class="k">04</span>ax8 问题清单</h2>
+<div class="issues">
+  <div class="issue"><span class="sev s0">P0</span><div><h3>未充值用户进不了游戏</h3><p>58x 余额 0 也能进游戏体验玩法，ax8 在用户最想「看看」的时候直接拦截。</p><p class="fix">建议：放开进入或提供试玩，把充值引导放到下注时余额不足的时刻。</p></div></div>
+  <div class="issue"><span class="sev s0">P0</span><div><h3>PWA 首次打开首页显示不全</h3><p>巴西网络下首次打开约 2–3 秒，但首页游戏区空白，要强退后第二次打开才完整。首次打开就是新装用户的第一印象，大部分用户不会想到强退重开。</p><p class="fix">建议：排查首次启动时 Service Worker / 缓存未就绪导致的渲染失败；游戏区加骨架屏和失败重试，加载失败时自动重新请求，而不是留白。</p></div></div>
+  <div class="issue"><span class="sev s1">P1</span><div><h3>支付页信息不完整、跳第三方</h3><p>无订单号、无状态、无倒计时，375 宽度下仍横向溢出。</p><p class="fix">建议：站内收银或在跳转前展示订单号、状态、倒计时、「付款后回大厅等待上分」说明。</p></div></div>
+  <div class="issue"><span class="sev s1">P1</span><div><h3>提款页没有公开流水要求</h3><p>ax8 的流水审计放在提款记录页的「Registro de auditoria」标签里，提款页本身看不到还差多少。58x 直接在提款页写「还需投注 R$X」，不足时提交会弹窗说明。透明的流水能减少「为什么提不了」的客诉和放弃。</p><p class="fix">建议：提款页顶部显示剩余流水，并提供流水明细入口。</p></div></div>
+  <div class="issue"><span class="sev s1">P1</span><div><h3>提款信息无校验、填错后无法自助修改</h3><p>ax8 的提款信息只能首次自行设置，设置后不可修改，而且不过校验位的 CPF(12312312312)也能提交；58x 实测填错 CPF 约 40 秒被拒，也只能找客服改，且表单不保留已填内容。两站都把「填错」的成本全部推给客服。</p><p class="fix">建议：设置时对 CPF 做格式和校验位实时校验，提交前二次确认姓名与 CPF；提款被拒时在订单内写明原因；保留不可自改的风控前提下，提供「申请修改」表单(带验证)而不是只给客服入口。</p></div></div>
+  <div class="issue"><span class="sev s1">P1</span><div><h3>个人中心首屏先显示错误余额和 VIP</h3><p>进入个人中心时先显示余额 1,46、VIP 0、「还需投注 0,00」，约 1 秒后才变成真实的 2,18 和 VIP1。余额是用户最敏感的数字，闪错一次就会引起「钱少了」的怀疑和客诉。</p><p class="fix">建议：数据回来之前显示骨架或「--」，不要渲染默认值或缓存值；排查 1,46 的数据来源，退出登录时清掉本地缓存。</p></div></div>
+  <div class="issue"><span class="sev s1">P1</span><div><h3>视觉精细度和动效不足</h3><p>对比 58x：58x 配色鲜艳，底部导航邀请图标、客服浮标、悬浮宝箱、活动图标和小 banner 基本都有动效；ax8 页面静态、精细度不够，首页不够抓眼球。</p><p class="fix">建议：先从高曝光位置做起，包括首页主视觉、底部导航中间按钮、客服浮标、悬浮入口，给它们加轻量动效(Lottie / APNG)，并统一图标风格。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>未充值账号余额与账户明细不一致</h3><p>未充值账号余额显示 R$2,18，但账户明细没有任何记录。对照已充值账号：「Bônus de Cadastro +2,18」和「Depósito do membro +100,00」在同一秒(2026-10-06 15:53:58)入账，说明这笔赠金是充值后才真正入账。充值前余额里显示了一笔账上还没有的钱。</p><p class="fix">建议：未激活的赠金和可用余额分开显示(如「待激活 R$2,18」)，避免用户以为余额可用。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>文案和命名问题</h3><p>· 邀请规则第 5 条葡语乱码，厂商名 TOPPLAYER 重复，另一处拼成 TOPLAYER。<br>· 同一个资金密码叫了三种名字：Senha de Ativos / Saque Senha / senha de fundo。<br>· 返水列表只有厂商 logo，没有名字。<br>· 个人中心「客服」旁的红点其实是公告未读数，查看后也不消失。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>注册后没有欢迎消息</h3><p>注册后通知列表为空，没有欢迎消息或新手引导。</p><p class="fix">建议：注册后推一条欢迎通知，带充值和新手指引入口。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>PWA 部分页面出现侧边滚动条</h3><p>优惠页和提款页右侧出现系统滚动条，其他页面没有，不像原生 APP。</p><p class="fix">建议：统一隐藏滚动条样式(::-webkit-scrollbar)，并检查这两页是否有内容溢出。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>记录页首次打开定位错误</h3><p>首次进入「Relatórios」时页面向上偏移，顶部的「Detalhes da conta / Histórico de apostas / Relatório」标签被截掉一半，看不全表头。</p><p class="fix">建议：进入页面时重置滚动位置，标签栏吸顶。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>访客活动页空白约 6 秒</h3><p>Eventos 列表在长图加载完之前整页空白，无骨架屏或加载提示。</p><p class="fix">建议：先渲染活动标题列表，图片懒加载并加占位。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>底部导航「Iniclo」拼写错误</h3><p>应为「Início」，在 H5 和 PWA 底部导航都能看到。</p></div></div>
+  <div class="issue"><span class="sev s2">P2</span><div><h3>搜索后标签状态错乱</h3><p>PWA 内搜索后高亮的是「Popular」而不是「Pesquisar」。</p></div></div>
+</div>
+
+<h2><span class="k">05</span>58x 的借鉴点与风险点</h2>
+<div class="cards">
+  <div class="card"><h3>可借鉴</h3><p>· 底部导航第 4 位放「Depósito」，充值永远一键可达；中间的邀请按钮用动态宝箱图标。<br>· 个人中心头部吸顶，余额和充值 / 提款按钮一直可见；客服排菜单第一位。<br>· 提款页有「Máx」一键全提，提交按钮固定在底部，剩余流水和客服提示放在顶部。<br>· 落地页先分流 APP / H5 两种用户，并写明系统版本要求。<br>· 高曝光位置都做了动效，首页信息密度高、吸引力强。<br>· 首页厂商分类标出游戏数量，给人「游戏多」的感知。<br>· 流水不足时提交会弹窗写明还差多少。<br>· 记录页的 Relatório 按游戏汇总注数、投注额、盈亏，用户自查方便。<br>· 提款被拒时订单详情直接写原因。</p></div>
+  <div class="card"><h3>不建议照搬</h3><p>· APP 分支进入仿应用商店页(sd58x.com)，页面自带「已验证」、4,9 星、69K+ 评价、100K+ 下载等数据，用户识破后会伤信任，也有平台和合规风险。<br>· PWA 每次打开约 15 秒(12 秒白屏 + 3 秒黑屏)，白屏期间没有任何品牌或进度提示。<br>· 进站要经过中转页 + 二选一落地页 + 新标签，换 4 个域名。<br>· 注册双重人机验证。<br>· 安装弹窗的「关闭」实际跳到外部下载域名(kxcwkkwkw.shop)，邀请链接也用外部域名，容易引起不信任。<br>· 客服悬浮按钮压在游戏图上。<br>· 从游戏回大厅余额不自动刷新。<br>· 提款信息无实时校验，填错要等被拒后再找客服改，表单也不保留已填内容。<br>· 确认弹窗写「输入提款密码」却没有输入框。<br>· 账变明细外露后台字段「Ofertas Manuais」。</p></div>
+</div>
+
+<h2><span class="k">06</span>测试说明</h2>
+<div class="note">
+  <ul>
+    <li>ax8 测试账号：已充值账号(R$100 人工补单)；未充值账号 11912377768(ID 24392291，注册时间 2026-10-05 18:59:20)。58x 测试账号：新注册账号 11912377766；已充值账号 5680761563。</li>
+    <li>58x 提款使用测试 CPF，订单被拒，结论只针对提交、处理和被拒流程。</li>
+    <li>测试环境：Windows 云桌面 + VPN，Chrome 窄窗口模拟移动端；PWA 启动时长、首页显示、视觉动效、滚动条、记录页定位为 iPhone + 巴西网络实测。所有耗时为单次实测，只作量级参考；云桌面下 58x 冷启动约 10 秒、PG 游戏冷缓存超过 35 秒，与网络环境有关，不计入问题。</li>
+    <li>两站都在轮换 H5 域名：ax8 为 plax8ck.com、rgax8lm.com；58x 为 c58x.com、j58x.com。</li>
+  </ul>
+</div>
+</div>
