@@ -26,6 +26,8 @@
     font-size:11px;padding:5px 11px;border-radius:14px;cursor:pointer}
   .ctrl button.on{background:var(--gold);border-color:var(--gold);color:#141400;font-weight:700}
   .ctrl.hide{display:none}
+  .lnkbox{background:#1c1c20;border:1px solid #3c3c40;color:#cfcfcf;font-size:11px;
+    padding:4px 9px;border-radius:5px;font-family:monospace;letter-spacing:.3px}
 
   .phone{width:390px;height:800px;border-radius:38px;background:var(--bg);border:9px solid #000;
     box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden;position:relative;display:flex;flex-direction:column;margin-top:12px}
@@ -88,6 +90,10 @@
     align-items:center;justify-content:center;font-size:14px;color:#c9c4b6;cursor:pointer;transition:.15s}
   .amt.on{border-color:var(--gold);color:var(--gold);background:#3e3a24}
   .amt.dis{opacity:.4;cursor:not-allowed}
+  .amt .n{font-size:16px;font-weight:700;letter-spacing:.2px;line-height:1}
+  .amt .u{font-size:10.5px;font-weight:500;color:#8b8578;margin-left:4px;letter-spacing:.4px;
+    align-self:flex-end;padding-bottom:3px;line-height:1}
+  .amt.on .u{color:#b7a93f}
 
   .inputbox{margin-top:14px;background:var(--input);border-radius:10px;height:50px;display:flex;
     align-items:center;padding:0 14px;border:1px solid transparent;gap:10px}
@@ -140,6 +146,42 @@
   .recrow .r1 em{font-style:normal;color:#e8a33d;font-size:12px;font-weight:500}
   .recrow .r2{display:flex;justify-content:space-between;font-size:11px;color:#6d6d6d;margin-top:7px}
 
+  /* ===== BESTPAY 站内收银页 ===== */
+  .cspage{position:absolute;inset:0;background:var(--bg);z-index:55;display:none;flex-direction:column}
+  .cspage.on{display:flex}
+  .csbody{flex:1;overflow-y:auto;padding:18px 16px 28px}
+  .csbody::-webkit-scrollbar{width:0}
+  .cstip{display:flex;gap:9px;font-size:13px;line-height:1.62;color:#9a9a9a;margin-bottom:15px}
+  .cstip i{width:7px;height:7px;flex:0 0 7px;border-radius:2px;background:#6a6a6a;margin-top:7px}
+  .cstip.hl{color:#E8A33D}
+  .cstip.hl i{background:#E8A33D}
+  .csamt{display:flex;align-items:center;justify-content:center;gap:9px;margin:20px 0 14px}
+  .csamt b{font-size:25px;font-weight:700;color:var(--gold);letter-spacing:.5px;line-height:1}
+  .csqr{width:228px;height:228px;margin:0 auto;background:#fff;border-radius:4px;padding:9px;position:relative}
+  .csqr svg{display:block;width:100%;height:100%}
+  .csmask{position:absolute;inset:0;background:rgba(8,8,8,.84);border-radius:4px;display:none;
+    align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#d05b5b}
+  .cspage.exp .csmask{display:flex}
+  .cscopy{display:block;margin:18px auto 0;width:64%;height:46px;border:0;border-radius:9px;
+    background:var(--gold);color:#141400;font-size:15px;font-weight:700;cursor:pointer}
+  .cspage.exp .cscopy{background:#3f3c10;color:#6f6c35;cursor:not-allowed}
+  .csaddr,.cstime{display:flex;align-items:center;justify-content:center;gap:6px;
+    font-size:12.5px;color:#8d8d8d;margin-top:15px}
+  .cstime{margin-top:12px}
+  .cstime b{color:#e6e6e6;font-weight:500}
+  .cspage.exp .cstime b{color:#d05b5b}
+  .csico{flex:0 0 14px;cursor:pointer}
+  .csinfo{margin-top:20px;border-top:1px solid var(--line);padding-top:4px}
+  .csrow{display:flex;align-items:center;gap:10px;padding:11px 0;font-size:13px}
+  .csrow .k{color:#8d8d8d;flex:0 0 auto}
+  .csrow .v{margin-left:auto;color:#e6e6e6;text-align:right;word-break:break-all}
+  .csrow .v.pend{color:#E8A33D}
+  .csrow .v.gone{color:#d05b5b}
+  .csre{display:none;margin:20px auto 0;width:100%;height:48px;border:0;border-radius:24px;
+    background:var(--gold);color:#141400;font-size:15px;font-weight:700;cursor:pointer}
+  .cspage.exp .csre{display:block}
+  .csempty{font-size:12.5px;color:#5f5f5f;text-align:center;margin-top:60px}
+
   table{width:100%;border-collapse:collapse;font-size:12.5px;background:#141416;border-radius:10px;overflow:hidden}
   th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #26262a;vertical-align:top}
   th{background:#1d1d20;color:#9d9d9d;font-weight:600;font-size:11px}
@@ -179,6 +221,17 @@
       <button onclick="setBal(5000,this)">5000</button>
       <button onclick="setBal(-1,this)">加载失败</button>
     </div>
+    <div class="ctrl" id="cLink">
+      <span>直达链接</span>
+      <code class="lnkbox" id="lnkV">#dep-new</code>
+      <button id="lnkBtn" onclick="copyLink()">复制链接</button>
+    </div>
+    <div class="ctrl" id="cCash">
+      <span>收银页</span>
+      <button class="on" onclick="setCsDemo(1012,this)">剩余约17分钟</button>
+      <button onclick="setCsDemo(30,this)">剩余30秒</button>
+      <button onclick="setCsDemo(0,this)">已失效</button>
+    </div>
     <div class="ctrl hide" id="cFlow">
       <span>有效流水</span>
       <button class="on" onclick="setFlow(1,this)">已达标</button>
@@ -192,7 +245,7 @@
         <div class="nav">
           <svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <div class="ttl" data-i="depTitle">存款</div>
-          <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="1" width="16" height="18" rx="2.5" stroke="#fff" stroke-width="1.6"/><path d="M5 6h8M5 10h8M5 14h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" onclick="openCsRec()" style="cursor:pointer"><rect x="1" y="1" width="16" height="18" rx="2.5" stroke="#fff" stroke-width="1.6"/><path d="M5 6h8M5 10h8M5 14h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
         </div>
         <div class="body">
           <div class="tabs"><div class="tab" data-i="tabOnline">在线充值</div></div>
@@ -202,14 +255,10 @@
           </div>
 
           <div class="pane on" id="dpBest">
-            <div class="inputbox"><span class="cur">R$</span><input placeholder="5,00-1.000.000,00" disabled></div>
-            <div class="grid g3" style="margin-top:14px">
-              <div class="amt dis">5,00</div><div class="amt dis">20,00</div><div class="amt dis">50,00</div>
-              <div class="amt dis">100,00</div><div class="amt dis">1.000,00</div><div class="amt dis">5.000,00</div>
-              <div class="amt dis">10.000,00</div><div class="amt dis">30.000,00</div><div class="amt dis">490.000,00</div>
-            </div>
-            <button class="cta" disabled data-i="depCta">立即充值</button>
-            <p style="font-size:11px;color:#4c4c4c;text-align:center;margin-top:14px" data-i="refOnly">现有渠道，仅作风格对照</p>
+            <div class="inputbox"><span class="cur">R$</span><input id="bIn" inputmode="decimal" oninput="onBIn()"></div>
+            <div class="limit" id="bLimit"></div>
+            <div class="grid g3" id="bGrid" style="margin-top:14px"></div>
+            <button class="cta" id="bCta" onclick="bSubmit()" data-i="depCta">立即充值</button>
           </div>
 
           <div class="pane" id="dpNew">
@@ -322,6 +371,55 @@
         </div>
       </div>
 
+
+      <!-- ===== BESTPAY 站内收银页 ===== -->
+      <div class="cspage" id="csPage">
+        <div class="nav">
+          <svg width="11" height="19" viewBox="0 0 11 19" fill="none" onclick="closeCs()" style="cursor:pointer"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="ttl" data-i="csTitle">存款</div>
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" onclick="openCsRec()" style="cursor:pointer"><rect x="1" y="1" width="16" height="18" rx="2.5" stroke="#fff" stroke-width="1.6"/><path d="M5 6h8M5 10h8M5 14h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="csbody">
+          <div class="cstip"><i></i><span data-i="csTip1"></span></div>
+          <div class="cstip"><i></i><span data-i="csTip2"></span></div>
+          <div class="cstip hl"><i></i><span data-i="csTip3"></span></div>
+
+          <div class="csamt"><b id="csAmtV">R$ 0,00</b><svg class="csico" width="14" height="14" viewBox="0 0 16 16" fill="none" onclick="csCopy('amt')"><rect x="5.4" y="1.4" width="9.2" height="9.2" rx="2" stroke="#F4E500" stroke-width="1.3"/><rect x="1.4" y="5.4" width="9.2" height="9.2" rx="2" fill="#0d0d0d" stroke="#F4E500" stroke-width="1.3"/></svg></div>
+
+          <div class="csqr" id="csQr"><div class="csmask" data-i="csQrGone">二维码已失效</div></div>
+
+          <button class="cscopy" id="csCopyBtn" onclick="csCopy('qr')" data-i="csCopyQR">复制二维码</button>
+
+          <div class="csaddr"><span data-i="csAddr">二维码地址</span><span id="csAddrV">--</span><svg class="csico" width="14" height="14" viewBox="0 0 16 16" fill="none" onclick="csCopy('qr')"><rect x="5.4" y="1.4" width="9.2" height="9.2" rx="2" stroke="#F4E500" stroke-width="1.3"/><rect x="1.4" y="5.4" width="9.2" height="9.2" rx="2" fill="#0d0d0d" stroke="#F4E500" stroke-width="1.3"/></svg></div>
+
+          <div class="cstime">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.6" stroke="#8d8d8d" stroke-width="1.3"/><path d="M8 4.4V8l2.4 1.6" stroke="#8d8d8d" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span data-i="csTime">有效时间：</span><b id="csLeftV">--</b>
+          </div>
+
+          <div class="csinfo">
+            <div class="csrow"><span class="k" data-i="csStatus">订单状态</span><span class="v pend" id="csStV">待支付</span></div>
+            <div class="csrow"><span class="k" data-i="csCreated">创建时间</span><span class="v" id="csTimeV">--</span></div>
+            <div class="csrow"><span class="k" data-i="csOrderNo">订单号</span><span class="v" id="csNoV">--</span><svg class="csico" width="14" height="14" viewBox="0 0 16 16" fill="none" onclick="csCopy('no')"><rect x="5.4" y="1.4" width="9.2" height="9.2" rx="2" stroke="#F4E500" stroke-width="1.3"/><rect x="1.4" y="5.4" width="9.2" height="9.2" rx="2" fill="#0d0d0d" stroke="#F4E500" stroke-width="1.3"/></svg></div>
+          </div>
+
+          <button class="csre" onclick="csReorder()" data-i="csRe">重新发起充值</button>
+        </div>
+      </div>
+
+      <!-- ===== 充值记录 ===== -->
+      <div class="recpage" id="csRec">
+        <div class="nav">
+          <svg width="11" height="19" viewBox="0 0 11 19" fill="none" onclick="csRec.classList.remove('on')" style="cursor:pointer"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="ttl" data-i="csRecTitle">充值记录</div><div style="width:18px"></div>
+        </div>
+        <div class="recrow" id="csRecRow" style="cursor:pointer;display:none" onclick="csReopen()">
+          <div class="r1"><span id="csRecAmt">R$ 0,00</span><em id="csRecSt">待支付</em></div>
+          <div class="r2"><span>BESTPAY</span><span id="csRecTime">--</span></div>
+        </div>
+        <p class="csempty" id="csRecEmpty" data-i="csRecEmpty">暂无充值订单</p>
+      </div>
+
       <div class="webview" id="wv">
         <div class="wvnav"><div class="b" onclick="closeWv()">‹</div><div class="t" id="wvT"></div></div>
         <div class="wvbody">
@@ -373,7 +471,28 @@ const I = {
   fPhone:["手机号码","Telefone"], fPhoneP:["+55 请输入手机号码","+55 Digite seu telefone"],
   fCpfP:["请输入您的CPF(巴西税务识别号码)","Digite seu CPF"],
   refOnly:["现有渠道，仅作风格对照","Canal existente, apenas para referência de estilo"],
-  flowDlg:["流水规则：有效投注达到规定倍数后方可提现","Regra: o saque exige atingir o rollover válido exigido"]
+  flowDlg:["流水规则：有效投注达到规定倍数后方可提现","Regra: o saque exige atingir o rollover válido exigido"],
+  csTitle:["存款","Depósito"],
+  csTip1:["打开您的支付应用，扫描或复制粘贴下方二维码以完成本次支付",
+          "Abra seu aplicativo de pagamento e digitalize ou copie e cole o código QR abaixo para concluir sua compra"],
+  csTip2:["该二维码仅可支付一次。如需再次支付，请返回并重新发起充值",
+          "Este código QR só pode ser pago uma vez. Se precisar pagar novamente, volte e recarregue"],
+  csTip3:["支付成功后，您可返回大厅等待余额到账！",
+          "Após o pagamento ser bem-sucedido, você pode retornar ao lobby do jogo e aguardar a adição de saldo!"],
+  csCopyQR:["复制二维码","Copiar código QR"],
+  csAddr:["二维码地址","Endereço do código QR"],
+  csTime:["有效时间：","Tempo efetivo:"],
+  csStatus:["订单状态","Status do pedido"],
+  csCreated:["创建时间","Hora de Criação"],
+  csOrderNo:["订单号","Número do Pedido"],
+  csPending:["待支付","Pendente"],
+  csGone:["已失效","Expirado"],
+  csQrGone:["二维码已失效","Código QR expirado"],
+  csRe:["重新发起充值","Recarregar novamente"],
+  csRecTitle:["充值记录","Histórico de recargas"],
+  csRecEmpty:["暂无充值订单","Nenhuma recarga encontrada"],
+  csCopied:["复制成功","Copiado"],
+  csGoneToast:["订单已失效，请重新发起充值","Pedido expirado. Faça uma nova recarga."]
 };
 const X = {
   depTip:["如何获得更多NGC币：请点击右侧<b>【购买NGC】</b>，在新开的 NewGPay 页面中点击<b>【买币】</b>，交易成功后立即可获得",
@@ -389,6 +508,8 @@ const X = {
   wdOk:["提交成功，请等待审核","Solicitação enviada. Aguarde a análise."],
   minD:["最低充值 {a} NGC","Recarga mínima: {a} NGC"],
   maxD:["单笔最高 {b} NGC","Máximo por transação: {b} NGC"],
+  minB:["最低充值 R$ {a}","Recarga mínima: R$ {a}"],
+  maxB:["单笔最高 R$ {b}","Máximo por transação: R$ {b}"],
   minW:["最低提款 R$ {a}","Saque mínimo: R$ {a}"],
   maxW:["单笔最高 R$ {b}","Máximo por transação: R$ {b}"],
   noAcct:["可提余额不足","Saldo disponível insuficiente"],
@@ -403,12 +524,15 @@ const X = {
 let lang=0, page='dep';
 const DQ=[50,300,500,1000], DMIN=5, DMAX=1000000;
 const WQ=[20,50,100], WMIN=10, WMAX=300;
+const BQ=[5,20,50,100,1000,5000,10000,30000,490000], BMIN=5, BMAX=1000000;
+let bPick=null, csLeft=0, csTimer=null, csDemo=1012, csOrder=null;
 let BONUS=0, ngc=0, acctBal=88, flowOk=1, dPick=null, wPick=null, wvMode='buy';
 
 const t=k=>I[k][lang], x=k=>X[k][lang];
 const fmt=n=>lang? n.toLocaleString('pt-BR',{maximumFractionDigits:2})
                  : n.toLocaleString('en-US',{maximumFractionDigits:2});
-const money=n=>'R$ '+n.toFixed(2).replace('.',',');
+const br=n=>n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const money=n=>'R$ '+br(n);
 
 function setLang(l){
   lang = l==='pt'?1:0;
@@ -418,9 +542,108 @@ function setLang(l){
   wdIn.placeholder  = x('wdPh').replace('{a}',fmt(WMIN)).replace('{b}',fmt(WMAX));
   depLimit.textContent = x('limit').replace('{a}',fmt(DMIN)+' NGC').replace('{b}',fmt(DMAX)+' NGC');
   wdLimit.textContent  = x('limit').replace('{a}','R$ '+fmt(WMIN)).replace('{b}','R$ '+fmt(WMAX));
-  renderAll(); buildTable();
+  bIn.placeholder = x('depPh');
+  bLimit.textContent = x('limit').replace('{a}','R$ '+br(BMIN)).replace('{b}','R$ '+br(BMAX));
+  renderAll(); renderBest(); csRender(); buildTable();
 }
 function renderAll(){ renderBal(); renderDep(); renderWd(); }
+
+/* ================= BESTPAY 存款表单 ================= */
+function renderBest(){
+  bGrid.innerHTML='';
+  BQ.forEach(v=>{
+    const d=document.createElement('div');
+    d.className='amt'+(bPick===v?' on':''); d.textContent=br(v);
+    d.onclick=()=>{bPick=v; bIn.value=v; renderBest();};
+    bGrid.appendChild(d);
+  });
+  const v=parseFloat(bIn.value)||0;
+  bCta.disabled = v<=0; bCta.textContent = t('depCta');
+}
+function onBIn(){ bPick=null; renderBest(); }
+function bSubmit(){
+  const v=parseFloat(bIn.value)||0;
+  if(v<BMIN) return toast(x('minB').replace('{a}',br(BMIN)));
+  if(v>BMAX) return toast(x('maxB').replace('{b}',br(BMAX)));
+  bCta.disabled=true; bCta.textContent=x('loading');
+  setTimeout(()=>{ bCta.textContent=t('depCta'); renderBest(); openCs(v); },800);
+}
+
+/* ================= BESTPAY 站内收银页 ================= */
+function csQrSvg(seed){
+  const N=29; let r=(seed>>>0)||1;
+  const rnd=()=>{r=(r*1664525+1013904223)>>>0;return r/4294967296;};
+  const g=Array.from({length:N},()=>Array(N).fill(0));
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++) g[y][xx]=rnd()<0.47?1:0;
+  const clear=(ox,oy)=>{for(let y=-1;y<8;y++)for(let xx=-1;xx<8;xx++){
+    const Y=oy+y,X=ox+xx; if(Y>=0&&Y<N&&X>=0&&X<N) g[Y][X]=0;}};
+  const finder=(ox,oy)=>{for(let y=0;y<7;y++)for(let xx=0;xx<7;xx++){
+    const on=(xx===0||xx===6||y===0||y===6)||(xx>=2&&xx<=4&&y>=2&&y<=4); g[oy+y][ox+xx]=on?1:0;}};
+  clear(0,0);clear(N-7,0);clear(0,N-7);
+  finder(0,0);finder(N-7,0);finder(0,N-7);
+  for(let i=8;i<N-8;i++){ g[6][i]=i%2?0:1; g[i][6]=i%2?0:1; }
+  let d='';
+  for(let y=0;y<N;y++)for(let xx=0;xx<N;xx++) if(g[y][xx]) d+='M'+xx+' '+y+'h1v1h-1z';
+  return '<svg viewBox="0 0 '+N+' '+N+'" shape-rendering="crispEdges"><path d="'+d+'" fill="#000"/></svg>';
+}
+function csFmt(sec){
+  if(sec<=0) return '0m 00s';
+  const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), ss=sec%60;
+  const p=n=>String(n).padStart(2,'0');
+  return (h? h+'h '+p(m)+'m ' : m+'m ')+p(ss)+'s';
+}
+function csRender(){
+  if(!csOrder) return;
+  const gone = csLeft<=0;
+  csPage.classList.toggle('exp',gone);
+  csAmtV.textContent = money(csOrder.amt);
+  csQr.innerHTML = csOrder.qrSvg + '<div class="csmask">'+t('csQrGone')+'</div>';
+  csAddrV.textContent = csOrder.mask;
+  csNoV.textContent = csOrder.no;
+  csTimeV.textContent = csOrder.created;
+  csStV.textContent = gone? t('csGone') : t('csPending');
+  csStV.className = 'v '+(gone?'gone':'pend');
+  csLeftV.textContent = gone? t('csGone') : csFmt(csLeft);
+  csRecAmt.textContent = money(csOrder.amt);
+  csRecSt.textContent = gone? t('csGone') : t('csPending');
+  csRecSt.style.color = gone? '#d05b5b' : '#e8a33d';
+  csRecTime.textContent = csOrder.created;
+  csRecRow.style.display='block'; csRecEmpty.style.display='none';
+}
+function csTick(){
+  if(csLeft>0){ csLeft--; csRender(); }
+  else { clearInterval(csTimer); csTimer=null; csRender(); }
+}
+function openCs(amt){
+  const now=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString();
+  const pix='00020126580014BR.GOV.BCB.PIX0136'+Math.random().toString(36).slice(2,10).toUpperCase()+'630490DE';
+  csOrder={ amt:amt, pix:pix,
+    mask:pix.slice(0,2)+'***'+pix.slice(-8),
+    no:'THRP'+String(Date.now())+Math.floor(Math.random()*9000+1000),
+    created:now.slice(0,10)+' '+now.slice(11,19),
+    qrSvg:csQrSvg(Math.floor(Math.random()*1e9)) };
+  csLeft=csDemo;
+  clearInterval(csTimer); csTimer=setInterval(csTick,1000);
+  csRender(); csPage.classList.add('on'); syncHash();
+}
+function closeCs(){ csPage.classList.remove('on'); syncHash(); }
+function csReopen(){
+  if(!csOrder) return;
+  if(csLeft<=0) return toast(t('csGoneToast'));
+  csRec.classList.remove('on'); csPage.classList.add('on');
+}
+function csReorder(){
+  closeCs(); csRec.classList.remove('on');
+  bIn.value=''; bPick=null; renderBest(); pickDep('best');
+}
+function openCsRec(){ csRender(); csRec.classList.add('on'); }
+function csCopy(k){
+  if(!csOrder) return;
+  if(k!=='no' && csLeft<=0) return toast(t('csGoneToast'));
+  toast(t('csCopied'));
+}
+function setCsDemo(v,b){ b.parentNode.querySelectorAll('button').forEach(e=>e.className=''); b.className='on';
+  csDemo=v; if(csOrder){ csLeft=v; clearInterval(csTimer); if(v>0) csTimer=setInterval(csTick,1000); csRender(); } }
 
 function renderBal(){
   const fail = ngc<0;
@@ -434,7 +657,8 @@ function renderDep(){
   depGrid.innerHTML='';
   DQ.forEach(v=>{
     const d=document.createElement('div');
-    d.className='amt'+(dPick===v?' on':''); d.textContent=fmt(v)+' NGC';
+    d.className='amt'+(dPick===v?' on':'');
+    d.innerHTML='<span class="n">'+fmt(v)+'</span><span class="u">NGC</span>';
     d.onclick=()=>{dPick=v; depIn.value=v; renderDep();};
     depGrid.appendChild(d);
   });
@@ -461,19 +685,56 @@ function onDepIn(){ dPick=null; renderDep(); }
 function onWdIn(){ wPick=null; renderWd(); }
 function wdAll(){ wdIn.value = Math.min(acctBal,WMAX); wPick=null; renderWd(); }
 
+/* ================= 直达链接（演示用） ================= */
+let hashReady=false;
+const ROUTES={
+  'dep-new' :()=>{goto('dep'); pickDep('new');},
+  'dep-best':()=>{goto('dep'); pickDep('best');},
+  'wd-new'  :()=>{goto('wd');  pickWd('new');},
+  'wd-best' :()=>{goto('wd');  pickWd('best');},
+  'cashier' :()=>{goto('dep'); pickDep('best'); csOrder? csPage.classList.add('on') : openCs(30);}
+};
+function curRoute(){
+  if(csPage.classList.contains('on')) return 'cashier';
+  return page==='dep' ? 'dep-'+(dNew.classList.contains('on')?'new':'best')
+                      : 'wd-' +(wNew.classList.contains('on')?'new':'best');
+}
+function syncHash(){
+  if(!hashReady) return;
+  const r=curRoute();
+  lnkV.textContent='#'+r;
+  if(location.hash.slice(1)!==r) location.hash=r;   // 幂等：已一致则不写，不会触发回环
+}
+function applyHash(){
+  const h=decodeURIComponent((location.hash||'').slice(1)).toLowerCase();
+  if(ROUTES[h] && h!==curRoute()) ROUTES[h]();
+  lnkV.textContent='#'+curRoute();
+}
+function copyLink(){
+  const url=location.href.split('#')[0]+'#'+curRoute();
+  const ta=document.createElement('textarea');
+  ta.value=url; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  ta.remove();
+  lnkBtn.textContent='已复制'; setTimeout(()=>{lnkBtn.textContent='复制链接';},1200);
+}
+
 function goto(p){
   page=p;
   pDep.className=p==='dep'?'on':''; pWd.className=p==='wd'?'on':'';
   sDep.classList.toggle('on',p==='dep'); sWd.classList.toggle('on',p==='wd');
   cBonus.classList.toggle('hide',p!=='dep');
+  cCash.classList.toggle('hide',p!=='dep');
   cFlow.classList.toggle('hide',p!=='wd');
+  syncHash();
 }
 function pickDep(k){ const n=k==='new';
   dNew.classList.toggle('on',n); dBest.classList.toggle('on',!n);
-  dpNew.classList.toggle('on',n); dpBest.classList.toggle('on',!n); }
+  dpNew.classList.toggle('on',n); dpBest.classList.toggle('on',!n); syncHash(); }
 function pickWd(k){ const n=k==='new';
   wNew.classList.toggle('on',n); wBest.classList.toggle('on',!n);
-  wpNew.classList.toggle('on',n); wpBest.classList.toggle('on',!n); }
+  wpNew.classList.toggle('on',n); wpBest.classList.toggle('on',!n); syncHash(); }
 
 function setBonus(v,b){ b.parentNode.querySelectorAll('button').forEach(e=>e.className=''); b.className='on'; BONUS=v; renderDep(); }
 function setBal(v,b){ b.parentNode.querySelectorAll('button').forEach(e=>e.className=''); b.className='on'; ngc=v; renderAll(); }
@@ -571,7 +832,27 @@ const ROWS=[
  ['公共','加载失败','加载失败，点击重试','Falha ao carregar. Toque para tentar novamente.'],
  ['公共','余额刷新','余额已更新','Saldo atualizado'],
  ['公共','取消','取消','Cancelar'],
- ['公共','去购买','去购买','Comprar']
+ ['公共','去购买','去购买','Comprar'],
+ ['充值','BESTPAY最低限制','最低充值 R$ 5,00','Recarga mínima: R$ 5,00'],
+ ['充值','BESTPAY最高限制','单笔最高 R$ 1.000.000,00','Máximo por transação: R$ 1.000.000,00'],
+ ['收银页','页面标题','存款','Depósito'],
+ ['收银页','说明①','打开您的支付应用，扫描或复制粘贴下方二维码以完成本次支付','Abra seu aplicativo de pagamento e digitalize ou copie e cole o código QR abaixo para concluir sua compra'],
+ ['收银页','说明②','该二维码仅可支付一次。如需再次支付，请返回并重新发起充值','Este código QR só pode ser pago uma vez. Se precisar pagar novamente, volte e recarregue'],
+ ['收银页','说明③','支付成功后，您可返回大厅等待余额到账！','Após o pagamento ser bem-sucedido, você pode retornar ao lobby do jogo e aguardar a adição de saldo!'],
+ ['收银页','复制按钮','复制二维码','Copiar código QR'],
+ ['收银页','地址标签','二维码地址','Endereço do código QR'],
+ ['收银页','有效时间','有效时间：','Tempo efetivo:'],
+ ['收银页','订单状态','订单状态','Status do pedido'],
+ ['收银页','状态-待支付','待支付','Pendente'],
+ ['收银页','状态-已失效','已失效','Expirado'],
+ ['收银页','创建时间','创建时间','Hora de Criação'],
+ ['收银页','订单号','订单号','Número do Pedido'],
+ ['收银页','二维码失效','二维码已失效','Código QR expirado'],
+ ['收银页','重新发起','重新发起充值','Recarregar novamente'],
+ ['收银页','失效提示','订单已失效，请重新发起充值','Pedido expirado. Faça uma nova recarga.'],
+ ['收银页','复制成功','复制成功','Copiado'],
+ ['收银页','记录页标题','充值记录','Histórico de recargas'],
+ ['收银页','记录页空态','暂无充值订单','Nenhuma recarga encontrada']
 ];
 function buildTable(){
   copyTable.innerHTML='<tr><th>页面</th><th>位置</th><th>中文</th><th>Português</th></tr>'+
@@ -580,6 +861,9 @@ function buildTable(){
 
 lg1.src=LOGO; lg2.src=LOGO; lg3.src=LOGO;
 setLang('zh'); goto('dep'); pickDep('new'); pickWd('new');
+hashReady=true;
+window.addEventListener('hashchange',applyHash);
+applyHash(); syncHash();
 </script>
 </body>
 </html>
