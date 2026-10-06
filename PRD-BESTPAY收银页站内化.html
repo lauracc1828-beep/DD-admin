@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BESTPAY 收银页站内化 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.ok{color:#1a7a3a;font-weight:600}
+.gap{color:#b1500a;font-weight:600}
+.src{white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">BESTPAY 收银页站内化</div>
+  <div class="cover-sub">PRD 产品需求文档 · H5 存款页 / PIX 收银页</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-06</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、名词解释</a></li>
+    <li><a href="#s3">三、交互逻辑流程图</a></li>
+    <li><a href="#s4">四、三方接口字段依赖</a></li>
+    <li><a href="#s5">五、页面元素与数据来源映射</a></li>
+    <li><a href="#s6">六、收银页显示与交互逻辑</a>
+      <ol>
+        <li><a href="#s61">6.1 入口、返回与回访</a></li>
+        <li><a href="#s62">6.2 支付说明区</a></li>
+        <li><a href="#s63">6.3 金额与二维码</a></li>
+        <li><a href="#s64">6.4 复制入口</a></li>
+        <li><a href="#s65">6.5 有效时间与失效处理</a></li>
+        <li><a href="#s66">6.6 订单信息区</a></li>
+      </ol>
+    </li>
+    <li><a href="#s7">七、后台配置说明</a></li>
+    <li><a href="#s8">八、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s9">九、边界与异常处理</a></li>
+    <li><a href="#s10">十、待确认事项</a></li>
+    <li><a href="#s11">十一、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与范围</h1>
+  <p>H5 存款页选择 BESTPAY 并提交后，平台当前的处理方式是打开三方收银台的内嵌页面（WebView），由 PixPay 侧渲染二维码与支付说明。该方式存在三项问题：页面视觉与平台割裂、三方页承载的免责与警示内容不受平台控制、以及会员一旦离开该页即无法再回到同一笔待支付订单。</p>
+  <p>本次需求将 BESTPAY 的收银环节<b>改为平台站内页面</b>：平台在下单后直接取回三方返回的 PIX 付款码串与过期时间，由平台自行渲染收银页，并补充三方页不具备的订单信息区与失效后的重新发起入口。页面布局与信息层级<b>对标参考平台的站内收银页</b>，展示数据取自 BESTPAY 下单接口的返回内容。</p>
+
+  <h2>本次需求范围</h2>
+  <table>
+    <thead><tr><th style="width:150px">模块</th><th>范围</th><th style="width:110px">对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>三方对接</td><td>BESTPAY 下单接口返回 PIX 付款码串、过期时间、三方订单号，前台不再跳转三方收银台 URL。</td><td>第四章</td></tr>
+      <tr><td>站内收银页</td><td>新增页面：支付说明区、金额、二维码、复制入口、脱敏付款码地址、有效时间倒计时、订单信息区、失效态与重新发起。</td><td>第五、六章</td></tr>
+      <tr><td>存款页改造</td><td>BESTPAY 提交后由「打开 WebView」改为「跳转站内收银页」。</td><td>6.1</td></tr>
+      <tr><td>充值记录</td><td>未失效的待支付订单可点击回到对应收银页继续支付。</td><td>6.1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice notice-info">
+    <p><b>不在本期范围</b>：支付成功后的到账反馈机制（订单状态轮询、成功提示、自动跳转）另行评估，本期收银页的订单状态<b>仅在进入页面时查询一次</b>并静态展示，会员按说明区指引自行返回等待到账。三方收银台原有的 QR 生成免责声明、博彩入金警示框（Atenção / CUIDADO）与 PIX / Banco Central 官方标识<b>不迁移至站内页</b>（见 10.2）。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、名词解释</h1>
+  <table>
+    <thead><tr><th style="width:150px">名词</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>BESTPAY</td><td>平台现有的巴西 PIX 支付渠道，底层收银台由 PixPay 提供。</td></tr>
+      <tr><td>PIX 付款码串</td><td>巴西央行 PIX 标准的 copia-e-cola 字符串。二维码由该串编码生成，复制动作复制的也是该串。</td></tr>
+      <tr><td>收银页</td><td>本次新增的平台站内页面，承载二维码与订单支付信息，替代原三方 WebView 收银台。</td></tr>
+      <tr><td>expireAt</td><td>BESTPAY 下单接口返回的付款码绝对过期时间点，收银页的倒计时以此为准。</td></tr>
+      <tr><td>待支付订单</td><td>已在平台创建、已取得付款码、尚未到账且未过期的充值订单。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、交互逻辑流程图</h1>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 700 890" width="700" height="890" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Helvetica Neue',Arial,sans-serif">
+    <defs>
+      <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#5a6a80"/>
+      </marker>
+    </defs>
+
+    <text x="320" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">BESTPAY 存款与站内收银流程</text>
+
+    <rect x="200" y="50" width="240" height="42" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="320" y="76" text-anchor="middle" font-size="12.5" fill="#123a66">存款页选择 BESTPAY，输入金额</text>
+
+    <rect x="200" y="122" width="240" height="42" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="320" y="148" text-anchor="middle" font-size="12.5" fill="#333">点击「立即充值」</text>
+
+    <polygon points="320,188 440,226 320,264 200,226" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="320" y="231" text-anchor="middle" font-size="12.5" fill="#6a4a00">金额在单笔限额内？</text>
+
+    <rect x="200" y="294" width="240" height="42" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="320" y="320" text-anchor="middle" font-size="12.5" fill="#333">调用 BESTPAY 下单接口</text>
+
+    <polygon points="320,360 440,398 320,436 200,398" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="320" y="403" text-anchor="middle" font-size="12.5" fill="#6a4a00">下单成功并返回付款码？</text>
+
+    <rect x="200" y="466" width="240" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="320" y="487" text-anchor="middle" font-size="12.5" fill="#333">跳转站内收银页，渲染金额、</text>
+    <text x="320" y="504" text-anchor="middle" font-size="12.5" fill="#333">二维码、脱敏地址与订单信息</text>
+
+    <rect x="200" y="546" width="240" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="320" y="567" text-anchor="middle" font-size="12.5" fill="#333">按三方 expireAt 换算剩余时长</text>
+    <text x="320" y="584" text-anchor="middle" font-size="12.5" fill="#333">并启动倒计时</text>
+
+    <polygon points="320,616 440,654 320,692 200,654" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="320" y="659" text-anchor="middle" font-size="12.5" fill="#6a4a00">倒计时是否归零？</text>
+
+    <rect x="200" y="722" width="240" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="320" y="743" text-anchor="middle" font-size="12.5" fill="#333">会员扫码或复制付款码串，</text>
+    <text x="320" y="760" text-anchor="middle" font-size="12.5" fill="#333">在支付应用内完成支付</text>
+
+    <rect x="200" y="802" width="240" height="50" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="320" y="823" text-anchor="middle" font-size="12.5" fill="#15542f">按说明区指引返回大厅等待</text>
+    <text x="320" y="840" text-anchor="middle" font-size="12.5" fill="#15542f">余额到账（到账反馈本期不做）</text>
+
+    <rect x="490" y="204" width="180" height="44" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="580" y="225" text-anchor="middle" font-size="12" fill="#8a2b2b">轻提示最低或最高限额，</text>
+    <text x="580" y="241" text-anchor="middle" font-size="12" fill="#8a2b2b">不下单</text>
+
+    <rect x="490" y="376" width="180" height="44" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="580" y="397" text-anchor="middle" font-size="12" fill="#8a2b2b">轻提示下单失败，</text>
+    <text x="580" y="413" text-anchor="middle" font-size="12" fill="#8a2b2b">停留存款页，输入保留</text>
+
+    <rect x="490" y="616" width="180" height="76" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="580" y="637" text-anchor="middle" font-size="12" fill="#8a2b2b">二维码置灰并覆盖失效</text>
+    <text x="580" y="653" text-anchor="middle" font-size="12" fill="#8a2b2b">蒙层，复制按钮置灰，</text>
+    <text x="580" y="669" text-anchor="middle" font-size="12" fill="#8a2b2b">订单状态改为已失效</text>
+
+    <rect x="490" y="712" width="180" height="50" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="580" y="733" text-anchor="middle" font-size="12" fill="#123a66">点「重新发起充值」</text>
+    <text x="580" y="749" text-anchor="middle" font-size="12" fill="#123a66">返回存款页重新下单</text>
+
+    <rect x="20" y="453" width="160" height="76" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="100" y="474" text-anchor="middle" font-size="12" fill="#123a66">充值记录中未失效</text>
+    <text x="100" y="490" text-anchor="middle" font-size="12" fill="#123a66">的待支付订单，可</text>
+    <text x="100" y="506" text-anchor="middle" font-size="12" fill="#123a66">点击回到本页继续</text>
+    <text x="100" y="522" text-anchor="middle" font-size="12" fill="#123a66">支付</text>
+
+    <line x1="320" y1="92" x2="320" y2="122" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="164" x2="320" y2="188" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="264" x2="320" y2="294" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="336" x2="320" y2="360" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="436" x2="320" y2="466" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="516" x2="320" y2="546" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="596" x2="320" y2="616" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="692" x2="320" y2="722" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="320" y1="772" x2="320" y2="802" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="440" y1="226" x2="490" y2="226" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="440" y1="398" x2="490" y2="398" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="440" y1="654" x2="490" y2="654" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="580" y1="692" x2="580" y2="712" stroke="#5a6a80" marker-end="url(#ar2)"/>
+    <line x1="180" y1="491" x2="200" y2="491" stroke="#5a6a80" marker-end="url(#ar2)"/>
+
+    <text x="333" y="282" font-size="11.5" fill="#2f7a4a">是</text>
+    <text x="452" y="220" font-size="11.5" fill="#a33">否</text>
+    <text x="333" y="454" font-size="11.5" fill="#2f7a4a">是</text>
+    <text x="452" y="392" font-size="11.5" fill="#a33">否</text>
+    <text x="333" y="712" font-size="11.5" fill="#2f7a4a">否</text>
+    <text x="452" y="648" font-size="11.5" fill="#a33">是</text>
+  </svg>
+  </div>
+  <p class="legend">图例：蓝底＝入口与跳转，白底＝系统处理或会员操作，菱形＝判断节点，红底＝校验未通过或失效分支，绿底＝流程终态。</p>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、三方接口字段依赖</h1>
+  <p>站内渲染收银页的前提是 BESTPAY 下单接口返回以下内容。已确认接口具备返回原始数据的能力，本章作为联调时的字段核对清单。</p>
+  <table>
+    <thead><tr><th style="width:170px">字段</th><th style="width:230px">前台用途</th><th style="width:110px">来源</th><th style="width:70px">必需性</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>PIX 付款码串<br>（copia-e-cola）</td><td>生成二维码、主按钮复制、脱敏地址行</td><td>BESTPAY</td><td>必需</td><td>以文本串返回，二维码由前台自行编码渲染，不使用三方提供的图片地址，避免图片加载失败导致页面不可用。</td></tr>
+      <tr><td>expireAt</td><td>有效时间倒计时、失效判定</td><td>BESTPAY</td><td>必需</td><td>绝对时间点。前台按「expireAt − 当前服务端时间」换算剩余时长，不使用相对秒数，避免网络延迟累计误差。</td></tr>
+      <tr><td>订单金额</td><td>金额区</td><td>平台</td><td>必需</td><td>取平台下单金额，并与三方返回金额比对，不一致时按 9.1 处理。</td></tr>
+      <tr><td>三方订单号</td><td>对账与排障</td><td>BESTPAY</td><td>必需</td><td><b>不在收银页展示</b>，仅落库并在后台订单记录中体现。</td></tr>
+      <tr><td>平台订单号</td><td>订单信息区</td><td>平台</td><td>必需</td><td>收银页展示的订单号为平台充值单号，与充值记录、客服查单口径一致。</td></tr>
+      <tr><td>下单时间</td><td>订单信息区「创建时间」</td><td>平台</td><td>必需</td><td>取平台订单创建时间，格式 <code>YYYY-MM-DD HH:mm:ss</code>。</td></tr>
+      <tr><td>订单状态</td><td>订单信息区「订单状态」</td><td>平台</td><td>必需</td><td>进入页面时查询一次，不轮询。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、页面元素与数据来源映射</h1>
+  <p>收银页的布局与信息层级对标参考平台，各元素的取数来源与差异处理如下。</p>
+  <table>
+    <thead><tr><th style="width:40px">#</th><th style="width:210px">页面元素</th><th style="width:120px">数据来源</th><th style="width:80px">对接状态</th><th>处理说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>导航栏（返回 / 标题 / 记录入口）</td><td class="src">平台自有</td><td class="ok">可取</td><td>标题沿用存款页标题，右侧为充值记录入口。</td></tr>
+      <tr><td>2</td><td>说明①　扫码或复制粘贴指引</td><td class="src">平台静态文案</td><td class="ok">可取</td><td>与三方收银台的 PIX 操作指引语义一致，改写为平台口径。</td></tr>
+      <tr><td>3</td><td>说明②　仅可支付一次</td><td class="src">平台静态文案</td><td class="gap">三方无对应</td><td>三方页无此提示，取参考平台原文作为平台静态文案。</td></tr>
+      <tr><td>4</td><td>说明③　支付成功后的指引（高亮）</td><td class="src">平台静态文案</td><td class="gap">三方无对应</td><td>沿用参考平台句式，<b>「积分」改为「余额」</b>以匹配平台口径，见第八章。</td></tr>
+      <tr><td>5</td><td>充值金额</td><td class="src">平台下单金额</td><td class="ok">可取</td><td>格式 <code>R$ 1.234,56</code>，巴西千分位。</td></tr>
+      <tr><td>6</td><td>二维码</td><td class="src">PIX 付款码串</td><td class="ok">可取</td><td>由付款码串前台编码渲染。</td></tr>
+      <tr><td>7</td><td>主按钮「复制二维码」</td><td class="src">PIX 付款码串</td><td class="ok">可取</td><td>复制完整付款码串，与三方页的 PIX CÓPIA É COLA 为同一动作。</td></tr>
+      <tr><td>8</td><td>二维码地址（脱敏）+ 复制</td><td class="src">平台对付款码串脱敏</td><td class="gap">三方无对应</td><td>三方页无此展示。按<b>「前 2 位 + *** + 后 8 位」</b>由平台生成展示值；点复制图标复制<b>完整串</b>。</td></tr>
+      <tr><td>9</td><td>有效时间倒计时</td><td class="src">三方 expireAt</td><td class="ok">可取</td><td>以三方返回的过期时间为准，见 6.5。</td></tr>
+      <tr><td>10</td><td>订单状态</td><td class="src">平台订单状态</td><td class="ok">可取</td><td>三方页无此区块，由平台补充。</td></tr>
+      <tr><td>11</td><td>创建时间</td><td class="src">平台下单时间</td><td class="ok">可取</td><td>同上。</td></tr>
+      <tr><td>12</td><td>订单号 + 复制</td><td class="src">平台订单号</td><td class="ok">可取</td><td>同上。</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">
+    <p>反向差异：三方收银台上的 <b>QR 生成免责声明</b>、<b>DEPÓSITO PARA JOGOS E APOSTAS 警示框</b>（Atenção / CUIDADO 两段）与 <b>PIX / Banco Central 官方标识</b>，在参考平台的站内收银页中无对应位置，本期<b>不迁移</b>。该取舍涉及巴西市场的合规披露要求，需法务或风控复核，见 10.2。</p>
+  </div>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、收银页显示与交互逻辑</h1>
+
+  <h2 id="s61">6.1 入口、返回与回访</h2>
+  <ol>
+    <li><b>主入口</b>：存款页选择 BESTPAY、输入有效金额并点击「立即充值」，校验通过且下单成功后<b>跳转至站内收银页</b>（独立页面，非存款页内的浮层）。原「打开三方收银台 WebView」的行为取消。</li>
+    <li><b>提交按钮</b>：点击后进入处理中状态（置灰、文案改为「处理中...」）直至下单接口返回，防止重复下单。</li>
+    <li><b>返回</b>：收银页左上角返回键回到存款页，订单不作废、不取消。</li>
+    <li><b>回访</b>：充值记录中的<b>待支付且未失效</b>订单可点击回到对应收银页继续支付；已失效或已完成的订单点击不进入收银页，轻提示订单已失效或已完成。</li>
+    <li><b>记录入口</b>：收银页与存款页导航栏右侧均提供充值记录入口。</li>
+    <li><b>重复下单</b>：会员返回存款页后再次提交，<b>生成新订单与新付款码</b>，原订单在其 expireAt 之前仍然有效，与说明②「如需再次支付，请返回并重新发起充值」的表述一致。</li>
+  </ol>
+
+  <h2 id="s62">6.2 支付说明区</h2>
+  <p>页面顶部为三条带项目符号的说明，自上而下依次为扫码指引、单次支付提示、支付后指引。前两条为常规灰度文案，<b>第三条为高亮文案</b>（视觉层级以 UI 设计稿为准）。文案内容见第八章。</p>
+
+  <h2 id="s63">6.3 金额与二维码</h2>
+  <ol>
+    <li><b>金额</b>：居中展示本次充值金额，格式 <code>R$ 1.234,56</code>，为页面视觉重心。右侧带复制图标，复制内容为<b>纯数值</b>（不含货币符号与千分位），便于会员在支付应用内直接粘贴。</li>
+    <li><b>二维码</b>：由 PIX 付款码串编码生成，白底居中展示，四周保留静区以保证扫码识别率。</li>
+    <li>付款码串获取失败或为空时，按 9.2 处理，不展示空白二维码。</li>
+  </ol>
+
+  <h2 id="s64">6.4 复制入口</h2>
+  <table>
+    <thead><tr><th style="width:170px">位置</th><th style="width:220px">复制内容</th><th>失效后是否可用</th></tr></thead>
+    <tbody>
+      <tr><td>金额右侧图标</td><td>充值金额纯数值</td><td>否，轻提示订单已失效</td></tr>
+      <tr><td>主按钮「复制二维码」</td><td>完整 PIX 付款码串</td><td>否，按钮置灰</td></tr>
+      <tr><td>二维码地址行图标</td><td>完整 PIX 付款码串</td><td>否，轻提示订单已失效</td></tr>
+      <tr><td>订单号右侧图标</td><td>平台订单号</td><td><b>是</b>，失效后仍可复制以便联系客服</td></tr>
+    </tbody>
+  </table>
+  <p>所有复制动作成功后统一轻提示「复制成功」。二维码地址行的展示值为脱敏串，<b>复制的始终是完整串</b>，不复制脱敏后的展示文本。</p>
+
+  <h2 id="s65">6.5 有效时间与失效处理</h2>
+  <ol>
+    <li><b>取值口径</b>：倒计时剩余时长 ＝ 三方返回的 <code>expireAt</code> − 当前服务端时间，<b>不使用平台固定时长</b>。</li>
+    <li><b>展示格式</b>：剩余时长不足 1 小时时展示为「{分}m {秒}s」，满 1 小时起展示为「{时}h {分}m {秒}s」，每秒刷新。</li>
+    <li><b>归零处理</b>：倒计时归零即视为订单失效，页面同步变化为——二维码<b>置灰并覆盖失效蒙层</b>（蒙层文案「二维码已失效」）；主按钮「复制二维码」<b>置灰不可点击</b>；有效时间位与订单状态位均改为「已失效」；页面底部出现<b>「重新发起充值」</b>按钮，点击返回存款页（清空金额输入，渠道保持选中 BESTPAY）。</li>
+    <li>会员在页面停留期间归零，无需刷新页面即时生效；重新进入页面时若已过期，直接以失效态渲染。</li>
+  </ol>
+
+  <h2 id="s66">6.6 订单信息区</h2>
+  <p>位于页面底部，以分隔线与上方内容区隔开，三行左标签右取值结构。</p>
+  <table>
+    <thead><tr><th style="width:130px">字段</th><th style="width:230px">取值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>订单状态</td><td>待支付 / 已失效</td><td>待支付为高亮态、已失效为警示态，具体色值以 UI 设计稿为准。本期不含「已完成」态的页内切换，见第一章范围说明。</td></tr>
+      <tr><td>创建时间</td><td>平台订单创建时间</td><td>格式 <code>YYYY-MM-DD HH:mm:ss</code>。</td></tr>
+      <tr><td>订单号</td><td>平台充值订单号</td><td>完整展示不截断，过长自动换行；右侧带复制图标。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、后台配置说明</h1>
+  <p>本期<b>不新增后台配置项</b>。收银页的有效时间取自三方返回值，不开放后台配置；页面各区块为固定展示，不做运营可配。BESTPAY 渠道自身的上下线开关、可见会员层级与单笔限额沿用现有配置，本次不做调整。</p>
+  <div class="notice">
+    <p>是否需要增加一个「收银页展示方式：站内 / 三方 WebView」的渠道级开关作为上线灰度与故障回退手段，见 10.3。</p>
+  </div>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、中文 / 葡语文案对照表</h1>
+  <table>
+    <thead><tr><th style="width:120px">位置</th><th style="width:28%">中文</th><th style="width:34%">Português</th><th style="width:130px">葡语来源</th></tr></thead>
+    <tbody>
+      <tr><td>页面标题</td><td>存款</td><td>Depósito</td><td>参考平台原文</td></tr>
+      <tr><td>说明①</td><td>打开您的支付应用，扫描或复制粘贴下方二维码以完成本次支付</td><td>Abra seu aplicativo de pagamento e digitalize ou copie e cole o código QR abaixo para concluir sua compra</td><td>参考平台原文</td></tr>
+      <tr><td>说明②</td><td>该二维码仅可支付一次。如需再次支付，请返回并重新发起充值</td><td>Este código QR só pode ser pago uma vez. Se precisar pagar novamente, volte e recarregue</td><td>参考平台原文</td></tr>
+      <tr><td>说明③（高亮）</td><td>支付成功后，您可返回大厅等待余额到账！</td><td>Após o pagamento ser bem-sucedido, você pode retornar ao lobby do jogo e aguardar a adição de saldo!</td><td>参考平台原文，仅将 <code>pontos</code> 替换为 <code>saldo</code></td></tr>
+      <tr><td>复制按钮</td><td>复制二维码</td><td>Copiar código QR</td><td>参考平台原文</td></tr>
+      <tr><td>地址标签</td><td>二维码地址</td><td>Endereço do código QR</td><td>参考平台原文</td></tr>
+      <tr><td>有效时间</td><td>有效时间：</td><td>Tempo efetivo:</td><td>参考平台原文</td></tr>
+      <tr><td>订单状态</td><td>订单状态</td><td>Status do pedido</td><td>参考平台原文</td></tr>
+      <tr><td>状态-待支付</td><td>待支付</td><td>Pendente</td><td>参考平台原文</td></tr>
+      <tr><td>创建时间</td><td>创建时间</td><td>Hora de Criação</td><td>参考平台原文</td></tr>
+      <tr><td>订单号</td><td>订单号</td><td>Número do Pedido</td><td>参考平台原文</td></tr>
+      <tr><td>状态-已失效</td><td>已失效</td><td>Expirado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>二维码失效蒙层</td><td>二维码已失效</td><td>Código QR expirado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>重新发起按钮</td><td>重新发起充值</td><td>Recarregar novamente</td><td>拟定，待运营确认</td></tr>
+      <tr><td>失效操作提示</td><td>订单已失效，请重新发起充值</td><td>Pedido expirado. Faça uma nova recarga.</td><td>拟定，待运营确认</td></tr>
+      <tr><td>复制成功</td><td>复制成功</td><td>Copiado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>充值记录标题</td><td>充值记录</td><td>Histórico de recargas</td><td>拟定，待运营确认</td></tr>
+      <tr><td>充值记录空态</td><td>暂无充值订单</td><td>Nenhuma recarga encontrada</td><td>拟定，待运营确认</td></tr>
+      <tr><td>下单失败</td><td>下单失败，请稍后重试</td><td>Falha ao gerar o pedido. Tente novamente.</td><td>拟定，待运营确认</td></tr>
+      <tr><td>最低限额</td><td>最低充值 R$ {最低}</td><td>Recarga mínima: R$ {最低}</td><td>沿用平台现有</td></tr>
+      <tr><td>最高限额</td><td>单笔最高 R$ {最高}</td><td>Máximo por transação: R$ {最高}</td><td>沿用平台现有</td></tr>
+      <tr><td>按钮-处理中</td><td>处理中...</td><td>Processando...</td><td>沿用平台现有</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">
+    <p>标注「参考平台原文」的条目葡语直接取自参考平台截图，未经翻译。标注「拟定，待运营确认」的为参考平台未覆盖的新增文案，上线前需由运营按巴西站现行用语终审。含 <code>{ }</code> 的为变量占位。</p>
+  </div>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th style="width:210px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>9.1</td><td>三方返回金额与平台下单金额不一致</td><td>不进入收银页，按下单失败处理并轻提示，订单置为异常待人工核查，不向会员展示二维码。</td></tr>
+      <tr><td>9.2</td><td>下单成功但付款码串为空或格式非法</td><td>不进入收银页，轻提示「下单失败，请稍后重试」，停留存款页且输入内容保留。</td></tr>
+      <tr><td>9.3</td><td>下单接口超时或报错</td><td>同 9.2；提交按钮恢复可点击状态。</td></tr>
+      <tr><td>9.4</td><td>三方未返回 expireAt</td><td>视为下单数据不完整，按 9.2 处理。倒计时无可信来源时不进入收银页，避免展示无法判定有效期的二维码。</td></tr>
+      <tr><td>9.5</td><td>会员停留期间倒计时归零</td><td>按 6.5 第 3 条即时切换为失效态，无需刷新页面。</td></tr>
+      <tr><td>9.6</td><td>从充值记录点入已过期订单</td><td>不进入收银页，轻提示订单已失效，引导重新发起充值。</td></tr>
+      <tr><td>9.7</td><td>会员在收银页等待期间订单已到账</td><td>本期不做页内状态轮询，页面仍显示待支付。到账以平台余额与充值记录为准，不影响资金结果。该场景的页面反馈待后续需求评估。</td></tr>
+      <tr><td>9.8</td><td>同一会员存在多笔未失效待支付订单</td><td>各订单互不影响，均可从充值记录分别进入各自的收银页。</td></tr>
+      <tr><td>9.9</td><td>复制能力不可用（系统剪贴板权限受限）</td><td>轻提示复制失败并提示长按手动复制；二维码地址行的展示值仍为脱敏串，不因此改为完整展示。</td></tr>
+      <tr><td>9.10</td><td>设备时间与服务端时间偏差</td><td>倒计时以服务端时间为基准换算初始剩余时长，本地仅做秒级递减，不直接取设备时间与 expireAt 相减。</td></tr>
+      <tr><td>9.11</td><td>会员未登录或登录态失效</td><td>沿用平台现有处理，跳转登录流程。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>十、待确认事项</h1>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th style="width:230px">事项</th><th>说明与影响</th></tr></thead>
+    <tbody>
+      <tr><td>10.1</td><td>支付成功后的页面反馈机制</td><td>本期明确不做订单状态轮询与自动跳转，会员需自行返回查看余额。若后续希望在收银页直接看到到账结果，需补充轮询频率、超时停止策略与成功态的页面表现，建议作为独立需求评估。</td></tr>
+      <tr><td>10.2</td><td>三方合规披露内容不迁移的风险</td><td>三方收银台的免责声明、博彩入金警示框与 PIX / Banco Central 标识本期不搬到站内页。站内化后这些内容将不再向会员展示，<b>需法务或风控确认是否属于必须披露项</b>。若需保留，建议做成默认收起的「支付须知」折叠条，以兼顾页面长度。</td></tr>
+      <tr><td>10.3</td><td>是否增加站内 / WebView 切换开关</td><td>作为上线灰度与三方故障时的回退手段。若需要，需在渠道配置中增加一项展示方式开关，并明确切换的生效范围与时机。</td></tr>
+      <tr><td>10.4</td><td>充值记录页的现状与改造量</td><td>6.1 的回访路径依赖充值记录能区分「待支付 / 已失效 / 已完成」并支持点击跳转。需确认现有充值记录页是否已具备该状态划分与跳转能力，若无则需一并改造。</td></tr>
+      <tr><td>10.5</td><td>脱敏规则的确认</td><td>「前 2 位 + *** + 后 8 位」取自参考平台的展示效果推断。若付款码串格式导致后 8 位无区分度，需调整截取位数。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十一 -->
+<div class="section" id="s11">
+  <h1>十一、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-10-06</td><td>初稿：BESTPAY 收银环节由三方 WebView 改为站内页面，覆盖三方字段依赖、页面元素与数据来源映射、收银页显示与交互逻辑、有效时间与失效处理、入口与回访、中葡文案对照、边界与异常处理。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
