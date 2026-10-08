@@ -44,21 +44,21 @@ tr:hover td{background:#fafcff}
 
 <h1>推广渠道埋点类型新增 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v1.0</span>
+  <span>📄 版本：v1.1</span>
   <span>✏️ 作者：Laura</span>
-  <span>📅 更新日期：2026-10-02</span>
+  <span>📅 更新日期：2026-10-07</span>
 </div>
 
 <div class="section-card">
 <h2>一、需求概述</h2>
-<p>推广渠道管理模块现有四种埋点类型（常规推广、Facebook API、TK API、Kwai API），均面向在外部广告平台投放的 H5 渠道链接。本需求新增三种面向独立安装包的埋点类型：<strong>APK上架包</strong>（商户自行封装并上架谷歌商店的马甲包，SD=6）、<strong>iOS上架包</strong>（商户自行封装并上架苹果商店的安装包，SD=4）、<strong>APK</strong>（平台自有的 H5 套壳包，打包指定 URL 后由商户自行分发）。</p>
+<p>推广渠道管理模块现有四种埋点类型（常规推广、Facebook API、TK API、Kwai API），均面向在外部广告平台投放的 H5 渠道链接。本需求新增三种面向独立安装包的埋点类型：<strong>APK上架包</strong>（商户自行封装并上架谷歌商店的马甲包，SD=6）、<strong>IOS上架包</strong>（商户自行封装并上架苹果商店的安装包，SD=4）、<strong>APK</strong>（平台自有的 H5 套壳包，打包指定 URL 后由商户自行分发）。</p>
 
 <h3>1.1 链路与适用设备</h3>
 <p>三种新埋点的本质差异在于：渠道链接<strong>不对外投放，而是打包进对应的安装包中使用</strong>。用户先安装 App，App 启动后在内置 WebView 中加载该渠道链接并落地至配置的页面。因此每种埋点的渠道链接<strong>只会在固定类型的设备上被访问</strong>，无需考虑跨设备访问的交互。</p>
 <table>
   <tr><th style="width:150px">埋点类型</th><th style="width:130px">链接打包载体</th><th style="width:110px">适用设备</th><th>用户获取路径</th></tr>
   <tr><td><strong>APK上架包</strong></td><td>商户封装的谷歌商店马甲包</td><td>安卓设备</td><td>在谷歌商店按名称搜索到该包并安装，启动后在 App 内加载渠道链接</td></tr>
-  <tr><td><strong>iOS上架包</strong></td><td>商户封装的苹果商店安装包</td><td>iOS 设备</td><td>在苹果商店搜索到该包并安装，启动后在 App 内加载渠道链接</td></tr>
+  <tr><td><strong>IOS上架包</strong></td><td>商户封装的苹果商店安装包</td><td>iOS 设备</td><td>在苹果商店搜索到该包并安装，启动后在 App 内加载渠道链接</td></tr>
   <tr><td><strong>APK</strong></td><td>平台自有的 H5 套壳包</td><td>安卓设备</td><td>由商户自行分发安装包，不经应用商店，安装后在 App 内加载打包的渠道链接</td></tr>
 </table>
 
@@ -76,12 +76,12 @@ tr:hover td{background:#fafcff}
   <tr><th style="width:140px">新增选项</th><th style="width:250px">展开字段</th><th style="width:110px">事件说明</th><th>选项说明</th></tr>
   <tr>
     <td><strong>APK上架包</strong></td>
-    <td>全渠道回传 kwai ID <span class="tag t-ok">非必填</span>，见 2.2</td>
+    <td>全渠道回传kwai ID <span class="tag t-ok">非必填</span>，见 2.2</td>
     <td><span class="tag t-ok">✅ 有</span>见 2.3</td>
     <td>商户自行封装并上架谷歌商店的马甲包，SD=6。渠道链接打包进该上架包，由安卓用户在 App 内访问。</td>
   </tr>
   <tr>
-    <td><strong>iOS上架包</strong></td>
+    <td><strong>IOS上架包</strong></td>
     <td>无</td>
     <td><span class="tag t-ok">✅ 有</span>见 2.3</td>
     <td>商户自行封装并上架苹果商店的安装包，SD=4。渠道链接打包进该上架包，由 iOS 用户在 App 内访问。</td>
@@ -99,7 +99,7 @@ tr:hover td{background:#fafcff}
 <table>
   <tr><th style="width:160px">字段</th><th style="width:80px">必填</th><th style="width:90px">控件</th><th style="width:230px">展示条件</th><th>字段说明</th></tr>
   <tr>
-    <td>全渠道回传 kwai ID</td>
+    <td>全渠道回传kwai ID</td>
     <td><span class="tag t-ok">非必填</span></td>
     <td>文本输入</td>
     <td>埋点类型选择「APK上架包」时展示；切换为其他埋点类型时隐藏并清空已填内容</td>
@@ -108,7 +108,7 @@ tr:hover td{background:#fafcff}
 </table>
 
 <h3>2.3 事件说明</h3>
-<p>事件说明用于展示该埋点类型的回传事件清单，内容格式为「中文事件名称 - 事件标识符」，具体以三方平台官方文档为准。入口有两处，均仅对 APK上架包与 iOS上架包展示：</p>
+<p>事件说明用于展示该埋点类型的回传事件清单，内容格式为「中文事件名称 - 事件标识符」。两种上架包埋点由客户端按我方统一埋点规范上报，事件清单由客户端埋点文档定义（见下方「回传事件清单」），不依赖三方平台文档。入口有两处，均仅对 APK上架包与 IOS上架包展示：</p>
 <table>
   <tr><th style="width:170px">入口位置</th><th style="width:260px">展示条件</th><th>交互说明</th></tr>
   <tr>
@@ -123,12 +123,21 @@ tr:hover td{background:#fafcff}
   </tr>
 </table>
 <h4>回传事件清单</h4>
+<p>APK上架包 与 IOS上架包 共用同一份清单，共 <strong>9 项</strong>事件。事件标识符<strong>严格区分大小写</strong>，后台两处入口均按下表顺序、以「中文事件名称 - 事件标识符」格式展示，不展示触发时机与参数。</p>
 <table>
-  <tr><th style="width:170px">埋点类型</th><th>回传事件（共 8 项）</th></tr>
-  <tr><td>APK上架包</td><td>注册 - register；注册点击 - registerClick；登录 - login；登出 - logout；开始游戏 - enterGame；拉起订单 - rechargeClick；首充 - firstrecharge；充值 - recharge</td></tr>
-  <tr><td>iOS上架包</td><td>同 APK上架包，共 8 项</td></tr>
-  <tr><td>APK</td><td>不涉及回传事件，两处入口均不展示</td></tr>
+  <tr><th style="width:110px">中文事件名称</th><th style="width:150px">事件标识符</th><th style="width:280px">触发时机</th><th>附加参数</th></tr>
+  <tr><td>登录成功</td><td>login</td><td>用户登录成功后</td><td>—</td></tr>
+  <tr><td>登出</td><td>logout</td><td>用户退出登录</td><td>—</td></tr>
+  <tr><td>点击注册</td><td>registerClick</td><td>点击注册按钮提交时（不等待结果）</td><td>—（此时 uid 多为空）</td></tr>
+  <tr><td>注册成功</td><td>registerSuccess</td><td>注册成功后</td><td>—</td></tr>
+  <tr><td>点击充值</td><td>depositClick</td><td>点击充值按钮提交时</td><td>—</td></tr>
+  <tr><td>首存成功</td><td>depositFirst</td><td>首次存款到账（后端确认）</td><td>id 订单号（去重用）、amount 金额、currency 币种、success（固定 1）</td></tr>
+  <tr><td>复存成功</td><td>depositRepeat</td><td>复充到账（后端确认）</td><td>id 订单号（去重用）、amount、currency、success（固定 1）</td></tr>
+  <tr><td>进入游戏</td><td>enterGame</td><td>进入游戏成功</td><td>gameId 游戏标识（部分游戏无则不带）</td></tr>
+  <tr><td>打开外链</td><td>openWindow</td><td>需要打开外部链接时</td><td>仅 url（不带基础参数）</td></tr>
 </table>
+<div class="info">除 openWindow 外，每个事件均额外携带<strong>基础参数</strong>；基础参数字段清单由客户端埋点规范定义，本文档不展开。depositFirst 与 depositRepeat 的 id 为订单号，用于去重，重复上报同一订单号时按一次计。事件名、参数与上报时机属客户端埋点实现范畴，后台仅做清单展示，不提供事件级配置能力。</div>
+<div class="note"><strong>APK</strong> 类型不涉及回传事件，表单内与渠道列表操作列两处入口均不展示。</div>
 
 <h3>2.4 测试回传弹窗</h3>
 <p>点击渠道列表操作列「Test」按钮后弹出，用于测试该渠道的埋点回传是否正常。三种新埋点下弹窗字段表现如下：</p>
@@ -150,7 +159,7 @@ tr:hover td{background:#fafcff}
 <table>
   <tr><th style="width:150px">埋点类型</th><th style="width:110px">适用设备</th><th style="width:230px">本需求描述的落地指向</th><th>说明</th></tr>
   <tr><td><strong>APK上架包</strong></td><td>安卓设备</td><td>官网首页 / 官网注册页</td><td>App 启动后加载渠道链接，经跳转域名落地至所配置的 H5 页面。</td></tr>
-  <tr><td><strong>iOS上架包</strong></td><td>iOS 设备</td><td>官网首页 / 官网注册页</td><td>同上。</td></tr>
+  <tr><td><strong>IOS上架包</strong></td><td>iOS 设备</td><td>官网首页 / 官网注册页</td><td>同上。</td></tr>
   <tr><td><strong>APK</strong></td><td>安卓设备</td><td>官网首页</td><td>App 启动后加载打包的渠道链接，落地至官网首页。</td></tr>
 </table>
 </div>
@@ -208,7 +217,7 @@ tr:hover td{background:#fafcff}
   </tr>
 </table>
 
-<h3>4.2 iOS上架包 · iOS 设备</h3>
+<h3>4.2 IOS上架包 · iOS 设备</h3>
 <p>用户从苹果商店安装后启动 App，App 内加载渠道链接并经跳转域名落地至官网首页 / 官网注册页，域名跳转正常生效。落地页<strong>不展示</strong>顶部固定横幅与底部安装浮层，也<strong>不弹出</strong>安装引导弹窗——用户已通过苹果商店完成安装，App 内无需再做任何安装引导。用户落地后直接进入正常的注册、登录与游戏流程。</p>
 <div class="info">后台「渠道设置」苹果 Tab 的下载按钮与引导安装字段仍可正常配置与保存，但不作用于该类渠道的前台表现。</div>
 
@@ -245,12 +254,12 @@ tr:hover td{background:#fafcff}
 <h2>六、验收要点</h2>
 <ol class="doc-ol">
   <li><strong>埋点类型字段：</strong>筛选区、新增 / 编辑 / 批量新增渠道弹窗的「埋点类型」下拉均展示 APK上架包、IOS上架包、APK 三个新选项，文案与顺序一致；渠道列表「埋点类型」列与测试回传弹窗「类型」字段可正确展示三种新类型。</li>
-  <li><strong>专属字段：</strong>选择 APK上架包 展开「全渠道回传 kwai ID」且为非必填；切换至其他埋点类型时该字段隐藏并清空；iOS上架包与 APK 不展开任何子字段。</li>
-  <li><strong>事件说明：</strong>表单内选择 APK上架包 或 IOS上架包 后展示事件说明，内容为 8 项回传事件；渠道列表操作列对这两类渠道展示「说明」按钮，弹窗标题为埋点类型名称、内容与表单内一致；APK 两处均不展示。</li>
+  <li><strong>专属字段：</strong>选择 APK上架包 展开「全渠道回传kwai ID」且为非必填；切换至其他埋点类型时该字段隐藏并清空；IOS上架包与 APK 不展开任何子字段。</li>
+  <li><strong>事件说明：</strong>表单内选择 APK上架包 或 IOS上架包 后展示事件说明，内容为 9 项回传事件、顺序与 2.3 清单一致、事件标识符大小写正确；渠道列表操作列对这两类渠道展示「说明」按钮，弹窗标题为埋点类型名称、内容与表单内一致；APK 两处均不展示。</li>
   <li><strong>测试回传弹窗：</strong>三种新埋点下 Pixel Id 字段保留展示、内容为空且置灰不可编辑，渠道名称与类型正确只读回填。</li>
   <li><strong>APK上架包主流程：</strong>安卓设备从谷歌商店安装并启动后，可正常落地至官网首页 / 官网注册页；不展示顶部横幅与底部安装浮层；安装引导弹窗按配置的弹框时间点与间隔正常弹出；弹框安装类型三种配置下均可正确安装；非 Chrome 浏览器点击安装可正常唤起 Chrome。</li>
   <li><strong>自动登录：</strong>在 H5 已登录状态下通过安装引导安装 PWA 或 APK，打开新安装的客户端直接为已登录状态；未登录状态下安装，打开后为未登录状态。</li>
-  <li><strong>iOS上架包主流程：</strong>iOS 设备从苹果商店安装并启动后，可正常落地至官网首页 / 官网注册页；不展示顶部横幅与底部安装浮层，不弹出安装引导弹窗。</li>
+  <li><strong>IOS上架包主流程：</strong>iOS 设备从苹果商店安装并启动后，可正常落地至官网首页 / 官网注册页；不展示顶部横幅与底部安装浮层，不弹出安装引导弹窗。</li>
   <li><strong>APK 主流程：</strong>安卓设备安装套壳包并启动后，可正常落地至官网首页；不展示顶部横幅与底部安装浮层，不弹出安装引导弹窗。</li>
   <li><strong>回归：</strong>常规推广、Facebook API、TK API、Kwai API 四种现有埋点的字段展开、事件说明、测试回传弹窗与前台下载按钮 / 安装引导行为均不受影响。</li>
 </ol>

@@ -158,6 +158,8 @@ tr:hover td{background:#f5f8ff}
 .tab-b{padding:4px 18px;font-size:13px;cursor:pointer;background:#fff;color:#595959;border:none;transition:all .15s;font-family:inherit}
 .tab-b.active{background:#0961BD;color:#fff}
 .hint{font-size:11px;color:#ff4d4f;margin-top:3px}
+.ev-link{display:inline-block;font-size:13px;color:#0961BD;cursor:pointer;margin-left:10px;line-height:32px}
+.ev-link:hover{text-decoration:underline}
 .note{font-size:11px;color:#8c8c8c;margin-top:3px}
 .cond{display:none}
 .cond.on{display:block}
@@ -3794,7 +3796,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="ba-top">
         <div class="ba-ti"><span class="bl req">地区：</span><select class="fs"><option>巴西</option></select></div>
         <div class="ba-ti"><span class="bl req">所属商户：</span><select class="fs"><option>762</option></select></div>
-        <div class="ba-ti"><span class="bl req">埋点类型：</span><select class="fs" id="ba-track" onchange="baTrackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option><option value="APK上架包">APK上架包</option><option value="IOS上架包">IOS上架包</option><option value="APK">APK</option></select></div>
+        <div class="ba-ti"><span class="bl req">埋点类型：</span><select class="fs" id="ba-track" onchange="baTrackChange()"><option>常规推广</option><option value="Facebook-API">Facebook API（Facebook服务器接口回传）</option><option value="TikTok-click-API">TK API（TikTok服务器接口回传）</option><option value="Kwai-API">Kwai API（快手服务器接口回传）</option><option value="APK上架包">APK上架包</option><option value="IOS上架包">IOS上架包</option><option value="APK">APK</option></select><span id="ba-ev-link" class="ev-link" style="display:none" onclick="openEvent(document.getElementById('ba-track').value)">事件说明</span></div>
       </div>
       <div class="fi" style="align-items:flex-start">
         <span class="fl req" style="line-height:28px;padding-top:4px">渠道信息：</span>
@@ -4094,8 +4096,8 @@ const evMap={
   'tiktok-click-api':{title:'TK API（TikTok服务器接口回传）',ev:[['注册','CompleteRegistration'],['登录','Login'],['充值','Purchase（仅在首充时触发）']]},
   'Kwai-API':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
   'kwai-click':{title:'Kwai API（快手服务器接口回传）',ev:[['注册','completeRegistration'],['充值','purchase'],['首充','firstDeposit']]},
-  'APK上架包':{title:'APK上架包',ev:[['注册','register'],['注册点击','registerClick'],['登录','login'],['登出','logout'],['开始游戏','enterGame'],['拉起订单','rechargeClick'],['首充','firstrecharge'],['充值','recharge']]},
-  'IOS上架包':{title:'IOS上架包',ev:[['注册','register'],['注册点击','registerClick'],['登录','login'],['登出','logout'],['开始游戏','enterGame'],['拉起订单','rechargeClick'],['首充','firstrecharge'],['充值','recharge']]},
+  'APK上架包':{title:'APK上架包',ev:[['登录成功','login'],['登出','logout'],['点击注册','registerClick'],['注册成功','registerSuccess'],['点击充值','depositClick'],['首存成功','depositFirst'],['复存成功','depositRepeat'],['进入游戏','enterGame'],['打开外链','openWindow']]},
+  'IOS上架包':{title:'IOS上架包',ev:[['登录成功','login'],['登出','logout'],['点击注册','registerClick'],['注册成功','registerSuccess'],['点击充值','depositClick'],['首存成功','depositFirst'],['复存成功','depositRepeat'],['进入游戏','enterGame'],['打开外链','openWindow']]},
 };
 
 // ─── RENDER TABLE ───
@@ -4247,6 +4249,11 @@ function landChange(){
   d.innerHTML=(map[v]||['www.kk678.ac']).map(x=>`<option>${x}</option>`).join('');
 }
 
+// 表单内「事件说明」入口：仅 APK上架包 / IOS上架包 展示
+function evLinkHtml(t){
+  return `<div class="fi"><span class="fl"></span><div class="fc"><span class="ev-link" onclick="openEvent('${t}')">事件说明</span></div></div>`;
+}
+
 function trackChange(){
   const v=document.getElementById('ac-track').value;
   const cont=document.getElementById('ac-track-extra');
@@ -4254,7 +4261,9 @@ function trackChange(){
   if(v==='Facebook-API'||v==='TikTok-click-API'||v==='Kwai-API'){
     h=`<div class="fi"><span class="fl req">pixel Id：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl req">访问令牌TOKEN：</span><div class="fc"><input class="fin" placeholder="请输入"></div></div><div class="fi"><span class="fl">test_event_code事件测试：</span><div class="fc"><input class="fin" placeholder="请输入（非必填）"></div></div><div style="color:#ff4d4f;font-size:12px;line-height:1.6;margin:4px 0 10px 152px">test_event_code事件测试：仅供测试使用，测试完成后注意删除该输入框填入的内容</div>`;
   }else if(v==='APK上架包'){
-    h=`<div class="fi"><span class="fl">全渠道回传kwai ID：</span><div class="fc"><input class="fin" id="ac-kwai-id" placeholder="请输入"></div></div>`;
+    h=`<div class="fi"><span class="fl">全渠道回传kwai ID：</span><div class="fc"><input class="fin" id="ac-kwai-id" placeholder="请输入"></div></div>`+evLinkHtml(v);
+  }else if(v==='IOS上架包'){
+    h=evLinkHtml(v);
   }
   cont.innerHTML=h;
 }
@@ -4451,10 +4460,13 @@ function baRender(data){
   const n=Math.max((data||[]).length,2);
   for(let i=0;i<n;i++){c.appendChild(mkRow(cols,(data||[])[i]));a.appendChild(mkAct());}
   const tip=document.getElementById('ba-row-tip');
-  if(baIsApi((document.getElementById('ba-track')||{}).value)){
+  const bv=(document.getElementById('ba-track')||{}).value;
+  if(baIsApi(bv)){
     tip.style.display='block';
     tip.textContent='test_event_code事件测试：仅供测试使用，测试完成后注意删除该输入框填入的内容';
   }else{tip.style.display='none'}
+  const bl=document.getElementById('ba-ev-link');
+  if(bl)bl.style.display=(bv==='APK上架包'||bv==='IOS上架包')?'inline-block':'none';
 }
 function addRow(){
   document.getElementById('batch-rows').appendChild(mkRow());
