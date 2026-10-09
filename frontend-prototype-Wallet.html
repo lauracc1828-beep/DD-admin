@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>钱包一级页 · H5 原型</title>
+<style>
+  :root{
+    --bg:#0d0d0d; --chip:#39342b; --input:#242424;
+    --gold:#F4E500; --line:#2b2b2b; --t2:#9a9a9a; --t3:#5f5f5f;
+    --navbg:#262626; --navh:66px;
+    --safeb:0px;   /* 底部安全区，真机下由 media query 注入 */
+    --safet:0px;   /* 顶部安全区（刘海/灵动岛） */
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;padding:34px 16px 60px;background:#1b1b1d;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+    color:#e6e6e6;display:flex;flex-direction:column;align-items:center}
+  h1{font-size:17px;margin:0 0 4px;color:#fff;font-weight:600}
+  .sub{font-size:12px;color:#7f7f7f;margin:0 0 16px}
+
+  /* ================= 手机壳 ================= */
+  .phone{width:390px;height:800px;border-radius:38px;background:var(--bg);border:9px solid #000;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden;position:relative;display:flex;flex-direction:column}
+
+  .screen{position:absolute;left:0;right:0;top:0;bottom:0;display:none;flex-direction:column}
+  .screen.on{display:flex}
+
+  .nav{height:calc(52px + var(--safet));flex:0 0 auto;background:#000;display:flex;align-items:center;
+    justify-content:space-between;padding:var(--safet) 16px 0}
+  .nav .ttl{font-size:17px;font-weight:600;color:#fff}
+  .nav .ico{width:20px;height:20px;flex:0 0 20px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .nav .ico.ph{visibility:hidden;cursor:default}
+
+  .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 16px 24px}
+  .body::-webkit-scrollbar{width:0}
+
+  /* ================= 钱包页：Tab 即顶栏（不再单设页面标题） ================= */
+  .wtabs{flex:0 0 auto;height:calc(52px + var(--safet));background:#000;
+    display:flex;align-items:flex-end;justify-content:center;gap:0;
+    padding:var(--safet) 16px 0;position:relative;border-bottom:1px solid var(--line)}
+  /* 点击区 72×46px（≥iOS 44pt / Android 48dp）。
+     文字 32px 居中，左右各 20px 内边距撑开热区；两块热区相邻不重叠，
+     两组文字之间仍是 40px 视觉间距 —— 外观与改前完全一致。 */
+  .wtab{width:72px;height:46px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;font-weight:600;color:#7c7c7c;position:relative;cursor:pointer;transition:color .15s}
+  .wtab.on{color:#fff}
+  /* 下划线只跟文字等宽，不跟随放大的热区 */
+  .wtab:after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:-1px;
+    width:0;height:2px;background:var(--gold);border-radius:2px;transition:width .18s}
+  .wtab.on:after{width:34px}
+  /* 记录入口：贴顶栏右侧 */
+  .wtabs .recIco{position:absolute;right:16px;bottom:14px;width:20px;height:20px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .wpane{display:none}
+  .wpane.on{display:block}
+
+  /* ================= 底部导航（常驻 · 复刻现网样式） ================= */
+  .tabbar{flex:0 0 auto;height:calc(var(--navh) + var(--safeb));background:var(--navbg);
+    border-top:1px solid #333;display:flex;align-items:flex-start;justify-content:space-around;
+    padding:8px 2px var(--safeb);position:relative;z-index:5}
+  .tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+    font-size:12px;color:#b9b9b9;line-height:1;cursor:default}
+  .tb .ic{width:34px;height:34px;position:relative;display:flex;align-items:center;justify-content:center}
+  .tb .ic svg{display:block;width:100%;height:100%}
+  .tb .dot{position:absolute;top:-1px;right:-1px;width:9px;height:9px;border-radius:50%;
+    background:#EE2B2B;border:1.5px solid var(--navbg)}
+  .tb.on .ln{color:var(--gold);font-weight:600}
+
+  /* 中间凸起的「邀请」按钮 */
+  .tb.center{gap:11px}   /* 图标上移 26px，加大间距让标签与其余四项基线对齐 */
+  .tb.center .ic{width:54px;height:54px;margin-top:-26px;border-radius:50%;
+    background:#2f2f2f;border:2.5px solid var(--gold);padding:4px;
+    box-shadow:0 3px 12px rgba(0,0,0,.55)}
+  .tb.center .plus{position:absolute;left:-1px;bottom:-1px;width:16px;height:16px;border-radius:50%;
+    background:#2F7CE8;border:2px solid var(--navbg);color:#fff;font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;line-height:1}
+
+  /* ================= 表单组件 ================= */
+  .sumline{font-size:13px;color:#cfcfcf;padding:14px 0 0;display:flex;align-items:center;gap:8px}
+  .sumline b{color:var(--gold);font-weight:600}
+  .sumline .lnk{color:#4a9bff;font-size:12px;margin-left:auto;cursor:pointer}
+
+  .channels{display:flex;gap:10px;padding:16px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .ch{min-width:104px;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;letter-spacing:.3px;
+    text-align:center;cursor:pointer;background:#232323;color:#8f8f8f;border:1px solid #333;transition:.15s}
+  .ch.on{background:var(--gold);color:#141400;border-color:var(--gold)}
+
+  .label{font-size:12px;color:var(--t2);margin:18px 0 9px}
+  .label.strong{color:#fff;font-size:14px;font-weight:600}
+  .grid{display:grid;gap:10px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  .amt{background:var(--chip);border:1px solid transparent;border-radius:9px;height:46px;display:flex;
+    align-items:center;justify-content:center;font-size:15px;color:#c9c4b6;cursor:pointer;transition:.15s;font-weight:600}
+  .amt.on{border-color:var(--gold);color:var(--gold);background:#3e3a24}
+
+  .inputbox{margin-top:14px;background:var(--input);border-radius:10px;height:50px;display:flex;
+    align-items:center;padding:0 14px;border:1px solid transparent;gap:10px}
+  .inputbox .cur{color:var(--gold);font-size:13px;font-weight:700}
+  .inputbox input{flex:1;background:transparent;border:0;outline:none;color:#fff;font-size:15px;min-width:0}
+  .inputbox input::placeholder{color:#636363}
+  .allbtn{background:transparent;border:0;color:var(--gold);font-size:13px;font-weight:700;cursor:pointer;padding:0 2px}
+  .limit{font-size:11px;color:var(--t3);margin-top:7px}
+  .recv{margin-top:14px;font-size:13px;color:var(--t2);text-align:center}
+  .recv b{color:var(--gold);font-size:15px}
+
+  .fld{border-bottom:1px solid #262626;padding:14px 0}
+  .fld .k{font-size:13px;color:#e2e2e2;font-weight:600;margin-bottom:9px}
+  .fld input{width:100%;background:transparent;border:0;outline:none;color:#fff;font-size:14px;padding:2px 0 4px}
+  .fld input::placeholder{color:#636363}
+  .fld.hide{display:none}
+
+  .cta{margin-top:22px;width:100%;height:50px;border:0;border-radius:25px;background:var(--gold);
+    color:#141400;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 0 18px rgba(244,229,0,.25)}
+
+  /* ================= 记录二级页 ================= */
+  .recrow{margin:14px 0 0;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:13px 14px}
+  .recrow .r1{display:flex;justify-content:space-between;font-size:14px;color:#fff;font-weight:600}
+  .recrow .r1 em{font-style:normal;color:#e8a33d;font-size:12px;font-weight:500}
+  .recrow .r1 em.done{color:#55b06a}
+  .recrow .r2{display:flex;justify-content:space-between;font-size:11px;color:#6d6d6d;margin-top:7px}
+
+  .toast{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);background:rgba(0,0,0,.88);
+    border:1px solid #333;color:#fff;font-size:13px;padding:12px 20px;border-radius:9px;opacity:0;
+    pointer-events:none;transition:.2s;z-index:80;max-width:80%;text-align:center}
+  .toast.on{opacity:1}
+
+  /* ================= 真机：脱掉手机壳，铺满全屏 =================
+     ≤500px 视为手机访问：隐藏标题与外框，手机壳撑满 viewport，
+     并注入 iOS/Android 安全区，呈现与原生 App 一致的版式。      */
+  @media (max-width:500px){
+    html,body{height:100%;overflow:hidden}
+    body{padding:0;background:var(--bg);display:block}
+    h1,.sub{display:none}
+    .phone{
+      width:100%;
+      height:100vh;
+      height:100dvh;          /* 支持 dvh 的浏览器下规避地址栏伸缩抖动 */
+      border:0;
+      border-radius:0;
+      box-shadow:none;
+    }
+    :root{
+      --safeb:env(safe-area-inset-bottom, 0px);
+      --safet:env(safe-area-inset-top, 0px);
+    }
+  }
+</style>
+</head>
+<body>
+
+  <h1>钱包</h1>
+  <p class="sub">H5 原型 · 390×800 · 底部导航「提款」→「钱包」，页内充值 / 提款两 Tab</p>
+
+  <div class="phone">
+
+    <!-- ============ 一级页：钱包 ============ -->
+    <div class="screen on" id="sWallet">
+      <!-- Tab 直接作为顶栏，不再单设「钱包」标题 -->
+      <div class="wtabs">
+        <div class="wtab on" id="wtDep" onclick="switchWTab('dep')">充值</div>
+        <div class="wtab" id="wtWd" onclick="switchWTab('wd')">提款</div>
+        <span class="recIco" onclick="openRec()" title="记录">
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="1" width="16" height="18" rx="2.5" stroke="#fff" stroke-width="1.6"/><path d="M5 6h8M5 10h8M5 14h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+      </div>
+
+      <div class="body">
+        <!-- ---------- 充值 Tab ---------- -->
+        <div class="wpane on" id="wpDep">
+          <div class="sumline"><span>账户余额：</span><b>R$ 10.529,85</b></div>
+
+          <div class="channels">
+            <div class="ch on" id="dBest" onclick="pickDep('best')">BESTPAY</div>
+            <div class="ch" id="dNew" onclick="pickDep('new')">NEWGPAY</div>
+          </div>
+
+          <div class="label">快捷金额</div>
+          <div class="grid g3" id="depGrid"></div>
+
+          <div class="label">自定义充值金额</div>
+          <div class="inputbox">
+            <span class="cur" id="depCur">R$</span>
+            <input id="depIn" inputmode="decimal" placeholder="请输入充值金额" oninput="onDepIn()">
+          </div>
+          <div class="limit" id="depLimit">单笔限额 R$ 10,00 - R$ 50.000,00</div>
+
+          <div class="recv" id="depRecv"></div>
+          <button class="cta" onclick="toast('演示：进入收银页')">立即充值</button>
+        </div>
+
+        <!-- ---------- 提款 Tab ---------- -->
+        <div class="wpane" id="wpWd">
+          <div class="sumline"><span>账户余额：</span><b>R$ 10.529,85</b></div>
+          <div class="sumline" style="padding-top:8px">
+            <span style="color:#9a9a9a;font-size:12px">提款需投注：<b style="color:#F4E500">R$ 1.039,36</b></span>
+            <span class="lnk" onclick="toast('演示：查看流水详情')">查看详情</span>
+          </div>
+
+          <div class="channels">
+            <div class="ch on" id="wBest" onclick="pickWd('best')">BESTPAY</div>
+            <div class="ch" id="wNew" onclick="pickWd('new')">NEWGPAY</div>
+          </div>
+
+          <div class="label strong">提款金额</div>
+          <div class="grid g3" id="wdGrid"></div>
+          <div class="inputbox">
+            <span class="cur">R$</span>
+            <input id="wdIn" inputmode="decimal" placeholder="10,00 - 300,00" oninput="onWdIn()">
+            <button class="allbtn" onclick="wdAll()">全部</button>
+          </div>
+          <div class="limit">单笔限额 R$ 10,00 - R$ 300,00</div>
+
+          <div class="label strong">提款方式</div>
+          <div class="grid g2">
+            <div class="amt on" id="mCpf" onclick="switchMethod('cpf')">CPF</div>
+            <div class="amt" id="mPhone" onclick="switchMethod('phone')">PHONE</div>
+          </div>
+
+          <div class="fld"><div class="k">姓名</div><input placeholder="请输入您的姓名"></div>
+          <div class="fld hide" id="fldPhone"><div class="k">手机号码</div><input inputmode="numeric" placeholder="+55 请输入手机号码"></div>
+          <div class="fld"><div class="k">CPF ID</div><input inputmode="numeric" placeholder="请输入您的CPF(巴西税务识别号码)"></div>
+
+          <button class="cta" onclick="toast('演示：提交提款申请')">立即提现</button>
+        </div>
+      </div>
+
+      <div class="tabbar"></div>
+    </div>
+
+    <!-- ============ 二级页：充值记录 ============ -->
+    <div class="screen" id="sDepRec">
+      <div class="nav">
+        <span class="ico" onclick="back()">
+          <svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div class="ttl">充值记录</div><span class="ico ph"></span>
+      </div>
+      <div class="body">
+        <div class="recrow">
+          <div class="r1"><span>R$ 300,00</span><em>待支付</em></div>
+          <div class="r2"><span>BESTPAY</span><span>2026-10-07 11:08</span></div>
+        </div>
+        <div class="recrow">
+          <div class="r1"><span>R$ 500,00</span><em class="done">已到账</em></div>
+          <div class="r2"><span>NEWGPAY</span><span>2026-10-06 14:32</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 二级页：提款记录 ============ -->
+    <div class="screen" id="sWdRec">
+      <div class="nav">
+        <span class="ico" onclick="back()">
+          <svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div class="ttl">提款记录</div><span class="ico ph"></span>
+      </div>
+      <div class="body">
+        <div class="recrow">
+          <div class="r1"><span>R$ 300,00</span><em>审核中</em></div>
+          <div class="r2"><span>PIX · CPF</span><span>2026-10-06 14:26</span></div>
+        </div>
+        <div class="recrow">
+          <div class="r1"><span>R$ 150,00</span><em class="done">已完成</em></div>
+          <div class="r2"><span>PIX · CPF</span><span>2026-10-03 09:12</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toastEl"></div>
+  </div>
+
+<script>
+/* ===================== 底部导航（复刻现网，钱包项高亮） =====================
+   五项等宽：首页 / 优惠 / 邀请 / 钱包 / 我的
+   · 第 4 项由现网「提款(Saque)」改为「钱包」，图标由钞票改为钱包
+   · 第 3 项「邀请」为凸起圆形按钮，金色描边 + 左下蓝色「+」角标
+   · 优惠、我的带红点；选中项仅标签变金色                                   */
+var NAV = [
+  {id:'sHome', label:'首页', svg:
+    '<svg viewBox="0 0 40 40" fill="none">'
+    +'<rect x="25" y="7.5" width="4.6" height="8" rx="1" fill="#C0392B"/>'
+    +'<path d="M20 4.4 3.2 17.6a1.3 1.3 0 0 0 .8 2.3h32a1.3 1.3 0 0 0 .8-2.3L20 4.4Z" fill="#E04B3C"/>'
+    +'<path d="M20 8.6 8.4 17.6h23.2L20 8.6Z" fill="#F0685A"/>'
+    +'<rect x="8" y="19" width="24" height="16.4" rx="1.6" fill="#F6E3BE"/>'
+    +'<rect x="16.6" y="25.4" width="6.8" height="10" rx="1" fill="#A5693C"/>'
+    +'<circle cx="22" cy="30.6" r=".9" fill="#F7C325"/>'
+    +'<rect x="10.4" y="22" width="5" height="5" rx="1" fill="#7FC5E8"/>'
+    +'<rect x="24.6" y="22" width="5" height="5" rx="1" fill="#7FC5E8"/>'
+    +'</svg>'},
+  {id:'sPromo', label:'优惠', dot:true, svg:
+    '<svg viewBox="0 0 40 40" fill="none">'
+    +'<path d="M20 13.4c-2.6-5.6-6.6-6.6-7.6-4.4-1 2.2 1.6 4.4 7.6 4.4Zm0 0c2.6-5.6 6.6-6.6 7.6-4.4 1 2.2-1.6 4.4-7.6 4.4Z" fill="#F7C325"/>'
+    +'<rect x="5.6" y="18.6" width="28.8" height="16.8" rx="2.2" fill="#3FAF4E"/>'
+    +'<rect x="3.8" y="13.2" width="32.4" height="7.2" rx="2" fill="#56C664"/>'
+    +'<rect x="16.8" y="13.2" width="6.4" height="22.2" fill="#F7C325"/>'
+    +'<rect x="16.8" y="13.2" width="6.4" height="7.2" fill="#FFD84D"/>'
+    +'</svg>'},
+  {id:'sInvite', label:'邀请', center:true, svg:
+    '<svg viewBox="0 0 40 40" fill="none">'
+    +'<circle cx="9.6" cy="15.4" r="5" fill="#F2C49B"/>'
+    +'<path d="M1.8 32.4c0-4.6 3.5-7.6 7.8-7.6s7.8 3 7.8 7.6H1.8Z" fill="#E8604C"/>'
+    +'<circle cx="30.4" cy="15.4" r="5" fill="#C98A5E"/>'
+    +'<path d="M22.6 32.4c0-4.6 3.5-7.6 7.8-7.6s7.8 3 7.8 7.6H22.6Z" fill="#4C84E8"/>'
+    +'<circle cx="20" cy="13.4" r="6.4" fill="#F7D4AE"/>'
+    +'<path d="M12.6 10.6c0-3.8 3.2-5.8 7.4-5.8s7.4 2 7.4 5.8c0 0-3.4-2-7.4-2s-7.4 2-7.4 2Z" fill="#4A3425"/>'
+    +'<path d="M10 34.4c0-5.4 4.4-9 10-9s10 3.6 10 9H10Z" fill="#3FAF4E"/>'
+    +'</svg>'},
+  {id:'sWallet', label:'钱包', svg:
+    '<svg viewBox="0 0 40 40" fill="none">'
+    +'<rect x="10" y="7.4" width="20" height="9.6" rx="1.6" fill="#5FC46B"/>'
+    +'<circle cx="20" cy="12.2" r="2.8" fill="#F2E27A"/>'
+    +'<rect x="3.6" y="12.6" width="32.8" height="22.4" rx="4" fill="#D89A58"/>'
+    +'<path d="M3.6 20.4h32.8V31a4 4 0 0 1-4 4H7.6a4 4 0 0 1-4-4V20.4Z" fill="#B0763C"/>'
+    +'<rect x="21.6" y="19.4" width="16.8" height="9.6" rx="3.2" fill="#E8B577"/>'
+    +'<circle cx="28.4" cy="24.2" r="2.6" fill="#F7C325"/>'
+    +'</svg>'},
+  {id:'sMine', label:'我的', dot:true, svg:
+    '<svg viewBox="0 0 40 40" fill="none">'
+    +'<circle cx="20" cy="13.6" r="7.2" fill="#F7D4AE"/>'
+    +'<path d="M12.4 11.4c0-4.4 3.4-6.8 7.6-6.8s7.6 2.4 7.6 6.8c0 0-3.6-2.2-7.6-2.2s-7.6 2.2-7.6 2.2Z" fill="#3A2A20"/>'
+    +'<path d="M6.4 35.6c0-6.4 6-10.4 13.6-10.4s13.6 4 13.6 10.4H6.4Z" fill="#3FAF4E"/>'
+    +'<path d="M20 25.2v10.4" stroke="#2E8B3C" stroke-width="1.3"/>'
+    +'<path d="M16 25.8 20 29l4-3.2" stroke="#2E8B3C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>'
+    +'</svg>'}
+];
+document.querySelector('.tabbar').innerHTML = NAV.map(function(n){
+  return '<div class="tb'+(n.center?' center':'')+(n.id==='sWallet'?' on':'')+'">'
+    + '<span class="ic">' + n.svg
+    + (n.dot ? '<span class="dot"></span>' : '')
+    + (n.center ? '<span class="plus">+</span>' : '')
+    + '</span>'
+    + '<span class="ln">'+n.label+'</span></div>';
+}).join('');
+
+/* ===================== 页面层级 =====================
+   钱包为一级页：无返回键，底部导航常驻
+   记录为二级页：有返回键，无底部导航                   */
+var sub = null;
+function show(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.id === id); });
+  var body = document.querySelector('#'+id+' .body');
+  if (body) body.scrollTop = 0;
+}
+function openRec(){ sub = (wTab === 'dep') ? 'sDepRec' : 'sWdRec'; show(sub); }
+function back(){ sub = null; show('sWallet'); }
+
+/* ===================== 页内 Tab ===================== */
+var wTab = 'dep';
+function switchWTab(tab){
+  wTab = tab;
+  document.getElementById('wtDep').classList.toggle('on', tab === 'dep');
+  document.getElementById('wtWd').classList.toggle('on', tab === 'wd');
+  document.getElementById('wpDep').classList.toggle('on', tab === 'dep');
+  document.getElementById('wpWd').classList.toggle('on', tab === 'wd');
+  document.querySelector('#sWallet .body').scrollTop = 0;
+}
+
+/* ===================== 表单（演示交互） ===================== */
+var DEP_AMTS = [30,50,100,200,500,1000];
+var WD_AMTS  = [20,50,100];
+var BAL = 10529.85;
+
+function money(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fillGrid(el, arr, onPick){
+  el.innerHTML = arr.map(function(v){ return '<div class="amt" data-v="'+v+'">'+money(v)+'</div>'; }).join('');
+  el.querySelectorAll('.amt').forEach(function(c){
+    c.onclick = function(){
+      el.querySelectorAll('.amt').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on');
+      onPick(Number(c.dataset.v));
+    };
+  });
+}
+function onDepIn(){
+  document.querySelectorAll('#depGrid .amt').forEach(function(x){ x.classList.remove('on'); });
+  showRecv();
+}
+function showRecv(){
+  var v = parseFloat((document.getElementById('depIn').value||'').replace(/\./g,'').replace(',','.'));
+  document.getElementById('depRecv').innerHTML = (v>0) ? '实际到账金额：<b>R$ '+money(v)+'</b>' : '';
+}
+function pickDep(ch){
+  document.getElementById('dBest').classList.toggle('on', ch==='best');
+  document.getElementById('dNew').classList.toggle('on', ch==='new');
+  var cur = document.getElementById('depCur'), lim = document.getElementById('depLimit');
+  if (ch === 'new'){ cur.textContent='NGC'; lim.textContent='单笔限额 5 NGC - 1.000.000 NGC'; }
+  else { cur.textContent='R$'; lim.textContent='单笔限额 R$ 10,00 - R$ 50.000,00'; }
+}
+function pickWd(ch){
+  document.getElementById('wBest').classList.toggle('on', ch==='best');
+  document.getElementById('wNew').classList.toggle('on', ch==='new');
+}
+function onWdIn(){
+  document.querySelectorAll('#wdGrid .amt').forEach(function(x){ x.classList.remove('on'); });
+}
+function wdAll(){ document.getElementById('wdIn').value = money(BAL); onWdIn(); }
+function switchMethod(m){
+  document.getElementById('mCpf').classList.toggle('on', m==='cpf');
+  document.getElementById('mPhone').classList.toggle('on', m==='phone');
+  document.getElementById('fldPhone').classList.toggle('hide', m!=='phone');
+}
+
+var tTimer;
+function toast(msg){
+  var el = document.getElementById('toastEl');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(function(){ el.classList.remove('on'); }, 1600);
+}
+
+fillGrid(document.getElementById('depGrid'), DEP_AMTS, function(v){
+  document.getElementById('depIn').value = money(v); showRecv();
+});
+fillGrid(document.getElementById('wdGrid'), WD_AMTS, function(v){
+  document.getElementById('wdIn').value = money(v);
+});
+</script>
+</body>
+</html>
