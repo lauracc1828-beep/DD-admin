@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>存款页优化说明（PIX / NewGPay） v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.old{color:#9a6a6a;text-decoration:line-through}
+.new{color:#1a6a3a;font-weight:600}
+.tag{display:inline-block;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;border-radius:4px;padding:0 7px;font-size:12px;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">存款页优化说明</div>
+  <div class="cover-sub">PIX（BESTPAY）/ NewGPay · 文案、底部按钮与返回路径</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-09</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、文档说明与范围</a></li>
+    <li><a href="#s2">二、优化点总览</a></li>
+    <li><a href="#s3">三、页面文案调整</a>
+      <ol>
+        <li><a href="#s31">3.1 术语统一</a></li>
+        <li><a href="#s32">3.2 区块与字段文案</a></li>
+        <li><a href="#s33">3.3 限额提示并入输入框</a></li>
+      </ol>
+    </li>
+    <li><a href="#s4">四、底部按钮固定</a></li>
+    <li><a href="#s5">五、返回路径调整</a>
+      <ol>
+        <li><a href="#s51">5.1 PIX 收银页的返回</a></li>
+        <li><a href="#s52">5.2 NewGPay 存款成功后的返回</a></li>
+        <li><a href="#s53">5.3 返回路径流转图</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">六、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s7">七、边界与异常处理</a></li>
+    <li><a href="#s8">八、待确认事项</a></li>
+    <li><a href="#s9">九、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、文档说明与范围</h1>
+  <p>本文记录存款页在前台呈现层面的优化点，覆盖 <b>PIX（BESTPAY）</b>与 <b>NewGPay</b> 两个渠道，内容限于<b>文案、底部按钮位置与返回路径</b>三类，不重复描述两个渠道已定稿的业务逻辑。</p>
+  <table>
+    <thead><tr><th style="width:120px">类别</th><th>内容</th><th style="width:100px">章节</th></tr></thead>
+    <tbody>
+      <tr><td>页面文案</td><td>术语统一、区块与字段文案调整、限额提示的呈现方式。</td><td>第三章</td></tr>
+      <tr><td>底部按钮</td><td>主按钮与结算信息由滚动区移至底部固定栏。</td><td>第四章</td></tr>
+      <tr><td>返回路径</td><td>PIX 收银页的返回目标、NewGPay 存款成功后的返回目标。</td><td>第五章</td></tr>
+      <tr><td>文案对照</td><td>两个渠道存款页全部固定展示文案的中葡对照。</td><td>第六章</td></tr>
+    </tbody>
+  </table>
+  <div class="notice notice-info">
+    <p><b>不在本文范围</b>：<b>赠送比例</b>及其计算规则——该项属后台配置能力，前台仅按配置值呈现，规则见《新增 NewGPay 支付渠道 PRD》；两个渠道的业务流程与校验顺序，分别见《新增 NewGPay 支付渠道 PRD》与《BESTPAY 收银页站内化 PRD》；页面层级、底部导航与钱包一级页结构，见《钱包页结构调整 PRD》。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、优化点总览</h1>
+  <table>
+    <thead><tr><th style="width:50px">#</th><th style="width:150px">优化点</th><th style="width:150px">适用渠道</th><th>优化前 → 优化后</th><th style="width:70px">章节</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>术语统一</td><td>两者</td><td>「充值 / 提款」 → 统一为<b>「存款 / 取款」</b></td><td>3.1</td></tr>
+      <tr><td>2</td><td>到账区文案</td><td>两者</td><td><span class="old">实际到账金额</span> → <span class="new">您将收到</span></td><td>3.2</td></tr>
+      <tr><td>3</td><td>说明入口合并</td><td>NewGPay</td><td><span class="old">如何获得更多 NGC？</span> → <span class="new">什么是 NGC？如何使用？</span></td><td>3.2</td></tr>
+      <tr><td>4</td><td>钱包卡信息分层</td><td>NewGPay</td><td>单行余额卡 → 品牌行 + 余额行 + 信任条三层</td><td>3.2</td></tr>
+      <tr><td>5</td><td>限额提示并入输入框</td><td>两者</td><td><span class="old">输入框下方：单笔限额 5 NGC - 1.000.000 NGC</span> → <span class="new">输入框占位：5-1.000.000</span></td><td>3.3</td></tr>
+      <tr><td>6</td><td>重复汇率行删除</td><td>NewGPay</td><td>页面底部独立汇率行 → 删除，仅保留钱包卡品牌行的汇率标签</td><td>3.2</td></tr>
+      <tr><td>7</td><td>底部按钮固定</td><td>两者</td><td>主按钮随页面滚动 → 固定于<b>底部结算栏</b>，与「您将收到」同容器</td><td>第四章</td></tr>
+      <tr><td>8</td><td>PIX 收银页返回</td><td>PIX</td><td>返回存款页 → <b>返回进入钱包前的一级页</b></td><td>5.1</td></tr>
+      <tr><td>9</td><td>存款成功后返回</td><td>NewGPay</td><td>停留存款页 → <b>自动返回进入钱包前的一级页</b></td><td>5.2</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、页面文案调整</h1>
+
+  <h2 id="s31">3.1 术语统一</h2>
+  <p>前台文案统一为「<b>存款 / 取款</b>」，与葡语 <code>Depósito / Saque</code> 一一对应。调整位置如下。</p>
+  <table>
+    <thead><tr><th style="width:200px">位置</th><th style="width:40%">优化前</th><th>优化后</th></tr></thead>
+    <tbody>
+      <tr><td>钱包页顶部 Tab</td><td class="old">充值 / 提款</td><td class="new">存款 / 取款</td></tr>
+      <tr><td>主按钮</td><td class="old">立即充值 / 立即提现</td><td class="new">立即存款 / 立即取款</td></tr>
+      <tr><td>记录页标题</td><td class="old">充值记录 / 提款记录</td><td class="new">存款记录 / 取款记录</td></tr>
+      <tr><td>收银页失效后按钮</td><td class="old">重新发起充值</td><td class="new">重新发起存款</td></tr>
+      <tr><td>成功提示</td><td class="old">充值成功</td><td class="new">存款成功</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">
+    <p>该统一<b>仅作用于前台会员可见文案</b>。后台报表沿用「充值订单记录 / 提现订单记录」等既有命名，两套口径的对应关系见《新增 NewGPay 支付渠道 PRD》第八章。</p>
+  </div>
+
+  <h2 id="s32">3.2 区块与字段文案</h2>
+  <table>
+    <thead><tr><th style="width:90px">渠道</th><th style="width:150px">位置</th><th style="width:38%">优化前</th><th>优化后</th></tr></thead>
+    <tbody>
+      <tr><td>两者</td><td>到账区标签</td><td class="old">实际到账金额：306</td><td class="new">您将收到　R$ 306,00（标签靠左、金额靠右，含货币单位）</td></tr>
+      <tr><td>两者</td><td>到账区副行</td><td class="old">无</td><td class="new">含赠送　+R$ 6,00（仅在有赠送时出现；赠送规则属后台配置，不在本文范围）</td></tr>
+      <tr><td>NewGPay</td><td>说明入口</td><td class="old">如何获得更多 NGC？</td><td class="new">什么是 NGC？如何使用？</td></tr>
+      <tr><td>NewGPay</td><td>说明展开内容</td><td class="old">如何获得更多NGC币：请点击右侧【购买NGC】，在新开的 NewGPay 页面中点击【买币】，交易成功后立即可获得</td><td class="new">先说明 NGC 的性质与 1:1 等值关系，再分三步给出完整链路：① 买币　② 回本页存款　③ 日后取款原路退回该钱包（全文见第六章对照表）</td></tr>
+      <tr><td>NewGPay</td><td>钱包卡结构</td><td class="old">单行：图标 + NGC 余额 + 购买按钮</td><td class="new">三层：品牌行（名称 + 汇率标签）／ 余额行（标签 + 大字余额 + 购买按钮）／ 信任条</td></tr>
+      <tr><td>NewGPay</td><td>信任条</td><td class="old">无</td><td class="new">即时到账 · 加密安全 · 可提回钱包（图标 + 短词，三栏等宽，竖线分隔）</td></tr>
+      <tr><td>NewGPay</td><td>底部汇率行</td><td class="old">页面底部独立一行「1 NGC = 1 R$」</td><td class="new">删除；该文案仅保留在钱包卡品牌行的汇率标签</td></tr>
+      <tr><td>两者</td><td>区块标题</td><td class="old">「快捷金额」「自定义充值金额」两个标题</td><td class="new">删除；输入框与快捷档位合为同一区块，用途由输入框占位说明</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s33">3.3 限额提示并入输入框</h2>
+  <table>
+    <thead><tr><th style="width:120px">项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>优化前</td><td>输入框下方单独一行，文案为「单笔限额 {最低} - {最高}」。</td></tr>
+      <tr><td><b>优化后</b></td><td>删除该行，限额以<b>纯数字区间</b>作为输入框占位，形如 <code>5-1.000.000</code>（存款）、<code>10-300</code>（取款）。</td></tr>
+      <tr><td>呈现规则</td><td>占位中不含「单笔限额」字样与币种单位，单位由输入框左侧前缀（<code>R$</code> / <code>NGC</code>）给出；数字按客户端语言的千分位规则格式化。</td></tr>
+      <tr><td>取值来源</td><td>区间两端取<b>当前渠道</b>的后台限额配置，切换渠道时随之变化。</td></tr>
+      <tr><td>校验提示</td><td>不变。金额越界时仍在提交后以轻提示给出完整文案（「最低存款 R$ 5,00」等）。</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、底部按钮固定</h1>
+  <table>
+    <thead><tr><th style="width:120px">项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>优化前</td><td>主按钮位于内容区末尾，随页面滚动；「您将收到」位于快捷档位下方。</td></tr>
+      <tr><td><b>优化后</b></td><td>主按钮与「您将收到」合并到页面底部固定栏，不随内容滚动。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>结算栏规格</h2>
+  <ol>
+    <li><b>结构</b>：自上而下为「您将收到」主行（标签靠左、金额靠右）、「含赠送」副行（仅有赠送时出现）、主按钮。</li>
+    <li><b>与渠道联动</b>：同一 Tab 下两个渠道各有一套结算信息，随渠道切换显隐，同一时刻只展示当前渠道的数值。</li>
+    <li><b>按钮状态</b>：金额为空或为 0 时置灰（不可点击），输入有效金额后激活；提交期间置灰并显示处理中文案以防重复提交。颜色与视觉样式以 UI 设计稿为准。</li>
+    <li><b>与底部导航的共存</b>：钱包为一级页，底部已有常驻导航，两者的叠放规则见《钱包页结构调整 PRD》第五章。</li>
+  </ol>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、返回路径调整</h1>
+  <p>调整两处返回目标，均跳过钱包页直达一级页。</p>
+
+  <h2 id="s51">5.1 PIX 收银页的返回</h2>
+  <table>
+    <thead><tr><th style="width:150px">项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>优化前</td><td>收银页左上角返回键回到钱包存款页。</td></tr>
+      <tr><td><b>优化后</b></td><td>左上角返回键<b>直接回到会员进入钱包页之前所在的一级页</b>，跳过钱包页。</td></tr>
+      <tr><td>目标页判定</td><td>取会员本次进入钱包页之前停留的那个一级页（首页 / 优惠 / 邀请 / 我的）。</td></tr>
+      <tr><td>兜底</td><td>若无法取得来源（如通过外部链接直接进入收银页、或本次会话未访问过其他一级页），<b>回到首页</b>。</td></tr>
+      <tr><td>订单处理</td><td>返回<b>不取消订单</b>。该笔待支付订单在其有效期内仍然有效，会员可从存款记录中点回收银页继续支付。</td></tr>
+      <tr><td>不受影响的入口</td><td>收银页右上角的记录入口、失效后的「重新发起存款」按钮，仍分别进入存款记录与钱包存款页，不走本规则。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s52">5.2 NewGPay 存款成功后的返回</h2>
+  <table>
+    <thead><tr><th style="width:150px">项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>优化前</td><td>提示「存款成功」后停留在存款页，刷新余额。</td></tr>
+      <tr><td><b>优化后</b></td><td>提示「存款成功」后<b>自动返回会员进入钱包页之前所在的一级页</b>。</td></tr>
+      <tr><td>触发条件</td><td>仅在<b>存款成功</b>时触发。失败、余额不足、限额拦截等情形均停留当前页，输入内容保留。</td></tr>
+      <tr><td>时序</td><td>先完成扣币与入账、刷新余额并展示成功提示，<b>待提示可被看清后再跳转</b>，不与提示同时发生。</td></tr>
+      <tr><td>目标页判定与兜底</td><td>与 5.1 一致。</td></tr>
+      <tr><td>适用范围</td><td>仅适用于 NewGPay 这类<b>同步返回结果</b>的渠道。PIX 为扫码后异步到账，提交后进入收银页，不适用本规则。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s53">5.3 返回路径流转图</h2>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 860 420" width="860" height="420" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Helvetica Neue',Arial,sans-serif">
+    <defs>
+      <marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#5a6a80"/>
+      </marker>
+      <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#2f7a4a"/>
+      </marker>
+    </defs>
+
+    <rect x="20" y="40" width="190" height="52" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="115" y="62" text-anchor="middle" font-size="12.5" fill="#123a66">一级页</text>
+    <text x="115" y="80" text-anchor="middle" font-size="11" fill="#4a6b8f">首页 / 优惠 / 邀请 / 我的</text>
+
+    <rect x="310" y="40" width="190" height="52" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="405" y="62" text-anchor="middle" font-size="12.5" fill="#333">钱包页 · 存款 Tab</text>
+    <text x="405" y="80" text-anchor="middle" font-size="11" fill="#6a7a8f">经底部导航进入</text>
+
+    <rect x="600" y="140" width="230" height="52" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="715" y="162" text-anchor="middle" font-size="12.5" fill="#333">PIX 收银页（二级）</text>
+    <text x="715" y="180" text-anchor="middle" font-size="11" fill="#6a7a8f">选 BESTPAY 提交后进入</text>
+
+    <rect x="600" y="260" width="230" height="52" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="715" y="282" text-anchor="middle" font-size="12.5" fill="#333">NewGPay 存款成功</text>
+    <text x="715" y="300" text-anchor="middle" font-size="11" fill="#6a7a8f">同步返回，提示后跳转</text>
+
+    <rect x="20" y="340" width="190" height="52" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="115" y="362" text-anchor="middle" font-size="12.5" fill="#15542f">回到进入钱包前的一级页</text>
+    <text x="115" y="380" text-anchor="middle" font-size="11" fill="#48795c">无来源时兜底回首页</text>
+
+    <line x1="210" y1="66" x2="310" y2="66" stroke="#5a6a80" marker-end="url(#ad)"/>
+    <text x="226" y="58" font-size="11" fill="#6a7a8f">底部导航</text>
+
+    <line x1="500" y1="66" x2="550" y2="66" stroke="#5a6a80"/>
+    <line x1="550" y1="66" x2="550" y2="166" stroke="#5a6a80"/>
+    <line x1="550" y1="166" x2="600" y2="166" stroke="#5a6a80" marker-end="url(#ad)"/>
+    <text x="556" y="118" font-size="11" fill="#6a7a8f">PIX 提交</text>
+
+    <line x1="550" y1="66" x2="550" y2="286" stroke="#5a6a80"/>
+    <line x1="550" y1="286" x2="600" y2="286" stroke="#5a6a80" marker-end="url(#ad)"/>
+    <text x="556" y="246" font-size="11" fill="#6a7a8f">NewGPay 提交</text>
+
+    <line x1="600" y1="180" x2="270" y2="180" stroke="#2f7a4a" stroke-width="1.6"/>
+    <line x1="270" y1="180" x2="270" y2="366" stroke="#2f7a4a" stroke-width="1.6"/>
+    <line x1="270" y1="366" x2="210" y2="366" stroke="#2f7a4a" stroke-width="1.6" marker-end="url(#ag)"/>
+    <text x="300" y="172" font-size="11.5" font-weight="700" fill="#2f7a4a">左上角返回</text>
+
+    <line x1="600" y1="300" x2="400" y2="300" stroke="#2f7a4a" stroke-width="1.6"/>
+    <line x1="400" y1="300" x2="400" y2="378" stroke="#2f7a4a" stroke-width="1.6"/>
+    <line x1="400" y1="378" x2="210" y2="378" stroke="#2f7a4a" stroke-width="1.6" marker-end="url(#ag)"/>
+    <text x="430" y="292" font-size="11.5" font-weight="700" fill="#2f7a4a">成功后自动返回</text>
+
+    <text x="20" y="412" font-size="12" fill="#888">绿线＝本次调整的返回路径，均跳过钱包页直达一级页；灰线＝进入路径。</text>
+  </svg>
+  </div>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、中文 / 葡语文案对照表</h1>
+  <table>
+    <thead><tr><th style="width:80px">区域</th><th style="width:130px">位置</th><th style="width:26%">中文</th><th style="width:32%">Português</th><th>葡语来源</th></tr></thead>
+    <tbody>
+      <tr><td>公共</td><td>Tab-存款</td><td>存款</td><td>Depósito</td><td>参考平台原文</td></tr>
+      <tr><td>公共</td><td>Tab-取款</td><td>取款</td><td>Saque</td><td>参考平台原文</td></tr>
+      <tr><td>公共</td><td>账户余额</td><td>账户余额：</td><td>Saldo da conta:</td><td>参考平台原文</td></tr>
+      <tr><td>公共</td><td>主按钮</td><td>立即存款</td><td>Depositar agora</td><td>拟定，待运营确认</td></tr>
+      <tr><td>公共</td><td>按钮-处理中</td><td>处理中...</td><td>Processando...</td><td>沿用平台现有</td></tr>
+      <tr><td>公共</td><td>到账-主行</td><td>您将收到</td><td>Você vai receber</td><td>拟定，待运营确认</td></tr>
+      <tr><td>公共</td><td>到账-副行</td><td>含赠送</td><td>Bônus incluído</td><td>拟定，待运营确认</td></tr>
+      <tr><td>公共</td><td>成功提示</td><td>存款成功</td><td>Depósito realizado com sucesso</td><td>拟定，待运营确认</td></tr>
+      <tr><td>公共</td><td>加载失败</td><td>加载失败，点击重试</td><td>Falha ao carregar. Toque para tentar novamente.</td><td>参考平台原文</td></tr>
+      <tr><td>公共</td><td>取消</td><td>取消</td><td>Cancelar</td><td>参考平台原文</td></tr>
+      <tr><td>PIX</td><td>输入占位</td><td>5-1,000,000</td><td>5-1.000.000</td><td>纯数字，无需翻译</td></tr>
+      <tr><td>PIX</td><td>最低限制</td><td>最低存款 R$ 5,00</td><td>Depósito mínimo: R$ 5,00</td><td>拟定，待运营确认</td></tr>
+      <tr><td>PIX</td><td>最高限制</td><td>单笔最高 R$ 1.000.000,00</td><td>Máximo por transação: R$ 1.000.000,00</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>钱包卡-名称</td><td>NewGPay 数字钱包</td><td>Carteira NewGPay</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>钱包卡-汇率标</td><td>1 NGC = 1 R$</td><td>1 NGC = 1 R$</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>余额标签</td><td>我的 NGC 余额</td><td>Meu saldo NGC</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>买币按钮</td><td>购买NGC</td><td>Comprar NGC</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>信任条1</td><td>即时到账</td><td>Instantâneo</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>信任条2</td><td>加密安全</td><td>Criptografado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>信任条3</td><td>可提回钱包</td><td>Saque de volta</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>说明入口</td><td>什么是 NGC？如何使用？</td><td>O que é NGC? Como usar?</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>说明展开</td><td>NGC 是 NewGPay 数字钱包的结算代币，与雷亚尔 1:1 等值。① 点【购买NGC】前往 NewGPay 买币，成交后即时到账；② 回到本页输入金额即可存款；③ 日后取款也会原路退回该钱包。</td><td>NGC é a moeda de liquidação da carteira digital NewGPay, com valor 1:1 em relação ao real. ① Toque em [Comprar NGC] para comprar no NewGPay; o saldo é creditado na hora; ② Volte a esta página e digite o valor para depositar; ③ Os saques futuros retornam para esta mesma carteira.</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>输入占位</td><td>5-1,000,000</td><td>5-1.000.000</td><td>纯数字，无需翻译</td></tr>
+      <tr><td>NewGPay</td><td>最低限制</td><td>最低存款 5 NGC</td><td>Depósito mínimo: 5 NGC</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>最高限制</td><td>单笔最高 1.000.000 NGC</td><td>Máximo por transação: 1.000.000 NGC</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>余额为零-标题</td><td>NGC 余额为 0</td><td>Saldo NGC zerado</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>余额为零-正文</td><td>您还没有 NGC，无法完成存款。是否立即购买 NGC？</td><td>Você ainda não tem NGC e não pode concluir o depósito. Deseja comprar NGC agora?</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>余额为零-确认</td><td>立即购买</td><td>Comprar agora</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>余额不足-标题</td><td>余额不足</td><td>Saldo insuficiente</td><td>参考平台原文</td></tr>
+      <tr><td>NewGPay</td><td>余额不足-正文</td><td>当前 NGC 余额不足以完成本次存款，是否前往购买 NGC？</td><td>Seu saldo NGC não cobre este depósito. Deseja comprar NGC agora?</td><td>拟定，待运营确认</td></tr>
+      <tr><td>NewGPay</td><td>余额不足-确认</td><td>去购买</td><td>Comprar</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>说明①</td><td>打开您的支付应用，扫描或复制粘贴下方二维码以完成本次支付</td><td>Abra seu aplicativo de pagamento e digitalize ou copie e cole o código QR abaixo para concluir sua compra</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>说明②</td><td>该二维码仅可支付一次。如需再次支付，请返回并重新发起存款</td><td>Este código QR só pode ser pago uma vez. Se precisar pagar novamente, volte e recarregue</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>说明③</td><td>支付成功后，您可返回大厅等待余额到账！</td><td>Após o pagamento ser bem-sucedido, você pode retornar ao lobby do jogo e aguardar a adição de saldo!</td><td>参考平台原文，仅将 <code>pontos</code> 替换为 <code>saldo</code></td></tr>
+      <tr><td>收银页</td><td>复制按钮</td><td>复制二维码</td><td>Copiar código QR</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>地址标签</td><td>二维码地址</td><td>Endereço do código QR</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>有效时间</td><td>有效时间：</td><td>Tempo efetivo:</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>订单状态</td><td>订单状态</td><td>Status do pedido</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>状态-待支付</td><td>待支付</td><td>Pendente</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>状态-已失效</td><td>已失效</td><td>Expirado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>收银页</td><td>创建时间</td><td>创建时间</td><td>Hora de Criação</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>订单号</td><td>订单号</td><td>Número do Pedido</td><td>参考平台原文</td></tr>
+      <tr><td>收银页</td><td>二维码失效蒙层</td><td>二维码已失效</td><td>Código QR expirado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>收银页</td><td>重新发起</td><td>重新发起存款</td><td>Fazer novo depósito</td><td>拟定，待运营确认</td></tr>
+      <tr><td>收银页</td><td>失效操作提示</td><td>订单已失效，请重新发起存款</td><td>Pedido expirado. Faça um novo depósito.</td><td>拟定，待运营确认</td></tr>
+      <tr><td>收银页</td><td>复制成功</td><td>复制成功</td><td>Copiado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>记录页</td><td>标题</td><td>存款记录</td><td>Histórico de depósitos</td><td>拟定，待运营确认</td></tr>
+      <tr><td>记录页</td><td>状态-已到账</td><td>已到账</td><td>Creditado</td><td>拟定，待运营确认</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">
+    <p>标注「参考平台原文」的条目葡语直接取自参考平台截图，未经翻译；标注「拟定，待运营确认」的为参考平台未覆盖的新增或改写文案，上线前需由运营按巴西站现行用语终审。其中<b>「立即存款 / Depositar agora」是对参考平台原文 <code>Recarregar agora</code> 的改写</b>，由术语统一引起，需一并确认。</p>
+  </div>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th style="width:230px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>7.1</td><td>收银页返回时来源一级页不可用（已下线、无权限等）</td><td>按兜底处理，回到首页，不停留在空白页。</td></tr>
+      <tr><td>7.2</td><td>NewGPay 存款成功后，自动跳转前会员已手动离开当前页</td><td>不再执行自动跳转，以会员的手动操作为准。</td></tr>
+      <tr><td>7.3</td><td>存款成功提示与自动跳转的时序冲突</td><td>先展示提示，待提示展示完毕后再跳转；跳转后不重复提示。</td></tr>
+      <tr><td>7.4</td><td>切换渠道后限额区间变化，已输入金额越界</td><td>输入内容保留，占位区间按新渠道更新；提交时按当前渠道限额拦截并提示。</td></tr>
+      <tr><td>7.5</td><td>赠送比例为 0</td><td>「含赠送」副行不渲染，结算栏只有「您将收到」一行，高度随之收缩。</td></tr>
+      <tr><td>7.6</td><td>长文案（葡语）导致结算栏主行标签与金额拥挤</td><td>标签可截断，金额完整展示不截断；金额为关键信息，优先保证其可读性。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、待确认事项</h1>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th style="width:230px">事项</th><th>说明与影响</th></tr></thead>
+    <tbody>
+      <tr><td>8.1</td><td>术语统一引起的葡语改写</td><td>「立即存款 / <code>Depositar agora</code>」与「存款成功 / <code>Depósito realizado com sucesso</code>」改自参考平台的 <code>Recarregar</code> 系列用语，需运营确认巴西站更习惯哪一套。若保留 <code>Recarregar</code>，则中文一侧的「存款」与葡语的「充值」语义将不再对齐。</td></tr>
+      <tr><td>8.2</td><td>PIX 收银页返回后的找回路径</td><td>返回跳过钱包页后，会员若想改金额重新下单，需重新进入钱包。是否需要在收银页增加一个「返回存款页」的次级入口，待确认。</td></tr>
+      <tr><td>8.3</td><td>取款侧是否同步调整返回路径</td><td>本次仅调整存款侧。取款提交成功后当前跳转取款记录页，是否也改为返回一级页，待确认。</td></tr>
+      <tr><td>8.4</td><td>BESTPAY 存款限额取值</td><td>现网钱包页标注为 <code>R$ 10,00 - R$ 50.000,00</code>，本文按 <code>R$ 5,00 - R$ 1.000.000,00</code> 呈现，两者不一致，需以后台实际配置为准后更新对照表。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-10-09</td><td>初稿：汇总 PIX 与 NewGPay 存款页的九项前台优化——术语统一、到账区与说明入口文案调整、钱包卡信息分层、限额提示并入输入框、重复汇率行删除、区块标题精简、底部按钮固定为结算栏，以及 PIX 收银页返回与 NewGPay 存款成功后返回一级页两项路径调整；附两个渠道全量中葡文案对照。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>

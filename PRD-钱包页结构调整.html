@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>钱包页结构调整 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">钱包页结构调整</div>
+  <div class="cover-sub">PRD 产品需求文档 · 底部导航 / 页面层级 / 钱包一级页结构</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-09</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、底部导航调整</a></li>
+    <li><a href="#s3">三、页面层级与流转</a>
+      <ol>
+        <li><a href="#s31">3.1 一级页与二级页的划分</a></li>
+        <li><a href="#s32">3.2 页面层级流转图</a></li>
+      </ol>
+    </li>
+    <li><a href="#s4">四、钱包一级页顶部结构</a></li>
+    <li><a href="#s5">五、底部区域：结算栏与底部导航的共存</a></li>
+    <li><a href="#s6">六、渠道切换的状态保持</a></li>
+    <li><a href="#s7">七、终端适配</a></li>
+    <li><a href="#s8">八、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s9">九、边界与异常处理</a></li>
+    <li><a href="#s10">十、待确认事项</a></li>
+    <li><a href="#s11">十一、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与范围</h1>
+  <p>现网底部导航第 4 项为<b>「提款」</b>，点击直达提款表单，存款入口则散落在其他位置。随着存款与取款两侧均新增 NEWGPAY 渠道、PIX 收银环节由三方页面改为站内页面，相关页面数量明显增加，原有的扁平入口已无法容纳这些新页面，也无法表达「存款与取款同属资金操作」的归属关系。</p>
+  <p>本需求将底部导航第 4 项改造为<b>「钱包」</b>一级页，把存款与取款收敛为页内两个 Tab，并重新划定一级页与二级页的层级与返回规则，为新增页面提供稳定的承载结构。</p>
+
+  <h2>本次需求范围</h2>
+  <table>
+    <thead><tr><th style="width:150px">模块</th><th>范围</th><th style="width:110px">对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>底部导航</td><td>第 4 项由「提款」改为「钱包」，图标与跳转目标同步调整；导航在一级页常驻、二级页不展示。</td><td>第二章</td></tr>
+      <tr><td>页面层级</td><td>一级页与二级页的划分、各页的返回键与导航显示规则、页面流转关系。</td><td>第三章</td></tr>
+      <tr><td>钱包一级页顶部</td><td>Tab 即顶栏（不另设页面标题）、标签左对齐、记录入口贴右。</td><td>第四章</td></tr>
+      <tr><td>底部区域</td><td>存款 / 取款结算栏与底部导航的共存规则。</td><td>第五章</td></tr>
+      <tr><td>终端适配</td><td>安全区注入与真机全屏呈现。</td><td>第七章</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice notice-info">
+    <p><b>不在本需求范围</b>：存款页与取款页的<b>页内内容与文案优化</b>（含底部按钮固定的具体实现、文案调整、返回路径的业务规则），见《存款页优化说明（PIX / NewGPay）》；两个支付渠道本身的业务逻辑，见《新增 NewGPay 支付渠道 PRD》与《BESTPAY 收银页站内化 PRD》；底部导航其余四项（首页 / 优惠 / 邀请 / 我的）的页面内容。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、底部导航调整</h1>
+  <table>
+    <thead><tr><th style="width:60px">序位</th><th style="width:120px">现网</th><th style="width:120px">调整后</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>首页</td><td>首页</td><td>不变。</td></tr>
+      <tr><td>2</td><td>优惠</td><td>优惠</td><td>不变，保留红点。</td></tr>
+      <tr><td>3</td><td>邀请</td><td>邀请</td><td>不变，保留凸起圆形按钮与左下角「+」角标。</td></tr>
+      <tr><td>4</td><td><b>提款</b></td><td><b>钱包</b></td><td>标签与图标同步更换（钞票图标 → 钱包图标）；跳转目标由提款表单改为<b>钱包一级页</b>，默认停留在<b>存款</b> Tab。</td></tr>
+      <tr><td>5</td><td>我的</td><td>我的</td><td>不变，保留红点。</td></tr>
+    </tbody>
+  </table>
+  <ol>
+    <li><b>常驻范围</b>：底部导航<b>仅在一级页展示</b>，所有二级页不展示（见 3.1）。</li>
+    <li><b>选中态</b>：当前所在一级页对应项的<b>标签变为高亮色</b>，图标不变色。从钱包进入二级页期间，导航虽不展示，但返回钱包后选中态仍停留在「钱包」。</li>
+    <li><b>临时收起</b>：会员在钱包页输入金额期间，导航临时收起，见第五章。</li>
+  </ol>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、页面层级与流转</h1>
+
+  <h2 id="s31">3.1 一级页与二级页的划分</h2>
+  <table>
+    <thead><tr><th style="width:80px">层级</th><th style="width:230px">页面</th><th style="width:100px">返回键</th><th style="width:110px">底部导航</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="2"><b>一级页</b></td><td>钱包（存款 Tab / 取款 Tab）</td><td>无</td><td>常驻</td><td>两个 Tab 属同一页面，切换不产生历史记录。</td></tr>
+      <tr><td>首页 / 优惠 / 邀请 / 我的</td><td>无</td><td>常驻</td><td>本需求不涉及其页面内容。</td></tr>
+      <tr><td rowspan="4"><b>二级页</b></td><td>PIX 收银页</td><td>有</td><td>不展示</td><td>存款选择 BESTPAY 并提交后进入。返回规则见《存款页优化说明（PIX / NewGPay）》。</td></tr>
+      <tr><td>NewGPay 买币页</td><td>有</td><td>不展示</td><td>App 内嵌的<b>三方页面</b>，平台不参与其页面设计与交互；返回钱包存款 Tab。</td></tr>
+      <tr><td>存款记录</td><td>有</td><td>不展示</td><td>由存款 Tab 或 PIX 收银页右上角记录入口进入，返回钱包。</td></tr>
+      <tr><td>取款记录</td><td>有</td><td>不展示</td><td>由取款 Tab 右上角记录入口进入，或提交取款成功后自动跳入；返回钱包。</td></tr>
+    </tbody>
+  </table>
+  <ol>
+    <li><b>二级页统一规则</b>：顶部为标准导航栏（左返回键 + 居中标题），左右两侧图标区等宽以保证标题视觉居中；页面底部不展示底部导航，整屏留给内容。</li>
+    <li><b>滚动位置</b>：每次进入页面时内容区滚动位置重置到顶部；Tab 切换同样重置。</li>
+  </ol>
+
+  <h2 id="s32">3.2 页面层级流转图</h2>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 810 370" width="810" height="370" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Helvetica Neue',Arial,sans-serif">
+    <defs>
+      <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#5a6a80"/>
+      </marker>
+    </defs>
+
+    <text x="20" y="28" font-size="12.5" font-weight="700" fill="#08305c">底部导航（五项一级页，导航常驻）</text>
+
+    <rect x="20" y="40" width="140" height="44" rx="8" fill="#f2f5f9" stroke="#c3cedd"/>
+    <text x="90" y="67" text-anchor="middle" font-size="12.5" fill="#56657a">首页</text>
+    <rect x="175" y="40" width="140" height="44" rx="8" fill="#f2f5f9" stroke="#c3cedd"/>
+    <text x="245" y="67" text-anchor="middle" font-size="12.5" fill="#56657a">优惠</text>
+    <rect x="330" y="40" width="140" height="44" rx="8" fill="#f2f5f9" stroke="#c3cedd"/>
+    <text x="400" y="67" text-anchor="middle" font-size="12.5" fill="#56657a">邀请</text>
+    <rect x="485" y="40" width="140" height="44" rx="8" fill="#eaf2fb" stroke="#1a5fa8" stroke-width="1.8"/>
+    <text x="555" y="67" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0b3f78">钱包（原「提款」）</text>
+    <rect x="640" y="40" width="140" height="44" rx="8" fill="#f2f5f9" stroke="#c3cedd"/>
+    <text x="710" y="67" text-anchor="middle" font-size="12.5" fill="#56657a">我的</text>
+
+    <rect x="455" y="120" width="200" height="44" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="555" y="147" text-anchor="middle" font-size="12.5" fill="#123a66">钱包一级页</text>
+
+    <rect x="220" y="190" width="150" height="42" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="295" y="216" text-anchor="middle" font-size="12.5" fill="#333">存款 Tab</text>
+    <rect x="630" y="190" width="150" height="42" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="705" y="216" text-anchor="middle" font-size="12.5" fill="#333">取款 Tab</text>
+
+    <rect x="20" y="256" width="170" height="52" rx="8" fill="#f6f9f4" stroke="#8cc9a3"/>
+    <text x="105" y="278" text-anchor="middle" font-size="12" fill="#1c5c38">PIX 收银页</text>
+    <text x="105" y="295" text-anchor="middle" font-size="11" fill="#5d8a71">BESTPAY 提交后进入</text>
+    <rect x="210" y="256" width="170" height="52" rx="8" fill="#f6f9f4" stroke="#8cc9a3"/>
+    <text x="295" y="278" text-anchor="middle" font-size="12" fill="#1c5c38">NewGPay 买币页</text>
+    <text x="295" y="295" text-anchor="middle" font-size="11" fill="#5d8a71">三方内嵌页面</text>
+    <rect x="400" y="256" width="170" height="52" rx="8" fill="#f6f9f4" stroke="#8cc9a3"/>
+    <text x="485" y="285" text-anchor="middle" font-size="12" fill="#1c5c38">存款记录</text>
+    <rect x="620" y="256" width="170" height="52" rx="8" fill="#f6f9f4" stroke="#8cc9a3"/>
+    <text x="705" y="285" text-anchor="middle" font-size="12" fill="#1c5c38">取款记录</text>
+
+    <line x1="555" y1="84" x2="555" y2="120" stroke="#5a6a80" marker-end="url(#aw)"/>
+    <line x1="555" y1="164" x2="555" y2="176" stroke="#5a6a80"/>
+    <line x1="295" y1="176" x2="705" y2="176" stroke="#5a6a80"/>
+    <line x1="295" y1="176" x2="295" y2="190" stroke="#5a6a80" marker-end="url(#aw)"/>
+    <line x1="705" y1="176" x2="705" y2="190" stroke="#5a6a80" marker-end="url(#aw)"/>
+    <line x1="295" y1="232" x2="295" y2="242" stroke="#5a6a80"/>
+    <line x1="105" y1="242" x2="485" y2="242" stroke="#5a6a80"/>
+    <line x1="105" y1="242" x2="105" y2="256" stroke="#5a6a80" marker-end="url(#aw)"/>
+    <line x1="295" y1="242" x2="295" y2="256" stroke="#5a6a80" marker-end="url(#aw)"/>
+    <line x1="485" y1="242" x2="485" y2="256" stroke="#5a6a80" marker-end="url(#aw)"/>
+    <line x1="705" y1="232" x2="705" y2="256" stroke="#5a6a80" marker-end="url(#aw)"/>
+
+    <text x="20" y="338" font-size="12" fill="#888">蓝框＝一级页（底部导航常驻，无返回键）　绿框＝二级页（有返回键，不展示底部导航）</text>
+    <text x="20" y="356" font-size="12" fill="#888">存款 / 取款为同一页面内的两个 Tab，切换不产生页面历史。</text>
+  </svg>
+  </div>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、钱包一级页顶部结构</h1>
+  <ol>
+    <li><b>Tab 即顶栏</b>：不单设「钱包」页面标题，<b>存款 / 取款两个 Tab 直接作为顶栏内容</b>，与底部导航「钱包」项形成呼应，省去一行标题的垂直空间。</li>
+    <li><b>标签左对齐</b>：两个 Tab 自<b>左起依次排列</b>，不居中。一级页没有返回键，左上角若留空会显得残缺；标签左起正好补上该位置，与右侧的记录入口形成左右配重。</li>
+    <li><b>选中指示</b>：选中项文字为高亮态，下方有<b>与文字等宽</b>的指示条；未选中项为次级灰度。指示条宽度跟随文字，不跟随点击热区。</li>
+    <li><b>点击热区</b>：每个 Tab 的可点击区域高度不小于 46px，宽度在文字基础上左右各外扩内边距，满足 iOS 44pt / Android 48dp 的最小触控尺寸；两个热区相邻但不重叠。</li>
+    <li><b>记录入口</b>：顶栏右侧固定一个记录图标，点击进入<b>当前 Tab 对应的记录页</b>——存款 Tab 进存款记录，取款 Tab 进取款记录。</li>
+    <li><b>默认 Tab</b>：每次从底部导航进入钱包页，默认停留在<b>存款</b> Tab；会员在页内切换过 Tab 后离开再返回，仍回到存款 Tab，不记忆上次选择。</li>
+  </ol>
+  <div class="notice">
+    <p>Tab 的文案由「充值 / 提款」改为「<b>存款 / 取款</b>」，属全局术语统一的一部分，调整范围与对照见《存款页优化说明（PIX / NewGPay）》第三章。</p>
+  </div>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、底部区域：结算栏与底部导航的共存</h1>
+  <p>存款与取款页的主操作按钮固定在页面底部（见《存款页优化说明（PIX / NewGPay）》第四章），而钱包作为一级页底部已有常驻导航。两者直接叠放会占去约 188px，使表单可视区压缩到不足 500px，首屏放不下完整的金额选择区。</p>
+
+  <h2>共存规则</h2>
+  <table>
+    <thead><tr><th style="width:190px">状态</th><th style="width:130px">底部导航</th><th style="width:130px">结算栏</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>进入钱包页，未输入金额</td><td>展示</td><td>展示</td><td>会员尚未开始操作，导航需可用以便切换去别处。</td></tr>
+      <tr><td><b>金额输入框有值</b></td><td><b>收起</b></td><td>展示</td><td>视为会员已进入交易流程，收起导航把空间让给表单，避免误触离开。</td></tr>
+      <tr><td>清空金额输入框</td><td>恢复展示</td><td>展示</td><td>自动恢复，无需额外操作。</td></tr>
+      <tr><td>切换 Tab</td><td>按目标 Tab 的输入状态重新判定</td><td>切换为目标 Tab 的按钮</td><td>存款与取款的输入内容相互独立。</td></tr>
+      <tr><td>提交成功后</td><td>恢复展示</td><td>金额归零</td><td>输入框清空，随之恢复。</td></tr>
+      <tr><td>二级页</td><td>不展示</td><td>按该页自身规则</td><td>见 3.1。</td></tr>
+    </tbody>
+  </table>
+  <ol>
+    <li>收起与恢复<b>带过渡动画</b>，避免页面高度突变造成的内容跳动。</li>
+    <li>收起期间底部导航<b>不可点击</b>，会员需清空金额或使用页内返回路径离开。</li>
+    <li>该规则<b>仅作用于钱包一级页</b>，其余一级页的导航始终常驻。</li>
+  </ol>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、渠道切换的状态保持</h1>
+  <p>存款与取款的每个 Tab 下均有 BESTPAY 与 NEWGPAY 两个渠道，各自拥有独立的金额输入框。若切换渠道时不处理，新渠道的输入框为空，会同时造成三个问题：结算栏金额跳回零、底部导航因「判定为未输入」而弹回、会员需要重新输入一遍。</p>
+
+  <h2>保持规则</h2>
+  <ol>
+    <li><b>金额带过</b>：切换渠道时，已输入的金额<b>平移到目标渠道的输入框</b>。存款两侧为 <code>1 NGC = 1 R$</code> 的等值关系，取款两侧同为 R$，数值可直接沿用，无需换算。</li>
+    <li><b>快捷档位高亮</b>：带过后按<b>目标渠道自身的档位表</b>重新匹配——金额命中目标档位则高亮该档，未命中则不高亮任何档位。两个渠道的档位表不同，不做跨渠道的档位映射。</li>
+    <li><b>限额校验</b>：始终按<b>当前渠道</b>的限额判定，提示文案也使用当前渠道的币种单位。带过的金额若超出目标渠道限额，在提交时拦截并提示。</li>
+    <li><b>底部导航与结算栏</b>：因金额已带过，两者状态连贯，不出现闪烁。</li>
+    <li><b>Tab 之间不带值</b>：存款与取款是方向相反的两笔业务，切换 Tab 时各自保留自己的输入内容，互不影响。</li>
+  </ol>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、终端适配</h1>
+  <ol>
+    <li><b>安全区</b>：顶栏高度包含顶部安全区（刘海 / 灵动岛），底部导航高度包含底部安全区（Home 指示条），由系统安全区变量注入，不写死数值。</li>
+    <li><b>全屏呈现</b>：在手机视口下页面铺满整屏，不出现外框与留白；内容区高度随视口变化，并规避浏览器地址栏伸缩造成的抖动。</li>
+    <li><b>滚动区域</b>：仅内容区可滚动，顶栏、结算栏与底部导航固定不动；滚动采用惯性滚动并限制滚动链，避免滚到底时带动外层页面。</li>
+  </ol>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、中文 / 葡语文案对照表</h1>
+  <table>
+    <thead><tr><th style="width:120px">位置</th><th style="width:170px">中文</th><th style="width:230px">Português</th><th>葡语来源</th></tr></thead>
+    <tbody>
+      <tr><td>底部导航-第4项</td><td>钱包</td><td>Carteira</td><td>拟定，待运营确认</td></tr>
+      <tr><td>顶部 Tab</td><td>存款</td><td>Depósito</td><td>参考平台原文</td></tr>
+      <tr><td>顶部 Tab</td><td>取款</td><td>Saque</td><td>参考平台原文</td></tr>
+      <tr><td>二级页标题</td><td>存款记录</td><td>Histórico de depósitos</td><td>拟定，待运营确认</td></tr>
+      <tr><td>二级页标题</td><td>取款记录</td><td>Histórico de saques</td><td>参考平台原文</td></tr>
+      <tr><td>记录-状态</td><td>已到账</td><td>Creditado</td><td>拟定，待运营确认</td></tr>
+      <tr><td>记录-状态</td><td>已完成</td><td>Concluído</td><td>拟定，待运营确认</td></tr>
+      <tr><td>记录-状态</td><td>审核中</td><td>Em análise</td><td>参考平台原文</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">
+    <p>底部导航其余四项（首页 / 优惠 / 邀请 / 我的）的文案不在本需求范围，沿用现网取值。标注「拟定，待运营确认」的条目上线前需由运营按巴西站现行用语终审。</p>
+  </div>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th style="width:230px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>9.1</td><td>在二级页按系统返回手势 / 物理返回键</td><td>与页内返回键行为一致，不出现「返回到空白页」或直接退出 App。</td></tr>
+      <tr><td>9.2</td><td>底部导航收起期间会员尝试点击导航区域</td><td>该区域已无可点击元素，点击穿透至页面内容，不触发任何跳转。</td></tr>
+      <tr><td>9.3</td><td>会员在二级页停留时登录态失效</td><td>沿用平台现有处理，跳转登录流程；重新登录后回到钱包一级页，不回到原二级页。</td></tr>
+      <tr><td>9.4</td><td>取款 Tab 的记录入口在无取款记录时</td><td>仍可进入，记录页展示空态，不置灰入口。</td></tr>
+      <tr><td>9.5</td><td>小屏设备下首屏放不下完整表单</td><td>内容区正常滚动；顶栏与结算栏固定，保证主按钮始终可见。</td></tr>
+      <tr><td>9.6</td><td>横屏或折叠屏展开</td><td>沿用平台现有适配策略，本需求不单独处理。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>十、待确认事项</h1>
+  <table>
+    <thead><tr><th style="width:60px">编号</th><th style="width:230px">事项</th><th>说明与影响</th></tr></thead>
+    <tbody>
+      <tr><td>10.1</td><td>原「提款」入口的其他引用点</td><td>底部导航第 4 项改为「钱包」后，站内其他指向原提款页的入口（活动页、消息、客服话术等）是否需要一并改为指向钱包页取款 Tab，需梳理清单后统一调整。</td></tr>
+      <tr><td>10.2</td><td>钱包页是否记忆上次所在 Tab</td><td>本文定为每次进入均回到存款 Tab。若希望记忆会员上次停留的 Tab，需明确记忆的有效期（本次会话 / 长期）。</td></tr>
+      <tr><td>10.3</td><td>底部导航「钱包」的葡语取值</td><td>暂拟 <code>Carteira</code>，需与现网其余四项的用语风格一并由运营确认。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十一 -->
+<div class="section" id="s11">
+  <h1>十一、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-10-09</td><td>初稿：底部导航第 4 项由「提款」改为「钱包」；确立一级页与二级页的划分、返回键与导航展示规则；钱包一级页顶部改为 Tab 即顶栏、标签左对齐、记录入口贴右；确立结算栏与底部导航的共存规则（输入金额时收起导航）与渠道切换的状态保持规则；补充终端适配要求。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
