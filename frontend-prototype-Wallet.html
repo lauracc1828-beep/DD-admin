@@ -21,15 +21,19 @@
   .sub{font-size:12px;color:#7f7f7f;margin:0 0 14px}
 
   /* ============ 演示控制区（真机隐藏） ============ */
-  .demo{width:390px;margin-bottom:10px}
-  .ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
-  .ctrl>span{font-size:11px;color:#777;width:62px;flex:0 0 62px}
+  .stage{display:flex;gap:24px;align-items:flex-start;justify-content:center}
+  .demo{width:208px;flex:0 0 208px;background:#151517;border:1px solid #26262a;
+    border-radius:12px;padding:14px 14px 3px;margin-top:12px}
+  .demo h3{font-size:11px;color:#8d8d8d;font-weight:600;letter-spacing:.6px;margin:0 0 12px}
+  .ctrl{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px;align-items:center}
+  .ctrl>span{flex:0 0 100%;font-size:11px;color:#777;margin-bottom:1px}
   .ctrl button{background:#2a2a2d;border:1px solid #3c3c40;color:#cfcfcf;
     font-size:11px;padding:4px 10px;border-radius:13px;cursor:pointer}
   .ctrl button.on{background:var(--gold);border-color:var(--gold);color:#141400;font-weight:700}
   .ctrl.hide{display:none}
   .lnkbox{background:#1c1c20;border:1px solid #3c3c40;color:#cfcfcf;font-size:11px;
-    padding:3px 8px;border-radius:5px;font-family:monospace}
+    padding:4px 9px;border-radius:5px;font-family:monospace;letter-spacing:.3px;
+    flex:0 0 100%;word-break:break-all;margin-bottom:5px}
 
   /* ============ 手机壳 ============ */
   .phone{width:390px;height:800px;border-radius:38px;background:var(--bg);border:9px solid #000;
@@ -273,6 +277,7 @@
     html,body{height:100%;overflow:hidden}
     body{padding:0;background:var(--bg);display:block}
     h1,.sub,.demo,.copy{display:none}
+    .stage{display:block}
     .phone{width:100%;height:100vh;height:100dvh;border:0;border-radius:0;box-shadow:none}
     :root{--safeb:env(safe-area-inset-bottom, 0px);--safet:env(safe-area-inset-top, 0px)}
   }
@@ -283,36 +288,7 @@
   <h1>钱包</h1>
   <p class="sub">H5 原型 · 390×800 · 底部导航「钱包」→ 页内存款 / 取款两 Tab</p>
 
-  <div class="demo">
-    <div class="ctrl"><span>语言</span>
-      <button id="lzh" class="on" onclick="setLang('zh')">中文</button>
-      <button id="lpt" onclick="setLang('pt')">Português</button>
-    </div>
-    <div class="ctrl" id="cBonus"><span>赠送比例</span>
-      <button class="on" onclick="setBonus(0,this)">0%（默认）</button>
-      <button onclick="setBonus(0.02,this)">2%</button>
-    </div>
-    <div class="ctrl" id="cNgc"><span>NGC 余额</span>
-      <button class="on" onclick="setBal(0,this)">0</button>
-      <button onclick="setBal(280,this)">280</button>
-      <button onclick="setBal(5000,this)">5000</button>
-      <button onclick="setBal(-1,this)">加载失败</button>
-    </div>
-    <div class="ctrl hide" id="cFlow"><span>有效流水</span>
-      <button class="on" onclick="setFlow(1,this)">已达标</button>
-      <button onclick="setFlow(0,this)">未达标</button>
-    </div>
-    <div class="ctrl" id="cCash"><span>收银页</span>
-      <button class="on" onclick="setCsDemo(1012,this)">剩余约17分钟</button>
-      <button onclick="setCsDemo(30,this)">剩余30秒</button>
-      <button onclick="setCsDemo(0,this)">已失效</button>
-    </div>
-    <div class="ctrl"><span>直达链接</span>
-      <code class="lnkbox" id="lnkV">#dep-best</code>
-      <button id="lnkBtn" onclick="copyLink()">复制链接</button>
-    </div>
-  </div>
-
+  <div class="stage">
   <div class="phone">
 
     <!-- ============ 一级页：钱包 ============ -->
@@ -454,7 +430,7 @@
     <!-- ============ 二级页：BESTPAY 站内收银页 ============ -->
     <div class="screen" id="sCashier">
       <div class="nav">
-        <span class="ico" onclick="back()"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="ico" onclick="toRoot()"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <div class="ttl" data-i="csTitle">存款</div>
         <span class="ico" onclick="openRec('dep')"><svg width="18" height="20" viewBox="0 0 18 20" fill="none"><rect x="1" y="1" width="16" height="18" rx="2.5" stroke="#fff" stroke-width="1.6"/><path d="M5 6h8M5 10h8M5 14h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></span>
       </div>
@@ -505,8 +481,7 @@
         <div class="simbox">
           <img id="lg3" alt="NewGPay" style="width:52px;height:52px;border-radius:12px;margin:0 auto 8px;display:block">
           <div class="big">NewGPay</div>
-          <div id="wvSub" style="font-size:11px;color:#8b93a4"></div>
-          <button id="wvBtn" onclick="wvDone()"></button>
+          <div id="wvSub" style="font-size:11.5px;color:#8b93a4;line-height:1.6"></div>
         </div>
       </div>
     </div>
@@ -568,6 +543,37 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="demo">
+    <h3>演示控制</h3>
+    <div class="ctrl"><span>语言</span>
+      <button id="lzh" class="on" onclick="setLang('zh')">中文</button>
+      <button id="lpt" onclick="setLang('pt')">Português</button>
+    </div>
+    <div class="ctrl" id="cLink"><span>直达链接</span>
+      <code class="lnkbox" id="lnkV">#dep-best</code>
+      <button id="lnkBtn" onclick="copyLink()">复制链接</button>
+    </div>
+    <div class="ctrl" id="cBonus"><span>赠送比例</span>
+      <button class="on" data-v="0" onclick="setBonus(0,this)">0%（默认）</button>
+      <button data-v="0.02" onclick="setBonus(0.02,this)">2%</button>
+    </div>
+    <div class="ctrl" id="cNgc"><span>NGC 余额</span>
+      <button class="on" onclick="setBal(0,this)">0</button>
+      <button onclick="setBal(280,this)">280</button>
+      <button onclick="setBal(5000,this)">5000</button>
+      <button onclick="setBal(-1,this)">加载失败</button>
+    </div>
+    <div class="ctrl hide" id="cFlow"><span>有效流水</span>
+      <button class="on" onclick="setFlow(1,this)">已达标</button>
+      <button onclick="setFlow(0,this)">未达标</button>
+    </div>
+    <div class="ctrl" id="cCash"><span>收银页</span>
+      <button class="on" onclick="setCsDemo(1012,this)">剩余约17分钟</button>
+      <button onclick="setCsDemo(30,this)">剩余30秒</button>
+      <button onclick="setCsDemo(0,this)">已失效</button>
+    </div>
+  </div>
   </div>
 
   <div class="copy">
@@ -650,11 +656,8 @@ const X = {
   maxW:["单笔最高 R$ {b}","Máximo por transação: R$ {b}"],
   noAcct:["可提余额不足","Saldo disponível insuficiente"],
   loading:["处理中...","Processando..."],
-  balOk:["余额已更新","Saldo atualizado"],
-  wvBuy:["模拟买币成功并返回","Simular compra e voltar"],
-  wvWallet:["模拟在钱包操作后返回","Simular retorno da carteira"],
-  wvSubBuy:["用户在此完成买币，返回后自动刷新 NGC 余额","O usuário compra aqui; ao voltar, o saldo NGC é atualizado."],
-  wvSubW:["NewGPay 钱包首页，返回后刷新 NGC 余额与账户余额","Página inicial da carteira NewGPay; ao voltar, os saldos são atualizados."]
+  wvSubBuy:["以下为 NewGPay 提供的三方内嵌页面，会员在此完成买币；平台不参与其页面设计与交互。","Página incorporada fornecida pelo NewGPay, onde o usuário compra as moedas. A plataforma não interfere em seu design nem em sua interação."],
+  wvSubW:["以下为 NewGPay 钱包首页，属三方内嵌页面；返回后刷新 NGC 余额与账户余额。","Página inicial da carteira NewGPay, incorporada de terceiros. Ao voltar, os saldos são atualizados."]
 };
 const ROWS=[
  ['公共','渠道名','NEWGPAY','NEWGPAY'],
@@ -745,7 +748,7 @@ var NAV=[
  {id:'sWallet',label:'钱包',svg:'<svg viewBox="0 0 40 40" fill="none"><rect x="10" y="7.4" width="20" height="9.6" rx="1.6" fill="#5FC46B"/><circle cx="20" cy="12.2" r="2.8" fill="#F2E27A"/><rect x="3.6" y="12.6" width="32.8" height="22.4" rx="4" fill="#D89A58"/><path d="M3.6 20.4h32.8V31a4 4 0 0 1-4 4H7.6a4 4 0 0 1-4-4V20.4Z" fill="#B0763C"/><rect x="21.6" y="19.4" width="16.8" height="9.6" rx="3.2" fill="#E8B577"/><circle cx="28.4" cy="24.2" r="2.6" fill="#F7C325"/></svg>'},
  {id:'sMine',label:'我的',dot:true,svg:'<svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="13.6" r="7.2" fill="#F7D4AE"/><path d="M12.4 11.4c0-4.4 3.4-6.8 7.6-6.8s7.6 2.4 7.6 6.8c0 0-3.6-2.2-7.6-2.2s-7.6 2.2-7.6 2.2Z" fill="#3A2A20"/><path d="M6.4 35.6c0-6.4 6-10.4 13.6-10.4s13.6 4 13.6 10.4H6.4Z" fill="#3FAF4E"/><path d="M20 25.2v10.4" stroke="#2E8B3C" stroke-width="1.3"/><path d="M16 25.8 20 29l4-3.2" stroke="#2E8B3C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
 ];
-var navActive='sWallet';
+var navActive='sWallet', lastRoot='sHome';   // lastRoot：进入钱包前所在的一级页
 function paintNav(){
   document.querySelectorAll('.tabbar').forEach(function(bar){
     bar.innerHTML = NAV.map(function(n,i){
@@ -757,20 +760,24 @@ function paintNav(){
 }
 function navGo(i){
   var n=NAV[i]; navActive=n.id;
-  if(n.id==='sWallet'){ paintNav(); show('sWallet'); syncHash(); return; }
+  if(n.id!=='sWallet') lastRoot=n.id;
+  if(n.id==='sWallet'){ paintNav(); show('sWallet'); return; }
   plTtl.textContent=n.label; plT.textContent=n.label; plIc.innerHTML=n.svg;
-  paintNav(); show('sPlace'); syncHash();
+  paintNav(); show('sPlace');
 }
 
 /* ===================== 页面层级 ===================== */
 function show(id){
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.id===id); });
   var b=document.querySelector('#'+id+' .body'); if(b) b.scrollTop=0;
+  syncHash();
 }
-function back(){ navActive='sWallet'; paintNav(); show('sWallet'); syncHash(); }
+function back(){ navActive='sWallet'; paintNav(); show('sWallet'); }
+/* 完成存款 / 关闭收银页后，直接回到进入钱包前的一级页，不停留在钱包页 */
+function toRoot(){ var i=0; NAV.forEach(function(n,k){ if(n.id===lastRoot) i=k; }); navGo(i); }
 function openRec(which){
   var w = which || wTab;
-  show(w==='dep' ? 'sDepRec' : 'sWdRec'); syncHash();
+  show(w==='dep' ? 'sDepRec' : 'sWdRec');
 }
 
 /* ===================== 数据与常量 ===================== */
@@ -862,7 +869,8 @@ function pickDep(ch){
   dpNew.classList.toggle('on',n); dpBest.classList.toggle('on',!n);
   depCta.style.display=n?'block':'none'; bCta.style.display=n?'none':'block';
   depRecv.style.display=n?'block':'none'; bRecv.style.display=n?'none':'block';
-  updateNav(); syncHash();
+  updateNav();
+  syncHash();
 }
 function depSubmit(){
   var v=parseFloat(depIn.value)||0;
@@ -875,6 +883,7 @@ function depSubmit(){
   setTimeout(function(){
     ngc-=v; acctBal+=v*(1+BONUS); depIn.value=''; dPick=null;
     renderAll(); updateNav(); toast(x('depOk'));
+    setTimeout(toRoot,800);          // 存款成功后返回进入钱包前的一级页
   },900);
 }
 function bSubmit(){
@@ -924,7 +933,8 @@ function pickWd(ch){
   wNew.classList.toggle('on',n); wBest.classList.toggle('on',!n);
   wpNew.classList.toggle('on',n); wpBest.classList.toggle('on',!n);
   wdCta.style.display=n?'block':'none'; wbCta.style.display=n?'none':'block';
-  updateNav(); syncHash();
+  updateNav();
+  syncHash();
 }
 function switchMethod(m){
   mCpf.classList.toggle('on',m==='cpf');
@@ -958,7 +968,8 @@ function switchWTab(tab){
   cCash.classList.toggle('hide',tab!=='dep');
   cFlow.classList.toggle('hide',tab!=='wd');
   document.querySelector('#sWallet .body').scrollTop=0;
-  updateNav(); syncHash();
+  updateNav();
+  syncHash();
 }
 function activeInput(){
   if(wTab==='dep') return depCh==='new'? depIn : bIn;
@@ -986,11 +997,9 @@ function openWv(mode){
   wvMode=mode;
   wvT.textContent  = mode==='buy'? t('buy') : t('enterWallet');
   wvSub.textContent= mode==='buy'? x('wvSubBuy') : x('wvSubW');
-  wvBtn.textContent= mode==='buy'? x('wvBuy') : x('wvWallet');
   wvHero.style.display = mode==='buy'?'block':'none';
-  show('sBuy'); syncHash();
+  show('sBuy');
 }
-function wvDone(){ if(wvMode==='buy') ngc+=500; back(); renderAll(); toast(x('balOk')); }
 
 /* ===================== BESTPAY 收银页 ===================== */
 function nowStr(){
@@ -1036,52 +1045,69 @@ function openCs(amt){
     no:'THRP'+String(Date.now())+Math.floor(Math.random()*9000+1000),
     created:nowStr(), qrSvg:csQrSvg(Math.floor(Math.random()*1e9)) };
   csLeft=csDemo; clearInterval(csTimer); csTimer=setInterval(csTick,1000);
-  csRender(); show('sCashier'); syncHash();
+  csRender(); show('sCashier');
 }
-function csReopen(){ if(!csOrder) return; if(csLeft<=0) return toast(t('csGoneToast')); show('sCashier'); syncHash(); }
+function csReopen(){ if(!csOrder) return; if(csLeft<=0) return toast(t('csGoneToast')); show('sCashier'); }
 function csReorder(){ bIn.value=''; bPick=null; renderBest(); pickDep('best'); switchWTab('dep'); back(); }
 function csCopy(k){ if(!csOrder) return; if(k!=='no'&&csLeft<=0) return toast(t('csGoneToast')); toast(t('csCopied')); }
 function setCsDemo(v,b){ b.parentNode.querySelectorAll('button').forEach(function(e){e.className='';}); b.className='on';
   csDemo=v; if(csOrder){ csLeft=v; clearInterval(csTimer); if(v>0) csTimer=setInterval(csTick,1000); csRender(); } }
 
 /* ===================== 演示开关 ===================== */
-function setBonus(v,b){ b.parentNode.querySelectorAll('button').forEach(function(e){e.className='';}); b.className='on'; BONUS=v; renderDepNew(); renderBest(); }
+function applyBonus(v){
+  BONUS=v;
+  Array.prototype.forEach.call(cBonus.querySelectorAll('button'),function(e){
+    e.className = (parseFloat(e.getAttribute('data-v'))===v) ? 'on' : '';
+  });
+  renderDepNew(); renderBest();
+}
+function setBonus(v,b){ applyBonus(v); syncHash(); }
 function setBal(v,b){ b.parentNode.querySelectorAll('button').forEach(function(e){e.className='';}); b.className='on'; ngc=v; renderAll(); }
 function setFlow(v,b){ b.parentNode.querySelectorAll('button').forEach(function(e){e.className='';}); b.className='on'; flowOk=v; renderWdNew(); }
 
-/* ===================== 直达链接 ===================== */
+/* ===================== 直达链接（演示用） ===================== */
+/* 路由格式：
+   存款   dep-best / dep-new              —— 赠送比例 0，结算栏无「含赠送」副行
+          dep-best-bonus / dep-new-bonus  —— 赠送比例 2%，结算栏渲染「含赠送」副行
+   取款   wd-best / wd-new
+   二级页 cashier（收银页）/ buy（买币页）/ rec-dep（存款记录）/ rec-wd（取款记录） */
 var hashReady=false;
 var ROUTES={
- 'dep-best':function(){ back(); switchWTab('dep'); pickDep('best'); },
- 'dep-new' :function(){ back(); switchWTab('dep'); pickDep('new');  },
- 'wd-best' :function(){ back(); switchWTab('wd');  pickWd('best');  },
- 'wd-new'  :function(){ back(); switchWTab('wd');  pickWd('new');   },
- 'cashier' :function(){ switchWTab('dep'); pickDep('best'); csOrder? show('sCashier') : openCs(30); },
- 'buy'     :function(){ switchWTab('dep'); pickDep('new'); openWv('buy'); },
- 'dep-rec' :function(){ show('sDepRec'); },
- 'wd-rec'  :function(){ show('sWdRec'); },
- 'home':function(){navGo(0);}, 'promo':function(){navGo(1);},
- 'invite':function(){navGo(2);}, 'mine':function(){navGo(4);}
+  'dep-best'      :function(){ back(); switchWTab('dep'); pickDep('best'); applyBonus(0); },
+  'dep-new'       :function(){ back(); switchWTab('dep'); pickDep('new');  applyBonus(0); },
+  'dep-best-bonus':function(){ back(); switchWTab('dep'); pickDep('best'); applyBonus(0.02); },
+  'dep-new-bonus' :function(){ back(); switchWTab('dep'); pickDep('new');  applyBonus(0.02); },
+  'wd-best'       :function(){ back(); switchWTab('wd');  pickWd('best'); },
+  'wd-new'        :function(){ back(); switchWTab('wd');  pickWd('new'); },
+  'rec-dep'       :function(){ back(); switchWTab('dep'); openRec('dep'); },
+  'rec-wd'        :function(){ back(); switchWTab('wd');  openRec('wd'); },
+  'buy'           :function(){ back(); switchWTab('dep'); pickDep('new'); openWv('buy'); },
+  'cashier'       :function(){ back(); switchWTab('dep'); pickDep('best');
+                               if(csOrder&&csLeft>0){ show('sCashier'); } else { openCs(csDemo||1012); } }
 };
-var PLACE={sHome:'home',sPromo:'promo',sInvite:'invite',sMine:'mine'};
+function curScreen(){ var el=document.querySelector('.screen.on'); return el? el.id : 'sWallet'; }
 function curRoute(){
-  var on=document.querySelector('.screen.on').id;
-  if(on==='sCashier') return 'cashier';
-  if(on==='sBuy')     return 'buy';
-  if(on==='sDepRec')  return 'dep-rec';
-  if(on==='sWdRec')   return 'wd-rec';
-  if(on==='sPlace')   return PLACE[navActive]||'home';
-  return wTab==='dep' ? 'dep-'+depCh : 'wd-'+wdCh;
+  var sc=curScreen();
+  if(sc==='sCashier') return 'cashier';
+  if(sc==='sBuy')     return 'buy';
+  if(sc==='sDepRec')  return 'rec-dep';
+  if(sc==='sWdRec')   return 'rec-wd';
+  if(sc!=='sWallet')  return curHash||'dep-best';
+  if(wTab==='dep')    return 'dep-'+depCh+(BONUS>0?'-bonus':'');
+  return 'wd-'+wdCh;
 }
+var curHash='', applying=false;
 function syncHash(){
-  if(!hashReady) return;
-  var r=curRoute(); lnkV.textContent='#'+r;
-  if(location.hash.slice(1)!==r) location.hash=r;
+  if(!hashReady || applying) return;
+  var r=curRoute(); curHash=r;
+  lnkV.textContent='#'+r;
+  if(location.hash.slice(1)!==r) location.hash=r;   // 幂等：已一致则不写，不触发回环
 }
 function applyHash(){
   var h=decodeURIComponent((location.hash||'').slice(1)).toLowerCase();
-  if(ROUTES[h] && h!==curRoute()) ROUTES[h]();
-  lnkV.textContent='#'+curRoute();
+  if(ROUTES[h] && h!==curRoute()){ applying=true; try{ ROUTES[h](); } finally { applying=false; } }
+  curHash=curRoute();
+  lnkV.textContent='#'+curHash;
 }
 function copyLink(){
   var url=location.href.split('#')[0]+'#'+curRoute();
@@ -1089,7 +1115,8 @@ function copyLink(){
   ta.value=url; ta.style.position='fixed'; ta.style.opacity='0';
   document.body.appendChild(ta); ta.select();
   try{ document.execCommand('copy'); }catch(e){}
-  ta.remove(); lnkBtn.textContent='已复制'; setTimeout(function(){lnkBtn.textContent='复制链接';},1200);
+  ta.remove();
+  lnkBtn.textContent='已复制'; setTimeout(function(){ lnkBtn.textContent='复制链接'; },1200);
 }
 
 /* ===================== 文案对照表 ===================== */
@@ -1102,10 +1129,9 @@ function buildTable(){
 lg1.src=LOGO; lg2.src=LOGO; lg3.src=LOGO; lg4.src=LOGO;
 paintNav();
 setLang('zh'); switchWTab('dep'); pickDep('best'); pickWd('best'); switchMethod('cpf');
-document.addEventListener('click',function(e){ if(!tipBar.contains(e.target)) tipBar.classList.remove('open'); });
-hashReady=true;
+hashReady=true; applyHash(); syncHash();
 window.addEventListener('hashchange',applyHash);
-applyHash(); syncHash();
+document.addEventListener('click',function(e){ if(!tipBar.contains(e.target)) tipBar.classList.remove('open'); });
 </script>
 
 </body>

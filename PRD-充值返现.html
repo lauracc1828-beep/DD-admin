@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>充值返现 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#123a66;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.nw{white-space:nowrap}
+.req{color:#d93025;font-weight:700}
+.formula{background:#f6f8fb;border:1px solid #dde4ec;border-radius:6px;padding:12px 16px;margin:10px 0;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#123a66;line-height:2}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">充值返现</div>
+  <div class="cover-sub">PRD 产品需求文档 · 会员存款返现设置 / 返现发放与账变</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-11</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、名词定义</a></li>
+    <li><a href="#s3">三、返现发放流程图</a></li>
+    <li><a href="#s4">四、后台功能：充值返现设置</a>
+      <ol>
+        <li><a href="#s41">4.1 菜单位置与页面构成</a></li>
+        <li><a href="#s42">4.2 筛选区字段说明</a></li>
+        <li><a href="#s43">4.3 列表字段说明</a></li>
+        <li><a href="#s44">4.4 状态开关</a></li>
+        <li><a href="#s45">4.5 编辑弹窗：会员存款返现设置</a></li>
+        <li><a href="#s46">4.6 字段校验与温馨提示</a></li>
+        <li><a href="#s47">4.7 配置生效范围与操作留痕</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">五、返现计算与发放规则</a>
+      <ol>
+        <li><a href="#s51">5.1 计算基数与取整</a></li>
+        <li><a href="#s52">5.2 每日最高优惠的统计口径</a></li>
+        <li><a href="#s53">5.3 提现稽核倍数</a></li>
+        <li><a href="#s54">5.4 入账与账变类型</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">六、前台联动：充值页呈现</a></li>
+    <li><a href="#s7">七、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s8">八、边界与异常处理</a></li>
+    <li><a href="#s9">九、权限</a></li>
+    <li><a href="#s10">十、关联需求同步说明</a></li>
+    <li><a href="#s11">十一、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与范围</h1>
+  <p>平台希望以<b>存款方式</b>为维度做差异化激励：对成本较低、到账更稳定的渠道给予更高的充值返现比例，把会员的充值行为向这些渠道引导；对成本较高的渠道则不给或少给返现。此前「赠送比例」这一取值只散落在各渠道需求中被引用，缺少统一的配置入口与统一的发放、上限、稽核口径。</p>
+  <p>本需求在商户后台新增<b>「商户财务配置 — 充值返现设置」</b>页面，把平台已接入的全部存款方式集中在一张列表中，按存款方式逐一配置<b>返现百分比、每日最高优惠、提现稽核倍数</b>与<b>启用状态</b>；并定义返现在充值成功后的计算、封顶、入账与账变规则。配置保存后，前台充值页即按该配置展示赠送角标与「含赠送」副行，会员充值成功后由系统自动发放返现。</p>
+
+  <h2>本次需求范围</h2>
+  <table>
+    <thead><tr><th style="width:150px">模块</th><th>范围</th><th style="width:110px">对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>后台列表页</td><td>新增「充值返现设置」页面：筛选区（最后操作时间 / 存款方式 / 操作人）、全量存款方式列表、状态开关、编辑入口。</td><td>4.1 ~ 4.4</td></tr>
+      <tr><td>后台编辑弹窗</td><td>「会员存款返现设置」弹窗：返现百分比、每日最高优惠、提现稽核倍数三项配置，及其必填关系、输入区间与温馨提示。</td><td>4.5 ~ 4.6</td></tr>
+      <tr><td>返现发放规则</td><td>计算基数与取整、每日最高优惠的统计与封顶、提现稽核倍数对有效投注的追加、入账账户。</td><td>第五章</td></tr>
+      <tr><td>账变类型</td><td>在一类账变「活动优惠」下<b>新增二类账变「充值赠送」</b>，承载本功能产生的全部返现入账记录。</td><td>5.4</td></tr>
+      <tr><td>前台联动</td><td>充值页渠道角标与结算栏「含赠送」副行的取值来源、奖励规则气泡取值来源、比例为 0 时的降级表现。</td><td>第六章</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice notice-info">
+    <p><b>不在本需求范围</b>：前台存款页的<b>页面结构与交互呈现</b>（结算栏层级、「含赠送」副行与问号气泡的样式与触发方式），见《存款页优化说明（PIX / NewGPay）》；各支付渠道自身的接入与业务流程，见《新增 NewGPay 支付渠道 PRD》与《BESTPAY 收银页站内化 PRD》；钱包页层级与底部导航，见《钱包页结构调整 PRD》；充值活动（累充 / 单笔充值档位奖励）的档位、领取与作废规则，见《充值活动 PRD》——该活动奖励与本功能的充值返现为<b>两套独立奖励</b>，可叠加发放，各自独立记账变。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、名词定义</h1>
+  <table>
+    <thead><tr><th style="width:150px">名词</th><th>定义</th></tr></thead>
+    <tbody>
+      <tr><td>充值返现</td><td>会员通过指定存款方式完成充值后，平台按配置比例额外赠送的金额。后台功能名为「充值返现」，前台对会员呈现为「含赠送」。</td></tr>
+      <tr><td>存款方式</td><td>平台已接入的支付渠道，即列表的行维度。当前共 8 条：<span class="nw">bestpay、u2cpay、虚拟币、newgpay、ydpay、银联、ECNY、OKPay</span>。</td></tr>
+      <tr><td>返现方式</td><td>返现金额的计算形式。本期<b>仅支持「比例金额」</b>一种，即按充值金额的百分比计算，列表中为只读展示，不提供切换。</td></tr>
+      <tr><td>返现百分比（%）</td><td>该存款方式的返现比例，支持 3 位小数。返现金额 ＝ 实际到账充值金额 × 返现百分比。</td></tr>
+      <tr><td>每日最高优惠</td><td>单个会员在<b>同一存款方式</b>下、单个自然日内可获得的返现金额上限，单位为平台币种。</td></tr>
+      <tr><td>提现稽核倍数</td><td>返现金额在会员提现前需完成的有效投注倍数。追加有效投注要求 ＝ 本次返现金额 × 稽核倍数。</td></tr>
+      <tr><td>自然日</td><td>统一按<b>平台运营时区 UTC-3</b>（巴西雷西亚尔）计算，每日 00:00:00 起算、23:59:59 结束。后台列表与筛选区的时间均为 UTC-3。</td></tr>
+      <tr><td>实际到账充值金额</td><td>充值订单经三方支付成功回调后，真正计入会员账户的本金金额，不含三方手续费。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、返现发放流程图</h1>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 700 1110" width="700" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC',Arial,sans-serif">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#7c8da3"/>
+      </marker>
+    </defs>
+    <text x="250" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">充值返现发放流程</text>
+
+    <!-- 主干 -->
+    <rect x="120" y="56" width="260" height="42" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="250" y="82" text-anchor="middle" font-size="12.5" fill="#123a66">会员提交充值订单并完成支付</text>
+
+    <rect x="120" y="128" width="260" height="42" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="154" text-anchor="middle" font-size="12.5" fill="#333">三方支付成功回调，本金入账</text>
+
+    <rect x="120" y="200" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="219" text-anchor="middle" font-size="12.5" fill="#333">服务端实时读取该存款方式的</text>
+    <text x="250" y="236" text-anchor="middle" font-size="12.5" fill="#333">充值返现配置</text>
+
+    <polygon points="250,276 380,316 250,356 120,316" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="250" y="312" text-anchor="middle" font-size="12" fill="#6a4a00">状态为开启</text>
+    <text x="250" y="328" text-anchor="middle" font-size="12" fill="#6a4a00">且返现百分比 &gt; 0？</text>
+
+    <rect x="120" y="386" width="260" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="405" text-anchor="middle" font-size="12.5" fill="#333">计算 返现金额 ＝ 实际到账金额</text>
+    <text x="250" y="422" text-anchor="middle" font-size="12.5" fill="#333">× 返现百分比，向下取 2 位小数</text>
+
+    <rect x="120" y="466" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="485" text-anchor="middle" font-size="12.5" fill="#333">取该会员当日（UTC-3）在该存款</text>
+    <text x="250" y="502" text-anchor="middle" font-size="12.5" fill="#333">方式下已发放返现累计值 S</text>
+
+    <polygon points="250,542 380,582 250,622 120,582" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="250" y="578" text-anchor="middle" font-size="12" fill="#6a4a00">S 已达到</text>
+    <text x="250" y="594" text-anchor="middle" font-size="12" fill="#6a4a00">每日最高优惠？</text>
+
+    <rect x="120" y="652" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="671" text-anchor="middle" font-size="12.5" fill="#333">本次实发 ＝ 取较小值（计算值，</text>
+    <text x="250" y="688" text-anchor="middle" font-size="12.5" fill="#333">每日最高优惠 − S）</text>
+
+    <rect x="120" y="728" width="260" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="747" text-anchor="middle" font-size="12.5" fill="#333">实发金额入可用余额，记一类账变</text>
+    <text x="250" y="764" text-anchor="middle" font-size="12.5" fill="#333">「活动优惠」/ 二类账变「充值赠送」</text>
+
+    <polygon points="250,808 380,848 250,888 120,848" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="250" y="853" text-anchor="middle" font-size="12" fill="#6a4a00">提现稽核倍数 ≥ 1？</text>
+
+    <rect x="120" y="918" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="937" text-anchor="middle" font-size="12.5" fill="#333">追加有效投注要求 ＝ 本次实发</text>
+    <text x="250" y="954" text-anchor="middle" font-size="12.5" fill="#333">× 稽核倍数</text>
+
+    <rect x="120" y="994" width="260" height="50" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="250" y="1013" text-anchor="middle" font-size="12.5" fill="#15542f">前台余额刷新，会员可在账变记录</text>
+    <text x="250" y="1030" text-anchor="middle" font-size="12.5" fill="#15542f">中查询该笔「充值赠送」</text>
+
+    <!-- 分支 -->
+    <rect x="432" y="294" width="206" height="44" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="535" y="313" text-anchor="middle" font-size="12" fill="#8a2b2b">不计算返现，仅本金入账，</text>
+    <text x="535" y="329" text-anchor="middle" font-size="12" fill="#8a2b2b">不产生「充值赠送」账变</text>
+
+    <rect x="432" y="560" width="206" height="44" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="535" y="579" text-anchor="middle" font-size="12" fill="#8a2b2b">当日该存款方式额度已用尽，</text>
+    <text x="535" y="595" text-anchor="middle" font-size="12" fill="#8a2b2b">本次不发放返现</text>
+
+    <rect x="432" y="826" width="206" height="44" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="535" y="845" text-anchor="middle" font-size="12" fill="#123a66">倍数为 0 或未填，该笔返现</text>
+    <text x="535" y="861" text-anchor="middle" font-size="12" fill="#123a66">不参与提现流水稽核</text>
+
+    <!-- 连线 -->
+    <line x1="250" y1="98" x2="250" y2="124" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="170" x2="250" y2="196" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="246" x2="250" y2="272" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="356" x2="250" y2="382" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="436" x2="250" y2="462" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="512" x2="250" y2="538" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="622" x2="250" y2="648" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="698" x2="250" y2="724" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="778" x2="250" y2="804" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="888" x2="250" y2="914" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="964" x2="250" y2="990" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+
+    <line x1="380" y1="316" x2="428" y2="316" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="380" y1="582" x2="428" y2="582" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="380" y1="848" x2="428" y2="848" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+
+    <text x="264" y="374" font-size="11.5" fill="#15542f">是</text>
+    <text x="392" y="310" font-size="11.5" fill="#8a2b2b">否</text>
+    <text x="264" y="640" font-size="11.5" fill="#15542f">否</text>
+    <text x="392" y="576" font-size="11.5" fill="#8a2b2b">是</text>
+    <text x="264" y="906" font-size="11.5" fill="#15542f">是</text>
+    <text x="392" y="842" font-size="11.5" fill="#123a66">否</text>
+
+    <!-- 分支回收 -->
+    <path d="M638 848 L666 848 L666 1019 L384 1019" fill="none" stroke="#7c8da3" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+  </svg>
+  </div>
+  <p class="legend">说明：虚线为「稽核倍数为 0」分支的回收路径——该笔返现仍正常入账并产生账变，只是不追加提现流水要求。「状态关闭 / 比例为 0」与「当日额度已用尽」两条分支为终止分支，不产生返现账变。</p>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、后台功能：充值返现设置</h1>
+
+  <h2 id="s41">4.1 菜单位置与页面构成</h2>
+  <ul>
+    <li><b>菜单位置</b>：商户后台左侧导航<b>「商户财务配置」→「充值返现设置」</b>，位于「支付方式管理」之下、「代付商户管理」之上。</li>
+    <li><b>页面构成</b>：自上而下为<b>筛选区</b>、<b>时区提示</b>、<b>配置列表</b>、<b>分页条</b>；列表「操作」列的「编辑」按钮唤起<b>「会员存款返现设置」弹窗</b>。</li>
+    <li><b>数据来源</b>：列表展示平台<b>已接入的全部存款方式</b>，由支付方式管理同步，<b>不提供新增与删除</b>；新接入的存款方式自动追加一行，返现百分比与每日最高优惠初始为 <code>0</code>，状态默认<b>关闭</b>。</li>
+    <li><b>默认排序</b>：按<b>最近操作时间倒序</b>，从未配置过的存款方式排在末尾。</li>
+  </ul>
+
+  <h2 id="s42">4.2 筛选区字段说明</h2>
+  <table>
+    <thead><tr><th style="width:150px">字段</th><th style="width:110px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
+    <tbody>
+      <tr><td>最后操作时间</td><td>日期范围选择器</td><td>否</td><td>起止两个输入框，按<b>最近一次保存或开关切换</b>的时间筛选。时间口径为 <b>UTC-3</b>，筛选区下方以红色提示文案「当前时间为 UTC-3 时区」常驻说明。起止均为空时不参与筛选；仅填其一时，另一端视为不限。</td></tr>
+      <tr><td>存款方式</td><td>下拉单选</td><td>否</td><td>选项为列表中已接入的全部存款方式，与列表行一一对应；默认空（全部）。</td></tr>
+      <tr><td>操作人</td><td>文本输入</td><td>否</td><td>按最近操作人账号<b>模糊匹配</b>；从未配置过、操作人为空的行不会被该条件命中。</td></tr>
+      <tr><td>查 询</td><td>主按钮</td><td>—</td><td>按当前筛选条件重新拉取列表，结果回到第 1 页。</td></tr>
+      <tr><td>重 置</td><td>次按钮</td><td>—</td><td>清空全部筛选条件并重新拉取全量列表。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s43">4.3 列表字段说明</h2>
+  <table>
+    <thead><tr><th style="width:140px">列</th><th style="width:90px">是否可编辑</th><th>说明与取值</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式</td><td>只读</td><td>支付渠道名称，与支付方式管理中的配置同名，如 bestpay、u2cpay、虚拟币、newgpay、ydpay、银联、ECNY、OKPay。</td></tr>
+      <tr><td>返现方式</td><td>只读</td><td>固定展示<b>「比例金额」</b>。本期仅支持按比例计算，不提供固定金额等其他方式，亦不提供切换控件。</td></tr>
+      <tr><td>返现百分比例（%）</td><td>弹窗内编辑</td><td>展示当前配置的返现比例，<b>去除末尾无意义的 0</b> 后展示（如配置 <code>1.000</code> 展示为 <code>1</code>、<code>0.200</code> 展示为 <code>0.2</code>、<code>2.500</code> 展示为 <code>2.5</code>）。展示为 <code>0</code> 表示<b>该存款方式尚未配置过返现</b>。</td></tr>
+      <tr><td>每日最高优惠（元）</td><td>弹窗内编辑</td><td>展示当前配置的单日封顶金额，去除末尾无意义的 0 后展示。展示为 <code>0</code> 表示尚未配置。</td></tr>
+      <tr><td>状态</td><td>行内可切换</td><td>开关控件，<b>开启</b>＝该存款方式的返现规则生效，<b>关闭</b>＝不生效。详见 4.4。</td></tr>
+      <tr><td>最近操作时间</td><td>只读</td><td>该行<b>最后一次保存配置或切换状态</b>的时间，格式 <code>YYYY-MM-DD HH:mm:ss (UTC-3)</code>。从未操作过时展示为空。</td></tr>
+      <tr><td>操作人</td><td>只读</td><td>最近一次操作的后台账号。从未操作过时展示为空。</td></tr>
+      <tr><td>操作</td><td>—</td><td>「编辑」按钮，点击唤起「会员存款返现设置」弹窗（4.5）。</td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><b>分页</b>：底部展示「共 N 条数据」与页码，每页条数下拉默认 <b>50 条 / 页</b>。</li>
+    <li><b>列工具</b>：沿用现有后台列表的右上角工具组（刷新 / 密度 / 列设置），行为与其他列表页一致。</li>
+  </ul>
+
+  <h2 id="s44">4.4 状态开关</h2>
+  <ul>
+    <li><b>切换方式</b>：在列表行内直接点击开关即生效，<b>不弹二次确认</b>，成功后轻提示「操作成功」并刷新该行的最近操作时间与操作人。</li>
+    <li><b>与配置值相互独立</b>：开关可<b>自由切换，不受返现百分比与每日最高优惠取值的约束</b>。即允许「开关开启但返现百分比为 0」的组合存在。</li>
+    <li><b>生效判定</b>：返现是否发放，取决于<b>「状态开启」与「返现百分比 &gt; 0」同时成立</b>。开关开启但返现百分比为 0 时，视同无返现：不计算、不发放、不产生账变，<b>前台亦不展示赠送角标与「含赠送」副行</b>（见第六章）。</li>
+    <li><b>关闭的影响范围</b>：关闭仅对关闭<b>之后</b>产生的充值订单生效，已发放的返现不回收、已追加的提现流水要求不撤销。</li>
+  </ul>
+
+  <h2 id="s45">4.5 编辑弹窗：会员存款返现设置</h2>
+  <p>点击列表行「编辑」唤起弹窗，标题为<b>「会员存款返现设置」</b>，分「基本信息」与「返现设置」两组，底部为「保存」「重置」。</p>
+
+  <h3>基本信息</h3>
+  <table>
+    <thead><tr><th style="width:150px">字段</th><th style="width:110px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式</td><td>纯文本</td><td>—</td><td>只读展示当前编辑行的存款方式名称，<b>不可修改</b>，用于确认操作对象。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>返现设置</h3>
+  <table>
+    <thead><tr><th style="width:150px">字段</th><th style="width:110px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
+    <tbody>
+      <tr><td><span class="req">*</span> 返现百分比（%）</td><td>数字输入</td><td><b>是</b></td><td>该存款方式的返现比例。输入区间 <b>0.001 ~ 100.000</b>，<b>最多 3 位小数</b>，保存时统一补齐为 3 位小数存储（如输入 <code>1</code> 存为 <code>1.000</code>）。该值直接决定前台渠道角标的「+N%」与结算栏「含赠送」金额。</td></tr>
+      <tr><td><span class="req">*</span> 每日最高优惠</td><td>数字输入</td><td><b>是</b></td><td>单个会员在<b>该存款方式</b>下单个自然日（UTC-3）可获得的返现金额上限。输入区间 <b>0.01 ~ 1000000.00</b>，<b>最多 2 位小数</b>，保存时统一补齐为 2 位小数存储。该值同时作为前台奖励规则气泡中「每日最高奖励」的取值来源。</td></tr>
+      <tr><td>提现稽核倍数</td><td>数字输入</td><td>否</td><td>返现金额需完成的有效投注倍数。<b>输入为大于等于 1 的整数</b>，不接受小数与 0。<b>不填时默认为 0</b>，表示该笔赠送金额<b>不参与提现流水稽核计算</b>。该值同时作为前台奖励规则气泡中「提现流水要求」的倍数取值来源。</td></tr>
+      <tr><td>保 存</td><td>主按钮</td><td>—</td><td>通过校验后提交，弹窗关闭，轻提示「保存成功」，列表对应行的配置值、最近操作时间、操作人同步刷新。</td></tr>
+      <tr><td>重 置</td><td>次按钮</td><td>—</td><td>将三项输入<b>还原为本次打开弹窗时的已保存值</b>（非清空），弹窗保持打开。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s46">4.6 字段校验与温馨提示</h2>
+  <p>弹窗内「返现设置」下方以红色文案常驻展示以下 5 条温馨提示，内容与校验规则一一对应：</p>
+  <table>
+    <thead><tr><th style="width:40px">序</th><th style="width:420px">提示文案</th><th>对应校验与拦截</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>「返现百分比（%）」与「每日最高优惠」为必填项，必须同时填写</td><td>两项<b>不允许只填其一</b>。任一为空时点击保存，在空值字段下方标红提示「请填写{字段名}」，不提交。</td></tr>
+      <tr><td>2</td><td>「返现百分比（%）」的输入区间「0.001 ~ 100.000」</td><td>小于 0.001、大于 100.000 或超过 3 位小数时标红拦截，提示「返现百分比的输入区间为 0.001 ~ 100.000」。<b>不接受 0</b>——若需停用该存款方式的返现，使用列表状态开关关闭。</td></tr>
+      <tr><td>3</td><td>「每日最高优惠」的输入区间「0.01 ~ 1000000.00」</td><td>小于 0.01、大于 1000000.00 或超过 2 位小数时标红拦截，提示「每日最高优惠的输入区间为 0.01 ~ 1000000.00」。</td></tr>
+      <tr><td>4</td><td>「提现稽核倍数」非必填，不填时默认显示为 0，加赠金额部分不参与提现流水稽核计算</td><td>允许留空；留空保存后，列表与下次打开弹窗均<b>显示为 0</b>，发放时不追加有效投注要求。</td></tr>
+      <tr><td>5</td><td>「提现稽核倍数」的输入为大于等于 1 的整数</td><td>填入 0、负数、小数或非数字时标红拦截，提示「提现稽核倍数需为大于等于 1 的整数」。</td></tr>
+    </tbody>
+  </table>
+  <div class="notice">
+    <p><b>输入态约束</b>：三项均<b>只允许输入数字与小数点</b>，粘贴含非法字符的内容时自动过滤；超出小数位数时在失焦后按规则截断并标红提示，不静默修改为合法值。</p>
+  </div>
+
+  <h2 id="s47">4.7 配置生效范围与操作留痕</h2>
+  <ul>
+    <li><b>即时生效，仅对新订单</b>：保存成功后配置立即生效。某笔充值返现以多少计算，<b>以该订单支付成功回调时服务端读取到的配置为准</b>；修改前已完成的订单<b>不补发、不追回</b>，已追加的提现流水要求也不随配置变更而调整。</li>
+    <li><b>页面停留期间的配置变更</b>：会员在前台充值页停留期间若后台修改了配置，前台展示的赠送金额可能与实际入账不一致；<b>一律以服务端结果为准</b>，刷新后的余额即为准确值。</li>
+    <li><b>每日上限的跨配置累计</b>：当日已发放的返现累计值 S <b>不因配置修改而清零</b>，仍按自然日累计，于次日 00:00:00（UTC-3）统一重置。若新上限低于当日已累计值，当日剩余额度视为 0，不发放亦不追回。</li>
+    <li><b>操作留痕</b>：每次保存配置或切换状态，均记录<b>操作时间（UTC-3）与操作人账号</b>，并在列表「最近操作时间」「操作人」两列展示；完整的变更前后值进入后台操作日志，可按账号与时间追溯。</li>
+  </ul>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、返现计算与发放规则</h1>
+
+  <h2 id="s51">5.1 计算基数与取整</h2>
+  <div class="formula">
+    返现金额（计算值）＝ 向下取 2 位小数（ 实际到账充值金额 × 返现百分比 ÷ 100 ）
+  </div>
+  <ul>
+    <li><b>计算基数</b>：取<b>实际到账的本金金额</b>，即三方支付成功回调后真正计入会员账户的金额，<b>不含三方手续费</b>。若实际到账金额与会员提交金额因三方扣费而不一致，<b>以实际到账金额为准</b>。</li>
+    <li><b>取整规则</b>：计算结果一律<b>向下取整至 2 位小数</b>（舍去第 3 位及以后，不四舍五入），平台不向上多给。例：到账 R$ 33,33、比例 1% → 0,3333 → 实发 <b>R$ 0,33</b>。</li>
+    <li><b>触发时点</b>：仅在<b>充值订单支付成功</b>时触发一次。订单失败、超时失效、关闭或被撤销的，均不触发返现；订单后续被人工冲正的，对应返现随之冲回并生成反向账变。</li>
+    <li><b>零值处理</b>：计算值取整后为 <code>0.00</code> 时，<b>不入账、不产生账变</b>，前台亦不展示返现提示。</li>
+  </ul>
+
+  <h2 id="s52">5.2 每日最高优惠的统计口径</h2>
+  <ul>
+    <li><b>统计维度</b>：<b>会员 × 存款方式 × 自然日</b>。每种存款方式各自独立累计当日返现总额，<b>互不影响、互不共用额度</b>。例：会员当日通过 bestpay 已拿满 R$ 8,00 上限后，仍可继续通过 newgpay 获得该渠道上限内的返现。</li>
+    <li><b>重置时点</b>：按 <b>UTC-3</b> 自然日，每日 <code>00:00:00</code> 起累计值归零。跨日时点以<b>充值订单支付成功回调的时间</b>归属当日，而非订单创建时间。</li>
+    <li><b>封顶计算</b>：</li>
+  </ul>
+  <div class="formula">
+    当日剩余额度 R ＝ 每日最高优惠 − 当日该存款方式已发放返现累计 S<br>
+    本次实发金额 ＝ 取较小值（ 返现金额计算值 ，R ）<br>
+    若 R ≤ 0，本次实发金额 ＝ 0，不入账、不产生账变
+  </div>
+  <table>
+    <thead><tr><th style="width:120px">场景</th><th style="width:130px">配置</th><th style="width:150px">当日已累计 S</th><th style="width:140px">本笔计算值</th><th>实发结果</th></tr></thead>
+    <tbody>
+      <tr><td>未触顶</td><td>比例 1%，上限 8,00</td><td>R$ 0,00</td><td>R$ 3,00</td><td>实发 <b>R$ 3,00</b>，S 更新为 3,00。</td></tr>
+      <tr><td>部分截断</td><td>比例 1%，上限 8,00</td><td>R$ 6,50</td><td>R$ 3,00</td><td>剩余额度 1,50 &lt; 3,00，实发 <b>R$ 1,50</b>，S 更新为 8,00。</td></tr>
+      <tr><td>额度用尽</td><td>比例 1%，上限 8,00</td><td>R$ 8,00</td><td>R$ 3,00</td><td>剩余额度为 0，<b>不发放、不产生账变</b>，本金正常入账。</td></tr>
+      <tr><td>跨渠道独立</td><td>bestpay 上限 8,00<br>newgpay 上限 100,00</td><td>bestpay 已 8,00<br>newgpay 已 0,00</td><td>newgpay 本笔 2,50</td><td>两渠道额度独立，newgpay 实发 <b>R$ 2,50</b>。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s53">5.3 提现稽核倍数</h2>
+  <div class="formula">
+    追加有效投注要求 ＝ 本次实发返现金额 × 提现稽核倍数
+  </div>
+  <ul>
+    <li><b>稽核范围</b>：稽核对象<b>仅为赠送部分</b>，即本次实发的返现金额，<b>不含充值本金</b>。本金自身的提现流水要求沿用平台既有的存款稽核规则，两者各自独立计算后合并计入会员的待完成有效投注。</li>
+    <li><b>倍数为 0 或未填</b>：该笔返现<b>不追加任何有效投注要求</b>，入账后与普通余额无差别，可直接参与提现。</li>
+    <li><b>多笔叠加</b>：会员同日多次充值产生的多笔返现，各自按发放当时的倍数独立计算追加额，<b>累加</b>进待完成有效投注；某笔配置修改不影响此前已生成的追加额。</li>
+    <li><b>前台可查</b>：倍数取值通过充值页「含赠送」旁的奖励规则气泡向会员前置披露，表述为「赠送金额 ×{倍数}」，见第六章。</li>
+  </ul>
+
+  <h2 id="s54">5.4 入账与账变类型</h2>
+  <ul>
+    <li><b>入账账户</b>：返现金额在充值成功后由系统<b>自动即时入账至会员可用余额</b>，与充值本金进入同一账户，<b>无需会员手动领取</b>，不设待领取状态、不设过期作废。</li>
+    <li><b>入账顺序</b>：先完成本金入账，再执行返现入账，两者为<b>两条独立的账变记录</b>，便于对账与客诉核查。</li>
+  </ul>
+
+  <h3>新增账变类型</h3>
+  <p>本功能产生的返现入账需要新增账变类型承载，在现有<b>一类账变「活动优惠」</b>之下<b>新增二类账变「充值赠送」</b>：</p>
+  <table>
+    <thead><tr><th style="width:120px">层级</th><th style="width:150px">名称</th><th style="width:80px">增减方向</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>一类账变</td><td>活动优惠</td><td>加款</td><td><b>沿用现有</b>，不新增、不改名。</td></tr>
+      <tr><td>二类账变</td><td><b>充值赠送</b>（新增）</td><td>加款</td><td>专用于承载充值返现的入账记录。本功能产生的全部返现<b>只记入该二类账变</b>，不与充值活动档位奖励、神秘彩金、会员答谢等其他「活动优惠」下的二类账变混记。</td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><b>适用范围</b>：该二类账变适用于<b>全部存款方式</b>的充值返现，不按渠道再拆分；渠道信息通过账变记录关联的充值订单号追溯。</li>
+    <li><b>生效位置</b>：新增后需同步出现在<b>会员账变查询、报表查询的账变类型筛选项</b>与<b>前台会员账变 / 交易记录</b>中，口径与其他二类账变一致。</li>
+    <li><b>冲正</b>：充值订单被人工冲正时，对应返现生成<b>同类型的反向（减款）账变</b>，并同步扣减当日累计值 S 与已追加的有效投注要求。</li>
+  </ul>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、前台联动：充值页呈现</h1>
+  <p>前台充值页的呈现方式<b>沿用现有已确认的结构与文案，本需求不做改动</b>，仅明确各处取值与后台配置项的对应关系。页面结构、样式与交互见《存款页优化说明（PIX / NewGPay）》。</p>
+  <table>
+    <thead><tr><th style="width:170px">前台元素</th><th style="width:200px">取值来源</th><th>联动规则</th></tr></thead>
+    <tbody>
+      <tr><td>渠道按钮右上角<b>赠送角标</b></td><td>该存款方式的<b>返现百分比</b></td><td>内容为「+N%」，N 取后台配置值（去除末尾无意义的 0）。仅在存款页展示，取款页不展示。</td></tr>
+      <tr><td>结算栏「<b>含赠送</b>」副行</td><td>返现百分比 × 当前输入金额</td><td>实时计算并展示「+R$ X,XX」，取整规则与 5.1 一致。该行为<b>预估值</b>，不扣减每日剩余额度——实际入账以服务端结果为准。</td></tr>
+      <tr><td>「您将收到」主行</td><td>输入金额 ×（1 ＋ 返现百分比）</td><td>保留 2 位小数；输入为空或 0 时不展示数值。</td></tr>
+      <tr><td>奖励规则气泡 —<br><b>每日最高奖励</b></td><td>该存款方式的<b>每日最高优惠</b></td><td>展示为「每日最高奖励　R$ {配置值}」，取后台配置的原始值，<b>不随当日已用额度变化</b>。</td></tr>
+      <tr><td>奖励规则气泡 —<br><b>提现流水要求</b></td><td>该存款方式的<b>提现稽核倍数</b></td><td>展示为「提现流水要求　赠送金额 ×{配置倍数}」。倍数为 0 时该行<b>不展示</b>，气泡仅保留「每日最高奖励」一行。</td></tr>
+    </tbody>
+  </table>
+  <div class="notice notice-info">
+    <p><b>无返现时的降级表现</b>：当该存款方式<b>状态关闭</b>或<b>返现百分比为 0</b> 时，前台视同无返现——渠道按钮<b>不显示赠送角标</b>，结算栏<b>不渲染「含赠送」副行</b>（问号图标随之不出现），结算栏仅保留「您将收到」一行、高度随之收缩。</p>
+  </div>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、中文 / 葡语文案对照表</h1>
+  <p>本需求<b>不新增前台文案</b>。充值页涉及返现的文案均沿用《存款页优化说明（PIX / NewGPay）》已确认的版本，列此处仅供联调核对：</p>
+  <table>
+    <thead><tr><th style="width:150px">位置</th><th style="width:200px">中文</th><th style="width:240px">葡语</th><th>备注</th></tr></thead>
+    <tbody>
+      <tr><td>结算栏副行</td><td>含赠送</td><td>Bônus incluído</td><td>沿用现网，不随后台「充值返现」改名。</td></tr>
+      <tr><td>奖励气泡 — 标签</td><td>每日最高奖励</td><td>Bônus máximo diário</td><td>取值为后台「每日最高优惠」。</td></tr>
+      <tr><td>奖励气泡 — 标签</td><td>提现流水要求</td><td>Requisito de apostas para saque</td><td>取值为后台「提现稽核倍数」。</td></tr>
+      <tr><td>奖励气泡 — 流水取值</td><td>赠送金额 ×{倍数}</td><td>{倍数}× o valor do bônus</td><td>倍数为 0 时整行不展示。</td></tr>
+      <tr><td>前台账变记录</td><td>充值赠送</td><td>Bônus de depósito</td><td>新增二类账变在前台交易记录中的展示名。</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">后台界面为中文单语，「充值返现设置」「会员存款返现设置」「返现百分比」「每日最高优惠」「提现稽核倍数」等均不涉及葡语翻译。</p>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:260px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式从未配置过返现</td><td>列表返现百分比与每日最高优惠展示为 <code>0</code>，状态为关闭，最近操作时间与操作人为空。前台不展示角标与「含赠送」副行。</td></tr>
+      <tr><td>状态开启但返现百分比为 0</td><td>允许保存该状态组合，但<b>视同无返现</b>：不计算、不发放、不产生账变，前台不展示角标与「含赠送」副行。</td></tr>
+      <tr><td>计算值取整后为 0.00</td><td>不入账、不产生账变、不扣减当日额度；本金正常入账，前台不提示返现。</td></tr>
+      <tr><td>当日该存款方式额度已用尽</td><td>本金正常入账，返现不发放、不产生账变。前台结算栏在输入阶段<b>仍按比例展示预估赠送</b>（不做额度预检），实际以服务端结果为准。</td></tr>
+      <tr><td>剩余额度小于本笔计算值</td><td>按剩余额度<b>部分发放</b>，实发金额记入账变；提现流水追加额按<b>实发金额</b>（而非计算值）× 倍数计算。</td></tr>
+      <tr><td>会员停留页面期间配置被修改</td><td>以提交时服务端读取到的配置为准。若与前台展示的「含赠送」金额不一致，按服务端结果入账，刷新后的余额即为准确值。</td></tr>
+      <tr><td>每日最高优惠被下调至低于当日已累计值</td><td>当日剩余额度视为 0，本日不再发放；<b>已发放部分不追回</b>，次日按新上限重新累计。</td></tr>
+      <tr><td>提现稽核倍数被修改</td><td>仅对修改后新产生的返现生效；此前已追加的有效投注要求<b>不随之调整</b>。</td></tr>
+      <tr><td>充值订单支付失败 / 超时失效 / 关闭</td><td>不触发返现计算，不产生账变，不占用当日额度。</td></tr>
+      <tr><td>充值订单被人工冲正</td><td>对应返现生成<b>反向（减款）账变</b>，同步回退当日累计值 S 与已追加的有效投注要求。若会员余额不足以扣回，按平台既有的负余额处理规则执行。</td></tr>
+      <tr><td>同一订单回调重复到达</td><td>按充值订单号做<b>幂等处理</b>，同一订单<b>最多产生一笔</b>「充值赠送」账变，重复回调直接忽略。</td></tr>
+      <tr><td>跨日时点充值（临近 00:00 UTC-3）</td><td>以<b>支付成功回调时间</b>归属自然日。订单创建于前一日、回调发生在次日的，计入<b>次日</b>额度。</td></tr>
+      <tr><td>新接入存款方式</td><td>列表自动追加一行，配置值为 0、状态关闭；在后台完成配置并开启前，该渠道不产生返现。</td></tr>
+      <tr><td>存款方式在支付方式管理中被下线</td><td>列表保留该行并置为不可编辑（「编辑」按钮置灰、状态开关置灰），历史配置与账变记录保留可查。</td></tr>
+      <tr><td>保存并发冲突</td><td>两名管理员同时编辑同一行时，<b>后提交者覆盖</b>，并在操作日志中各记一条；提交后列表刷新为最新值。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、权限</h1>
+  <ul>
+    <li><b>菜单权限</b>：「商户财务配置 — 充值返现设置」作为独立权限点纳入后台角色权限树，未授权账号<b>不展示该菜单项</b>。</li>
+    <li><b>操作权限</b>：拆分为<b>查看</b>与<b>编辑</b>两级。仅具备查看权限时，列表正常展示，「编辑」按钮与状态开关<b>置灰不可操作</b>。</li>
+    <li><b>生效范围</b>：配置以<b>商户</b>为单位隔离，一个商户的配置不影响其他商户。</li>
+    <li><b>审计</b>：全部保存与状态切换行为进入后台操作日志，记录操作账号、时间（UTC-3）、存款方式与变更前后取值。</li>
+  </ul>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>十、关联需求同步说明</h1>
+  <table>
+    <thead><tr><th style="width:230px">关联文档</th><th>同步点</th></tr></thead>
+    <tbody>
+      <tr><td>《新增 NewGPay 支付渠道 PRD》</td><td>该文档第四章将 NEWGPAY 的<b>「赠送比例」</b>列为待补充的后台配置项。本 PRD 即为其配置入口：NEWGPAY 的赠送比例取自本页「充值返现设置」中 newgpay 一行的<b>返现百分比</b>，不另设渠道级配置；该文档 5.4「赠送比例与实际到账」的计算口径以本 PRD 第五章为准（新增了<b>每日最高优惠封顶</b>与<b>向下取 2 位小数</b>两项约束）。</td></tr>
+      <tr><td>《存款页优化说明（PIX / NewGPay）》</td><td>该文档 3.4「奖励规则提示」气泡中的<b>每日最高奖励</b>与<b>提现流水要求</b>，取值分别对应本页的<b>每日最高优惠</b>与<b>提现稽核倍数</b>；前台展示结构与中葡文案以该文档为准，本 PRD 不作改动。</td></tr>
+      <tr><td>《BESTPAY 收银页站内化 PRD》</td><td>BESTPAY 渠道的赠送比例取自本页 bestpay 一行的返现百分比。收银页本身不展示返现信息，返现在支付成功回调后按本 PRD 第五章发放。</td></tr>
+      <tr><td>《充值活动 PRD》</td><td>充值活动的档位奖励与本功能的充值返现为<b>两套独立奖励，可同时发放</b>：前者手动领取、记入其自身的账变类型；后者自动入账、记入新增的二类账变<b>「充值赠送」</b>。两者的提现稽核要求各自独立计算后<b>累加</b>。</td></tr>
+      <tr><td>支付方式管理</td><td>本页列表的行来源于支付方式管理中已接入的存款方式，新增与下线由该模块驱动，本页不提供新增 / 删除入口。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十一 -->
+<div class="section" id="s11">
+  <h1>十一、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:120px">日期</th><th style="width:90px">作者</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-10-11</td><td>Laura</td><td>首版。确立后台「充值返现设置」列表页与「会员存款返现设置」弹窗的逐字段说明与校验规则；定义返现计算基数（实际到账金额）、向下取 2 位小数、每日最高优惠按「会员 × 存款方式 × UTC-3 自然日」独立封顶、提现稽核倍数仅稽核赠送部分；明确充值成功即时入账至可用余额，并在一类账变「活动优惠」下新增二类账变「充值赠送」；补充前台充值页各元素的取值来源与无返现降级表现、SVG 发放流程图、边界与异常处理、关联需求同步说明。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
