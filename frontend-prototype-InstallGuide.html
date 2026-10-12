@@ -159,6 +159,17 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
 .gp-hd-logo-txt{color:#fff;font-size:11px;font-weight:700}
 .gp-body{padding:16px 15px 0;overflow-y:auto;flex:1;scrollbar-width:none}
 .gp-body::-webkit-scrollbar{display:none}
+/* 充值确认区块（仅「弹框时间点＝用户充值」展示，位于标题上方）*/
+.gp-dep{display:none;gap:9px;align-items:flex-start;margin-bottom:16px}
+.gp-dep.on{display:flex}
+.gp-dep-ic{
+  width:26px;height:26px;border-radius:50%;background:#22c55e;color:#fff;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;line-height:1;margin-top:1px;
+}
+.gp-dep-tx{flex:1;min-width:0}
+.gp-dep-ttl{font-size:15px;font-weight:700;color:#111;margin-bottom:3px}
+.gp-dep-sub{font-size:12px;color:#666;line-height:1.55}
 .gp-ttl{font-size:17px;font-weight:700;color:#111;margin-bottom:4px}
 .gp-sub{font-size:12px;color:#666;line-height:1.55;margin-bottom:13px}
 /* APP 信息行 */
@@ -632,6 +643,15 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
       </div>
     </div>
     <div class="gp-body">
+      <!-- 充值确认区块：仅「弹框时间点＝用户充值」时展示；金额读取最近一次成功充值记录，
+           读不到记录（接口异常/记录为空）则整块隐藏，弹窗其余内容照常展示 -->
+      <div class="gp-dep" id="gpDep">
+        <div class="gp-dep-ic">✓</div>
+        <div class="gp-dep-tx">
+          <div class="gp-dep-ttl">充值成功！</div>
+          <div class="gp-dep-sub">R$ <span id="gpDepAmt">50,00</span> 已到账，可在您的账户中使用。</div>
+        </div>
+      </div>
       <div class="gp-ttl">发现新版本</div>
       <div class="gp-sub" id="gpSub">下载应用到您的桌面，体验更流畅</div>
       <div class="gp-app">
@@ -1110,6 +1130,21 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
       </div>
     </div>
     <div class="cs">
+      <div class="cl">弹框时间点</div>
+      <div class="cg">
+        <button class="cb" id="gpTm-home" onclick="setGpTiming('home')">访问主页</button>
+        <button class="cb on" id="gpTm-recharge" onclick="setGpTiming('recharge')">用户充值</button>
+        <button class="cb" id="gpTm-withdraw" onclick="setGpTiming('withdraw')">首次提现</button>
+      </div>
+    </div>
+    <div class="cs" id="cs-gpDep">
+      <div class="cl">充值记录取数</div>
+      <div class="cg">
+        <button class="cb on" id="gpDep-ok" onclick="setGpDepOk(true)">取到记录</button>
+        <button class="cb" id="gpDep-fail" onclick="setGpDepOk(false)">记录为空/异常</button>
+      </div>
+    </div>
+    <div class="cs">
       <div class="cl">设备类型</div>
       <div class="cg">
         <button class="cb on" id="gpDev-android" onclick="setGpDev('android')">Android</button>
@@ -1161,6 +1196,8 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
     </div>
     <div class="chint" style="margin-top:6px">
       赠送彩金金额由后台配置，示例值 R$100<br>
+      弹框时间点＝用户充值时，标题上方加「充值成功」区块，金额取最近一次成功充值，示例值 R$ 50,00<br>
+      充值区块与弹窗样式叠加，不影响标题 / 副标题既有逻辑<br>
       切换到此 Tab 时自动显示引导弹窗
     </div>
   </div>
@@ -1235,11 +1272,14 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
 <script>
 // 赠送彩金金额（后台配置，原型示例值）
 const GP_BONUS_AMT = 100;
+// 最近一次成功充值金额（实际由接口返回，原型示例值；巴西金额格式：千分位「.」小数点「,」）
+const GP_DEP_AMT = '50,00';
 
 const S = {
   tab:'dl',
   dlDev:'android', dlType:'pwa', dlPwa:true, dlBr:'safari', dlChrome:true, dlWake:true,
-  gpContent:'normal', gpDev:'android', gpType:'pwa', gpPwa:true, gpBr:'safari', gpCanClose:false, gpChrome:true, gpWake:true,
+  gpContent:'normal', gpTiming:'recharge', gpDepOk:true,
+  gpDev:'android', gpType:'pwa', gpPwa:true, gpBr:'safari', gpCanClose:false, gpChrome:true, gpWake:true,
   stPage:'google', stDev:'android', stType:'pwa', stPwa:true, stBr:'safari', stAuth:'standard', stChrome:true, stWake:true,
   storeEntry:'tab',
   origin:null,
@@ -1336,10 +1376,14 @@ function closeGP(){
 }
 function updateGP(){
   const isBonus=S.gpContent==='bonus';
-  // 赠送彩金：副标题改为含金额文案；常规：默认文案
+  // 赠送彩金：副标题改为含金额文案；常规：默认文案（不受弹框时间点影响）
   $('gpSub').textContent=isBonus
     ?`下载应用到您的桌面，即可额外获得 R$${GP_BONUS_AMT} 彩金`
     :'下载应用到您的桌面，体验更流畅';
+  // 充值确认区块：仅「用户充值」时间点展示；取不到最近一次成功充值记录则整块隐藏
+  const showDep=S.gpTiming==='recharge'&&S.gpDepOk;
+  $('gpDep').classList.toggle('on',showDep);
+  $('gpDepAmt').textContent=GP_DEP_AMT;
 }
 function resetGpBtn(){
   clearInterval(_gpT); // 停止进行中的安装进度
@@ -1530,6 +1574,18 @@ function setGpContent(v){
   S.gpContent=v;
   ['normal','bonus'].forEach(c=>$('gpCt-'+c).classList.toggle('on',c===v));
   refreshTab(); // 同步刷新弹窗内容
+}
+function setGpTiming(v){
+  S.gpTiming=v;
+  ['home','recharge','withdraw'].forEach(t=>$('gpTm-'+t).classList.toggle('on',t===v));
+  $('cs-gpDep').style.display=v==='recharge'?'':'none';
+  refreshTab();
+}
+function setGpDepOk(v){
+  S.gpDepOk=v;
+  $('gpDep-ok').classList.toggle('on',v);
+  $('gpDep-fail').classList.toggle('on',!v);
+  refreshTab();
 }
 function setGpDev(v){
   S.gpDev=v;

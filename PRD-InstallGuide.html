@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD · 安装引导模块 v1.8</title>
+<title>PRD · 安装引导模块 v1.9</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
@@ -50,9 +50,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h1>安装引导模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v1.8</span>
+  <span>📄 版本：v1.9</span>
   <span>✏️ 作者：Laura</span>
-  <span>📅 更新日期：2026-09-12</span>
+  <span>📅 更新日期：2026-10-13</span>
 </div>
 
 <!-- TOC -->
@@ -119,7 +119,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：常规升级 / 赠送彩金升级；默认「常规升级」</td><td>「常规升级」：弹窗展示为普通下载升级提示，不含赠送信息。「赠送彩金升级」：弹窗中额外展示赠送彩金金额，以吸引用户点击安装。注意：此处展示的金额仅为前端营销展示值，不等于实际赠送金额。</td></tr>
   <tr><td class="indent2">↳↳ 赠送金额类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额；默认「固定金额」</td><td>「固定金额」：弹窗展示固定值，如「安装送100」。「随机金额」：弹窗展示区间值，如「安装送50～200」。</td></tr>
   <tr><td class="indent2">↳↳ 显示赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>固定金额为单一输入框；随机金额为两个输入框（最小值 / 最大值）</td><td>仅为弹窗中展示给用户看的营销数字，不影响实际赠送金额。<br><strong>展示格式：</strong>固定金额 → R$[金额]，如「R$100」；随机金额 → R$[最小值]～R$[最大值]，如「R$100～R$500」。</td></tr>
-  <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「用户充值」；可选：访问主页 / 用户充值 / 首次提现</td><td>「访问主页」：用户每次访问 H5 首页时触发（受弹框间隔时间控制）。「用户充值」：用户每次充值回调成功后触发（若用户当前在游戏中则不弹，退出游戏后仍会弹出）。「首次提现」：用户第一次提现回调成功后触发，仅触发一次。</td></tr>
+  <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「用户充值」；可选：访问主页 / 用户充值 / 首次提现</td><td>「访问主页」：用户每次访问 H5 首页时触发（受弹框间隔时间控制）。「用户充值」：用户每次充值回调成功后触发（若用户当前在游戏中则不弹，退出游戏后仍会弹出）。「首次提现」：用户第一次提现回调成功后触发，仅触发一次。<br><br><span class="chg"><strong>弹窗内容差异：</strong>选「用户充值」时，引导安装弹窗在标题上方额外展示「充值确认区块」，告知用户本次充值已到账，详见 3.4 节；选「访问主页」「首次提现」时不展示该区块。本差异仅作用于引导安装弹窗，顶部横幅与底部安装浮层的内容不随弹框时间点变化。</span></td></tr>
   <tr><td class="indent">↳ 弹框间隔时间</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「0小时(强制安装)」；可选：0小时(强制安装) / 1～24小时</td><td>「0小时」：弹窗强制弹出，用户无法关闭，只能停留在弹窗上。<span class="chg">1～24小时：弹窗弹出后用户可关闭，每隔对应时长重新弹出（不做已安装判定，按间隔持续弹出）。</span></td></tr>
   <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；默认「关闭」；<strong>当前功能配置可保存但暂不上线生效</strong></td><td>「关闭」：用户安装后不赠送彩金。「充值用户赠送」：仅有过充值记录的用户安装后系统自动赠送彩金。「无需充值赠送」：所有完成安装的用户均可获赠，包括未充值用户。赠送彩金需满足打码倍数要求方可提现。</td></tr>
   <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示</td><td>用户安装后实际到账的彩金金额，与浮层「显示赠送金额」相互独立，两者可以不同。</td></tr>
@@ -130,7 +130,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th><th>前台效果</th></tr>
   <tr><td>安卓安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用)；默认「pwa(快速安装)」；<span class="chg">二期：APK / PWA+APK 选项已启用</span></td><td><span class="chg">安卓点击安装后先按浏览器路由（Chrome→新标签跳「防封谷歌页」商店页完成安装；非 Chrome→唤起 Chrome，不支持唤起则就地），见 3.4；以下为就地 / 商店页的安装机制。</span>「pwa」：引导用户将 H5 页面添加到手机桌面（PWA 方式）；前台判断当前浏览器是否支持 PWA 安装（能否触发 beforeinstallprompt 事件）：支持则触发系统 PWA 安装提示，不支持则弹出复制链接弹框，引导用户换支持 PWA 的浏览器打开安装。「apk」：引导用户下载并安装 APK 包，需商户提前上传封装好的 APK。「pwa(优先)+apk(推荐)」：优先引导安装 PWA，若浏览器不支持 PWA 则降级至 APK 下载。</td></tr>
-  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-req">必填</span></td><td><span class="chg">单选（三选一）</span></td><td><span class="chg">安卓安装类型含 APK 时展示；三种来源方式互斥单选，默认选中「马甲包」。可选：<br>• <strong>马甲包</strong>：展示「选择马甲包」按钮，点击从系统管理-马甲包管理中选包，选定后自动填入 APK 包地址（只读来源）与包名；<br>• <strong>上传马甲包</strong>：展示「上传」按钮（仅支持 apk 文件，限 100MB），上传解析后自动填入 APK 包地址与包名；<br>• <strong>自定义链接</strong>：无操作按钮，APK 包地址改为手动输入。<br>切换三种方式时，清空已填的 APK 包地址与 APK 包名，避免残留上一方式的数据。<span class="chg">二期：马甲包管理暂未上线，「马甲包」方式下拉暂空，当前用「上传马甲包」手动上传跑通。</span></td><td><span class="chg">原三种来源平铺同时可见，易误操作；现收敛为单选，选定方式后仅呈现对应操作入口，路径唯一。</span>马甲包是经过伪装的 APK。</td></tr>
+  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-req">必填</span></td><td><span class="chg">单选（三选一）</span></td><td><span class="chg">安卓安装类型含 APK 时展示；三种来源方式互斥单选，默认选中「马甲包」。可选：<br>• <strong>马甲包</strong>：展示「选择马甲包」按钮，点击从系统管理-马甲包管理中选包，选定后自动填入 APK 包地址（只读来源）与包名；<br>• <strong>上传APK</strong>：展示「上传」按钮（仅支持 apk 文件，限 100MB），上传解析后自动填入 APK 包地址与包名；<br>• <strong>自定义链接</strong>：无操作按钮，APK 包地址改为手动输入。<br>切换三种方式时，清空已填的 APK 包地址与 APK 包名，避免残留上一方式的数据。<span class="chg">二期：马甲包管理暂未上线，「马甲包」方式下拉暂空，当前用「上传APK」手动上传跑通。</span></td><td><span class="chg">原三种来源平铺同时可见，易误操作；现收敛为单选，选定方式后仅呈现对应操作入口，路径唯一。</span>马甲包是经过伪装的 APK。</td></tr>
   <tr><td class="indent">↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>安卓安装类型含 APK 时展示，位于「选择APK」下方；「马甲包」「上传马甲包」方式下由系统自动填入，「自定义链接」方式下手动输入</td><td>APK 文件下载地址，用户点击安装时从该地址下载 APK 包。</td></tr>
   <tr><td class="indent">↳ APK包名</td><td>—</td><td>自动填充</td><td>含 APK 时展示，位于 APK 包地址下方；选择马甲包或上传后自动读取（只读），手动修改 APK 包地址或切换选择APK方式后自动清空</td><td><span class="chg">APK 唯一包标识符，仅作渠道包的标识与管理记录，<strong>不用于</strong>判断用户设备是否已安装（前台不做已安装判定）。</span></td></tr>
 </table>
@@ -196,6 +196,35 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>固定金额</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[金额].</td></tr>
   <tr><td>随机金额</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[最小值]～R$[最大值].</td></tr>
 </table>
+
+<h4><span class="chg">充值确认区块（弹框时间点＝「用户充值」）</span></h4>
+<p><span class="chg">后台「弹框时间点」配置为「用户充值」时，引导安装弹窗在标题区上方额外插入一块充值确认信息，先向用户确认本次充值已到账，再引导其安装 APP；配置为「访问主页」或「首次提现」时，该区块整块不渲染。</span></p>
+
+<p><span class="chg"><strong>区块内容与排版</strong>：绿色圆形对勾图标（静态资源）+ 确认标题 + 到账说明文案（含动态金额），图标居左、文案居右两行排列，整块位于弹窗标题「发现新版本」之上，与标题之间留白分隔，不加分割线。文案见第五章中葡对照。</span></p>
+
+<table>
+  <tr><th>元素</th><th>取值来源</th><th>展示说明</th></tr>
+  <tr><td>对勾图标</td><td>静态资源</td><td>绿色实心圆底 + 白色对勾，固定样式，不随配置变化。</td></tr>
+  <tr><td>确认标题</td><td>固定文案</td><td>「充值成功！」/「Depósito confirmado!」，不含动态变量。</td></tr>
+  <tr><td>到账金额</td><td><span class="chg">接口读取该用户<strong>最近一次成功充值</strong>记录的充值金额</span></td><td>按巴西本地化金额格式展示，保留两位小数，整数位千分位用「.」、小数位用「,」，前缀币种符号 R$，如「R$ 50,00」「R$ 1.250,00」。</td></tr>
+  <tr><td>到账说明文案</td><td>固定文案 + 动态金额</td><td>「R$[金额] 已到账，可在您的账户中使用。」，金额按上行规则渲染。</td></tr>
+</table>
+
+<p><span class="chg"><strong>取数口径</strong>：金额取当前登录用户<strong>最近一次充值状态为「成功」的充值记录</strong>，不限定该记录是否为本次触发弹窗的那一笔，也不限定充值时间范围。因此当「弹框间隔时间」配置为 1～24 小时、弹窗按间隔重复弹出时，每次弹出均实时读取最近一次成功充值记录并展示，不随次数衰减或隐藏，与本模块「不做已安装判定、按间隔持续弹出」的口径保持一致。</span></p>
+
+<p><span class="chg"><strong>兜底逻辑</strong>：若接口异常或未查询到成功充值记录，充值确认区块整块隐藏，弹窗其余内容（标题、副标题、APP 信息行、安装按钮、客服按钮、安装步骤区、安全提示）照常展示并可正常进入安装流程，不因取数失败而阻断弹窗或安装引导。</span></p>
+
+<p><span class="chg"><strong>与「弹框内容」配置的关系</strong>：充值确认区块由「弹框时间点」单独决定，与「弹框内容」（常规升级 / 赠送彩金升级）正交叠加，互不覆盖。区块出现与否不改变标题与副标题的既有逻辑——常规升级仍展示默认副标题，赠送彩金升级仍展示含赠送金额的副标题。</span></p>
+
+<table>
+  <tr><th>弹框时间点</th><th>弹框内容</th><th>充值确认区块</th><th>副标题</th></tr>
+  <tr><td>用户充值</td><td>常规升级</td><td>✅ 展示</td><td>默认副标题</td></tr>
+  <tr><td>用户充值</td><td>赠送彩金升级</td><td>✅ 展示</td><td>含赠送金额副标题</td></tr>
+  <tr><td>访问主页 / 首次提现</td><td>常规升级</td><td>❌ 不展示</td><td>默认副标题</td></tr>
+  <tr><td>访问主页 / 首次提现</td><td>赠送彩金升级</td><td>❌ 不展示</td><td>含赠送金额副标题</td></tr>
+</table>
+
+<div class="info"><span class="chg">充值确认区块对安卓与 iOS 设备一致生效，不受设备分支影响；iOS 弹窗整块隐藏的仅为「安卓应用安装说明」，充值确认区块照常展示。</span></div>
 
 <h4><span class="chg">点击安装后的浏览器路由（本次调整 · 仅安卓）</span></h4>
 <p><span class="chg">安卓设备点击任意安装入口（顶部横幅 / 底部浮层 / 引导弹窗）后，先按当前【浏览器环境】路由，再进入安装。用户侧无「尝试→失败」中间态、无延迟。</span></p>
@@ -544,7 +573,14 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>下载APP到您的桌面，额外获得R$[金额]彩金。</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[金额].</td><td>弹窗副标题（赠送彩金升级）</td></tr>
 </table>
 
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.8 · 2026-09-12</p>
+<p><strong><span class="chg">引导安装弹窗 — 充值确认区块（弹框时间点＝用户充值）</span></strong></p>
+<table>
+  <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
+  <tr><td>充值成功！</td><td>Depósito confirmado!</td><td>充值确认区块标题</td></tr>
+  <tr><td>R$[金额] 已到账，可在您的账户中使用。</td><td>O valor de R$[金额] já está disponível na sua conta.</td><td>充值确认区块说明文案（[金额]为最近一次成功充值金额，格式 R$ 50,00）</td></tr>
+</table>
+
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.9 · 2026-10-13</p>
 </div>
 </div>
 </body>
