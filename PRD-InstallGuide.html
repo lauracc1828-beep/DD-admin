@@ -190,17 +190,31 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>弹窗内容</strong>：顶部品牌插图（静态资源）+ 标题 + 副标题 + APP 信息行（APP 图标及站点名称，来源：系统管理 → 系统配置 → 站点配置）+ 安装按钮 + 客服按钮 + 安装步骤区 + 安全提示（文案见第五章中葡对照）。</p>
 <p>客服按钮与安装按钮并排同行，点击后跳转客服页面；常规升级和赠送彩金升级状态下均显示。</p>
 
-<p><strong>赠送彩金升级状态</strong>：标题不变，副标题替换为含赠送金额的文案，金额动态读取后台「显示赠送金额」配置。</p>
+<h4><span class="chg">副标题文案结构（本次调整）</span></h4>
+<p><span class="chg">原副标题仅一句产品说明，信息量不足、缺少转化钩子。本次改为<strong>三句式结构</strong>，并引入橙色高亮段提升扫读效率：第一句讲产品体验，第二句讲彩金利益，第三句讲信息触达。常规升级与赠送彩金升级<strong>仅第二句不同</strong>，第一、三句完全一致。</span></p>
+
 <table>
-  <tr><th>配置类型</th><th>副标题展示格式</th></tr>
-  <tr><td>固定金额</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[金额].</td></tr>
-  <tr><td>随机金额</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[最小值]～R$[最大值].</td></tr>
+  <tr><th>句位</th><th>常规升级</th><th>赠送彩金升级</th><th>样式</th></tr>
+  <tr><td>第一句</td><td colspan="2" style="text-align:center">下载 APP，体验更流畅更安全。（两状态一致）</td><td>常规色</td></tr>
+  <tr><td>第二句</td><td>我们定期赠送免费彩金，</td><td><span class="chg">立即安装即得 R$[金额] 彩金！</span></td><td><span class="chg">橙色加粗高亮</span></td></tr>
+  <tr><td>第三句</td><td colspan="2" style="text-align:center">使用 APP 还能更快收到最新消息与优惠活动！（两状态一致）</td><td><span class="chg">「更快收到最新消息与优惠活动！」橙色加粗高亮</span></td></tr>
+</table>
+
+<div class="info"><span class="chg">第二句采用「替换」而非「追加」：常规升级的「定期赠送免费彩金」与赠送彩金升级的具体金额属同一利益点的泛化与具体表述，并列出现会造成语义重复且使副标题超过 5 行。替换后两状态副标题行数一致、弹窗高度稳定。</span></div>
+
+<p><span class="chg"><strong>高亮规则</strong>：两种状态均固定两段橙色高亮（#F59E0B，加粗），高亮密度一致。常规升级高亮「定期赠送免费彩金」与「更快收到最新消息与优惠活动！」；赠送彩金升级高亮「立即安装即得 R$[金额] 彩金！」与「更快收到最新消息与优惠活动！」。高亮段落为固定文案切分，不随金额长度变化。</span></p>
+
+<p><strong>赠送彩金升级状态</strong>：标题不变，副标题第二句替换为含赠送金额的文案，金额动态读取后台「显示赠送金额」配置。</p>
+<table>
+  <tr><th>配置类型</th><th>第二句展示格式（葡语）</th></tr>
+  <tr><td>固定金额</td><td><span class="chg">Instale agora e ganhe um bônus de R$[金额]!</span></td></tr>
+  <tr><td>随机金额</td><td><span class="chg">Instale agora e ganhe um bônus de R$[最小值]～R$[最大值]!</span></td></tr>
 </table>
 
 <h4><span class="chg">充值确认区块（弹框时间点＝「用户充值」）</span></h4>
 <p><span class="chg">后台「弹框时间点」配置为「用户充值」时，引导安装弹窗在标题区上方额外插入一块充值确认信息，先向用户确认本次充值已到账，再引导其安装 APP；配置为「访问主页」或「首次提现」时，该区块整块不渲染。</span></p>
 
-<p><span class="chg"><strong>区块内容与排版</strong>：绿色圆形对勾图标（静态资源）+ 确认标题 + 到账说明文案（含动态金额），图标居左、文案居右两行排列，整块位于弹窗标题「发现新版本」之上，与标题之间留白分隔，不加分割线。文案见第五章中葡对照。</span></p>
+<p><span class="chg"><strong>区块内容与排版</strong>：绿色圆形对勾图标（静态资源）+ 确认标题 + 到账说明文案（含动态金额），图标居左（绿色实心圆 + 白色对勾，带绿色外发光）、文案居右两行排列，整块位于弹窗标题「发现新版本」之上，<strong>下方以一条浅灰分割线与标题区隔开</strong>。文案见第五章中葡对照。</span></p>
 
 <table>
   <tr><th>元素</th><th>取值来源</th><th>展示说明</th></tr>
@@ -556,7 +570,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 <table>
   <tr><th>中文</th><th>葡语（参考图原文）</th><th>位置</th></tr>
   <tr><td>发现新版本</td><td>Descobrir uma nova versão</td><td>弹窗标题</td></tr>
-  <tr><td>下载APP到您的桌面，获得更流畅的体验</td><td>Baixe o aplicativo para a sua área de trabalho para uma experiência mais fluida</td><td>弹窗副标题（常规升级）</td></tr>
+  <tr><td><span class="chg">下载 APP，体验更流畅更安全。</span></td><td><span class="chg">Baixe o aplicativo para uma experiência mais fluida e segura.</span></td><td><span class="chg">弹窗副标题第一句（两状态一致，常规色）</span></td></tr>
+  <tr><td><span class="chg">我们定期赠送免费彩金，</span></td><td><span class="chg">Temos bônus grátis regularmente e,</span></td><td><span class="chg">弹窗副标题第二句（常规升级）；「定期赠送免费彩金 / bônus grátis regularmente」橙色加粗高亮</span></td></tr>
+  <tr><td><span class="chg">使用 APP 还能更快收到最新消息与优惠活动！</span></td><td><span class="chg">com o app, você pode receber nossas novidades e promoções mais rápido!</span></td><td><span class="chg">弹窗副标题第三句（两状态一致）；「更快收到最新消息与优惠活动！/ novidades e promoções mais rápido!」橙色加粗高亮</span></td></tr>
   <tr><td>安装</td><td>Instalar</td><td>弹窗安装按钮</td></tr>
   <tr><td>安卓应用安装说明：</td><td>Instalação de um aplicativo Android:</td><td>步骤区标题</td></tr>
   <tr><td>1. 点击上方按钮下载安装文件</td><td>1. Clique no botão acima para baixar o arquivo de instalação</td><td>步骤 1</td></tr>
@@ -570,8 +586,9 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>引导安装弹窗 — 赠送彩金升级</strong></p>
 <table>
   <tr><th>中文</th><th>葡语</th><th>位置</th></tr>
-  <tr><td>下载APP到您的桌面，额外获得R$[金额]彩金。</td><td>Baixe o aplicativo para o seu desktop e ganhe um bônus extra de R$[金额].</td><td>弹窗副标题（赠送彩金升级）</td></tr>
+  <tr><td><span class="chg">立即安装即得 R$[金额] 彩金！</span></td><td><span class="chg">Instale agora e ganhe um bônus de R$[金额]!</span></td><td><span class="chg">弹窗副标题第二句（赠送彩金升级，替换常规升级的第二句）；整句橙色加粗高亮。随机金额时金额写作 R$[最小值]～R$[最大值]</span></td></tr>
 </table>
+<div class="note"><span class="chg">赠送彩金升级状态下，副标题第一句与第三句沿用上表「常规升级」的同位句，不作改动。</span></div>
 
 <p><strong><span class="chg">引导安装弹窗 — 充值确认区块（弹框时间点＝用户充值）</span></strong></p>
 <table>

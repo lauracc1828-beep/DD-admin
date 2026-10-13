@@ -159,19 +159,22 @@ body{background:#0c0919;min-height:100vh;display:flex;align-items:flex-start;jus
 .gp-hd-logo-txt{color:#fff;font-size:11px;font-weight:700}
 .gp-body{padding:16px 15px 0;overflow-y:auto;flex:1;scrollbar-width:none}
 .gp-body::-webkit-scrollbar{display:none}
-/* 充值确认区块（仅「弹框时间点＝用户充值」展示，位于标题上方）*/
-.gp-dep{display:none;gap:9px;align-items:flex-start;margin-bottom:16px}
+/* 充值确认区块（仅「弹框时间点＝用户充值」展示，位于标题上方，下方分割线与标题区隔开）*/
+.gp-dep{display:none;gap:12px;align-items:flex-start;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #eee}
 .gp-dep.on{display:flex}
 .gp-dep-ic{
-  width:26px;height:26px;border-radius:50%;background:#22c55e;color:#fff;
+  width:42px;height:42px;border-radius:50%;background:#22c55e;color:#fff;
   flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:700;line-height:1;margin-top:1px;
+  font-size:24px;font-weight:700;line-height:1;
+  box-shadow:0 0 12px rgba(34,197,94,.45);
 }
 .gp-dep-tx{flex:1;min-width:0}
-.gp-dep-ttl{font-size:15px;font-weight:700;color:#111;margin-bottom:3px}
-.gp-dep-sub{font-size:12px;color:#666;line-height:1.55}
-.gp-ttl{font-size:17px;font-weight:700;color:#111;margin-bottom:4px}
-.gp-sub{font-size:12px;color:#666;line-height:1.55;margin-bottom:13px}
+.gp-dep-ttl{font-size:18px;font-weight:700;color:#111;margin-bottom:4px;line-height:1.25}
+.gp-dep-sub{font-size:13px;color:#8a8a8a;line-height:1.5}
+.gp-ttl{font-size:17px;font-weight:700;color:#111;margin-bottom:5px}
+.gp-sub{font-size:13px;color:#8a8a8a;line-height:1.6;margin-bottom:13px}
+/* 副标题营销高亮（橙色加粗）*/
+.gp-sub em{font-style:normal;font-weight:700;color:#f59e0b}
 /* APP 信息行 */
 .gp-app{display:flex;align-items:center;gap:10px;margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid #f0f0f0}
 .gp-app-ic{width:44px;height:44px;border-radius:11px;overflow:hidden;flex-shrink:0}
@@ -1376,10 +1379,11 @@ function closeGP(){
 }
 function updateGP(){
   const isBonus=S.gpContent==='bonus';
-  // 赠送彩金：副标题改为含金额文案；常规：默认文案（不受弹框时间点影响）
-  $('gpSub').textContent=isBonus
-    ?`下载应用到您的桌面，即可额外获得 R$${GP_BONUS_AMT} 彩金`
-    :'下载应用到您的桌面，体验更流畅';
+  // 副标题三句式，<em> 为橙色高亮段，固定两段高亮（不受弹框时间点影响）
+  // 常规：第二句为「定期赠送免费彩金」；赠送彩金：第二句替换为含金额文案
+  $('gpSub').innerHTML=isBonus
+    ?`下载 APP，体验更流畅更安全。<em>立即安装即得 R$${GP_BONUS_AMT} 彩金！</em>使用 APP 还能<em>更快收到最新消息与优惠活动！</em>`
+    :'下载 APP，体验更流畅更安全。我们<em>定期赠送免费彩金</em>，使用 APP 还能<em>更快收到最新消息与优惠活动！</em>';
   // 充值确认区块：仅「用户充值」时间点展示；取不到最近一次成功充值记录则整块隐藏
   const showDep=S.gpTiming==='recharge'&&S.gpDepOk;
   $('gpDep').classList.toggle('on',showDep);
