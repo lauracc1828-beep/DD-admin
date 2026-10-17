@@ -11,7 +11,7 @@
   :root{
     --bg:#141415; --panel:#1c1c1e; --card:#19191b; --field:#232325; --chip:#39342b;
     --tabbar:#232326; --line:#2e2e31;
-    --gold:#f4f03a; --gold-dim:#6f6c25; --gold-soft:rgba(244,240,58,.12);
+    --gold:#f4f03a;--warn:#ff9a3c; --gold-dim:#6f6c25; --gold-soft:rgba(244,240,58,.12);
     --grey:#8a8a8f; --grey2:#5c5c61; --text:#f2f2f2; --red:#ff5a52; --green:#3ddc84;
     --navbg:#1a1a1c; --navh:62px; --safeb:0px; --safet:0px;
     --ngblue:#2f6fe8; --ngblue-lt:#4f8dff;
@@ -253,35 +253,59 @@
     transition:width .2s ease,background .2s ease;cursor:pointer}
   .idots i.on{width:17px;border-radius:3px;background:#4f8dff}
   .intro-btns{position:relative;display:flex;gap:10px;margin-top:18px}
-  .intro-btns button{flex:1;height:45px;border-radius:12px;font-size:13.5px;font-weight:700}
+  .intro-btns button{flex:1;height:45px;border-radius:12px;font-size:13.5px;font-weight:700;white-space:nowrap}
   .btn-ng{background:linear-gradient(145deg,var(--ngblue-lt),var(--ngblue));color:#fff;
     box-shadow:0 8px 20px rgba(47,111,232,.4)}
   .btn-ng-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#cfd8ea}
   @keyframes introPop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.06)}100%{transform:none;opacity:1}}
 
   /* ===== 新手引导（聚光罩） ===== */
-  .coach{position:absolute;inset:0;z-index:25}
+  .coach{position:absolute;inset:0;z-index:25;opacity:0;transition:opacity .26s ease}
+  .coach.in{opacity:1}
   .hole{position:absolute;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.74);
-    border:1.5px solid var(--gold);transition:all .3s ease;pointer-events:none}
+    border:1.5px solid var(--gold);pointer-events:none;
+    transition:left .3s ease, top .3s ease, width .3s ease, height .3s ease}
+  /* 首帧：光圈先就位再淡入，否则会从上一个位置飞进来 */
+  .coach.noanim .hole, .coach.noanim .ctip{transition:none}
   .ctip{position:absolute;left:14px;right:14px;background:#2a2a2d;border:1px solid #3a3a3e;
-    border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.55}
+    border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.55;
+    transform:translateY(7px);transition:transform .26s ease, top .3s ease}
+  .coach.in .ctip{transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .coach,.hole,.ctip{transition:none}
+  }
   .crow{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
   .crow button{height:32px;padding:0 18px;border-radius:8px;background:var(--gold);color:#111;
-    font-weight:700;font-size:12.5px}
+    font-weight:700;font-size:12.5px;white-space:nowrap}
   .crow .skip{background:none;color:var(--grey);font-size:12.5px;padding:4px 0;height:auto}
   .crow .idx{font-size:12px;color:var(--grey)}
 
   /* ================= 底部 ================= */
-  .foot{flex:0 0 auto;padding:10px 14px 8px;background:var(--bg)}
+  .foot{flex:0 0 auto;padding:10px 14px 8px;background:var(--bg);position:relative}
   .receive{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;
     color:#cfcfcf;margin-bottom:10px}
   .receive b{font-size:19px;color:var(--gold)}
+  /* 结算栏「含赠送」副行 + 奖励规则气泡 */
+  .receive.sub{margin-top:-7px;margin-bottom:10px;font-size:11.5px;color:var(--grey)}
+  .receive.sub b{font-size:12.5px;color:#4ec77a;font-weight:700}
+  .qmk{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;
+    border-radius:50%;border:1px solid var(--grey);color:var(--grey);font-size:9px;font-style:normal;
+    line-height:1;margin-left:4px;cursor:pointer;transform:translateY(1px)}
+  .bpop{position:absolute;left:14px;right:14px;bottom:100%;margin-bottom:6px;z-index:9;
+    background:#2a2a2d;border:1px solid #3a3a3e;border-radius:10px;padding:9px 12px;
+    font-size:12px;color:#cfcfcf;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+  .bpop .r{display:flex;justify-content:space-between;gap:18px;padding:3px 0}
+  .bpop .r b{color:#fff;font-weight:600}
   .cta{width:100%;height:46px;border-radius:23px;background:var(--gold);color:#111;
-    font-size:15px;font-weight:700;transition:.2s}
+    font-size:15px;font-weight:700;transition:.2s;white-space:nowrap}
   .cta:disabled{background:var(--gold-dim);color:#2c2b10;cursor:not-allowed}
 
   .nav{flex:0 0 auto;display:flex;justify-content:space-around;padding:8px 0 calc(10px + var(--safeb));
-    background:var(--navbg);border-top:1px solid var(--line)}
+    background:var(--navbg);border-top:1px solid var(--line);
+    transition:margin-bottom .22s ease, opacity .18s ease}
+  /* CTA 可点时收起导航，把底部让给主操作；金额清空或校验不过再滑回来 */
+  .nav.tuck{margin-bottom:calc(-1 * (44px + var(--safeb)));opacity:0;pointer-events:none}
+  @media (prefers-reduced-motion:reduce){ .nav{transition:none} }
   .nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--grey);
     text-decoration:none;width:60px;position:relative}
   .nav a.on{color:var(--gold)}
@@ -314,6 +338,16 @@
   .mask.show .dialog{transform:none}
   .dialog h3{font-size:15px;margin-bottom:8px;color:#fff}
   .dialog p{font-size:12.5px;color:#bbb;line-height:1.6;margin-bottom:16px}
+  /* 需要用户作答的那一句，提为弹窗主视觉 */
+  .dialog p.ask{font-size:16px;font-weight:700;color:#fff;line-height:1.45;margin:0 0 16px}
+  /* 错误提示标题：橙色叹号与标题同行 */
+  .dialog h3.errh{display:flex;align-items:center;justify-content:center;gap:7px;
+    font-size:14.5px;font-weight:700;color:#fff;margin-bottom:9px}
+  .dialog h3.errh .bang{flex:none;width:18px;height:18px;border-radius:50%;
+    border:1.6px solid var(--warn);color:var(--warn);font-size:12px;font-weight:800;line-height:1;
+    display:flex;align-items:center;justify-content:center}
+  .dialog p.bnfact{font-size:12.5px;color:#bbb;line-height:1.65;margin-bottom:12px}
+  .dialog p.bnfact b{color:var(--gold);font-weight:700}
   .dialog .icon{width:54px;height:54px;margin:0 auto 13px;border:2.5px solid #f4c430;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#f4c430;line-height:1}
   .sum{text-align:left;background:#1b1b1d;border-radius:10px;padding:10px 12px;margin-bottom:14px;
@@ -323,7 +357,7 @@
   .sum b{text-align:right}
   .sum b.y{color:var(--gold)}
   .btns{display:flex;gap:10px}
-  .btns button{flex:1;height:40px;border-radius:9px;font-size:13px;font-weight:700}
+  .btns button{flex:1;height:40px;border-radius:9px;font-size:13px;font-weight:700;white-space:nowrap}
   .btn-ghost{background:#38383b}
   .btn-yel{background:var(--gold);color:#111}
   .btn-yel:disabled{background:var(--gold-dim);color:#2c2b10;cursor:not-allowed}
@@ -419,7 +453,7 @@
           <p class="balance"><span data-i="acct">账户余额：</span><b id="dBal">R$ 10.529,85</b></p>
 
           <div class="methods" id="depMethods">
-            <button class="method on" data-m="best"><span class="label">BESTPAY</span></button>
+            <button class="method on" data-m="best" id="mBest"><span class="label">BESTPAY</span><span class="btag" hidden></span></button>
             <button class="method" data-m="ngc" id="mNgc">
               <span class="base-line"></span><span class="glow-ring blur"></span><span class="glow-ring"></span>
               <span class="label">NewGPay</span><span class="btag" hidden></span>
@@ -442,7 +476,6 @@
             </div>
             <div class="r3">
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></svg><span data-i="f1">秒级到账</span></span>
-              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.5 4 5.5v6.2c0 4.8 3.3 8.3 8 9.8 4.7-1.5 8-5 8-9.8V5.5l-8-3Z"/></svg><span data-i="f2">加密安全</span></span>
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.9-6.4"/><path d="M3.5 4.5v4.2h4.2"/></svg><span data-i="f3">可提回钱包</span></span>
               <button class="f tut" id="guideBtn" onclick="replayGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 16 12l-6 3.4V8.6Z"/></svg><span class="lb" data-i="guideBtn" data-txt="新手教程">新手教程</span></button>
             </div>
@@ -481,7 +514,7 @@
               <button class="buy" id="wEnterBtn" data-i="ngEnter" onclick="toast(t('tWallet'))">进入钱包</button>
             </div>
             <div class="r3">
-              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V8m0 0-4 4m4-4 4 4"/><path d="M5 4h14"/></svg><span data-i="wf1">自主挑价卖出</span></span>
+              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 15 4.5-5 3.5 3.5L20 6"/><path d="M20 6h-4.5M20 6v4.5"/></svg><span data-i="wf1">市价成交</span></span>
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2.2"/><path d="M3 10h18"/></svg><span data-i="wf2">PIX 收款</span></span>
               <button class="f tut" id="wGuideBtn" onclick="replayWdGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 16 12l-6 3.4V8.6Z"/></svg><span class="lb" data-i="guideBtn" data-txt="新手教程">新手教程</span></button>
             </div>
@@ -516,7 +549,14 @@
 
       <!-- 底部操作 -->
       <div class="foot" id="dFoot">
+        <div class="bpop" id="dBpop" hidden>
+          <div class="r"><span data-i="maxDailyK">每日最高奖励</span><b id="bpMax">R$ 0,00</b></div>
+          <div class="r" id="bpWagerRow"><span data-i="wagerK">提现流水要求</span><b id="bpWager"></b></div>
+        </div>
         <div class="receive"><span data-i="recv">您将收到</span><b id="dRecv">R$ 0,00</b></div>
+        <div class="receive sub" id="dSub" hidden>
+          <span><span data-i="bonusK">含赠送</span><i class="qmk" id="dQmk">?</i></span><b id="dSubV">+R$ 0,00</b>
+        </div>
         <button class="cta" id="dCta" disabled onclick="depSubmit()">立即充值</button>
       </div>
       <div class="foot" id="wFoot" hidden>
@@ -556,6 +596,75 @@
     </div>
 
     <!-- ===== NewGPay 首次说明 ===== -->
+    <!-- ===== NGC 余额不足，引导去买币 ===== -->
+    <div class="mask" id="dlgBuyNgc">
+      <div class="dialog">
+        <h3 class="errh"><span class="bang">!</span><span data-i="bnT">NGC 余额不足</span></h3>
+        <p class="bnfact" id="bnFact"></p>
+        <p class="ask" data-i="bnB">是否去购买 NGC？</p>
+        <div class="btns">
+          <button class="btn-ghost" data-close data-i="cancel">取消</button>
+          <button class="btn-yel" data-i="confirm" onclick="goBuyNgc()">确认</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 未填收款信息 ===== -->
+    <div class="mask" id="dlgNoPayee">
+      <div class="dialog">
+        <div class="icon">!</div>
+        <h3 data-i="noPayeeT">请先添加收款信息</h3>
+        <p data-i="noPayeeB">提款前需要先登记接收款项的账户，保存后即可发起提款。</p>
+        <div class="btns">
+          <button class="btn-ghost" data-close data-i="later">暂不添加</button>
+          <button class="btn-yel" data-i="goAdd" onclick="closeMask('dlgNoPayee');setTimeout(openPayee,160)">去添加</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 首次保存收款信息的二次确认 ===== -->
+    <div class="mask" id="dlgFirstSave">
+      <div class="dialog">
+        <div class="icon">!</div>
+        <h3 data-i="fsT">请确认提款信息</h3>
+        <p><span data-i="fsB1">本次提款成功后，所填写的提款信息将保存至您的账户并</span><b style="color:var(--gold)" data-i="fsLock">不可自行修改</b><span data-i="fsB2">。请确认姓名与收款账号准确无误。</span></p>
+        <div class="btns">
+          <button class="btn-ghost" data-close data-i="fsBack">返回修改</button>
+          <button class="btn-yel" data-i="fsOk" onclick="closeMask('dlgFirstSave');openConfirm()">确认无误</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 有未完结提款 ===== -->
+    <div class="mask" id="dlgPending">
+      <div class="dialog">
+        <div class="icon">!</div>
+        <h3 data-i="pdT">有未完结的提款</h3>
+        <p data-i="pdB">请等待上一笔提款完成后，再申请新的提款。</p>
+        <div class="btns">
+          <button class="btn-ghost" data-close data-i="close">关闭</button>
+          <button class="btn-yel" data-i="seeRec" onclick="closeMask('dlgPending');setTimeout(function(){switchWTab('wd');openRec();},160)">查看记录</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 提款二次确认 ===== -->
+    <div class="mask" id="dlgConfirm">
+      <div class="dialog">
+        <h3 id="cfTitle">确认取款</h3>
+        <div class="sum">
+          <div><span data-i="cfAmtK">提款金额</span><b class="y" id="cfAmt">R$ 0,00</b></div>
+          <div><span data-i="cfWayK">提款方式</span><b id="cfWay">—</b></div>
+          <div><span data-i="cfToK">收款账号</span><b id="cfTo">—</b></div>
+        </div>
+        <p id="cfNote" style="margin-bottom:14px"></p>
+        <div class="btns">
+          <button class="btn-ghost" data-close data-i="cancel">取消</button>
+          <button class="btn-yel" id="cfOk" onclick="wdConfirm()">确认取款</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== NewGPay 品牌介绍浮层（先于新手引导） ===== -->
     <div class="mask sheet-mask" id="shIntro">
       <div class="sheet intro">
@@ -677,8 +786,11 @@
   <div class="grp"><span>语言</span>
     <div class="seg" id="cLang"><button data-v="0" class="on">中文</button><button data-v="1">Português</button></div>
   </div>
-  <div class="grp"><span>NewGPay 充值赠送比例（后台配置）</span>
-    <div class="seg" id="cBonus"><button data-v="0" class="on">未配置</button><button data-v="3">3%</button><button data-v="5">5%</button></div>
+  <div class="grp"><span>BESTPAY 充值返现（后台配置）</span>
+    <div class="seg" id="cbBest"><button data-v="0" class="on">未配置</button><button data-v="1|8|1">1%·上限8·1倍</button><button data-v="2|50|0">2%·上限50·不稽核</button></div>
+  </div>
+  <div class="grp"><span>NewGPay 充值返现（后台配置）</span>
+    <div class="seg" id="cbNgc"><button data-v="0">未配置</button><button data-v="2.5|100|3" class="on">2.5%·上限100·3倍</button><button data-v="5|1000|0">5%·上限1000·不稽核</button></div>
   </div>
   <div class="grp"><span>NGC 余额</span>
     <div class="seg" id="cNgc"><button data-v="0" class="on">0</button><button data-v="280">280</button><button data-v="5000">5.000</button></div>
@@ -705,7 +817,8 @@
   <button class="act" id="cGlow">重播流光提示</button>
   <p class="note">
     · <b>顶部 Tab</b>：胶囊容器内两段式，选中态金边金底并显出图标；右侧分隔线 + 记录入口。<br>
-    · <b>渠道切换</b>：选中态金色实心；配置了赠送比例时 NewGPay 带 +N% 角标，进入页面时流光一次引导注意。<br>
+    · <b>渠道切换</b>：选中态金色实心；<b>两个渠道各自读取后台「充值返现设置」</b>，配置了比例即带 +N% 角标，NewGPay 进入页面时流光一次引导注意。<br>
+    · <b>充值返现</b>：结算栏「含赠送」副行随比例显隐，金额按<b>向下取 2 位小数</b>计算；点副行问号查看每日最高奖励与提现流水要求（稽核倍数为 0 时该行不展示）。<br>
     · <b>提款</b>：收款信息走底部弹窗，弹窗内选方式并填对应字段；提现成功后才保存并锁定。
   </p>
 </div>
@@ -719,6 +832,13 @@ var NAV = function(){ return [
   {id:'wallet', label:t('navWallet'), on:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2.8" y="5.6" width="18.4" height="13.4" rx="2.6"/><path d="M2.8 10.2h18.4"/><circle cx="16.8" cy="14.8" r="1.5"/><path d="M6.4 5.6 14.2 2.9a1.1 1.1 0 0 1 1.5.9v1.8"/></svg>'},
   {id:'mine', label:t('navMine'), dot:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c0-3.8 3.2-6.2 7.2-6.2s7.2 2.4 7.2 6.2"/></svg>'}
 ]; };
+/* CTA 亮起 → 收导航；灰掉 → 放导航。存款/取款面板共用。 */
+function syncNavTuck(){
+  var cta = document.getElementById(wTab === 'dep' ? 'dCta' : 'wCta');
+  var nav = document.getElementById('navBar');
+  if (!cta || !nav) return;
+  nav.classList.toggle('tuck', sub === null && !cta.disabled);
+}
 function renderNav(){
   var navHtml = NAV().map(function(n){
     return '<a href="javascript:void(0)" class="'+(n.on?'on ':'')+(n.mid?'mid':'')+'">'
@@ -740,75 +860,76 @@ var I18N = {
   /* —— 新手引导入口 —— */
   guideBtn:['新手教程','Tutorial'],                                                              // [T]
   /* —— NewGPay 品牌介绍浮层（文案与页内 FAQ 口径一致）—— */
-  introTag:['NGC 官方钱包 · 全球通用','Carteira oficial do NGC · alcance global'],         // [T]
+  introTag:['NGC 官方钱包 · 全球通用','Carteira oficial do NGC · global'],                   // [T]
   introQ1:['什么是 NGC？','O que é NGC?'],
   introA1:['NGC 是 NewGPay <b>官方发行的去中心化代币</b>。用 NGC 充值本平台，<b>固定按 1 NGC = R$ 1 入账</b>。',
-           'O NGC é o <b>token descentralizado emitido oficialmente pela NewGPay</b>. Ao recarregar nesta plataforma com NGC, a conversão é fixa: <b>1 NGC = R$ 1</b>.'],
+           '<b>Token descentralizado oficial da NewGPay.</b> Na recarga aqui a conversão é fixa: <b>1 NGC = R$ 1</b>.'],
   introQ2:['NewGPay 是什么？','O que é a NewGPay?'],
   introA2:['<b>NGC 官方钱包</b>。存储、转账、买卖一站完成，全球通用。本站与 NGC 官方<b>直连</b>，存提赠送不定期加码。',
-           'A <b>carteira oficial do NGC</b>. Armazenamento, transferência e negociação em um só lugar, com alcance global. Nossa plataforma é <b>conectada diretamente</b> à NewGPay, com bônus extras de depósito e saque de tempos em tempos.'],
+           '<b>Carteira oficial do NGC</b>: guardar, transferir e negociar num só lugar. <b>Conexão direta</b> com a NewGPay e bônus extras de tempos em tempos.'],
   introQ3:['为什么用 NewGPay？','Por que usar a NewGPay?'],
   introB1:['<b>差价可赚</b> — 钱包内买卖 NGC 按<b>市场价</b>成交，不定期开启买卖活动：<b>低于 R$ 1 买入，高于 R$ 1 卖出</b>。',
-           '<b>Ganhe na diferença</b> — na carteira, a compra e a venda de NGC seguem o <b>preço de mercado</b>; em campanhas abertas de tempos em tempos você <b>compra abaixo de R$ 1 e vende acima de R$ 1</b>.'],
+           '<b>Ganhe na diferença</b> — na carteira o NGC segue o <b>preço de mercado</b>: <b>compre abaixo de R$ 1, venda acima</b>.'],
   /* 🎁 两种形态：未配置赠送比例 / 已配置（{n} 由后台比例填充） */
   introB2:['用 NGC 充值本平台，享受<b>惊喜加赠</b>！',
-           'Recarregue nesta plataforma com NGC e aproveite <b>bônus surpresa</b>!'],              // [T]
+           '<b>Bônus surpresa</b> ao recarregar com NGC!'],                                        // [T]
   introB2n:['<b>充值额外赠 {n}%</b> — 用 NGC 充值本平台，{n}% 赠送直接到账。',
-            '<b>Bônus extra de {n}% na recarga</b> — recarregue com NGC e receba {n}% na hora.'],
+            '<b>Bônus de {n}%</b> ao recarregar com NGC, na hora!'],
   /* —— 轮播：分组 + 6 步说明 —— */
   igBuy:['如何买 NGC','Como comprar NGC'],
   igSell:['如何卖 NGC','Como vender NGC'],                 /* 留给取款引导 */
   is1t:['挑选卖家','Escolha o vendedor'],
-  is1d:['进入 <b>Comprar</b>，列表里每个卖家都标明成功率和平均响应时间，挑一个下单。',
-        'Entre em <b>Comprar</b>: a lista mostra a taxa de sucesso e o tempo médio de resposta de cada vendedor. Escolha um e faça o pedido.'],
+  is1d:['进入 <b>Comprar</b>，列表标明各卖家的成功率与平均响应时间，选择其一下单。',
+        'Em <b>Comprar</b>, a lista mostra a taxa de sucesso e o tempo médio de resposta de cada vendedor. Selecione um e faça o pedido.'],
   is2t:['填金额下单','Informe o valor'],
-  is2d:['输入要买的金额，选 <b>PIX</b> 付款方式，点 <b>Comprar NGC</b> 生成订单。',
-        'Digite o valor que quer comprar, escolha <b>PIX</b> como forma de pagamento e toque em <b>Comprar NGC</b> para gerar o pedido.'],
+  is2d:['输入购买金额，选择 <b>PIX</b> 付款方式，点击 <b>Comprar NGC</b> 生成订单。',
+        'Informe o valor, escolha <b>PIX</b> como forma de pagamento e toque em <b>Comprar NGC</b> para gerar o pedido.'],
   is3t:['向卖家付款','Pague ao vendedor'],
-  is3d:['按卖家给出的 PIX 信息完成付款，<b>在倒计时结束前</b>付清，订单才会继续。',
-        'Pague usando os dados PIX do vendedor. Conclua <b>antes do fim da contagem</b> para o pedido seguir.'],
+  is3d:['按卖家提供的 PIX 信息付款，须<b>在倒计时结束前</b>完成，订单方可继续。',
+        'Pague com os dados PIX do vendedor. É preciso concluir <b>antes do fim da contagem</b> para o pedido prosseguir.'],
   is4t:['卖家放币，NGC 到账','Liberação do NGC'],
-  is4d:['卖家确认后状态从<b>等待放币</b>变为<b>交易完成</b>，NGC 进入你的钱包余额。',
-        'Após a confirmação do vendedor, o status muda de <b>Aguardando liberação</b> para <b>Transação concluída</b> e o NGC entra no saldo da sua carteira.'],
+  is4d:['卖家确认后，状态由<b>等待放币</b>转为<b>交易完成</b>，NGC 计入钱包余额。',
+        'Após a confirmação do vendedor, o status passa de <b>Aguardando liberação</b> para <b>Transação concluída</b> e o NGC entra no saldo da carteira.'],
   /* —— 以下两步留给取款引导 —— */
   is5t:['填卖出数量','Informe a quantidade'],
-  is5d:['输入要卖出的 NGC 数量，选 <b>PIX</b> 收款方式。',
-        'Digite quantos NGC quer vender e escolha <b>PIX</b> para receber.'],
+  is5d:['输入卖出数量，选择 <b>PIX</b> 收款方式。',
+        'Informe a quantidade a vender e escolha <b>PIX</b> para receber.'],
   is6t:['卖出到账','Venda concluída'],
-  is6d:['显示<b>交易完成</b>，账单列出本次卖出明细，款项打到你的 PIX 账户。',
-        'Aparece <b>Transação concluída</b>; o extrato detalha a venda e o valor cai na sua conta PIX.'],
+  is6d:['状态显示<b>交易完成</b>，账单列明本次卖出明细，款项转入你的 PIX 账户。',
+        'O status fica <b>Transação concluída</b>; o extrato detalha a venda e o valor entra na sua conta PIX.'],
   /* —— 轮播按钮 —— */
   introBack:['上一步','Voltar'],
   introStart:['开始使用','Começar'],
   /* —— 提款引导 —— */
-  wdReplayTip:['以后想重看这套说明，点钱包卡里的<b>新手教程</b>。',
-               'Para rever estas instruções, toque em <b>Tutorial</b> no cartão da carteira.'],   // [T]
+  wdReplayTip:['如需重看，可在钱包卡中点击<b>新手教程</b>。',
+               'Para rever, toque em <b>Tutorial</b> no cartão da carteira.'],                    // [T]
   whSite:['本站','Nesta plataforma'],                                                            // [T]
+  whSiteS:['本站','Aqui'],                                /* 计数前缀用短形，长形会挤爆提示框 */   // [T]
   whApp:['NewGPay','NewGPay'],
-  whAppTip:['以下操作在 NewGPay 钱包内完成','Estes passos são feitos dentro da carteira NewGPay'], // [T]
+  whAppTip:['以下操作在钱包内完成','Feito dentro da carteira'],                                    // [T]
   igSellApp:['在 NewGPay 卖出 NGC','Vender NGC na NewGPay'],                                    // [T]
-  wdSeeSell:['查看如何卖币','Ver como vender moedas'],                                            // [T]
-  wf1:['自主挑价卖出','Venda no seu preço'],                                                     // [T]
+  wdSeeSell:['查看如何卖币','Como vender'],                                                      // [T]
+  wf1:['市价成交','Cotação atual'],                                                             // [T]
   wf2:['PIX 收款','Recebe via PIX'],                                                             // [T]
-  wcoach1:['先选择或填写提款金额，支持快捷档位与手动输入。',
-           'Primeiro escolha ou digite o valor do saque: valores rápidos ou manual.'],           // [T]
-  wcoach2:['点击转入，金额从账户余额划到你的 <b>NewGPay 钱包</b>。',
-           'Toque em transferir: o valor sai do seu saldo e vai para a sua <b>carteira NewGPay</b>.'], // [T]
-  wcoach3:['转入后，这里就会显示你的 <b>NewGPay 钱包</b>余额。',
-           'Feita a transferência, o saldo da sua <b>carteira NewGPay</b> passa a aparecer aqui.'], // [T]
-  wcoach4:['点<b>进入钱包</b>，去 NewGPay 把 NGC 卖出——实际提现在那里完成。',
-           'Toque em <b>Abrir carteira</b> para vender o NGC na NewGPay — o saque em si é concluído lá.'], // [T]
-  introLater:['以后再说','Agora não'],
+  wcoach1:['选择或输入提款金额，支持快捷档位。',
+           'Escolha ou digite o valor do saque. Há valores rápidos disponíveis.'],               // [T]
+  wcoach2:['提交后，金额由账户余额转入你的 <b>NewGPay 钱包</b>。',
+           'Ao enviar, o valor sai do seu saldo e entra na sua <b>carteira NewGPay</b>.'],        // [T]
+  wcoach3:['转入完成后，此处显示你的 <b>NewGPay 钱包</b>余额。',
+           'Concluída a transferência, o saldo da <b>carteira NewGPay</b> aparece aqui.'],        // [T]
+  wcoach4:['点击<b>进入钱包</b>，在 NewGPay 卖出 NGC，提现于该处完成。',
+           'Toque em <b>Abrir carteira</b> e venda o NGC na NewGPay. O saque é concluído lá.'],   // [T]
+  introLater:['暂不查看','Agora não'],
   introGo:['查看操作步骤','Ver o passo a passo'],
   /* —— 4 步引导 —— */
-  coach1:['这是你的 <b>NGC 钱包余额</b>。1 NGC = R$ 1,00 存款额度。',
-          'Este é o seu <b>saldo na carteira NewGPay</b>. 1 NGC = R$ 1,00 de crédito para recarga.'],// [R]
-  coach2:['在这里选择存款金额，支持快捷档位与手动输入。',
-          'Escolha aqui quanto quer depositar: valores rápidos ou digitado.'],                    // [T]
-  coach3:['以上步骤随时可以重看，点这里就行。',
-          'Pode rever esse passo a passo quando quiser: basta tocar aqui.'],                       // [T]
-  coach4:['确认无误后点这里完成存款，额度实时到账。',
-          'Toque aqui para concluir. O saldo cai na hora.'],                                      // [T]
+  coach1:['此处为你的 <b>NGC 钱包余额</b>，1 NGC 抵 R$ 1,00 存款额度。',
+          'Aqui fica o seu <b>saldo NGC</b>: 1 NGC equivale a R$ 1,00 de crédito.'],              // [T]
+  coach2:['选择或输入存款金额，支持快捷档位。',
+          'Escolha ou digite o valor do depósito. Há valores rápidos disponíveis.'],              // [T]
+  coach3:['点击此处可重新查看完整教程。',
+          'Toque aqui para rever o tutorial completo.'],                                          // [T]
+  coach4:['确认金额后提交，额度实时到账。',
+          'Confira o valor e envie. O crédito entra na hora.'],                                   // [T]
   coachSkip:['跳过','Pular'], coachNext:['下一步','Próximo'], coachDone:['知道了','Entendi'],      // [R]
   /* —— 底部导航（[P] 参考图原文）—— */
   navHome:['首页','Inicio'], navPromo:['优惠','Promoção'], navInvite:['邀请','Convidar'],
@@ -824,13 +945,17 @@ var I18N = {
   ngBalK:['我的 NGC 余额','Saldo NGC'],                    // [P] 「NGC 余额为 0」= Saldo NGC zerado
   ngBuy:['购买NGC','Comprar NGC'],                         // [P]
   ngEnter:['进入钱包','Abrir carteira'],                   // [P]
-  f1:['秒级到账','Chega em segundos'],                     // [P]
-  f2:['加密安全','Transações seguras'],                    // [P]
-  f3:['可提回钱包','Resgatável para a carteira'],          // [T]
+  f1:['秒级到账','Instantâneo'],                            // [T] [P]原文「Chega em segundos」101px，窄屏折行
+  f3:['可提回钱包','Resgatável'],                           // [T] 原「Resgatável para a carteira」过长
   /* —— 存款 —— */
   depPh:['请输入充值金额','Digite o valor da recarga'],     // [P]
   depCta:['立即存款','Recarregar agora'],                   // [P]
   recv:['您将收到','Você recebe'],                          // [R]
+  /* —— 充值返现（后台「商户财务配置 — 充值返现设置」） —— */
+  bonusK:['含赠送','Bônus incluído'],                       // [R]
+  maxDailyK:['每日最高奖励','Bônus máximo diário'],         // [R]
+  wagerK:['提现流水要求','Requisito de apostas para saque'],// [R]
+  wagerV:['赠送金额 ×{n}','{n}× o valor do bônus'],         // [R]
   minDep:['最低充值','Recarga mínima:'],                    // [P]
   maxDep:['单笔最高','Máximo por transação:'],              // [P]
   insuffNgc:['余额不足，当前可用','Saldo insuficiente. Disponível:'],   // [P]「余额不足」= Saldo insuficiente
@@ -860,6 +985,10 @@ var I18N = {
   save:['保存','Salvar'], cancel:['取消','Cancelar'], confirm:['确认','Confirmar'],        // [R]
   /* —— NewGPay 取款说明弹窗 —— */
   /* —— 弹窗 —— */
+  bnT:['NGC 余额不足','Saldo NGC insuficiente'],                                                   // [T]
+  bnFact:['本次存款需 <b>{n} NGC</b>，当前余额 <b>{h} NGC</b>',
+          'Esta recarga exige <b>{n} NGC</b> e seu saldo é de <b>{h} NGC</b>'],                   // [T]
+  bnB:['是否去购买 NGC？','Deseja comprar NGC?'],                                                // [T]
   noPayeeT:['请先添加收款信息','Adicione os dados de recebimento'],   // [T]
   noPayeeB:['提款前需要先登记接收款项的账户，保存后即可发起提款。',
             'Cadastre a conta que vai receber o valor para poder solicitar o saque.'],            // [T]
@@ -880,6 +1009,7 @@ var I18N = {
   cfNoteNgc:['款项转入 NGC 钱包后，需在 NewGPay 侧卖出方可到账。',
              'Depois de enviado para a carteira NewGPay, é preciso vender o NGC para receber.'],     // [T]
   cfOkWd:['确认取款','Confirmar saque'], cfOkNgc:['确认','Confirmar'],
+  pdT:['有未完结的提款','Saque em andamento'],                                                   // [P]
   pdB:['请等待上一笔提款完成后，再申请新的提款。',
        'Aguarde a conclusão do saque anterior antes de solicitar outro.'],                        // [P]
   seeRec:['查看记录','Ver extrato'], close:['关闭','Fechar'],          // [P]
@@ -911,7 +1041,7 @@ function applyI18n(){
   document.querySelectorAll('.f.tut .lb').forEach(function(lb){
     lb.dataset.txt = lb.textContent;         /* 扫光层跟着语言走 */
   });
-  renderNav(); renderDep(); renderWd(); renderIntroBonus(); syncIntroBtns();
+  renderNav(); renderDep(); renderWd(); renderIntroBonus(); syncIntroBtns(); renderBuyNgc();
   if (!document.getElementById('coach').hidden) showCoach();
   if (document.getElementById('shPayee').classList.contains('show')) renderPayeeSheet();
   if (sub === 'sRec') { document.getElementById('recTitle').textContent = t(wTab==='dep'?'recDep':'recWd'); renderRec(); }
@@ -921,7 +1051,14 @@ function setLang(l){ LANG = l; applyI18n(); if (typeof syncHash === 'function') 
 
 /* ===================== 工具 ===================== */
 var BAL = 10529.85, NGC = 0;
-var BONUS = 0;   /* NewGPay 充值赠送比例，0 = 未配置；由后台配置，演示控制可切 */
+/* 充值返现配置：后台「商户财务配置 — 充值返现设置」按存款方式逐条配置，前台只读
+   on=状态开关  pct=返现百分比(%)  dailyMax=每日最高优惠  wager=提现稽核倍数(0=不稽核) */
+var CASHBACK = {
+  best:{ on:false, pct:0,   dailyMax:0,   wager:0 },          /* BESTPAY 默认未配置 */
+  ngc :{ on:true,  pct:2.5, dailyMax:100, wager:3 }           /* NewGPay 默认 2.5%，上限 R$100，稽核 3 倍 */
+};
+function cbLive(k){ var c = CASHBACK[k]; return !!(c && c.on && c.pct > 0); }
+var BONUS = CASHBACK.ngc.pct;   /* = CASHBACK.ngc.pct，供 NGC 引导浮层文案取用 */
 var brl = function(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 var int = function(n){ return n.toLocaleString('pt-BR'); };
 var cents = function(n){ return Math.round(n*100)/100; };
@@ -969,9 +1106,9 @@ function openRec(){
   sub = 'sRec';
   syncHash();
   document.getElementById('recTitle').textContent = t(wTab === 'dep' ? 'recDep' : 'recWd');
-  renderRec(); show('sRec');
+  renderRec(); show('sRec'); syncNavTuck();
 }
-function back(){ sub = null; show('sWallet'); syncHash(); }
+function back(){ sub = null; show('sWallet'); syncHash(); syncNavTuck(); }
 function switchWTab(tab){
   wTab = tab;
   document.getElementById('tDep').classList.toggle('active', tab === 'dep');
@@ -983,6 +1120,7 @@ function switchWTab(tab){
   if (tab === 'wd'){ wdHintSeen = true; document.getElementById('tWd').classList.remove('hint'); }
   document.getElementById('scroll').scrollTop = 0;
   syncHash();
+  syncNavTuck();
 }
 
 /* ===================== 充值面板 ===================== */
@@ -995,13 +1133,18 @@ function renderDep(){
   document.querySelectorAll('#depMethods .method').forEach(function(b){ b.classList.toggle('on', b.dataset.m === dM); });
   var L = DEP_LIM[dM];
   document.getElementById('dNgCard').hidden = dM !== 'ngc';
-  var bt = document.querySelector('#mNgc .btag');
-  if (bt){ bt.hidden = BONUS <= 0; bt.textContent = BONUS > 0 ? '+' + BONUS + '%' : ''; }
+  ['best','ngc'].forEach(function(k){
+    var bt = document.querySelector((k === 'ngc' ? '#mNgc' : '#mBest') + ' .btag');
+    if (!bt) return;
+    bt.hidden = !cbLive(k);
+    bt.textContent = cbLive(k) ? '+' + (+CASHBACK[k].pct) + '%' : '';
+  });
   document.getElementById('dNgcBal').innerHTML = int(NGC) + ' <small>NGC</small>';
   document.getElementById('depCur').textContent = L.cur;
   document.getElementById('depIn').placeholder  = L.ph;
   document.getElementById('depGrid').innerHTML = DEP_CHIPS[dM].map(function(v){
-    return '<button class="chip'+(v===dAmt?' on':'')+'" data-v="'+v+'">'+int(v)+' '+L.cur+'</button>';
+    var txt = dM === 'ngc' ? brl(v) : int(v);   /* NGC 是代币金额，保留两位小数 */
+    return '<button class="chip'+(v===dAmt?' on':'')+'" data-v="'+v+'">'+txt+' '+L.cur+'</button>';
   }).join('');
   document.querySelectorAll('#depGrid .chip').forEach(function(c){
     c.onclick = function(){ setDAmt(+c.dataset.v); };
@@ -1009,14 +1152,42 @@ function renderDep(){
   var err = '';
   if (dAmt) err = dAmt < L.min ? (t('minDep')+' '+int(L.min)+' '+L.cur)
                 : dAmt > L.max ? (t('maxDep')+' '+int(L.max)+' '+L.cur) : '';
-  if (!err && dM === 'ngc' && dAmt > NGC) err = t('insuffNgc') + ' ' + int(NGC) + ' NGC';
   document.getElementById('dErr').textContent = err;
   document.getElementById('dField').classList.toggle('err', !!err);
   var ok = dAmt > 0 && !err;
   document.getElementById('dCta').textContent = t('depCta');
-  var recv = ok ? (dM === 'ngc' ? dAmt * (1 + BONUS/100) : dAmt) : 0;
-  document.getElementById('dRecv').textContent = 'R$ ' + brl(recv);
+  /* 充值返现：按当前存款方式各自的配置计算，向下取 2 位小数（1 NGC = 1 R$） */
+  var live  = cbLive(dM);
+  var base  = ok ? dAmt : 0;
+  var bonus = live ? Math.floor(base * CASHBACK[dM].pct) / 100 : 0;
+  document.getElementById('dRecv').textContent = 'R$ ' + brl(base + bonus);
+  var sub = document.getElementById('dSub');
+  if (sub){
+    sub.hidden = !live;                                  /* 比例为 0 / 状态关闭 → 副行与问号一并不渲染 */
+    document.getElementById('dSubV').textContent = '+R$ ' + brl(bonus);
+    if (!live) document.getElementById('dBpop').hidden = true;
+  }
+  renderBonusPop();
   document.getElementById('dCta').disabled = !ok;
+  syncNavTuck();
+}
+/* 奖励规则气泡：展示该存款方式后台配置的每日最高优惠与提现稽核倍数 */
+function renderBonusPop(){
+  var c = CASHBACK[dM], el = document.getElementById('bpMax');
+  if (!el) return;
+  el.textContent = 'R$ ' + brl(c.dailyMax || 0);
+  var wr = document.getElementById('bpWagerRow');
+  wr.hidden = !(c.wager >= 1);                           /* 倍数为 0 → 该行不展示 */
+  if (c.wager >= 1) document.getElementById('bpWager').textContent = t('wagerV').replace('{n}', String(c.wager));
+}
+/* 后台配置写入：data-v 形如 "返现百分比|每日最高优惠|提现稽核倍数"，"0" 表示未配置 */
+function setCb(k, v){
+  var a = String(v).split('|'), pct = +a[0] || 0;
+  CASHBACK[k] = pct > 0
+    ? { on:true,  pct:pct, dailyMax:+(a[1] || 0), wager:+(a[2] || 0) }
+    : { on:false, pct:0,   dailyMax:0,            wager:0 };
+  if (k === 'ngc') BONUS = CASHBACK.ngc.pct;
+  renderDep(); renderIntroBonus(); syncHash();
 }
 function setDAmt(v, fromInput){
   dAmt = v;
@@ -1035,10 +1206,23 @@ document.querySelectorAll('#depMethods .method').forEach(function(b){
     else if (dM === 'ngc' && !coachSeen) setTimeout(function(){ startCoach('dep'); }, 600);
   };
 });
+var bnNeedV = 0, bnHaveV = 0;
+function renderBuyNgc(){
+  var el = document.getElementById('bnFact');
+  if (!el) return;
+  el.innerHTML = t('bnFact').replace('{n}', int(bnNeedV)).replace('{h}', int(bnHaveV));
+}
 function depSubmit(){
-  if (dM === 'ngc' && NGC < dAmt){ toast(t('tNgcLow')); return; }
+  /* NGC 不足不拦输入，提交时才引导去买币 */
+  if (dM === 'ngc' && NGC < dAmt){
+    bnNeedV = dAmt; bnHaveV = NGC;
+    renderBuyNgc();
+    openMask('dlgBuyNgc');
+    return;
+  }
   toast(dM === 'best' ? t('tCashier') : t('tDepNgc'));
 }
+function goBuyNgc(){ closeMask('dlgBuyNgc'); setTimeout(function(){ toast(t('tBuy')); }, 160); }
 
 /* ===================== 提款 ===================== */
 var WD_METHODS = [
@@ -1115,6 +1299,7 @@ function renderWd(){
   document.getElementById('wCta').textContent  = needPayee ? t('payeeAdd')
                                                : (wM === 'ngc' ? t('wdCtaNgc') : t('wdCta'));
   document.getElementById('wCta').disabled     = !(ok || needPayee);
+  syncNavTuck();
 }
 function setWAmt(v, fromInput){
   wAmt = v;
@@ -1268,7 +1453,7 @@ var COACHES = {
     { sel:'#dCta',     k:'coach4' },
     { sel:'#guideBtn', k:'coach3' } ] },      /* 收尾：告诉用户教程随时能重看 */
   /* 提款的页内高亮只讲「本站」这一段，讲完直接接钱包卖出演示 */
-  wd:{ done:'wdSeeSell', after:'wdSell', map:'whSite', steps:[
+  wd:{ done:'wdSeeSell', after:'wdSell', map:'whSiteS', steps:[
     { sel:'#wField',     k:'wcoach1' },   /* ① 选金额   */
     { sel:'#wCta',       k:'wcoach2' },   /* ② 点转入   */
     { sel:'#wNgCard',    k:'wcoach3' },   /* ③ 余额到账 */
@@ -1332,7 +1517,10 @@ function introToCoach(){
   var c = car(); closeMask(c.sheet);
   if (c.end === 'close') return;
   var k = c.end.split(':')[1];
-  setTimeout(function(){ startCoach(k); }, 280);
+  /* 浮层下滑这 250ms 里先把首个目标滚到位，等遮罩淡入时页面已经稳了 */
+  var first = COACHES[k] && COACHES[k].steps[0];
+  if (first) scrollStepIntoView(first.sel);
+  setTimeout(function(){ startCoach(k); }, 300);
 }
 function startCoach(key){
   var k = key || (wTab === 'wd' ? 'wd' : 'dep');
@@ -1341,22 +1529,39 @@ function startCoach(key){
   COACH = COACHES[k];
   if (k === 'dep') coachSeen = true; else wdCoachSeen = true;
   ci = 0;
-  document.getElementById('coach').hidden = false;
+  var box = document.getElementById('coach');
+  box.hidden = false;
+  box.classList.add('noanim');      /* 定位这一帧不要动画 */
+  box.classList.remove('in');
   showCoach();
+  var paint = window.requestAnimationFrame || function(cb){ setTimeout(cb, 16); };
+  paint(function(){ paint(function(){
+    box.classList.add('in');                                    /* 就位后再淡入 */
+    setTimeout(function(){ box.classList.remove('noanim'); }, 280);  /* 之后步骤间恢复平移动画 */
+  }); });
 }
-function endCoach(){ document.getElementById('coach').hidden = true; }
+function endCoach(){
+  var box = document.getElementById('coach');
+  if (box.hidden) return;
+  box.classList.remove('in');
+  setTimeout(function(){ if (!box.classList.contains('in')) box.hidden = true; }, 240);
+}
 function coachNext(){
   if (++ci < COACH.steps.length){ showCoach(); return; }
   endCoach();
   if (COACH.after === 'wdSell') setTimeout(openWdSell, 300);   /* 本站讲完 → 接钱包卖出 */
 }
+function scrollStepIntoView(sel){
+  var el = document.querySelector(sel), sc = document.getElementById('scroll');
+  if (!el || !sc) return;
+  var r = el.getBoundingClientRect(), s0 = sc.getBoundingClientRect();
+  if (r.bottom > s0.bottom - 110 || r.top < s0.top) sc.scrollTop += r.top - s0.top - 110;
+}
 function showCoach(){
   var step = COACH.steps[ci], el = document.querySelector(step.sel);
   var sc0 = document.getElementById('scroll');
   if (!el || !sc0){ endCoach(); return; }
-  var sc = document.getElementById('scroll') || document.querySelector('#sWallet .scroll');
-  var r0 = el.getBoundingClientRect(), s0 = sc.getBoundingClientRect();
-  if (r0.bottom > s0.bottom - 110 || r0.top < s0.top) sc.scrollTop += r0.top - s0.top - 110;
+  scrollStepIntoView(step.sel);
   var paint = window.requestAnimationFrame || function(cb){ setTimeout(cb, 16); };
   paint(function(){
     var P = document.querySelector('.phone').getBoundingClientRect();
@@ -1401,7 +1606,7 @@ var HASH_LOCK = false;
 function buildHash(){
   var h;
   if (sub === 'sRec') h = 'rec-' + (wTab === 'dep' ? 'dep' : 'wd');
-  else if (wTab === 'dep') h = 'dep-' + (dM === 'best' ? 'best' : 'ngc');
+  else if (wTab === 'dep') h = 'dep-' + (dM === 'best' ? 'best' : 'ngc') + (cbLive(dM) ? '-bonus' : '');
   else h = 'wd-' + (wM === 'pix' ? 'best' : 'ngc');
   return '#' + h + (LANG ? '-pt' : '');
 }
@@ -1421,6 +1626,8 @@ function applyHash(){
   if (!h) { switchWTab('dep'); applyI18n(); syncHash(); return; }
   var pt = /-pt$/.test(h);
   h = h.replace(/-pt$/, '');
+  var wantBonus = /-bonus$/.test(h);
+  h = h.replace(/-bonus$/, '');
   if (pt !== !!LANG){
     LANG = pt ? 1 : 0;
     document.querySelectorAll('#cLang button').forEach(function(b){
@@ -1439,8 +1646,20 @@ function applyHash(){
   } else {
     switchWTab('dep');
     dM = (ch === 'ngc') ? 'ngc' : 'best';
+    applyCb(dM, wantBonus);                 /* #dep-xxx-bonus 直达含赠送态 */
   }
   applyI18n();
+  syncHash();
+}
+/* 锚点落地时套用该渠道的演示配置，并回填演示面板选中态 */
+var CB_DEMO = { best:'1|8|1', ngc:'2.5|100|3' };
+function applyCb(k, on){
+  var v  = on ? CB_DEMO[k] : '0';
+  var id = (k === 'best') ? 'cbBest' : 'cbNgc';
+  document.querySelectorAll('#' + id + ' button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.v === v);
+  });
+  setCb(k, v);
 }
 window.addEventListener('hashchange', function(){ if (!HASH_LOCK) applyHash(); });
 
@@ -1454,7 +1673,15 @@ function seg(id, fn){
   });
 }
 seg('cLang',  function(v){ setLang(+v); });
-seg('cBonus', function(v){ BONUS = +v; renderDep(); renderIntroBonus(); });
+seg('cbBest', function(v){ setCb('best', v); });
+seg('cbNgc',  function(v){ setCb('ngc',  v); });
+document.getElementById('dQmk').onclick = function(e){
+  e.stopPropagation();
+  var pop = document.getElementById('dBpop'); pop.hidden = !pop.hidden;
+};
+document.addEventListener('click', function(){
+  var pop = document.getElementById('dBpop'); if (pop) pop.hidden = true;
+});
 seg('cNgc',   function(v){ NGC = +v; renderDep(); renderWd(); });
 seg('cPhone', function(v){
   WD_METHODS[1].unlocked = v === '1';
