@@ -14,6 +14,7 @@
     --gold:#f4f03a; --gold-dim:#6f6c25; --gold-soft:rgba(244,240,58,.12);
     --grey:#8a8a8f; --grey2:#5c5c61; --text:#f2f2f2; --red:#ff5a52; --green:#3ddc84;
     --navbg:#1a1a1c; --navh:62px; --safeb:0px; --safet:0px;
+    --ngblue:#2f6fe8; --ngblue-lt:#4f8dff;
     --dur:1.6s; --delay:.5s;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -108,20 +109,26 @@
     font-size:11.5px;color:var(--grey);position:relative}
   .ngcard .r3 .f + .f:before{content:"";position:absolute;left:0;top:1px;bottom:1px;width:1px;background:#2e2e2e}
   .ngcard .r3 svg{width:13px;height:13px;display:block;flex:0 0 13px}
+  /* 新手教程：并入功能条第 4 项，不新增行高；::after 向外扩热区 */
+  .ngcard .r3 .f.tut{color:#9fc0ff;font-weight:600}
+  .ngcard .r3 .f.tut svg{stroke:#9fc0ff}
+  .ngcard .r3 .f.tut .lb{position:relative;display:inline-block;
+    text-decoration:underline;text-decoration-color:rgba(159,192,255,.55);
+    text-underline-offset:2.5px;text-align:left}
+  /* 扫光：在原字之上复制一层同样的字，只让这一层走白光渐变，
+     background-clip:text 把光裁在字形内——底字颜色不动，区域不亮 */
+  .ngcard .r3 .f.tut .lb:after{content:attr(data-txt);
+    position:absolute;left:0;top:0;white-space:nowrap;text-decoration:none;pointer-events:none;
+    background-image:linear-gradient(100deg,transparent 41%,rgba(255,255,255,.95) 50%,transparent 59%);
+    background-size:260% 100%;background-repeat:no-repeat;background-position:185% 0;
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;-webkit-text-fill-color:transparent;
+    animation:tutSweep 3s linear infinite}
+  @keyframes tutSweep{0%{background-position:185% 0} 23%,100%{background-position:-85% 0}}
+  @media (prefers-reduced-motion:reduce){ .ngcard .r3 .f.tut .lb:after{display:none} }
+  .ngcard .r3 .f.tut:after{content:"";position:absolute;inset:-10px -5px}
+  .ngcard .r3 .f.tut:active{opacity:.55}
 
-  /* FAQ */
-  .faq{margin-top:10px;border:1px solid #3a381a;background:rgba(244,240,58,.04);border-radius:10px}
-  .faq .h{width:100%;display:flex;align-items:center;gap:8px;padding:11px 12px;font-size:12.5px;
-    color:#b9b56a;text-align:left;cursor:pointer}
-  .faq .h .q{width:17px;height:17px;flex:0 0 17px;border-radius:50%;border:1.2px solid #8a8558;
-    display:flex;align-items:center;justify-content:center;font-size:10px}
-  .faq .h .cv{margin-left:auto;font-size:10px;transition:transform .25s}
-  .faq.open .h .cv{transform:rotate(180deg)}
-  .faq .b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
-  .faq.open .b{grid-template-rows:1fr}
-  .faq .b>div{overflow:hidden}
-  .faq .in{padding:0 12px 12px;font-size:12px;line-height:1.7;color:#cfcfcf}
-  .faq .in b{color:var(--gold);font-weight:600}
 
   /* 金额输入 */
   .field{margin-top:6px;display:flex;align-items:center;gap:8px;height:46px;padding:0 12px;
@@ -167,6 +174,102 @@
 
   .emptym{margin-top:10px;padding:14px;border-radius:10px;background:var(--card);border:1px solid var(--line);
     font-size:12px;color:var(--grey);line-height:1.7;text-align:center}
+
+
+
+  /* ===== NewG Pay 品牌介绍浮层：配色跟随 logo 的蓝 ===== */
+  .intro{background:linear-gradient(168deg,#1d4393 0%,#16294e 36%,#1b1b1d 70%,#1f1f21 100%);
+    border-top:1px solid rgba(79,141,255,.55);position:relative;overflow:hidden}
+  .intro::before{content:"";position:absolute;left:50%;top:-140px;width:360px;height:280px;
+    transform:translateX(-50%);background:radial-gradient(circle,rgba(79,141,255,.5),transparent 68%);pointer-events:none}
+  .intro .grab{background:rgba(255,255,255,.3)}
+  .intro-x{position:absolute;top:10px;right:10px;z-index:3;width:30px;height:30px;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.17);color:#cfd8ea}
+  .intro-x svg{width:14px;height:14px;display:block}
+  .intro-x:active{background:rgba(255,255,255,.2)}
+  .intro-x:after{content:"";position:absolute;inset:-7px}   /* 扩热区 */
+  /* 品牌头：logo 横排，比居中大方块省高度且信息量更高 */
+  .ibrand{position:relative;display:flex;align-items:center;gap:11px;margin:0 0 12px}
+  .ibrand .ibt{min-width:0}
+  .ibrand .n{font-size:16px;font-weight:700;color:#fff;letter-spacing:.2px;line-height:1.2}
+  .ibrand .s{margin-top:3px;font-size:11.5px;color:#9fb0d0;line-height:1.4}
+  .intro-logo{width:42px;height:42px;flex:none;border-radius:12px;
+    background:linear-gradient(145deg,var(--ngblue-lt),var(--ngblue));
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;
+    letter-spacing:-.2px;box-shadow:0 7px 18px rgba(47,111,232,.45);animation:introPop .4s ease}
+  /* 认知区：两问两答 */
+  .intro-qa{position:relative;margin-top:2px}
+  .intro-qa .iq{font-size:13px;font-weight:700;color:#fff;margin:12px 0 4px;
+    display:flex;align-items:center;gap:7px}
+  .intro-qa .iq:first-child{margin-top:0}
+  .intro-qa .iq:before{content:"";width:3px;height:11px;border-radius:2px;background:var(--gold)}
+  .intro .ia{font-size:12.5px;line-height:1.65;color:#c9d4ea}
+  .intro .ia b,.intro .tx b{color:var(--gold);font-weight:700}
+  /* 卖点区：与认知区用细线分隔，拉开层级 */
+  .iwhy{position:relative;margin-top:13px;padding-top:12px;border-top:1px solid rgba(120,160,255,.2)}
+  .iwhy .wh{font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;
+    display:flex;align-items:center;gap:7px}
+  .iwhy .wh:before{content:"";width:3px;height:11px;border-radius:2px;background:var(--gold)}
+  .intro .ib{display:flex;gap:9px;align-items:flex-start;margin-top:8px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(120,160,255,.24);
+    border-radius:11px;padding:10px 12px}
+  .intro .ib:first-of-type{margin-top:0}
+  .intro .ib .em{font-size:17px;line-height:1.25;flex:none}
+  .intro .ib .tx{font-size:12.5px;line-height:1.6;color:#e2e8f6}
+  /* 🎁 是本平台的实际利益，金色强调；💰 是钱包侧机会，保持蓝灰 */
+  .intro .ib.gold{background:rgba(244,240,58,.07);border-color:rgba(244,240,58,.36)}
+  /* 归属标识：这段操作在哪个 App 里完成 */
+  .loc{display:inline-block;vertical-align:1px;margin-right:6px;
+    font-size:9.5px;font-weight:700;letter-spacing:.2px;padding:1.5px 6px;border-radius:5px}
+  .loc.app{background:rgba(79,141,255,.2);border:1px solid rgba(79,141,255,.55);color:#9fc0ff}
+  .wloc{position:relative;display:flex;align-items:center;gap:2px;margin-bottom:8px}
+  .wloc .lt{font-size:11px;color:#8fa0c0}
+  .wtip{position:relative;margin-top:12px;padding-top:11px;border-top:1px solid rgba(120,160,255,.2);
+    font-size:11.5px;line-height:1.6;color:#8fa0c0}
+  .wtip b{color:#9fc0ff;font-weight:700}
+  /* 分步轮播 */
+  .islide{display:none;position:relative}
+  .islide.on{display:block;animation:ifade .22s ease}
+  @keyframes ifade{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+  .ifig{position:relative;margin:13px 0 0;display:flex;justify-content:center}
+  .ifig img{display:block;width:196px;border-radius:12px;background:#0d0d0f;
+    border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 22px rgba(0,0,0,.45)}
+  .ifig img:not([src]){min-height:260px}
+  .ifig.land img{width:100%;max-width:272px}
+  .ifig.land img:not([src]){min-height:154px}
+  #shIntro .islide[data-s="0"] .ifig{margin:2px 0 4px}
+  .ith{position:relative;display:flex;align-items:center;gap:9px;
+    font-size:16px;font-weight:700;color:#fff;line-height:1.35}
+  .ith .n{font-size:11px;font-weight:700;letter-spacing:.3px;padding:2px 8px;border-radius:7px;
+    background:rgba(79,141,255,.2);border:1px solid rgba(79,141,255,.5);color:#9fc0ff;flex:none}
+  .ith .n.sell{background:rgba(244,240,58,.14);border-color:rgba(244,240,58,.42);color:var(--gold)}
+  .isub{position:relative;margin-top:5px;font-size:12.5px;font-weight:600;color:#9fb0d0}
+  .itx{position:relative;margin-top:11px;font-size:12.5px;line-height:1.7;color:#c9d4ea}
+  .itx b{color:var(--gold);font-weight:700}
+  .idots{position:relative;display:flex;justify-content:center;gap:7px;margin-top:15px}
+  .idots:empty{display:none}
+  .idots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.26);
+    transition:width .2s ease,background .2s ease;cursor:pointer}
+  .idots i.on{width:17px;border-radius:3px;background:#4f8dff}
+  .intro-btns{position:relative;display:flex;gap:10px;margin-top:18px}
+  .intro-btns button{flex:1;height:45px;border-radius:12px;font-size:13.5px;font-weight:700}
+  .btn-ng{background:linear-gradient(145deg,var(--ngblue-lt),var(--ngblue));color:#fff;
+    box-shadow:0 8px 20px rgba(47,111,232,.4)}
+  .btn-ng-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#cfd8ea}
+  @keyframes introPop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.06)}100%{transform:none;opacity:1}}
+
+  /* ===== 新手引导（聚光罩） ===== */
+  .coach{position:absolute;inset:0;z-index:25}
+  .hole{position:absolute;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.74);
+    border:1.5px solid var(--gold);transition:all .3s ease;pointer-events:none}
+  .ctip{position:absolute;left:14px;right:14px;background:#2a2a2d;border:1px solid #3a3a3e;
+    border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.55}
+  .crow{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .crow button{height:32px;padding:0 18px;border-radius:8px;background:var(--gold);color:#111;
+    font-weight:700;font-size:12.5px}
+  .crow .skip{background:none;color:var(--grey);font-size:12.5px;padding:4px 0;height:auto}
+  .crow .idx{font-size:12px;color:var(--grey)}
 
   /* ================= 底部 ================= */
   .foot{flex:0 0 auto;padding:10px 14px 8px;background:var(--bg)}
@@ -264,6 +367,7 @@
   .ctrl .seg button.on{border-color:var(--gold);color:var(--gold)}
   .ctrl .lnkbox{background:#1c1c20;border:1px solid #3c3c40;color:var(--gold);font-size:11.5px;
     padding:5px 9px;border-radius:5px;font-family:monospace;letter-spacing:.3px}
+  .ctrl .act.blue{background:linear-gradient(145deg,var(--ngblue-lt),var(--ngblue));color:#fff}
   .ctrl .act{height:36px;border-radius:9px;background:var(--gold);color:#111;font-weight:700;font-size:13px}
   .ctrl .note{font-size:11.5px;color:#7a7a7f;line-height:1.75}
   .ctrl .note b{color:#a9a48a}
@@ -318,7 +422,7 @@
             <button class="method on" data-m="best"><span class="label">BESTPAY</span></button>
             <button class="method" data-m="ngc" id="mNgc">
               <span class="base-line"></span><span class="glow-ring blur"></span><span class="glow-ring"></span>
-              <span class="label">NEWGPAY</span><span class="btag">+3%</span>
+              <span class="label">NEWGPAY</span><span class="btag" hidden></span>
             </button>
           </div>
 
@@ -340,15 +444,8 @@
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></svg><span data-i="f1">秒级到账</span></span>
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.5 4 5.5v6.2c0 4.8 3.3 8.3 8 9.8 4.7-1.5 8-5 8-9.8V5.5l-8-3Z"/></svg><span data-i="f2">加密安全</span></span>
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.9-6.4"/><path d="M3.5 4.5v4.2h4.2"/></svg><span data-i="f3">可提回钱包</span></span>
+              <button class="f tut" id="guideBtn" onclick="replayGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 16 12l-6 3.4V8.6Z"/></svg><span class="lb" data-i="guideBtn" data-txt="新手教程">新手教程</span></button>
             </div>
-          </div>
-
-          <!-- FAQ -->
-          <div class="faq" id="dFaq">
-            <button class="h" onclick="document.getElementById('dFaq').classList.toggle('open')">
-              <span class="q">?</span><span data-i="faqQ">什么是 NGC？如何获得？</span><span class="cv">▾</span>
-            </button>
-            <div class="b"><div><div class="in" data-i="faqA">如何获得更多 NGC 币：请点击右侧【购买NGC】，在新开的 NewGPay 页面中点击【买币】，交易成功后立即可获得。</div></div></div>
           </div>
 
           <label class="field" id="dField" style="margin-top:16px">
@@ -381,7 +478,12 @@
                 <div class="k" data-i="ngBalK">我的 NGC 余额</div>
                 <div class="v" id="wNgcBal">0 <small>NGC</small></div>
               </div>
-              <button class="buy" data-i="ngEnter" onclick="toast(t('tWallet'))">进入钱包</button>
+              <button class="buy" id="wEnterBtn" data-i="ngEnter" onclick="toast(t('tWallet'))">进入钱包</button>
+            </div>
+            <div class="r3">
+              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V8m0 0-4 4m4-4 4 4"/><path d="M5 4h14"/></svg><span data-i="wf1">自主挑价卖出</span></span>
+              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2.2"/><path d="M3 10h18"/></svg><span data-i="wf2">PIX 收款</span></span>
+              <button class="f tut" id="wGuideBtn" onclick="replayWdGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 16 12l-6 3.4V8.6Z"/></svg><span class="lb" data-i="guideBtn" data-txt="新手教程">新手教程</span></button>
             </div>
           </div>
 
@@ -454,72 +556,113 @@
     </div>
 
     <!-- ===== NEWGPAY 首次说明 ===== -->
-    <div class="mask sheet-mask" id="shNgcGuide">
-      <div class="sheet">
+    <!-- ===== NewG Pay 品牌介绍浮层（先于新手引导） ===== -->
+    <div class="mask sheet-mask" id="shIntro">
+      <div class="sheet intro">
         <div class="grab"></div>
-        <h3 data-i="gdTitle">NEWGPAY 提款怎么到账</h3>
-        <p data-i="gdDesc">NEWGPAY 提款不会直接出款，需要三步：</p>
-        <div class="ngcinfo" style="margin-top:12px">
-          <div class="step"><span class="n y">1</span><span data-i="gd1">金额从账户余额转入您的 <b>NGC 钱包</b>（1 NGC = 1 R$）。</span></div>
-          <div class="step"><span class="n">2</span><span data-i="gd2">在 NewGPay 侧<b>卖出 NGC</b>，该步骤需您自行操作。</span></div>
-          <div class="step"><span class="n">3</span><span data-i="gd3">卖出成交后，款项按您在 NewGPay 绑定的账户到账。</span></div>
+        <button class="intro-x" data-close aria-label="关闭" title="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+        <!-- 第 1 屏：钱包介绍 -->
+        <div class="islide on" data-s="0">
+          <div class="ibrand">
+            <div class="intro-logo">NewG</div>
+            <div class="ibt">
+              <div class="n">NewG Pay</div>
+              <div class="s" data-i="introTag"></div>
+            </div>
+          </div>
+          <div class="ifig land"><img class="igif" alt="" data-src="assets-newgpay/w1-wallet.gif"></div>
+          <div class="intro-qa">
+            <div class="iq" data-i="introQ1">什么是 NGC？</div>
+            <div class="ia" data-i="introA1"></div>
+            <div class="iq" data-i="introQ2">NewG Pay 是什么？</div>
+            <div class="ia" data-i="introA2"></div>
+          </div>
+          <div class="iwhy">
+            <div class="wh" data-i="introQ3">为什么用 NewG Pay？</div>
+            <div class="ib"><span class="em">💰</span><span class="tx" data-i="introB1"></span></div>
+            <div class="ib gold"><span class="em">🎁</span><span class="tx" id="introBonus"></span></div>
+          </div>
         </div>
-        <p style="color:#d08a7a;margin-top:12px" data-i="gdWarn">若未卖出 NGC，款项将停留在 NGC 钱包，不会自动到账。</p>
-        <button class="btn-yel" style="width:100%;height:44px;border-radius:10px;font-weight:700;margin-top:14px"
-                data-i="gdOk" onclick="ngcGuideSeen=true;closeMask('shNgcGuide')">我知道了，继续</button>
+
+        <!-- 第 2–7 屏：钱包内操作步骤 -->
+        <div class="islide" data-s="1">
+          <div class="ith"><span data-i="igBuy"></span><span class="n">1/4</span></div>
+          <div class="isub" data-i="is1t"></div>
+          <div class="ifig"><img class="igif" alt="" data-src="assets-newgpay/w2-buy-pick.gif"></div>
+          <div class="itx" data-i="is1d"></div>
+        </div>
+        <div class="islide" data-s="2">
+          <div class="ith"><span data-i="igBuy"></span><span class="n">2/4</span></div>
+          <div class="isub" data-i="is2t"></div>
+          <div class="ifig"><img class="igif" alt="" data-src="assets-newgpay/w3-buy-order.gif"></div>
+          <div class="itx" data-i="is2d"></div>
+        </div>
+        <div class="islide" data-s="3">
+          <div class="ith"><span data-i="igBuy"></span><span class="n">3/4</span></div>
+          <div class="isub" data-i="is3t"></div>
+          <div class="ifig"><img class="igif" alt="" data-src="assets-newgpay/w4-buy-pay.gif"></div>
+          <div class="itx" data-i="is3d"></div>
+        </div>
+        <div class="islide" data-s="4">
+          <div class="ith"><span data-i="igBuy"></span><span class="n">4/4</span></div>
+          <div class="isub" data-i="is4t"></div>
+          <div class="ifig"><img class="igif" alt="" data-src="assets-newgpay/w5-buy-done.gif"></div>
+          <div class="itx" data-i="is4d"></div>
+        </div>
+        <!-- 卖 NGC 两屏（w6-sell-amt / w7-sell-done + igSell / is5t,is5d / is6t,is6d）
+             暂不放在存款引导里，留给后续「取款引导」使用 -->
+
+        <div class="idots"></div>
+        <div class="intro-btns">
+          <button class="btn-ng-ghost ib-back" onclick="introPrev()"></button>
+          <button class="btn-ng ib-next" onclick="introNext()"></button>
+        </div>
       </div>
     </div>
 
-    <!-- ===== 未添加收款信息 ===== -->
-    <div class="mask" id="dlgNoPayee">
-      <div class="dialog">
-        <h3 data-i="noPayeeT">请先添加收款信息</h3>
-        <p data-i="noPayeeB">提款前需要先登记接收款项的账户，保存后即可发起提款。</p>
-        <div class="btns">
-          <button class="btn-ghost" data-close data-i="later">暂不添加</button>
-          <button class="btn-yel" data-i="goAdd" onclick="closeMask('dlgNoPayee');setTimeout(openPayee,160)">去添加</button>
+    <!-- ===== NewG Pay 内的卖出演示（页内高亮走完后才弹） ===== -->
+    <div class="mask sheet-mask" id="shWdSell">
+      <div class="sheet intro">
+        <div class="grab"></div>
+        <button class="intro-x" data-close aria-label="关闭" title="关闭">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+        <!-- 第 2–3 屏：第 2 步的操作演示 -->
+        <div class="islide on" data-s="0">
+          <div class="wloc"><span class="loc app" data-i="whApp">NewG Pay</span><span class="lt" data-i="whAppTip"></span></div>
+          <div class="ith"><span data-i="igSellApp"></span><span class="n sell">1/2</span></div>
+          <div class="isub" data-i="is5t"></div>
+          <div class="ifig"><img class="igif" alt="" data-src="assets-newgpay/w6-sell-amt.gif"></div>
+          <div class="itx" data-i="is5d"></div>
+        </div>
+        <div class="islide" data-s="1">
+          <div class="wloc"><span class="loc app" data-i="whApp">NewG Pay</span><span class="lt" data-i="whAppTip"></span></div>
+          <div class="ith"><span data-i="igSellApp"></span><span class="n sell">2/2</span></div>
+          <div class="isub" data-i="is6t"></div>
+          <div class="ifig"><img class="igif" alt="" data-src="assets-newgpay/w7-sell-done.gif"></div>
+          <div class="itx" data-i="is6d"></div>
+          <div class="wtip" data-i="wdReplayTip"></div>
+        </div>
+
+        <div class="idots"></div>
+        <div class="intro-btns">
+          <button class="btn-ng-ghost ib-back" onclick="introPrev()"></button>
+          <button class="btn-ng ib-next" onclick="introNext()"></button>
         </div>
       </div>
     </div>
 
-    <!-- ===== 首次保存提醒 ===== -->
-    <div class="mask" id="dlgFirstSave">
-      <div class="dialog">
-        <div class="icon">!</div>
-        <h3 data-i="fsT">请确认提款信息</h3>
-        <p><span data-i="fsB1">本次提款成功后，所填写的提款信息将保存至您的账户并</span><b style="color:#f4c430" data-i="fsLock">不可自行修改</b><span data-i="fsB2">。请确认姓名与收款账号准确无误。</span></p>
-        <div class="btns">
-          <button class="btn-ghost" data-close data-i="fsBack">返回修改</button>
-          <button class="btn-yel" data-i="fsOk" onclick="closeMask('dlgFirstSave');openConfirm()">确认无误</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 提款确认 ===== -->
-    <div class="mask" id="dlgConfirm">
-      <div class="dialog">
-        <h3 id="cfTitle">确认提现</h3>
-        <div class="sum">
-          <div><span data-i="cfAmtK">提款金额</span><b class="y" id="cfAmt">R$ 0,00</b></div>
-          <div><span data-i="cfWayK">提款方式</span><b id="cfWay">—</b></div>
-          <div><span data-i="cfToK">收款账号</span><b id="cfTo">—</b></div>
-        </div>
-        <p id="cfNote" style="text-align:left;font-size:12px;margin-bottom:14px"></p>
-        <div class="btns">
-          <button class="btn-ghost" data-close data-i="cancel">取消</button>
-          <button class="btn-yel" id="cfOk" onclick="wdConfirm()">确认取款</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 未完结提款拦截 ===== -->
-    <div class="mask" id="dlgPending">
-      <div class="dialog">
-        <div class="icon">!</div>
-        <p style="margin-bottom:18px;font-size:14px;color:#f2f2f2" data-i="pdB">请等待上一笔提款完成后，再申请新的提款。</p>
-        <div class="btns">
-          <button class="btn-yel" data-i="seeRec" onclick="closeMask('dlgPending');openRec()">查看记录</button>
-          <button class="btn-ghost" data-close data-i="close">关闭</button>
+    <!-- ===== 新手引导 ===== -->
+    <div class="coach" id="coach" hidden>
+      <div class="hole" id="hole"></div>
+      <div class="ctip" id="ctip" role="dialog">
+        <div id="ctxt"></div>
+        <div class="crow">
+          <button class="skip" id="cSkip" data-i="coachSkip" onclick="endCoach()">跳过</button>
+          <span class="idx" id="cIdx"></span>
+          <button id="cNext" onclick="coachNext()">下一步</button>
         </div>
       </div>
     </div>
@@ -533,6 +676,9 @@
   <h2>演示控制</h2>
   <div class="grp"><span>语言</span>
     <div class="seg" id="cLang"><button data-v="0" class="on">中文</button><button data-v="1">Português</button></div>
+  </div>
+  <div class="grp"><span>NEWGPAY 充值赠送比例（后台配置）</span>
+    <div class="seg" id="cBonus"><button data-v="0" class="on">未配置</button><button data-v="3">3%</button><button data-v="5">5%</button></div>
   </div>
   <div class="grp"><span>NGC 余额</span>
     <div class="seg" id="cNgc"><button data-v="0" class="on">0</button><button data-v="280">280</button><button data-v="5000">5.000</button></div>
@@ -555,10 +701,11 @@
       <button id="lnkBtn">复制链接</button>
     </div>
   </div>
+  <button class="act blue" id="cIntro">重播当前页引导</button>
   <button class="act" id="cGlow">重播流光提示</button>
   <p class="note">
     · <b>顶部 Tab</b>：胶囊容器内两段式，选中态金边金底并显出图标；右侧分隔线 + 记录入口。<br>
-    · <b>渠道切换</b>：选中态金色实心；NEWGPAY 带 +3% 角标，进入页面时流光一次引导注意。<br>
+    · <b>渠道切换</b>：选中态金色实心；配置了赠送比例时 NEWGPAY 带 +N% 角标，进入页面时流光一次引导注意。<br>
     · <b>提款</b>：收款信息走底部弹窗，弹窗内选方式并填对应字段；提现成功后才保存并锁定。
   </p>
 </div>
@@ -590,6 +737,79 @@ function renderNav(){
    [R] 用户提供的葡语参考原型原文
    [T] 暂拟，需运营确认                                            */
 var I18N = {
+  /* —— 新手引导入口 —— */
+  guideBtn:['新手教程','Tutorial'],                                                              // [T]
+  /* —— NewG Pay 品牌介绍浮层（文案与页内 FAQ 口径一致）—— */
+  introTag:['NGC 官方钱包 · 全球通用','Carteira oficial do NGC · alcance global'],         // [T]
+  introQ1:['什么是 NGC？','O que é NGC?'],
+  introA1:['NGC 是 NewG Pay <b>官方发行的去中心化代币</b>。用 NGC 充值本平台，<b>固定按 1 NGC = R$ 1 入账</b>。',
+           'O NGC é o <b>token descentralizado emitido oficialmente pela NewG Pay</b>. Ao recarregar nesta plataforma com NGC, a conversão é fixa: <b>1 NGC = R$ 1</b>.'],
+  introQ2:['NewG Pay 是什么？','O que é a NewG Pay?'],
+  introA2:['<b>NGC 官方钱包</b>。存储、转账、买卖一站完成，全球通用。本站与 NGC 官方<b>直连</b>，存提赠送不定期加码。',
+           'A <b>carteira oficial do NGC</b>. Armazenamento, transferência e negociação em um só lugar, com alcance global. Nossa plataforma é <b>conectada diretamente</b> à NewG Pay, com bônus extras de depósito e saque de tempos em tempos.'],
+  introQ3:['为什么用 NewG Pay？','Por que usar a NewG Pay?'],
+  introB1:['<b>差价可赚</b> — 钱包内买卖 NGC 按<b>市场价</b>成交，不定期开启买卖活动：<b>低于 R$ 1 买入，高于 R$ 1 卖出</b>。',
+           '<b>Ganhe na diferença</b> — na carteira, a compra e a venda de NGC seguem o <b>preço de mercado</b>; em campanhas abertas de tempos em tempos você <b>compra abaixo de R$ 1 e vende acima de R$ 1</b>.'],
+  /* 🎁 两种形态：未配置赠送比例 / 已配置（{n} 由后台比例填充） */
+  introB2:['用 NGC 充值本平台，享受<b>惊喜加赠</b>！',
+           'Recarregue nesta plataforma com NGC e aproveite <b>bônus surpresa</b>!'],              // [T]
+  introB2n:['<b>充值额外赠 {n}%</b> — 用 NGC 充值本平台，{n}% 赠送直接到账。',
+            '<b>Bônus extra de {n}% na recarga</b> — recarregue com NGC e receba {n}% na hora.'],
+  /* —— 轮播：分组 + 6 步说明 —— */
+  igBuy:['如何买 NGC','Como comprar NGC'],
+  igSell:['如何卖 NGC','Como vender NGC'],                 /* 留给取款引导 */
+  is1t:['挑选卖家','Escolha o vendedor'],
+  is1d:['进入 <b>Comprar</b>，列表里每个卖家都标明成功率和平均响应时间，挑一个下单。',
+        'Entre em <b>Comprar</b>: a lista mostra a taxa de sucesso e o tempo médio de resposta de cada vendedor. Escolha um e faça o pedido.'],
+  is2t:['填金额下单','Informe o valor'],
+  is2d:['输入要买的金额，选 <b>PIX</b> 付款方式，点 <b>Comprar NGC</b> 生成订单。',
+        'Digite o valor que quer comprar, escolha <b>PIX</b> como forma de pagamento e toque em <b>Comprar NGC</b> para gerar o pedido.'],
+  is3t:['向卖家付款','Pague ao vendedor'],
+  is3d:['按卖家给出的 PIX 信息完成付款，<b>在倒计时结束前</b>付清，订单才会继续。',
+        'Pague usando os dados PIX do vendedor. Conclua <b>antes do fim da contagem</b> para o pedido seguir.'],
+  is4t:['卖家放币，NGC 到账','Liberação do NGC'],
+  is4d:['卖家确认后状态从<b>等待放币</b>变为<b>交易完成</b>，NGC 进入你的钱包余额。',
+        'Após a confirmação do vendedor, o status muda de <b>Aguardando liberação</b> para <b>Transação concluída</b> e o NGC entra no saldo da sua carteira.'],
+  /* —— 以下两步留给取款引导 —— */
+  is5t:['填卖出数量','Informe a quantidade'],
+  is5d:['输入要卖出的 NGC 数量，选 <b>PIX</b> 收款方式。',
+        'Digite quantos NGC quer vender e escolha <b>PIX</b> para receber.'],
+  is6t:['卖出到账','Venda concluída'],
+  is6d:['显示<b>交易完成</b>，账单列出本次卖出明细，款项打到你的 PIX 账户。',
+        'Aparece <b>Transação concluída</b>; o extrato detalha a venda e o valor cai na sua conta PIX.'],
+  /* —— 轮播按钮 —— */
+  introBack:['上一步','Voltar'],
+  introStart:['开始使用','Começar'],
+  /* —— 提款引导 —— */
+  wdReplayTip:['以后想重看这套说明，点钱包卡里的<b>新手教程</b>。',
+               'Para rever estas instruções, toque em <b>Tutorial</b> no cartão da carteira.'],   // [T]
+  whSite:['本站','Nesta plataforma'],                                                            // [T]
+  whApp:['NewG Pay','NewG Pay'],
+  whAppTip:['以下操作在 NewG Pay 钱包内完成','Estes passos são feitos dentro da carteira NewG Pay'], // [T]
+  igSellApp:['在 NewG Pay 卖出 NGC','Vender NGC na NewG Pay'],                                    // [T]
+  wdSeeSell:['查看如何卖币','Ver como vender moedas'],                                            // [T]
+  wf1:['自主挑价卖出','Venda no seu preço'],                                                     // [T]
+  wf2:['PIX 收款','Recebe via PIX'],                                                             // [T]
+  wcoach1:['先选择或填写提款金额，支持快捷档位与手动输入。',
+           'Primeiro escolha ou digite o valor do saque: valores rápidos ou manual.'],           // [T]
+  wcoach2:['点击转入，金额从账户余额划到你的 <b>NewG Pay 钱包</b>。',
+           'Toque em transferir: o valor sai do seu saldo e vai para a sua <b>carteira NewG Pay</b>.'], // [T]
+  wcoach3:['转入后，这里就会显示你的 <b>NewG Pay 钱包</b>余额。',
+           'Feita a transferência, o saldo da sua <b>carteira NewG Pay</b> passa a aparecer aqui.'], // [T]
+  wcoach4:['点<b>进入钱包</b>，去 NewG Pay 把 NGC 卖出——实际提现在那里完成。',
+           'Toque em <b>Abrir carteira</b> para vender o NGC na NewG Pay — o saque em si é concluído lá.'], // [T]
+  introLater:['以后再说','Agora não'],
+  introGo:['查看操作步骤','Ver o passo a passo'],
+  /* —— 4 步引导 —— */
+  coach1:['这是你的 <b>NGC 钱包余额</b>。1 NGC = R$ 1,00 存款额度。',
+          'Este é o seu <b>saldo na carteira NewG</b>. 1 NGC = R$ 1,00 de crédito para recarga.'],// [R]
+  coach2:['在这里选择存款金额，支持快捷档位与手动输入。',
+          'Escolha aqui quanto quer depositar: valores rápidos ou digitado.'],                    // [T]
+  coach3:['以上步骤随时可以重看，点这里就行。',
+          'Pode rever esse passo a passo quando quiser: basta tocar aqui.'],                       // [T]
+  coach4:['确认无误后点这里完成存款，额度实时到账。',
+          'Toque aqui para concluir. O saldo cai na hora.'],                                      // [T]
+  coachSkip:['跳过','Pular'], coachNext:['下一步','Próximo'], coachDone:['知道了','Entendi'],      // [R]
   /* —— 底部导航（[P] 参考图原文）—— */
   navHome:['首页','Inicio'], navPromo:['优惠','Promoção'], navInvite:['邀请','Convidar'],
   navWallet:['钱包','Carteira'], navMine:['我的','Perfil'],
@@ -607,10 +827,6 @@ var I18N = {
   f1:['秒级到账','Chega em segundos'],                     // [P]
   f2:['加密安全','Transações seguras'],                    // [P]
   f3:['可提回钱包','Resgatável para a carteira'],          // [T]
-  /* —— FAQ（[P] NewGPay 第九章 说明入口/说明展开）—— */
-  faqQ:['什么是 NGC？如何获得？','O que é NGC? Como obter?'],
-  faqA:['如何获得更多 NGC 币：请点击右侧【购买NGC】，在新开的 NewGPay 页面中点击【买币】，交易成功后立即可获得。',
-        'Como obter mais NGC: toque em [Comprar NGC] à direita e, na página do NewGPay, toque em [Comprar moedas]. O saldo é creditado assim que a transação for concluída.'],
   /* —— 存款 —— */
   depPh:['请输入充值金额','Digite o valor da recarga'],     // [P]
   depCta:['立即存款','Recarregar agora'],                   // [P]
@@ -643,17 +859,6 @@ var I18N = {
   errName:['请输入完整姓名','Digite o nome completo'],               // [T]
   save:['保存','Salvar'], cancel:['取消','Cancelar'], confirm:['确认','Confirmar'],        // [R]
   /* —— NEWGPAY 取款说明弹窗 —— */
-  gdTitle:['NEWGPAY 提款怎么到账','Como funciona o saque NEWGPAY'],   // [R]
-  gdDesc:['NEWGPAY 提款不会直接出款，需要三步：','O saque NEWGPAY não cai direto. São 3 passos:'], // [R]
-  gd1:['金额从账户余额转入您的 <b>NGC 钱包</b>（1 NGC = 1 R$）。',
-       'O valor sai do seu saldo e vai para a sua <b>carteira NewG</b> (1 NGC = R$ 1,00).'],      // [R]
-  gd2:['在 NewGPay 侧<b>卖出 NGC</b>，该步骤需您自行操作。',
-       'Na NewG, <b>venda o NGC</b>. Esse passo é seu e não é automático.'],                      // [R]
-  gd3:['卖出成交后，款项按您在 NewGPay 绑定的账户到账。',
-       'Quando a venda for concluída, o valor cai na sua conta.'],                                // [R]
-  gdWarn:['若未卖出 NGC，款项将停留在 NGC 钱包，不会自动到账。',
-          'Se você não vender o NGC, o valor fica na carteira NewG e não é pago.'],               // [R]
-  gdOk:['我知道了，继续','Entendi, continuar'],                                                   // [R]
   /* —— 弹窗 —— */
   noPayeeT:['请先添加收款信息','Adicione os dados de recebimento'],   // [T]
   noPayeeB:['提款前需要先登记接收款项的账户，保存后即可发起提款。',
@@ -703,7 +908,11 @@ function applyI18n(){
   document.querySelectorAll('[data-ip]').forEach(function(el){
     el.placeholder = t(el.dataset.ip);
   });
-  renderNav(); renderDep(); renderWd();
+  document.querySelectorAll('.f.tut .lb').forEach(function(lb){
+    lb.dataset.txt = lb.textContent;         /* 扫光层跟着语言走 */
+  });
+  renderNav(); renderDep(); renderWd(); renderIntroBonus(); syncIntroBtns();
+  if (!document.getElementById('coach').hidden) showCoach();
   if (document.getElementById('shPayee').classList.contains('show')) renderPayeeSheet();
   if (sub === 'sRec') { document.getElementById('recTitle').textContent = t(wTab==='dep'?'recDep':'recWd'); renderRec(); }
   document.documentElement.lang = LANG ? 'pt-BR' : 'zh';
@@ -712,6 +921,7 @@ function setLang(l){ LANG = l; applyI18n(); if (typeof syncHash === 'function') 
 
 /* ===================== 工具 ===================== */
 var BAL = 10529.85, NGC = 0;
+var BONUS = 0;   /* NEWGPAY 充值赠送比例，0 = 未配置；由后台配置，演示控制可切 */
 var brl = function(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 var int = function(n){ return n.toLocaleString('pt-BR'); };
 var cents = function(n){ return Math.round(n*100)/100; };
@@ -785,7 +995,8 @@ function renderDep(){
   document.querySelectorAll('#depMethods .method').forEach(function(b){ b.classList.toggle('on', b.dataset.m === dM); });
   var L = DEP_LIM[dM];
   document.getElementById('dNgCard').hidden = dM !== 'ngc';
-  document.getElementById('dFaq').hidden    = dM !== 'ngc';
+  var bt = document.querySelector('#mNgc .btag');
+  if (bt){ bt.hidden = BONUS <= 0; bt.textContent = BONUS > 0 ? '+' + BONUS + '%' : ''; }
   document.getElementById('dNgcBal').innerHTML = int(NGC) + ' <small>NGC</small>';
   document.getElementById('depCur').textContent = L.cur;
   document.getElementById('depIn').placeholder  = L.ph;
@@ -803,7 +1014,8 @@ function renderDep(){
   document.getElementById('dField').classList.toggle('err', !!err);
   var ok = dAmt > 0 && !err;
   document.getElementById('dCta').textContent = t('depCta');
-  document.getElementById('dRecv').textContent = 'R$ ' + brl(ok ? dAmt : 0);
+  var recv = ok ? (dM === 'ngc' ? dAmt * (1 + BONUS/100) : dAmt) : 0;
+  document.getElementById('dRecv').textContent = 'R$ ' + brl(recv);
   document.getElementById('dCta').disabled = !ok;
 }
 function setDAmt(v, fromInput){
@@ -819,6 +1031,8 @@ document.querySelectorAll('#depMethods .method').forEach(function(b){
     if (b.dataset.m === 'ngc'){ ngcHintSeen = true; b.classList.remove('hint'); }
     if (dM === b.dataset.m) return;
     dM = b.dataset.m; setDAmt(0); syncHash();
+    if (dM === 'ngc' && !introSeen) setTimeout(openIntro, 450);
+    else if (dM === 'ngc' && !coachSeen) setTimeout(function(){ startCoach('dep'); }, 600);
   };
 });
 function depSubmit(){
@@ -839,7 +1053,7 @@ var FIELD_DEF = {
 };
 var SAVED = { name:null, phone:null, cpf:null };
 var DRAFT = { name:'', phone:'', cpf:'' };
-var PAYEE = null, BIND_LIMIT = 'ok', HAS_PENDING = false, ngcGuideSeen = false;
+var PAYEE = null, BIND_LIMIT = 'ok', HAS_PENDING = false;
 var wM = 'pix', wAmt = 0, kMethod = null;
 var WD_LIM = { min:20, max:50000 };
 var recs = {
@@ -915,7 +1129,7 @@ document.querySelectorAll('#wdMethods .method').forEach(function(b){
   b.onclick = function(){
     if (wM === b.dataset.m) return;
     wM = b.dataset.m; setWAmt(0); syncHash();
-    if (wM === 'ngc' && !ngcGuideSeen) openMask('shNgcGuide');
+    if (wM === 'ngc' && !wdCoachSeen) setTimeout(function(){ startCoach('wd'); }, 500);
   };
 });
 
@@ -1033,6 +1247,153 @@ function renderRec(){
 }
 
 
+
+/* ===================== NewG Pay 介绍浮层 + 新手引导 ===================== */
+var introSeen = false, coachSeen = false, ci = 0;
+var wdCoachSeen = false;
+
+/* ===== 引导浮层：存款 / 提款两套轮播共用一个引擎 ===== */
+/* 提款引导两段，按真实顺序：
+   ① 页内高亮「本站」转出 → ② 浮层演示 NewG Pay 里怎么卖                        */
+var CARS = {
+  dep:   { sheet:'shIntro',  n:5, i:0, go:'introGo',   end:'coach:dep' },
+  wdSell:{ sheet:'shWdSell', n:2, i:0, go:'coachNext', end:'close'     }
+};
+var CK = 'dep';                       /* 当前是哪套 */
+function car(){ return CARS[CK]; }
+var COACHES = {
+  dep:{ done:'coachDone', steps:[
+    { sel:'#dNgCard',  k:'coach1' },
+    { sel:'#dField',   k:'coach2' },
+    { sel:'#dCta',     k:'coach4' },
+    { sel:'#guideBtn', k:'coach3' } ] },      /* 收尾：告诉用户教程随时能重看 */
+  /* 提款的页内高亮只讲「本站」这一段，讲完直接接钱包卖出演示 */
+  wd:{ done:'wdSeeSell', after:'wdSell', map:'whSite', steps:[
+    { sel:'#wField',     k:'wcoach1' },   /* ① 选金额   */
+    { sel:'#wCta',       k:'wcoach2' },   /* ② 点转入   */
+    { sel:'#wNgCard',    k:'wcoach3' },   /* ③ 余额到账 */
+    { sel:'#wEnterBtn',  k:'wcoach4' } ] }   /* ④ 进钱包卖币 */
+};
+var COACH = COACHES.dep;
+
+function openIntro(){
+  if (introSeen || dM !== 'ngc' || wTab !== 'dep') return;
+  introSeen = true; CK = 'dep'; renderIntroBonus(); introGoto(0); openMask('shIntro');
+}
+function openWdSell(){      /* 第 ② 段：本站那步讲完，才演示钱包里的卖出 */
+  CK = 'wdSell'; introGoto(0); openMask('shWdSell');
+}
+/* 🎁 文案随赠送比例切换：未配置说「额外赠送」，配置后带具体比例 */
+function renderIntroBonus(){
+  var el = document.getElementById('introBonus');
+  if (!el) return;
+  el.innerHTML = BONUS > 0
+    ? t('introB2n').replace(/\{n\}/g, String(BONUS))
+    : t('introB2');
+}
+function igLoad(n){   /* 按需加载：只拉当前屏和下一屏，不一次性拉全部素材 */
+  var sheet = car().sheet;
+  [n, n+1].forEach(function(k){
+    var sl = document.querySelector('#'+sheet+' .islide[data-s="'+k+'"]');
+    if (!sl) return;
+    var im = sl.querySelector('.igif');
+    if (im && !im.getAttribute('src')){
+      im.onerror = function(){ im.parentNode.hidden = true; };   /* 素材缺失时只留文字，不留空白洞 */
+      im.src = im.dataset.src;
+    }
+  });
+}
+function introGoto(n){
+  var c = car();
+  c.i = Math.max(0, Math.min(c.n - 1, n));
+  document.querySelectorAll('#'+c.sheet+' .islide').forEach(function(sl){
+    sl.classList.toggle('on', +sl.dataset.s === c.i);
+  });
+  document.querySelectorAll('#'+c.sheet+' .idots i').forEach(function(dt, k){
+    dt.classList.toggle('on', k === c.i);
+  });
+  var sh = document.querySelector('#'+c.sheet+' .sheet'); if (sh) sh.scrollTop = 0;
+  syncIntroBtns();
+  igLoad(c.i);
+}
+function syncIntroBtns(){
+  Object.keys(CARS).forEach(function(k){
+    var c = CARS[k];
+    var b = document.querySelector('#'+c.sheet+' .ib-back'),
+        n = document.querySelector('#'+c.sheet+' .ib-next');
+    if (!b || !n) return;
+    b.textContent = t(c.i === 0 ? 'introLater' : 'introBack');
+    n.textContent = t(c.i === 0 ? c.go : c.i === c.n - 1 ? 'introStart' : 'coachNext');
+  });
+}
+function introPrev(){ var c = car(); if (c.i === 0) closeMask(c.sheet); else introGoto(c.i - 1); }
+function introNext(){ var c = car(); if (c.i === c.n - 1) introToCoach(); else introGoto(c.i + 1); }
+function introToCoach(){
+  var c = car(); closeMask(c.sheet);
+  if (c.end === 'close') return;
+  var k = c.end.split(':')[1];
+  setTimeout(function(){ startCoach(k); }, 280);
+}
+function startCoach(key){
+  var k = key || (wTab === 'wd' ? 'wd' : 'dep');
+  if (k === 'dep' && (dM !== 'ngc' || wTab !== 'dep')) return;
+  if (k === 'wd'  && (wM !== 'ngc' || wTab !== 'wd'))  return;
+  COACH = COACHES[k];
+  if (k === 'dep') coachSeen = true; else wdCoachSeen = true;
+  ci = 0;
+  document.getElementById('coach').hidden = false;
+  showCoach();
+}
+function endCoach(){ document.getElementById('coach').hidden = true; }
+function coachNext(){
+  if (++ci < COACH.steps.length){ showCoach(); return; }
+  endCoach();
+  if (COACH.after === 'wdSell') setTimeout(openWdSell, 300);   /* 本站讲完 → 接钱包卖出 */
+}
+function showCoach(){
+  var step = COACH.steps[ci], el = document.querySelector(step.sel);
+  var sc0 = document.getElementById('scroll');
+  if (!el || !sc0){ endCoach(); return; }
+  var sc = document.getElementById('scroll') || document.querySelector('#sWallet .scroll');
+  var r0 = el.getBoundingClientRect(), s0 = sc.getBoundingClientRect();
+  if (r0.bottom > s0.bottom - 110 || r0.top < s0.top) sc.scrollTop += r0.top - s0.top - 110;
+  var paint = window.requestAnimationFrame || function(cb){ setTimeout(cb, 16); };
+  paint(function(){
+    var P = document.querySelector('.phone').getBoundingClientRect();
+    var r = el.getBoundingClientRect(), pad = 6;
+    var hole = document.getElementById('hole');
+    hole.style.left   = (r.left - P.left - pad) + 'px';
+    hole.style.top    = (r.top  - P.top  - pad) + 'px';
+    hole.style.width  = (r.width  + pad*2) + 'px';
+    hole.style.height = (r.height + pad*2) + 'px';
+    document.getElementById('ctxt').innerHTML = t(step.k);
+    var idx = (ci+1) + '/' + COACH.steps.length;
+    document.getElementById('cIdx').textContent = COACH.map ? t(COACH.map) + ' · ' + idx : idx;
+    document.getElementById('cNext').textContent = t(ci === COACH.steps.length-1 ? COACH.done : 'coachNext');
+    var tip = document.getElementById('ctip'), h = tip.offsetHeight || 96;
+    var below = r.bottom - P.top + pad;
+    tip.style.top = (below + 12 + h < P.height - 10 ? below + 12
+                                                    : Math.max(10, r.top - P.top - 12 - h)) + 'px';
+  });
+}
+/* 页内「新手教程」入口：浮层 + 页内引导整套重播 */
+function replayGuide(){
+  endCoach();
+  document.querySelectorAll('.mask').forEach(function(m){ m.classList.remove('show'); });
+  introSeen = false; coachSeen = false;
+  if (wTab !== 'dep') switchWTab('dep');
+  if (dM !== 'ngc'){ dM = 'ngc'; setDAmt(0); syncHash(); }
+  setTimeout(openIntro, 120);
+}
+function replayWdGuide(){
+  endCoach();
+  document.querySelectorAll('.mask').forEach(function(m){ m.classList.remove('show'); });
+  wdCoachSeen = false; CARS.wdSell.i = 0;
+  if (wTab !== 'wd') switchWTab('wd');
+  if (wM !== 'ngc'){ wM = 'ngc'; setWAmt(0); syncHash(); renderWd(); }
+  setTimeout(function(){ startCoach('wd'); }, 160);
+}
+
 /* ===================== 锚点（直达链接） =====================
    形如 #dep-ngc / #wd-best / #rec-dep，追加 -pt 进入葡语态。
    页面状态变化时写回地址栏；带锚点打开时按锚点还原。           */
@@ -1057,7 +1418,7 @@ function syncHash(){
 }
 function applyHash(){
   var h = (location.hash || '').replace(/^#/, '');
-  if (!h) { switchWTab('dep'); syncHash(); return; }
+  if (!h) { switchWTab('dep'); applyI18n(); syncHash(); return; }
   var pt = /-pt$/.test(h);
   h = h.replace(/-pt$/, '');
   if (pt !== !!LANG){
@@ -1074,7 +1435,7 @@ function applyHash(){
   if (page === 'wd'){
     switchWTab('wd');
     wM = (ch === 'ngc') ? 'ngc' : 'pix';
-    if (wM === 'ngc') ngcGuideSeen = true;   /* 直达链接不弹首次说明 */
+    if (wM === 'ngc') wdCoachSeen = true;    /* 直达链接不弹首次引导 */
   } else {
     switchWTab('dep');
     dM = (ch === 'ngc') ? 'ngc' : 'best';
@@ -1093,6 +1454,7 @@ function seg(id, fn){
   });
 }
 seg('cLang',  function(v){ setLang(+v); });
+seg('cBonus', function(v){ BONUS = +v; renderDep(); renderIntroBonus(); });
 seg('cNgc',   function(v){ NGC = +v; renderDep(); renderWd(); });
 seg('cPhone', function(v){
   WD_METHODS[1].unlocked = v === '1';
@@ -1116,6 +1478,7 @@ document.getElementById('lnkBtn').onclick = function(){
   if (navigator.clipboard) navigator.clipboard.writeText(url);
   toast(LANG ? 'Link copiado' : '链接已复制');
 };
+document.getElementById('cIntro').onclick = function(){ wTab === 'wd' ? replayWdGuide() : replayGuide(); };
 document.getElementById('cGlow').onclick = function(){
   ngcHintSeen = false; wdHintSeen = false;
   if (wTab !== 'dep') switchWTab('dep');
@@ -1123,7 +1486,21 @@ document.getElementById('cGlow').onclick = function(){
 };
 
 /* ===================== init ===================== */
-renderNav(); renderDep(); renderWd(); applyHash(); playGlow();
+(function(){   /* 两套轮播各自生成圆点 */
+  Object.keys(CARS).forEach(function(key){
+    var c = CARS[key], box = document.querySelector('#'+c.sheet+' .idots'), h = '';
+    if (!box) return;
+    if (c.n > 1) for (var k = 0; k < c.n; k++) h += '<i data-k="'+k+'"></i>';
+    box.innerHTML = h;
+    box.querySelectorAll('i').forEach(function(dt){
+      dt.onclick = function(){ CK = key; introGoto(+dt.dataset.k); };
+    });
+  });
+  /* 两套都复位到第 1 屏 */
+  Object.keys(CARS).forEach(function(key){ CK = key; introGoto(0); });
+  CK = 'dep';
+})();
+renderNav(); renderDep(); renderWd(); renderIntroBonus(); applyHash(); playGlow();
 </script>
 </body>
 </html>
