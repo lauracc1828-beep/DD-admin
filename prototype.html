@@ -1333,7 +1333,8 @@ select.fs.ph{color:#bfbfbf}
         </div>
       </div>
       <div id="guide-form" style="display:block;background:#fff;padding:24px 32px;border-radius:6px;border:1px solid #f0f0f0;max-width:640px">
-        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option selected>显示</option></select></div></div>
+        <div class="fi"><span class="fl req">顶部横幅：</span><div class="fc"><select class="fs"><option>关闭</option><option selected>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">底部安装浮层：</span><div class="fc"><select class="fs"><option>关闭</option><option selected>开启</option></select></div></div>
         <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="g-guide" onchange="gcond('g-guide-sub',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
         <div id="g-guide-sub" class="cond">
           <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="g-popup" onchange="gcond('g-bonus-sub',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
@@ -3610,7 +3611,8 @@ select.fs.ph{color:#bfbfbf}
       <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="chTab(this,'ac','and')">安卓</button><button class="tab-b" onclick="chTab(this,'ac','ios')">苹果</button></div></div></div>
       <!-- Android -->
       <div id="ac-and">
-        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">顶部横幅：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">底部安装浮层：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
         <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ac-and-g" onchange="gcond('ac-and-gsub',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
         <div id="ac-and-gsub" class="cond">
           <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ac-and-popup" onchange="gcond('ac-and-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
@@ -3636,7 +3638,8 @@ select.fs.ph{color:#bfbfbf}
       </div>
       <!-- iOS -->
       <div id="ac-ios" style="display:none">
-        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">顶部横幅：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">底部安装浮层：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
         <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ac-ios-g" onchange="gcond('ac-ios-gsub',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
         <div id="ac-ios-gsub" class="cond">
           <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ac-ios-popup" onchange="gcond('ac-ios-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
@@ -3816,7 +3819,8 @@ select.fs.ph{color:#bfbfbf}
       <div class="fi"><span class="fl req">渠道设置：</span><div class="fc"><div class="tab-g"><button class="tab-b active" onclick="batchTab(this,'ba-and')">安卓</button><button class="tab-b" onclick="batchTab(this,'ba-ios')">苹果</button></div></div></div>
       <!-- 安卓 fields -->
       <div id="ba-and">
-      <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+      <div class="fi"><span class="fl req">顶部横幅：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+      <div class="fi"><span class="fl req">底部安装浮层：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
       <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ba-guide" onchange="gcond('ba-guide-fields',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
       <div id="ba-guide-fields" class="cond">
         <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ba-popup" onchange="gcond('ba-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>
@@ -3842,7 +3846,8 @@ select.fs.ph{color:#bfbfbf}
       </div>
       <!-- 苹果 fields -->
       <div id="ba-ios" style="display:none">
-        <div class="fi"><span class="fl req">下载按钮：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">顶部横幅：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
+        <div class="fi"><span class="fl req">底部安装浮层：</span><div class="fc"><select class="fs"><option>关闭</option><option>开启</option></select></div></div>
         <div class="fi"><span class="fl req">引导安装：</span><div class="fc"><select class="fs" id="ba-ios-guide" onchange="gcond('ba-ios-guide-fields',this.value==='开启')"><option>关闭</option><option>开启</option></select></div></div>
         <div id="ba-ios-guide-fields" class="cond">
           <div class="fi"><span class="fl req">弹框内容：</span><div class="fc"><select class="fs" id="ba-ios-popup" onchange="gcond('ba-ios-bonus',this.value==='赠送彩金升级')"><option>常规升级</option><option>赠送彩金升级</option></select></div></div>

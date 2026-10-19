@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需求说明 · 下载按钮开关拆分 v1.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
+.page{margin:0 auto;padding:40px 32px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:32px;display:flex;gap:20px;flex-wrap:wrap}
+.meta span{display:flex;align-items:center;gap:4px}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:600;color:#262626;margin:28px 0 12px}
+h3:first-of-type{margin-top:8px}
+h4{font-size:14px;font-weight:600;color:#444;margin:20px 0 10px}
+p{margin-bottom:12px;color:#444}
+ul{padding-left:22px;margin-bottom:12px}
+li{margin-bottom:6px;color:#444}
+.note{background:#fff7e6;border-left:3px solid #fa8c16;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#7d4f00}
+.info{background:#e6f4ff;border-left:3px solid #0961BD;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#003a8c}
+.tip{background:#f6ffed;border-left:3px solid #52c41a;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;color:#135200}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+th{background:#f0f5ff;padding:10px 14px;text-align:left;font-weight:600;color:#0961BD;border-bottom:2px solid #d6e4ff;white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafcff}
+td:first-child{white-space:nowrap;font-weight:500}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.tag-req{background:#fff0f0;color:#cf1322;border:1px solid #ffa39e}
+.toc{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.toc h3{margin:0 0 12px;font-size:14px;color:#888}
+.toc ol{padding-left:20px}
+.toc li{margin-bottom:6px}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.section-card{background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.flow-wrap{background:#f8f9ff;border-radius:8px;padding:20px;margin:12px 0;overflow-x:auto}
+.chg{background:#fff3cd;box-shadow:0 0 0 1px #ffe58f inset;border-radius:3px;padding:0 2px}
+.del{color:#999;text-decoration:line-through}
+.ba{display:flex;gap:20px;flex-wrap:wrap;margin:12px 0}
+.ba-col{flex:1 1 320px;background:#fafafa;border:1px solid #f0f0f0;border-radius:6px;padding:16px 20px}
+.ba-col h4{margin-top:0}
+.ba-col.after{background:#f6ffed;border-color:#b7eb8f}
+.fieldlist{list-style:none;padding:0;font-size:13px;font-family:-apple-system,'PingFang SC',sans-serif}
+.fieldlist li{padding:5px 0;border-bottom:1px dashed #e8e8e8;color:#444}
+.fieldlist li:last-child{border-bottom:none}
+.fieldlist .sub{padding-left:20px;color:#888;font-size:12px}
+.yes{color:#389e0d;font-weight:600}
+.no{color:#cf1322;font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>下载按钮开关拆分 · 需求说明</h1>
+<div class="meta">
+  <span>📄 版本：v1.0</span>
+  <span>✏️ 作者：Laura</span>
+  <span>📅 更新日期：2026-10-17</span>
+</div>
+
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#bg">背景与目标</a></li>
+    <li><a href="#field">后台字段变更</a></li>
+    <li><a href="#logic">关联控制逻辑</a></li>
+    <li><a href="#flow">前台展示逻辑流程图</a></li>
+    <li><a href="#data">数据与兼容</a></li>
+    <li><a href="#out">不在本次范围</a></li>
+    <li><a href="#sync">已同步修改记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section-card" id="bg">
+<h2>一、背景与目标</h2>
+
+<p><strong>现状</strong>：推广渠道管理及官方渠道配置中，「下载按钮」为单一开关，同时控制 H5 首页的<strong>顶部横幅</strong>与<strong>底部安装浮层</strong>两个前台组件。运营无法只保留其中一个，也无法针对不同渠道做轻重打扰的差异化投放。</p>
+
+<p><strong>目标</strong>：将「下载按钮」拆分为两个相互独立的开关，使顶部横幅与底部安装浮层可分别控制。</p>
+
+<div class="info"><strong>范围界定</strong>：本次仅做开关控制的拆分。两个组件的样式、文案、内容取值、点击安装后的全部交互流程（已安装唤起 → 浏览器路由 → 安卓 / iOS 安装机制）均保持现状不变，不做任何调整。</div>
+</div>
+
+<!-- 二 -->
+<div class="section-card" id="field">
+<h2>二、后台字段变更</h2>
+
+<h3>2.1 字段结构变化</h3>
+<div class="ba">
+  <div class="ba-col">
+    <h4>拆分前</h4>
+    <ul class="fieldlist">
+      <li><span class="del">下载按钮</span>　<span class="tag tag-req">必填</span></li>
+      <li class="sub">↳ 同时控制顶部横幅 + 底部安装浮层</li>
+      <li>引导安装　<span class="tag tag-req">必填</span></li>
+      <li class="sub">↳ 弹框内容 / 弹框时间点 / 弹框间隔时间 …</li>
+    </ul>
+  </div>
+  <div class="ba-col after">
+    <h4>拆分后</h4>
+    <ul class="fieldlist">
+      <li><span class="chg">顶部横幅</span>　<span class="tag tag-req">必填</span></li>
+      <li><span class="chg">底部安装浮层</span>　<span class="tag tag-req">必填</span></li>
+      <li>引导安装　<span class="tag tag-req">必填</span></li>
+      <li class="sub">↳ 弹框内容 / 弹框时间点 / 弹框间隔时间 …（不变）</li>
+    </ul>
+  </div>
+</div>
+
+<p>删除原「下载按钮」字段，新增两个独立字段，无父级总开关、无子级嵌套。两个字段在原「下载按钮」所在位置并列展示，顺序为<strong>顶部横幅 → 底部安装浮层 → 引导安装</strong>。</p>
+
+<h3>2.2 字段说明</h3>
+<table>
+  <tr><th>字段</th><th>必填</th><th>控件</th><th>选项与默认值</th><th>字段说明</th></tr>
+  <tr>
+    <td>顶部横幅</td>
+    <td><span class="tag tag-req">必填</span></td>
+    <td>下拉单选</td>
+    <td>可选：开启 / 关闭；默认「关闭」</td>
+    <td>开启后，H5 首页顶部常驻展示下载提示横幅（流布局，将页面内容向下推移，不覆盖页面），含 APP 图标、提示文案、装饰图、安装按钮、关闭按钮；关闭则不展示。不区分登录状态，已登录用户同样可见。落地指向为下载页类时不生效。</td>
+  </tr>
+  <tr>
+    <td>底部安装浮层</td>
+    <td><span class="tag tag-req">必填</span></td>
+    <td>下拉单选</td>
+    <td>可选：开启 / 关闭；默认「关闭」</td>
+    <td>开启后，未登录用户每次进入 H5 首页时从底部弹出安装浮层（带遮罩，覆盖整个页面含顶部横幅），含 APP 图标、含动态域名的说明文案、取消按钮、安装按钮；关闭则不展示。用户登录后浮层隐藏且不再触发。落地指向为下载页类时不生效。</td>
+  </tr>
+</table>
+
+<h3>2.3 生效位置（5 处）</h3>
+<table>
+  <tr><th>#</th><th>菜单位置</th><th>页面 / 弹窗</th><th>字段层级</th></tr>
+  <tr><td>1</td><td>官方渠道</td><td>安装引导配置页</td><td>单表单，安卓与苹果共用一份配置</td></tr>
+  <tr><td>2</td><td>推广渠道管理</td><td>新增渠道弹窗 — 渠道设置 · 安卓 Tab</td><td>安卓独立配置</td></tr>
+  <tr><td>3</td><td>推广渠道管理</td><td>新增渠道弹窗 — 渠道设置 · 苹果 Tab</td><td>苹果独立配置</td></tr>
+  <tr><td>4</td><td>推广渠道管理</td><td>批量新增渠道弹窗 — 渠道设置 · 安卓 Tab</td><td>安卓独立配置</td></tr>
+  <tr><td>5</td><td>推广渠道管理</td><td>批量新增渠道弹窗 — 渠道设置 · 苹果 Tab</td><td>苹果独立配置</td></tr>
+</table>
+<div class="info">编辑渠道弹窗与新增渠道弹窗为同一表单，随之同步生效。</div>
+</div>
+
+<!-- 三 -->
+<div class="section-card" id="logic">
+<h2>三、关联控制逻辑</h2>
+
+<h3>3.1 两个开关之间</h3>
+<p>两者完全独立、无互斥、无父子联动，任一开关的取值不影响另一个的可配置性，四种组合均为合法配置：</p>
+<table>
+  <tr><th>顶部横幅</th><th>底部安装浮层</th><th>前台表现</th></tr>
+  <tr><td class="yes">开启</td><td class="yes">开启</td><td>横幅常驻；未登录用户进入首页时浮层弹出，遮罩覆盖横幅，浮层关闭后横幅恢复可见。<strong>等同于拆分前「下载按钮 = 开启」</strong>。</td></tr>
+  <tr><td class="yes">开启</td><td class="no">关闭</td><td>仅横幅常驻，任何情况下不弹浮层。</td></tr>
+  <tr><td class="no">关闭</td><td class="yes">开启</td><td>无横幅；未登录用户进入首页时仅弹浮层，浮层关闭后页面无任何常驻安装入口。</td></tr>
+  <tr><td class="no">关闭</td><td class="no">关闭</td><td>两者均不展示，H5 首页无下载入口。<strong>等同于拆分前「下载按钮 = 关闭」</strong>。</td></tr>
+</table>
+
+<h3>3.2 生效条件（沿用原下载按钮口径）</h3>
+<table>
+  <tr><th>落地指向</th><th>顶部横幅</th><th>底部安装浮层</th></tr>
+  <tr><td>H5 页类（官网首页 / 官网注册页 / 主域名）</td><td>✅ 生效</td><td>✅ 生效</td></tr>
+  <tr><td>下载页类（仿谷歌页 / 防封下载页）</td><td>❌ 不生效</td><td>❌ 不生效</td></tr>
+</table>
+<p>落地指向为下载页类时，两个开关的配置值保留但前台不生效，与原「下载按钮」规则一致。</p>
+
+<h3>3.3 顶部横幅的展示规则</h3>
+<ul>
+  <li>不区分登录状态，开关开启即常驻展示，已登录用户同样可见。</li>
+  <li>用户点击「×」后当次会话不再显示。</li>
+  <li>用户点击安装按钮并完成安装后，横幅保持可见，不自动隐藏。</li>
+  <li>底部安装浮层或引导安装弹窗出现时，横幅被遮罩层覆盖但不被关闭，弹层关闭后恢复可见。</li>
+</ul>
+
+<h3>3.4 底部安装浮层的展示规则</h3>
+<ul>
+  <li><strong>登录态限制</strong>：仅未登录用户展示；用户登录后浮层隐藏，且不再触发。</li>
+  <li><strong>触发时机</strong>：未登录用户每次进入 H5 首页均触发一次，不做已安装判定，不做会话级去重。</li>
+  <li><strong>让位规则</strong>：进入首页时若存在其他弹窗（活动弹窗、公告弹窗等），浮层让位不弹；其他弹窗关闭后<strong>不补弹</strong>，本次访问不再展示浮层。</li>
+  <li><strong>关闭方式</strong>（不变）：仅点击「取消」按钮可关闭；点击浮层外遮罩区域不关闭；打开后 5 秒无操作自动关闭。</li>
+</ul>
+<div class="note">浮层的触发时机由上述规则直接约定，<strong>不读取、也不新增</strong>「弹框时间点」「弹框间隔时间」配置——这两个字段仍仅归属「引导安装」。</div>
+
+<h3>3.5 与「引导安装」的关系</h3>
+<p>「引导安装」为并列的第三个独立开关，控制引导安装弹窗（安卓 / iOS 安装流程），不受本次拆分影响，其子字段（弹框内容、弹框时间点、弹框间隔时间、弹框安装类型等）维持现状。</p>
+
+<p>拆分前 PRD 中的「特殊情况」条款——<em>下载按钮与引导安装同时开启、弹框时间点为「访问主页」时，未登录用户仅显示下载按钮，登录后引导安装弹框叠加覆盖</em>——拆分后不再需要作为特例规避：底部安装浮层已明确为未登录专属，引导安装弹窗（时间点＝访问主页）在用户登录后触发，两者因登录态天然错开，不存在同屏叠加。顶部横幅与引导安装弹窗可同屏，弹窗遮罩覆盖横幅，横幅不被关闭。</p>
+
+<table>
+  <tr><th>后台开关</th><th>前台组件</th><th>登录态</th><th>触发时机来源</th></tr>
+  <tr><td>顶部横幅</td><td>H5 首页顶部下载提示横幅</td><td>不限</td><td>页面加载即常驻</td></tr>
+  <tr><td>底部安装浮层</td><td>H5 首页底部安装浮层（带遮罩）</td><td>仅未登录</td><td>每次进入首页，不读弹框时间点</td></tr>
+  <tr><td>引导安装</td><td>引导安装弹窗（安卓 / iOS 分支）</td><td>按弹框时间点，访问主页时为登录后</td><td>弹框时间点 + 弹框间隔时间</td></tr>
+</table>
+
+<h3>3.6 点击安装后的交互</h3>
+<p>顶部横幅与底部安装浮层的安装按钮共用同一套安装交互逻辑，与拆分前完全一致：点击 → 已安装唤起判定 → 未命中则按浏览器环境路由（Chrome / 非 Chrome）→ 进入对应设备的安装机制（安卓 PWA / APK、iOS 保存桌面）。本次不做任何改动。</p>
+</div>
+
+<!-- 四 -->
+<div class="section-card" id="flow">
+<h2>四、前台展示逻辑流程图</h2>
+<div class="flow-wrap">
+<svg viewBox="-140 0 1160 650" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:860px;font-family:-apple-system,'PingFang SC',sans-serif;font-size:12px">
+  <defs>
+    <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0961BD"/></marker>
+    <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#888"/></marker>
+  </defs>
+
+  <!-- 起点 -->
+  <rect x="300" y="10" width="240" height="34" rx="17" fill="#0961BD"/>
+  <text x="420" y="32" text-anchor="middle" fill="#fff" font-weight="600">用户访问 H5 页面</text>
+  <line x1="420" y1="44" x2="420" y2="64" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- 落地指向 -->
+  <polygon points="420,66 550,96 420,126 290,96" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="420" y="92" text-anchor="middle" fill="#003a8c" font-weight="600">落地指向类型？</text>
+  <text x="420" y="109" text-anchor="middle" fill="#003a8c" font-size="11">下载页类 or H5 页类</text>
+  <line x1="290" y1="96" x2="180" y2="96" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="235" y="89" text-anchor="middle" fill="#888" font-size="11">下载页类</text>
+  <rect x="20" y="78" width="160" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="100" y="101" text-anchor="middle" fill="#595959">两个组件均不生效</text>
+  <line x1="420" y1="126" x2="420" y2="150" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="433" y="143" fill="#003a8c" font-size="11">H5 页类</text>
+
+  <!-- 并行分叉 -->
+  <rect x="300" y="152" width="240" height="34" rx="6" fill="#fff7e6" stroke="#ffd591"/>
+  <text x="420" y="174" text-anchor="middle" fill="#7d4f00" font-weight="600">两开关各自独立判断</text>
+  <line x1="300" y1="169" x2="230" y2="169" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="230" y1="169" x2="230" y2="222" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="540" y1="169" x2="640" y2="169" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="640" y1="169" x2="640" y2="222" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- 左：顶部横幅 -->
+  <polygon points="230,224 350,254 230,284 110,254" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="230" y="250" text-anchor="middle" fill="#003a8c" font-weight="600">顶部横幅</text>
+  <text x="230" y="267" text-anchor="middle" fill="#003a8c" font-size="11">是否开启？</text>
+  <line x1="110" y1="254" x2="20" y2="254" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="65" y="247" text-anchor="middle" fill="#888" font-size="11">关闭</text>
+  <rect x="-130" y="236" width="150" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="-55" y="259" text-anchor="middle" fill="#595959">不展示顶部横幅</text>
+  <line x1="230" y1="284" x2="230" y2="312" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="243" y="303" fill="#003a8c" font-size="11">开启</text>
+  <rect x="120" y="314" width="220" height="48" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="230" y="333" text-anchor="middle" fill="#135200" font-weight="600">常驻展示顶部横幅</text>
+  <text x="230" y="350" text-anchor="middle" fill="#135200" font-size="11">不限登录状态，可点「×」会话级关闭</text>
+
+  <!-- 右：底部浮层 -->
+  <polygon points="640,224 775,254 640,284 505,254" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="640" y="250" text-anchor="middle" fill="#003a8c" font-weight="600">底部安装浮层</text>
+  <text x="640" y="267" text-anchor="middle" fill="#003a8c" font-size="11">是否开启？</text>
+  <line x1="775" y1="254" x2="830" y2="254" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="802" y="247" text-anchor="middle" fill="#888" font-size="11">关闭</text>
+  <rect x="830" y="236" width="180" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="920" y="259" text-anchor="middle" fill="#595959">不弹出底部浮层</text>
+  <line x1="640" y1="284" x2="640" y2="312" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="653" y="303" fill="#003a8c" font-size="11">开启</text>
+
+  <polygon points="640,314 775,344 640,374 505,344" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="640" y="349" text-anchor="middle" fill="#003a8c" font-weight="600">用户是否已登录？</text>
+  <line x1="775" y1="344" x2="830" y2="344" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="802" y="337" text-anchor="middle" fill="#888" font-size="11">已登录</text>
+  <rect x="830" y="322" width="180" height="44" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="920" y="339" text-anchor="middle" fill="#595959" font-size="11">浮层隐藏，不再触发</text>
+  <text x="920" y="355" text-anchor="middle" fill="#595959" font-size="10">（浮层为未登录专属）</text>
+  <line x1="640" y1="374" x2="640" y2="402" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="653" y="393" fill="#003a8c" font-size="11">未登录</text>
+
+  <polygon points="640,404 775,436 640,468 505,436" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="640" y="431" text-anchor="middle" fill="#003a8c" font-weight="600">首页是否有</text>
+  <text x="640" y="448" text-anchor="middle" fill="#003a8c" font-size="11">其他弹窗？</text>
+  <line x1="775" y1="436" x2="830" y2="436" stroke="#888" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="802" y="429" text-anchor="middle" fill="#888" font-size="11">有</text>
+  <rect x="830" y="414" width="180" height="44" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="920" y="431" text-anchor="middle" fill="#595959" font-size="11">浮层让位不弹</text>
+  <text x="920" y="447" text-anchor="middle" fill="#595959" font-size="10">本次访问不补弹</text>
+  <line x1="640" y1="468" x2="640" y2="496" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text x="653" y="487" fill="#003a8c" font-size="11">无</text>
+
+  <rect x="530" y="498" width="220" height="48" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="640" y="517" text-anchor="middle" fill="#135200" font-weight="600">弹出底部安装浮层</text>
+  <text x="640" y="534" text-anchor="middle" fill="#135200" font-size="11">每次进入首页均弹，遮罩覆盖横幅</text>
+
+  <!-- 汇合：点击安装 -->
+  <line x1="230" y1="362" x2="230" y2="578" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="640" y1="546" x2="640" y2="578" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="230" y1="578" x2="640" y2="578" stroke="#0961BD" stroke-width="1.5"/>
+  <line x1="435" y1="578" x2="435" y2="596" stroke="#0961BD" stroke-width="1.5" marker-end="url(#a1)"/>
+  <rect x="265" y="598" width="340" height="34" rx="6" fill="#fff7e6" stroke="#ffd591"/>
+  <text x="435" y="620" text-anchor="middle" fill="#7d4f00" font-weight="600">点击安装 → 两入口共用同一套安装流程（不变）</text>
+</svg>
+</div>
+<div class="info">图中「两开关各自独立判断」为并行分叉：顶部横幅的判断结果不影响底部安装浮层的判断，反之亦同。两入口点击安装后进入同一套流程（已安装唤起 → 浏览器路由 → 设备安装机制）。</div>
+</div>
+
+<!-- 五 -->
+<div class="section-card" id="data">
+<h2>五、数据与兼容</h2>
+
+<h3>5.1 存量数据迁移</h3>
+<p>上线时对所有已存在的渠道配置（含官方渠道、推广渠道、历史批量创建渠道）执行一次性迁移：</p>
+<table>
+  <tr><th>原「下载按钮」值</th><th>迁移后「顶部横幅」</th><th>迁移后「底部安装浮层」</th></tr>
+  <tr><td>开启</td><td class="yes">开启</td><td class="yes">开启</td></tr>
+  <tr><td>关闭</td><td class="no">关闭</td><td class="no">关闭</td></tr>
+</table>
+<div class="tip">迁移后所有存量渠道的前台表现与上线前完全一致，无需运营介入重配。</div>
+
+<h3>5.2 校验规则</h3>
+<p>两个字段均为必填，保存时各自校验非空；<strong>无需</strong>校验「至少开启一个」，两者同时关闭为合法配置（等同于原下载按钮关闭）。两字段之间无联动置灰。</p>
+
+<h3>5.3 操作日志</h3>
+<p>渠道新增 / 编辑的操作日志中，原「下载按钮」变更项拆分为「顶部横幅」「底部安装浮层」两条独立记录，分别记录变更前后值。</p>
+</div>
+
+<!-- 六 -->
+<div class="section-card" id="out">
+<h2>六、不在本次范围</h2>
+<ul>
+  <li>批量替换功能不新增「更换下载按钮开关」替换类型，维持更换安装包 / 更换安装引导 / 更换跳转域名三类。</li>
+  <li>推广渠道列表页不新增「顶部横幅」「底部安装浮层」展示列。</li>
+  <li>底部安装浮层不新增独立的「弹框时间点」「弹框间隔时间」配置字段。</li>
+  <li>两个前台组件的 UI 样式、中葡文案、图标取值来源均不调整。</li>
+  <li>「引导安装」开关及其全部子字段不做任何改动。</li>
+</ul>
+</div>
+
+<!-- 七 -->
+<div class="section-card" id="sync">
+<h2>七、已同步修改记录</h2>
+
+<h3>7.1 后台原型 prototype.html</h3>
+<table>
+  <tr><th>位置</th><th>修改内容</th></tr>
+  <tr><td>官方渠道 — 安装引导配置页</td><td>「下载按钮」替换为「顶部横幅」「底部安装浮层」两个必填开关，默认「关闭」</td></tr>
+  <tr><td>新增 / 编辑渠道 — 安卓 Tab、苹果 Tab</td><td>同上，各 Tab 独立两个开关</td></tr>
+  <tr><td>批量新增渠道 — 安卓 Tab、苹果 Tab</td><td>同上，各 Tab 独立两个开关</td></tr>
+</table>
+
+<h3>7.2 《推广渠道管理 PRD》v2.9</h3>
+<table>
+  <tr><th>位置</th><th>修改内容</th></tr>
+  <tr><td>第二章 落地流程图 ⑥A / ⑥B 节点</td><td>「下载按钮」表述改为「顶部横幅、底部安装浮层各自独立生效」</td></tr>
+  <tr><td>落地指向选项说明表</td><td>表头「下载按钮/引导安装」改为「顶部横幅/底部安装浮层/引导安装」；官网首页行说明改为三项各自独立生效</td></tr>
+  <tr><td>渠道设置 — 安卓 Tab 字段表</td><td>「下载按钮」行拆为两行，各自补完整选项说明与前端效果</td></tr>
+  <tr><td>渠道设置 — 苹果 Tab 字段表</td><td>同步拆为两行</td></tr>
+  <tr><td>引导安装字段「特殊情况」段</td><td>改写为「与底部安装浮层的关系」，删除叠加规避表述</td></tr>
+</table>
+
+<h3>7.3 《安装引导模块 PRD》v2.0</h3>
+<table>
+  <tr><th>位置</th><th>修改内容</th></tr>
+  <tr><td>目录</td><td>「下载按钮（顶部横幅）」改为「顶部横幅」</td></tr>
+  <tr><td>第一章 模块概述、生效范围</td><td>「下载按钮」表述改为「顶部横幅、底部安装浮层」</td></tr>
+  <tr><td>第二章 通用字段表</td><td>「下载按钮」行拆为两行；引导安装行的「特殊情况」改写为「与底部安装浮层的关系」</td></tr>
+  <tr><td>3.1 生效条件表</td><td>「下载按钮」列拆为两列，并补两开关独立的说明</td></tr>
+  <tr><td>3.2</td><td>标题改为「顶部横幅」，触发条件改为「顶部横幅开关开启时」，补充常驻、不限登录态</td></tr>
+  <tr><td>3.3</td><td>触发条件改为「底部安装浮层开关开启时」，新增登录态限制、触发频率、让位不补弹三段</td></tr>
+  <tr><td>3.4 / 3.5 安装流程及相关 tip</td><td>「下载按钮（顶部横幅 / 底部浮层）」统一改为「顶部横幅 / 底部安装浮层」</td></tr>
+  <tr><td>第四章 SVG 逻辑流程图</td><td>判断节点由「下载按钮 → 引导安装 → 其他弹窗 → 特殊情况」改为「顶部横幅 → 底部安装浮层 → 用户是否已登录 → 其他弹窗」</td></tr>
+</table>
+<div class="note">顺带修复《安装引导模块 PRD》两处历史 HTML 结构错误：3.4 节「本次调整（仅安卓）」的 <code>div.info</code> 误用 <code>&lt;/p&gt;</code> 闭合、通用字段表「选择APK」行缺一个 <code>&lt;/span&gt;</code>。</div>
+</div>
+
+</div>
+</body>
+</html>
