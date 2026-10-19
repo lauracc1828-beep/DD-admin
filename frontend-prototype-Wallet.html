@@ -11,7 +11,7 @@
   :root{
     --bg:#141415; --panel:#1c1c1e; --card:#19191b; --field:#232325; --chip:#39342b;
     --tabbar:#232326; --line:#2e2e31;
-    --gold:#f4f03a;--warn:#ff9a3c; --gold-dim:#6f6c25; --gold-soft:rgba(244,240,58,.12);
+    --gold:#ffe600;--warn:#ff9a3c; --gold-dim:#6e6520; --gold-soft:rgba(255,230,0,.12);
     --grey:#8a8a8f; --grey2:#5c5c61; --text:#f2f2f2; --red:#ff5a52; --green:#3ddc84;
     --navbg:#1a1a1c; --navh:62px; --safeb:0px; --safet:0px;
     --ngblue:#2f6fe8; --ngblue-lt:#4f8dff;
@@ -57,20 +57,22 @@
   .glow-ring.blur{padding:4px;inset:-3px;filter:blur(5px)}
   .glow-ring::before{content:"";position:absolute;left:50%;top:50%;width:400%;aspect-ratio:1;
     transform:translate(-50%,-50%);
-    background:conic-gradient(from 0deg,transparent 0 62%,rgba(244,240,58,.15) 74%,var(--gold) 90%,#fffbd0 96%,transparent 100%)}
-  .base-line{position:absolute;inset:-1.5px;border-radius:inherit;pointer-events:none;border:1.5px solid rgba(244,240,58,0)}
+    background:conic-gradient(from 0deg,transparent 0 62%,rgba(255,230,0,.15) 74%,var(--gold) 90%,#fffbd0 96%,transparent 100%)}
+  .base-line{position:absolute;inset:-1.5px;border-radius:inherit;pointer-events:none;border:1.5px solid rgba(255,230,0,0)}
   .hint .glow-ring{animation:ringFade var(--dur) ease var(--gd,var(--delay)) both}
   .hint .glow-ring::before{animation:spin var(--dur) linear var(--gd,var(--delay)) both}
   .hint .base-line{animation:baseFade var(--dur) ease var(--gd,var(--delay)) both}
   .hint .label{animation:textPop .7s ease calc(var(--gd,var(--delay)) + var(--dur) - .25s) both}
   @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
   @keyframes ringFade{0%{opacity:0}8%,85%{opacity:1}100%{opacity:0}}
-  @keyframes baseFade{0%,100%{border-color:rgba(244,240,58,0)}15%,80%{border-color:rgba(244,240,58,.18)}}
-  @keyframes textPop{0%{color:var(--tc);text-shadow:none}40%{color:#fffbd0;text-shadow:0 0 12px rgba(244,240,58,.7)}100%{color:var(--tc);text-shadow:none}}
+  @keyframes baseFade{0%,100%{border-color:rgba(255,230,0,0)}15%,80%{border-color:rgba(255,230,0,.18)}}
+  @keyframes textPop{0%{color:var(--tc);text-shadow:none}40%{color:#fffbd0;text-shadow:0 0 12px rgba(255,230,0,.7)}100%{color:var(--tc);text-shadow:none}}
 
   /* ================= 通用 ================= */
-  .balance{margin:16px 2px 4px;font-size:15px;font-weight:600;display:flex;align-items:baseline;gap:6px}
-  .balance b{color:var(--gold)}
+  .balance{margin:16px 2px 4px;font-size:13.5px;font-weight:500;display:flex;align-items:baseline;gap:6px}
+  /* 金额：白色、数字在前、R$ 在后；不加粗 */
+  .balance b{color:#fff;font-size:17px;font-weight:500;letter-spacing:.2px}
+  .balance b i{font-style:normal;margin-left:5px}      /* R$ 与数字同字号同字重 */
   .flowline{margin:7px 2px 0;font-size:11.5px;color:var(--grey);display:flex;align-items:center}
   .flowline b{color:var(--gold);font-weight:600;margin:0 3px}
   .flowline .lnk{margin-left:auto;color:#4a9bff;cursor:pointer}
@@ -95,7 +97,7 @@
   .ngcard .lg{width:28px;height:28px;flex:0 0 28px;border-radius:7px;background:#1565E8;
     display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff}
   .ngcard .tt{flex:1;font-size:14px;font-weight:700;color:#fff}
-  .ngcard .rate{border:1px solid #6b6412;background:rgba(244,240,58,.07);color:var(--gold);
+  .ngcard .rate{border:1px solid #6b6412;background:rgba(255,230,0,.07);color:var(--gold);
     font-size:11px;font-weight:700;padding:4px 9px;border-radius:7px;white-space:nowrap}
   .ngcard .r2{display:flex;align-items:center;gap:10px;padding:12px;border-top:1px solid var(--line)}
   .ngcard .r2 .bk{flex:1;min-width:0}
@@ -155,7 +157,7 @@
   .pix{margin-top:10px;width:100%;display:flex;align-items:center;gap:10px;padding:12px;
     background:var(--panel);border:1px solid var(--line);border-radius:12px;text-align:left}
   .pix .pi{min-width:52px;height:30px;padding:0 9px;flex:0 0 auto;border-radius:8px;
-    background:rgba(244,240,58,.1);border:1px solid #4e4a18;color:var(--gold);
+    background:rgba(255,230,0,.1);border:1px solid #4e4a18;color:var(--gold);
     display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800;letter-spacing:.3px}
   .pix .pt{flex:1;min-width:0;font-size:13px;line-height:1.45}
   .pix .pt small{display:block;color:var(--grey);font-size:11.5px;margin-top:2px}
@@ -200,6 +202,12 @@
     letter-spacing:-.2px;box-shadow:0 7px 18px rgba(47,111,232,.45);animation:introPop .4s ease}
   /* 认知区：两问两答 */
   .intro-qa{position:relative;margin-top:2px}
+  /* 方案 B：问答块排在亮点之后并弱化，金色只留给亮点区 */
+  .intro-qa.dim{margin-top:13px}
+  .intro-qa.dim .iq{color:#b9c4d8;font-weight:600;font-size:12.5px}
+  .intro-qa.dim .iq:before{background:rgba(255,255,255,.26)}
+  .intro-qa.dim .ia{color:#8e9bb3;font-size:12px}
+  .intro-qa.dim .ia b{color:inherit;font-weight:400}
   .intro-qa .iq{font-size:13px;font-weight:700;color:#fff;margin:12px 0 4px;
     display:flex;align-items:center;gap:7px}
   .intro-qa .iq:first-child{margin-top:0}
@@ -218,7 +226,7 @@
   .intro .ib .em{font-size:17px;line-height:1.25;flex:none}
   .intro .ib .tx{font-size:12.5px;line-height:1.6;color:#e2e8f6}
   /* 🎁 是本平台的实际利益，金色强调；💰 是钱包侧机会，保持蓝灰 */
-  .intro .ib.gold{background:rgba(244,240,58,.07);border-color:rgba(244,240,58,.36)}
+  .intro .ib.gold{background:rgba(255,230,0,.07);border-color:rgba(255,230,0,.36)}
   /* 归属标识：这段操作在哪个 App 里完成 */
   .loc{display:inline-block;vertical-align:1px;margin-right:6px;
     font-size:9.5px;font-weight:700;letter-spacing:.2px;padding:1.5px 6px;border-radius:5px}
@@ -243,7 +251,7 @@
     font-size:16px;font-weight:700;color:#fff;line-height:1.35}
   .ith .n{font-size:11px;font-weight:700;letter-spacing:.3px;padding:2px 8px;border-radius:7px;
     background:rgba(79,141,255,.2);border:1px solid rgba(79,141,255,.5);color:#9fc0ff;flex:none}
-  .ith .n.sell{background:rgba(244,240,58,.14);border-color:rgba(244,240,58,.42);color:var(--gold)}
+  .ith .n.sell{background:rgba(255,230,0,.14);border-color:rgba(255,230,0,.42);color:var(--gold)}
   .isub{position:relative;margin-top:5px;font-size:12.5px;font-weight:600;color:#9fb0d0}
   .itx{position:relative;margin-top:11px;font-size:12.5px;line-height:1.7;color:#c9d4ea}
   .itx b{color:var(--gold);font-weight:700}
@@ -284,10 +292,12 @@
   .foot{flex:0 0 auto;padding:10px 14px 8px;background:var(--bg);position:relative}
   .receive{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;
     color:#cfcfcf;margin-bottom:10px}
-  .receive b{font-size:19px;color:var(--gold)}
+  .receive b{font-size:20px;font-weight:700;color:#fff;letter-spacing:.2px}
+  .receive b i{font-style:normal;margin-left:5px}      /* R$ 与数字同字号同字重 */
   /* 结算栏「含赠送」副行 + 奖励规则气泡 */
   .receive.sub{margin-top:-7px;margin-bottom:10px;font-size:11.5px;color:var(--grey)}
-  .receive.sub b{font-size:12.5px;color:#4ec77a;font-weight:700}
+  .receive.sub b{font-size:12.5px;color:var(--gold);font-weight:700}
+  .receive.sub b i{font-style:normal;margin-left:4px}
   .qmk{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;
     border-radius:50%;border:1px solid var(--grey);color:var(--grey);font-size:9px;font-style:normal;
     line-height:1;margin-left:4px;cursor:pointer;transform:translateY(1px)}
@@ -450,7 +460,7 @@
 
         <!-- ================= 充值面板 ================= -->
         <div id="wpDep">
-          <p class="balance"><span data-i="acct">账户余额：</span><b id="dBal">R$ 10.529,85</b></p>
+          <p class="balance"><span data-i="acct">账户余额：</span><b id="dBal">10.529,85<i>R$</i></b></p>
 
           <div class="methods" id="depMethods">
             <button class="method on" data-m="best" id="mBest"><span class="label">BESTPAY</span><span class="btag" hidden></span></button>
@@ -491,7 +501,7 @@
 
         <!-- ================= 提款面板 ================= -->
         <div id="wpWd" hidden>
-          <p class="balance"><span data-i="acct">账户余额：</span><b id="wBal">R$ 10.529,85</b></p>
+          <p class="balance"><span data-i="acct">账户余额：</span><b id="wBal">10.529,85<i>R$</i></b></p>
           <p class="flowline"><span data-i="flow">提款需投注：</span><b>R$ 1.039,36</b><span class="lnk" data-i="detail" onclick="toast(t('tFlow'))">查看详情 ›</span></p>
 
           <div class="methods" id="wdMethods">
@@ -553,14 +563,14 @@
           <div class="r"><span data-i="maxDailyK">每日最高奖励</span><b id="bpMax">R$ 0,00</b></div>
           <div class="r" id="bpWagerRow"><span data-i="wagerK">提现流水要求</span><b id="bpWager"></b></div>
         </div>
-        <div class="receive"><span data-i="recv">您将收到</span><b id="dRecv">R$ 0,00</b></div>
+        <div class="receive"><span data-i="recv">您将收到</span><b id="dRecv">0,00<i>R$</i></b></div>
         <div class="receive sub" id="dSub" hidden>
-          <span><span data-i="bonusK">含赠送</span><i class="qmk" id="dQmk">?</i></span><b id="dSubV">+R$ 0,00</b>
+          <span><span data-i="bonusK">含赠送</span><i class="qmk" id="dQmk">?</i></span><b id="dSubV">+0,00<i>R$</i></b>
         </div>
         <button class="cta" id="dCta" disabled onclick="depSubmit()">立即充值</button>
       </div>
       <div class="foot" id="wFoot" hidden>
-        <div class="receive"><span data-i="recv">您将收到</span><b id="wRecv">R$ 0,00</b></div>
+        <div class="receive"><span data-i="recv">您将收到</span><b id="wRecv">0,00<i>R$</i></b></div>
         <button class="cta" id="wCta" disabled onclick="wdSubmit()">立即提现</button>
       </div>
 
@@ -682,16 +692,16 @@
             </div>
           </div>
           <div class="ifig land"><img class="igif" alt="" data-src="assets-newgpay/w1-wallet.gif"></div>
-          <div class="intro-qa">
+          <div class="iwhy">
+            <div class="wh" data-i="introQ3">为什么用 NewGPay？</div>
+            <div class="ib gold"><span class="em">🎁</span><span class="tx" id="introBonus"></span></div>
+            <div class="ib"><span class="em">💰</span><span class="tx" data-i="introB1"></span></div>
+          </div>
+          <div class="intro-qa dim">
             <div class="iq" data-i="introQ1">什么是 NGC？</div>
             <div class="ia" data-i="introA1"></div>
             <div class="iq" data-i="introQ2">NewGPay 是什么？</div>
             <div class="ia" data-i="introA2"></div>
-          </div>
-          <div class="iwhy">
-            <div class="wh" data-i="introQ3">为什么用 NewGPay？</div>
-            <div class="ib"><span class="em">💰</span><span class="tx" data-i="introB1"></span></div>
-            <div class="ib gold"><span class="em">🎁</span><span class="tx" id="introBonus"></span></div>
           </div>
         </div>
 
@@ -828,7 +838,7 @@
 var NAV = function(){ return [
   {id:'home', label:t('navHome'), svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 10.2 12 3.6l8.5 6.6V20a.8.8 0 0 1-.8.8h-4.4v-6h-6.6v6H4.3A.8.8 0 0 1 3.5 20z"/></svg>'},
   {id:'promo', label:t('navPromo'), dot:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="8.5" width="18" height="12" rx="2"/><path d="M3 12.5h18M12 8.5v12"/><path d="M8.6 8.5a2.3 2.3 0 1 1 1.7-3.9c1 1 1.7 3.9 1.7 3.9m3.4 0a2.3 2.3 0 1 0-1.7-3.9c-1 1-1.7 3.9-1.7 3.9"/></svg>'},
-  {id:'invite', label:t('navInvite'), mid:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="#f4f03a" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.3"/><path d="M2.8 20c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6"/><path d="M17.6 6.6v5.2M15 9.2h5.2"/></svg>'},
+  {id:'invite', label:t('navInvite'), mid:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="#ffe600" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.3"/><path d="M2.8 20c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6"/><path d="M17.6 6.6v5.2M15 9.2h5.2"/></svg>'},
   {id:'wallet', label:t('navWallet'), on:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2.8" y="5.6" width="18.4" height="13.4" rx="2.6"/><path d="M2.8 10.2h18.4"/><circle cx="16.8" cy="14.8" r="1.5"/><path d="M6.4 5.6 14.2 2.9a1.1 1.1 0 0 1 1.5.9v1.8"/></svg>'},
   {id:'mine', label:t('navMine'), dot:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c0-3.8 3.2-6.2 7.2-6.2s7.2 2.4 7.2 6.2"/></svg>'}
 ]; };
@@ -865,16 +875,16 @@ var I18N = {
   introA1:['NGC 是 NewGPay <b>官方发行的去中心化代币</b>。用 NGC 充值本平台，<b>固定按 1 NGC = R$ 1 入账</b>。',
            '<b>Token descentralizado oficial da NewGPay.</b> Na recarga aqui a conversão é fixa: <b>1 NGC = R$ 1</b>.'],
   introQ2:['NewGPay 是什么？','O que é a NewGPay?'],
-  introA2:['<b>NGC 官方钱包</b>。存储、转账、买卖一站完成，全球通用。本站与 NGC 官方<b>直连</b>，存提赠送不定期加码。',
-           '<b>Carteira oficial do NGC</b>: guardar, transferir e negociar num só lugar. <b>Conexão direta</b> com a NewGPay e bônus extras de tempos em tempos.'],
+  introA2:['<b>NGC 官方钱包</b>。存储、转账、买卖一站完成，全球通用。本站与 NGC 官方<b>直连</b>，存提款不定期享<b>额外奖励</b>！',
+           '<b>Carteira oficial do NGC</b>: guardar, transferir e negociar num só lugar. <b>Conexão direta</b> com a NewGPay: depósitos e saques com <b>bônus extras</b> de tempos em tempos!'],
   introQ3:['为什么用 NewGPay？','Por que usar a NewGPay?'],
-  introB1:['<b>差价可赚</b> — 钱包内买卖 NGC 按<b>市场价</b>成交，不定期开启买卖活动：<b>低于 R$ 1 买入，高于 R$ 1 卖出</b>。',
-           '<b>Ganhe na diferença</b> — na carteira o NGC segue o <b>preço de mercado</b>: <b>compre abaixo de R$ 1, venda acima</b>.'],
+  introB1:['在钱包出售 NGC，额外赚取<b>矿工费</b>！',
+           '<b>ExtraBônus</b> ao vender NGC na carteira!'],                                      // [T]
   /* 🎁 两种形态：未配置赠送比例 / 已配置（{n} 由后台比例填充） */
   introB2:['用 NGC 充值本平台，享受<b>惊喜加赠</b>！',
            '<b>Bônus surpresa</b> ao recarregar com NGC!'],                                        // [T]
-  introB2n:['<b>充值额外赠 {n}%</b> — 用 NGC 充值本平台，{n}% 赠送直接到账。',
-            '<b>Bônus de {n}%</b> ao recarregar com NGC, na hora!'],
+  introB2n:['用 NGC 充值本平台，额外赠 <b>{n}%</b>！',
+            '<b>Bônus de {n}%</b> ao recarregar com NGC!'],
   /* —— 轮播：分组 + 6 步说明 —— */
   igBuy:['如何买 NGC','Como comprar NGC'],
   igSell:['如何卖 NGC','Como vender NGC'],                 /* 留给取款引导 */
@@ -968,7 +978,7 @@ var I18N = {
             'Nenhum método de saque disponível. Faça um depósito ou fale com o suporte.'], // [T]
   wdAll:['全部','Tudo'],                                    // [P]
   wdCta:['立即取款','Sacar agora'],                         // [P]
-  wdCtaNgc:['转入 NGC 钱包','Enviar para a carteira NGC'],   // [T]
+  wdCtaNgc:['转入 NewGPay 钱包','Enviar para a carteira NewGPay'], // [T]
   minWd:['最低提款 R$','Saque mínimo: R$'],                 // [P]
   maxWd:['单笔最高 R$','Máximo por transação: R$'],         // [P]
   insuffBal:['可提余额不足，当前可提','Saldo disponível insuficiente. Disponível:'], // [P]
@@ -1061,6 +1071,8 @@ function cbLive(k){ var c = CASHBACK[k]; return !!(c && c.on && c.pct > 0); }
 var BONUS = CASHBACK.ngc.pct;   /* = CASHBACK.ngc.pct，供 NGC 引导浮层文案取用 */
 var brl = function(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 var int = function(n){ return n.toLocaleString('pt-BR'); };
+/* 账户余额 / 您将收到 的统一写法：数字在前，R$ 在后（与个人中心一致） */
+var money = function(n){ return brl(n) + '<i>R$</i>'; };
 var cents = function(n){ return Math.round(n*100)/100; };
 function parseMoney(str){
   var s = String(str).replace(/[^\d,]/g,''), i = s.indexOf(','), ip = s, dp = null;
@@ -1140,6 +1152,7 @@ function renderDep(){
     bt.textContent = cbLive(k) ? '+' + (+CASHBACK[k].pct) + '%' : '';
   });
   document.getElementById('dNgcBal').innerHTML = int(NGC) + ' <small>NGC</small>';
+  document.getElementById('dBal').innerHTML = money(BAL);
   document.getElementById('depCur').textContent = L.cur;
   document.getElementById('depIn').placeholder  = L.ph;
   document.getElementById('depGrid').innerHTML = DEP_CHIPS[dM].map(function(v){
@@ -1160,11 +1173,11 @@ function renderDep(){
   var live  = cbLive(dM);
   var base  = ok ? dAmt : 0;
   var bonus = live ? Math.floor(base * CASHBACK[dM].pct) / 100 : 0;
-  document.getElementById('dRecv').textContent = 'R$ ' + brl(base + bonus);
+  document.getElementById('dRecv').innerHTML = money(base + bonus);
   var sub = document.getElementById('dSub');
   if (sub){
     sub.hidden = !live;                                  /* 比例为 0 / 状态关闭 → 副行与问号一并不渲染 */
-    document.getElementById('dSubV').textContent = '+R$ ' + brl(bonus);
+    document.getElementById('dSubV').innerHTML = '+' + money(bonus);
     if (!live) document.getElementById('dBpop').hidden = true;
   }
   renderBonusPop();
@@ -1260,7 +1273,7 @@ function allSaved(){ return !!PAYEE && METHOD_FIELDS[PAYEE.type].every(isLocked)
 
 function renderWd(){
   document.querySelectorAll('#wdMethods .method').forEach(function(b){ b.classList.toggle('on', b.dataset.m === wM); });
-  document.getElementById('wBal').textContent = 'R$ ' + brl(BAL);
+  document.getElementById('wBal').innerHTML = money(BAL);
   document.getElementById('wNgCard').hidden  = wM !== 'ngc';
   document.getElementById('wNgcBal').innerHTML = int(NGC) + ' <small>NGC</small>';
   document.getElementById('wInfoBox').hidden = wM !== 'pix';
@@ -1295,7 +1308,7 @@ function renderWd(){
 
   var ok = wAmt > 0 && !err && (wM === 'ngc' || (!none && !!PAYEE));
   var needPayee = wM === 'pix' && !PAYEE && !none;
-  document.getElementById('wRecv').textContent = 'R$ ' + brl(wAmt > 0 && !err ? wAmt : 0);
+  document.getElementById('wRecv').innerHTML = money(wAmt > 0 && !err ? wAmt : 0);
   document.getElementById('wCta').textContent  = needPayee ? t('payeeAdd')
                                                : (wM === 'ngc' ? t('wdCtaNgc') : t('wdCta'));
   document.getElementById('wCta').disabled     = !(ok || needPayee);
@@ -1314,7 +1327,8 @@ document.querySelectorAll('#wdMethods .method').forEach(function(b){
   b.onclick = function(){
     if (wM === b.dataset.m) return;
     wM = b.dataset.m; setWAmt(0); syncHash();
-    if (wM === 'ngc' && !wdCoachSeen) setTimeout(function(){ startCoach('wd'); }, 500);
+    if (wM === 'ngc' && !wdIntroSeen) setTimeout(openWdIntro, 450);
+    else if (wM === 'ngc' && !wdCoachSeen) setTimeout(function(){ startCoach('wd'); }, 500);
   };
 });
 
@@ -1435,13 +1449,15 @@ function renderRec(){
 
 /* ===================== NewGPay 介绍浮层 + 新手引导 ===================== */
 var introSeen = false, coachSeen = false, ci = 0;
-var wdCoachSeen = false;
+var wdIntroSeen = false, wdCoachSeen = false;
 
 /* ===== 引导浮层：存款 / 提款两套轮播共用一个引擎 ===== */
 /* 提款引导两段，按真实顺序：
    ① 页内高亮「本站」转出 → ② 浮层演示 NewGPay 里怎么卖                        */
 var CARS = {
   dep:   { sheet:'shIntro',  n:5, i:0, go:'introGo',   end:'coach:dep' },
+  /* 提款也先过一遍同一张品牌介绍（只取第 1 屏），再进页内引导 */
+  wd:    { sheet:'shIntro',  n:1, i:0, go:'coachNext', end:'coach:wd'  },
   wdSell:{ sheet:'shWdSell', n:2, i:0, go:'coachNext', end:'close'     }
 };
 var CK = 'dep';                       /* 当前是哪套 */
@@ -1465,7 +1481,11 @@ function openIntro(){
   if (introSeen || dM !== 'ngc' || wTab !== 'dep') return;
   introSeen = true; CK = 'dep'; renderIntroBonus(); introGoto(0); openMask('shIntro');
 }
-function openWdSell(){      /* 第 ② 段：本站那步讲完，才演示钱包里的卖出 */
+function openWdIntro(){     /* 第 ① 段：与存款共用的品牌介绍，只放第 1 屏 */
+  if (wdIntroSeen || wM !== 'ngc' || wTab !== 'wd') return;
+  wdIntroSeen = true; CK = 'wd'; renderIntroBonus(); introGoto(0); openMask('shIntro');
+}
+function openWdSell(){      /* 第 ③ 段：本站那步讲完，才演示钱包里的卖出 */
   CK = 'wdSell'; introGoto(0); openMask('shWdSell');
 }
 /* 🎁 文案随赠送比例切换：未配置说「额外赠送」，配置后带具体比例 */
@@ -1488,6 +1508,15 @@ function igLoad(n){   /* 按需加载：只拉当前屏和下一屏，不一次�
     }
   });
 }
+function buildDots(key){
+  var c = CARS[key], box = document.querySelector('#'+c.sheet+' .idots'), h = '';
+  if (!box) return;
+  if (c.n > 1) for (var k = 0; k < c.n; k++) h += '<i data-k="'+k+'"></i>';
+  box.innerHTML = h;
+  box.querySelectorAll('i').forEach(function(dt){
+    dt.onclick = function(){ CK = key; introGoto(+dt.dataset.k); };
+  });
+}
 function introGoto(n){
   var c = car();
   c.i = Math.max(0, Math.min(c.n - 1, n));
@@ -1498,12 +1527,17 @@ function introGoto(n){
     dt.classList.toggle('on', k === c.i);
   });
   var sh = document.querySelector('#'+c.sheet+' .sheet'); if (sh) sh.scrollTop = 0;
+  buildDots(CK);
   syncIntroBtns();
   igLoad(c.i);
 }
 function syncIntroBtns(){
-  Object.keys(CARS).forEach(function(k){
+  /* dep 与 wd 共用同一个浮层，当前这套要优先，否则按钮文案会被另一套盖掉 */
+  var done = {};
+  [CK].concat(Object.keys(CARS)).forEach(function(k){
     var c = CARS[k];
+    if (!c || done[c.sheet]) return;
+    done[c.sheet] = 1;
     var b = document.querySelector('#'+c.sheet+' .ib-back'),
         n = document.querySelector('#'+c.sheet+' .ib-next');
     if (!b || !n) return;
@@ -1593,10 +1627,10 @@ function replayGuide(){
 function replayWdGuide(){
   endCoach();
   document.querySelectorAll('.mask').forEach(function(m){ m.classList.remove('show'); });
-  wdCoachSeen = false; CARS.wdSell.i = 0;
+  wdIntroSeen = false; wdCoachSeen = false; CARS.wd.i = 0; CARS.wdSell.i = 0;
   if (wTab !== 'wd') switchWTab('wd');
   if (wM !== 'ngc'){ wM = 'ngc'; setWAmt(0); syncHash(); renderWd(); }
-  setTimeout(function(){ startCoach('wd'); }, 160);
+  setTimeout(openWdIntro, 160);
 }
 
 /* ===================== 锚点（直达链接） =====================
@@ -1642,7 +1676,7 @@ function applyHash(){
   if (page === 'wd'){
     switchWTab('wd');
     wM = (ch === 'ngc') ? 'ngc' : 'pix';
-    if (wM === 'ngc') wdCoachSeen = true;    /* 直达链接不弹首次引导 */
+    if (wM === 'ngc'){ wdIntroSeen = true; wdCoachSeen = true; }  /* 直达链接不弹首次引导 */
   } else {
     switchWTab('dep');
     dM = (ch === 'ngc') ? 'ngc' : 'best';
