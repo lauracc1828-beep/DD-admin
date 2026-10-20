@@ -145,6 +145,14 @@
   .field input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font-size:15px}
   .field input::placeholder{color:var(--grey2)}
   .field .max{font-size:12px;font-weight:700;color:var(--gold);padding:4px 6px}
+  /* 有金额时出现的清空按钮 */
+  .field .clr{flex:0 0 20px;width:20px;height:20px;border-radius:50%;display:flex;
+    align-items:center;justify-content:center;background:rgba(255,255,255,.14);color:#cfcfcf;
+    position:relative;animation:clrIn .16s ease}
+  .field .clr svg{width:11px;height:11px;display:block}
+  .field .clr:after{content:"";position:absolute;inset:-9px}   /* 扩热区，不占宽 */
+  .field .clr:active{background:rgba(255,255,255,.26)}
+  @keyframes clrIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
   .hint-err{min-height:16px;font-size:11.5px;color:var(--red);margin:5px 2px 0;line-height:1.5}
   .note{font-size:11.5px;color:var(--grey);margin:6px 2px 0;line-height:1.55}
 
@@ -500,6 +508,7 @@
           <label class="field" id="dField" style="margin-top:16px">
             <span class="cur" id="depCur">NGC</span>
             <input id="depIn" inputmode="decimal" placeholder="5-1,000,000" autocomplete="off">
+            <button class="clr" type="button" hidden aria-label="清空" onclick="clearAmt('dep')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg></button>
           </label>
           <p class="hint-err" id="dErr"></p>
           <div class="grid" id="depGrid"></div>
@@ -554,6 +563,7 @@
           <label class="field" id="wField" style="margin-top:14px">
             <span class="cur">R$</span>
             <input id="wAmt" inputmode="decimal" placeholder="20,00 - 50.000,00" autocomplete="off">
+            <button class="clr" type="button" hidden aria-label="清空" onclick="clearAmt('wd')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></svg></button>
             <button class="max" type="button" data-i="wdAll" onclick="wdMax()">全部</button>
           </label>
           <p class="hint-err" id="wErr"></p>
@@ -1194,6 +1204,7 @@ function renderDep(){
   }
   renderBonusPop();
   document.getElementById('dCta').disabled = !ok;
+  syncClr('dep');
   syncNavTuck();
 }
 /* 奖励规则气泡：展示该存款方式后台配置的每日最高优惠与提现稽核倍数 */
@@ -1236,6 +1247,16 @@ function renderBuyNgc(){
   var el = document.getElementById('bnFact');
   if (!el) return;
   el.innerHTML = t('bnFact').replace('{n}', int(bnNeedV)).replace('{h}', int(bnHaveV));
+}
+/* 清空金额并把焦点还给输入框 */
+function clearAmt(which){
+  if (which === 'dep'){ setDAmt(0); document.getElementById('depIn').focus(); }
+  else { setWAmt(0); document.getElementById('wAmt').focus(); }
+}
+function syncClr(which){
+  var inp = document.getElementById(which === 'dep' ? 'depIn' : 'wAmt');
+  var btn = document.querySelector('#'+(which === 'dep' ? 'dField' : 'wField')+' .clr');
+  if (inp && btn) btn.hidden = !inp.value;
 }
 function depSubmit(){
   /* NGC 不足不拦输入，提交时才引导去买币 */
@@ -1324,6 +1345,7 @@ function renderWd(){
   document.getElementById('wCta').textContent  = needPayee ? t('payeeAdd')
                                                : (wM === 'ngc' ? t('wdCtaNgc') : t('wdCta'));
   document.getElementById('wCta').disabled     = !(ok || needPayee);
+  syncClr('wd');
   syncNavTuck();
 }
 function setWAmt(v, fromInput){
