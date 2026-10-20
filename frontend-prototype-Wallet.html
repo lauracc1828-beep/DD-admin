@@ -97,8 +97,6 @@
   .ngcard .lg{width:28px;height:28px;flex:0 0 28px;border-radius:7px;background:#1565E8;
     display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff}
   .ngcard .tt{flex:1;font-size:14px;font-weight:700;color:#fff}
-  .ngcard .rate{border:1px solid #6b6412;background:rgba(255,230,0,.07);color:var(--gold);
-    font-size:11px;font-weight:700;padding:4px 9px;border-radius:7px;white-space:nowrap}
   .ngcard .r2{display:flex;align-items:center;gap:10px;padding:12px;border-top:1px solid var(--line)}
   .ngcard .r2 .bk{flex:1;min-width:0}
   .ngcard .r2 .bk .k{font-size:12px;color:var(--grey);margin-bottom:5px}
@@ -475,8 +473,7 @@
             <div class="r1">
               <span class="lg">NewG</span>
               <span class="tt" data-i="ngTitle">NewGPay 数字钱包</span>
-              <span class="rate">1 NGC = 1 R$</span>
-            </div>
+                          </div>
             <div class="r2">
               <div class="bk">
                 <div class="k" data-i="ngBalK">我的 NGC 余额</div>
@@ -485,7 +482,7 @@
               <button class="buy" data-i="ngBuy" onclick="toast(t('tBuy'))">购买NGC</button>
             </div>
             <div class="r3">
-              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></svg><span data-i="f1">秒级到账</span></span>
+              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.2" y="10.5" width="15.6" height="9.8" rx="2.2"/><path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9"/></svg><span>1 NGC = 1 R$</span></span>
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.9-6.4"/><path d="M3.5 4.5v4.2h4.2"/></svg><span data-i="f3">可提回钱包</span></span>
               <button class="f tut" id="guideBtn" onclick="replayGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 16 12l-6 3.4V8.6Z"/></svg><span class="lb" data-i="guideBtn" data-txt="新手教程">新手教程</span></button>
             </div>
@@ -514,8 +511,7 @@
             <div class="r1">
               <span class="lg">NewG</span>
               <span class="tt" data-i="ngTitle">NewGPay 数字钱包</span>
-              <span class="rate">1 NGC = 1 R$</span>
-            </div>
+                          </div>
             <div class="r2">
               <div class="bk">
                 <div class="k" data-i="ngBalK">我的 NGC 余额</div>
@@ -524,7 +520,7 @@
               <button class="buy" id="wEnterBtn" data-i="ngEnter" onclick="toast(t('tWallet'))">进入钱包</button>
             </div>
             <div class="r3">
-              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 15 4.5-5 3.5 3.5L20 6"/><path d="M20 6h-4.5M20 6v4.5"/></svg><span data-i="wf1">市价成交</span></span>
+              <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.2" y="10.5" width="15.6" height="9.8" rx="2.2"/><path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9"/></svg><span>1 NGC = 1 R$</span></span>
               <span class="f"><svg viewBox="0 0 24 24" fill="none" stroke="#8a8a8f" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2.2"/><path d="M3 10h18"/></svg><span data-i="wf2">PIX 收款</span></span>
               <button class="f tut" id="wGuideBtn" onclick="replayWdGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M10 8.6 16 12l-6 3.4V8.6Z"/></svg><span class="lb" data-i="guideBtn" data-txt="新手教程">新手教程</span></button>
             </div>
@@ -919,7 +915,6 @@ var I18N = {
   whAppTip:['以下操作在钱包内完成','Feito dentro da carteira'],                                    // [T]
   igSellApp:['在 NewGPay 卖出 NGC','Vender NGC na NewGPay'],                                    // [T]
   wdSeeSell:['查看如何卖币','Como vender'],                                                      // [T]
-  wf1:['市价成交','Cotação atual'],                                                             // [T]
   wf2:['PIX 收款','Recebe via PIX'],                                                             // [T]
   wcoach1:['选择或输入提款金额，支持快捷档位。',
            'Escolha ou digite o valor do saque. Há valores rápidos disponíveis.'],               // [T]
@@ -955,8 +950,7 @@ var I18N = {
   ngBalK:['我的 NGC 余额','Saldo NGC'],                    // [P] 「NGC 余额为 0」= Saldo NGC zerado
   ngBuy:['购买NGC','Comprar NGC'],                         // [P]
   ngEnter:['进入钱包','Abrir carteira'],                   // [P]
-  f1:['秒级到账','Instantâneo'],                            // [T] [P]原文「Chega em segundos」101px，窄屏折行
-  f3:['可提回钱包','Resgatável'],                           // [T] 原「Resgatável para a carteira」过长
+  f3:['可提回钱包','Resgatável'],                           // [T] 3 列每列仅 79px(320机型)，只能用单词
   /* —— 存款 —— */
   depPh:['请输入充值金额','Digite o valor da recarga'],     // [P]
   depCta:['立即存款','Recarregar agora'],                   // [P]
