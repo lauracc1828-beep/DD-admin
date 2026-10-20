@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>提款页改版优化 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.chg{color:#b1500a;font-weight:600}
+.keep{color:#1a7a3a;font-weight:600}
+.src{white-space:nowrap}
+
+.ptx{color:#24407a}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">提款页改版优化</div>
+  <div class="cover-sub">PRD 产品需求文档 · 布局调整 / 提款地址交互</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-20</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、名词解释</a></li>
+    <li><a href="#s3">三、提款地址默认选择流程图</a></li>
+    <li><a href="#s4">四、页面布局调整</a>
+      <ol><li><a href="#s41">4.1 区块顺序与改动对照</a></li>
+          <li><a href="#s42">4.2 金额输入区</a></li>
+          <li><a href="#s43">4.3 已删除的区块</a></li></ol></li>
+    <li><a href="#s5">五、提款方式与字段定义</a>
+      <ol><li><a href="#s51">5.1 提款方式</a></li>
+          <li><a href="#s52">5.2 字段归属与完整性判定</a></li></ol></li>
+    <li><a href="#s6">六、提款地址的默认选择逻辑</a></li>
+    <li><a href="#s7">七、收款信息面板</a>
+      <ol><li><a href="#s71">7.1 三种显示形态</a></li>
+          <li><a href="#s72">7.2 面板内交互</a></li>
+          <li><a href="#s73">7.3 保存与锁定</a></li></ol></li>
+    <li><a href="#s8">八、提交校验与拦截顺序</a></li>
+    <li><a href="#s9">九、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s10">十、边界与异常处理</a></li>
+    <li><a href="#s11">十一、关联需求同步检查</a></li>
+    <li><a href="#s12">十二、修订记录</a></li>
+  </ol>
+</div>
+
+<div class="section" id="s1">
+<h1>一、需求背景与范围</h1>
+<p>提款页现网存在两类问题。<b>布局上</b>，收款信息以展开的表单常驻页面中部，姓名、CPF ID、手机号三个输入框连同区块标题、填写提示、提款规则说明一并堆在金额输入之前，会员每次提款都要滚过一屏已经填好且不可修改的内容才能到达金额区；同时页面文案层层叠加，「提款方式」「收款信息」「提款规则」三段说明实际重复表达同一件事。</p>
+<p><b>逻辑上</b>，现网仅维护<b>一条</b>收款记录。当会员同时具备 CPF 与 PHONE 两种提款方式的条件时，页面落在哪一个没有明确规则，表现为取最后一次保存的那条；会员上次用 PHONE 成功提过款，这次进来可能仍落在 CPF，需要手动切换。本次需求确立一套完整的默认选择规则，使页面<b>总是落在会员最可能要用的那个方式</b>上。</p>
+
+<h2>本次需求范围</h2>
+<table>
+<thead><tr><th style="width:150px">模块</th><th>范围</th><th style="width:110px">对应章节</th></tr></thead>
+<tbody>
+<tr><td>页面布局</td><td>收款信息由常驻展开表单改为<b>卡片 + 弹出面板</b>；删除区块标题、填写提示与提款规则三段冗余文案；金额输入区新增清空键。</td><td>第四章</td></tr>
+<tr><td>提款方式与字段</td><td>明确 CPF、PHONE 两种方式各自所需字段，确立姓名与 CPF ID 为<b>账户级共享字段</b>、手机号为 PHONE 方式专属。</td><td>第五章</td></tr>
+<tr><td>默认选择逻辑</td><td>按「可用方式 → 信息完整性 → 最近成功提款 → 后台排序值」四级判定页面默认落在哪个提款方式。</td><td>第六章</td></tr>
+<tr><td>收款信息面板</td><td>面板的三种显示形态、方式切换、字段预填与锁定、保存与二次确认。</td><td>第七章</td></tr>
+<tr><td>提交校验</td><td>收款信息缺失、未完结提款、绑定占用数超限、首次保存确认四类拦截的<b>判定顺序</b>。</td><td>第八章</td></tr>
+</tbody></table>
+
+<div class="notice notice-info">
+<p><b>不在本期范围</b>：本文档<b>仅定义前台 H5 提款页</b>，提款方式的后台配置项（状态、解锁条件、排序值、绑定占用数上限）与审核出款流程不属于本文档范围。NEWGPAY 渠道下的提款流程不涉及收款信息，其页面结构与交互沿用《NewGPay支付渠道 PRD》第六章，本文档仅在第四章的区块顺序中标明其位置。提款金额的限额、有效流水校验、提现密码、提交后的审核与出款流程均不变更。提款记录页不在本次改版范围。</p>
+</div>
+</div>
+
+<div class="section" id="s2">
+<h1>二、名词解释</h1>
+<table>
+<thead><tr><th style="width:150px">名词</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>提款方式</td><td>出金通道的形态，本期为 CPF 与 PHONE 两种。各自所需的收款字段不同，见 5.1。</td></tr>
+<tr><td>提款地址</td><td>某个提款方式下，会员已保存的那一组收款信息的统称。一个提款方式对应一条提款地址。</td></tr>
+<tr><td>账户级字段</td><td>属于会员本人、与提款方式无关的实名信息，全局只存一份。本期为<b>姓名</b>与 <b>CPF ID</b>。</td></tr>
+<tr><td>方式级字段</td><td>仅某一种提款方式需要的字段。本期为 PHONE 方式的<b>手机号</b>。</td></tr>
+<tr><td>信息完整</td><td>某提款方式所需的全部字段均已保存。由于姓名与 CPF ID 账户级共享，<b>保存过 PHONE 方式后 CPF 方式自动判定为完整</b>。</td></tr>
+<tr><td>可用</td><td>该提款方式在后台的状态为开启，<b>且</b>对当前会员已解锁。两个条件缺一不可。</td></tr>
+<tr><td>成功提款记录</td><td>该提款方式最近一次<b>出款成功</b>的时间。处理中、审核中、已驳回的订单均不计入。</td></tr>
+<tr><td>排序值</td><td>后台为每个提款方式配置的排序权重，数值越大越靠前。用于无成功提款记录时的兜底排序。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s3">
+<h1>三、提款地址默认选择流程图</h1>
+<p>会员进入提款页、或在页内把渠道切到 BESTPAY 时执行本流程，判定页面默认落在哪个提款方式。</p>
+<div class="fc-wrap"><svg viewBox="0 0 1000 700" width="100%" style="max-width:1000px" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9aa7b5"/></marker></defs><rect x="360" y="20" width="280" height="40" rx="7" fill="#e8f6ec" stroke="#9ed3b0" stroke-width="1.2"/><text x="500.0" y="44.5" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#1a6b3a" font-weight='600'>进入提款页，或渠道切到 BESTPAY</text><path d="M500 60 L500 84" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><rect x="330" y="86" width="340" height="44" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="500.0" y="105.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">取可用提款方式：状态开启且已解锁</text><text x="500.0" y="120.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">按后台排序值降序排列</text><path d="M500 130 L500 154" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><rect x="380" y="156" width="240" height="38" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="500.0" y="179.5" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#444" font-weight='600'>可用方式数量为 0？</text><path d="M620 175 L756 175" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="688" y="168" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">是</text><rect x="758" y="153" width="228" height="44" rx="7" fill="#fdecec" stroke="#eab6b6" stroke-width="1.2"/><text x="872.0" y="172.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#8a2b2b">空状态：暂无可用提款方式</text><text x="872.0" y="187.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#8a2b2b">提交按钮置灰</text><path d="M500 194 L500 218" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="515" y="210" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">否</text><rect x="330" y="220" width="340" height="44" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="500.0" y="239.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">逐个判定各方式的信息是否完整</text><text x="500.0" y="254.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">按该方式所需字段是否全部已保存</text><path d="M500 264 L500 288" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><rect x="360" y="290" width="280" height="38" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="500.0" y="313.5" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#444" font-weight='600'>信息完整的方式有几个？</text><path d="M400 328 L160 360" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="240" y="340" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">0 个</text><rect x="40" y="362" width="240" height="46" rx="7" fill="#fff4e6" stroke="#f0cfa0" stroke-width="1.2"/><text x="160.0" y="382.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#8a5200">初始待填写态</text><text x="160.0" y="397.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#8a5200">已保存字段预填并锁定</text><path d="M500 328 L500 360" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="520" y="346" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">1 个</text><rect x="380" y="362" width="240" height="46" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="500.0" y="382.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">默认选中该方式</text><text x="500.0" y="397.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">并填入其已保存信息</text><path d="M600 328 L790 360" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="720" y="340" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">多个</text><rect x="700" y="362" width="260" height="46" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="830.0" y="382.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">查最近一次成功提款</text><text x="830.0" y="397.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">所使用的提款方式</text><path d="M830 408 L830 432" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><rect x="690" y="434" width="280" height="38" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="830.0" y="457.5" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#444" font-weight='600'>存在成功提款记录？</text><path d="M690 453 L560 453" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="625" y="446" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">无</text><rect x="330" y="431" width="226" height="44" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="443.0" y="450.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">按后台排序值</text><text x="443.0" y="465.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">取最高的那个方式</text><path d="M830 472 L830 496" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="848" y="488" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">有</text><rect x="690" y="498" width="280" height="38" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="830.0" y="521.5" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#444" font-weight='600'>该方式当前仍可用且完整？</text><path d="M830 536 L830 560" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="848" y="552" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">是</text><rect x="700" y="562" width="260" height="44" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="830.0" y="588.5" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">默认选中该方式</text><path d="M690 517 L560 517" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ar)"/><text x="625" y="510" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">否</text><rect x="330" y="495" width="226" height="44" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="443.0" y="514.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">回退：在其余可用且完整的</text><text x="443.0" y="529.0" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" fill="#0b3f78">方式中按排序值取最高</text><text x="30" y="628" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">绿色为入口，灰色为判断，蓝色为取值与结果，橙色为待填写态，红色为不可提款的空状态。</text><text x="30" y="647" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">「信息完整」指该提款方式所需的全部字段均已保存：CPF 方式需姓名 + CPF ID，PHONE 方式需姓名 + 手机号 + CPF ID。</text><text x="30" y="666" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">姓名与 CPF ID 为账户级共享字段，因此保存过 PHONE 方式后，CPF 方式的字段自动齐备、随之判定为完整。</text><text x="30" y="685" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">本判定仅决定页面默认落在哪个方式；会员手动切换后不写入记忆，下次进页仍按本流程重算。</text></svg></div>
+</div>
+
+<div class="section" id="s4">
+<h1>四、页面布局调整</h1>
+
+<h2 id="s41">4.1 区块顺序与改动对照</h2>
+<p>提款面板自上而下的区块顺序与改动如下。NEWGPAY 渠道下的区块差异见《NewGPay支付渠道 PRD》第五章，本表以 BESTPAY 渠道为准。</p>
+<table>
+<thead><tr><th style="width:50px">序</th><th style="width:150px">区块</th><th>改动前</th><th>改动后</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>账户余额</td><td>「账户余额：」+ 金额</td><td class="keep">保留。金额展示样式见《钱包一级页改造 PRD》5.7。</td></tr>
+<tr><td>2</td><td>提款需投注</td><td>投注要求 + 「查看详情 ›」</td><td class="keep">保留，不变。</td></tr>
+<tr><td>3</td><td>渠道区</td><td>BESTPAY / NEWGPAY</td><td class="keep">保留，不变。</td></tr>
+<tr><td>4</td><td>收款信息</td><td><b>展开的表单</b>：区块标题 + 填写提示 + 姓名 / CPF ID / 手机号输入框常驻页面</td><td class="chg">改为<b>一行卡片</b>：左侧标明提款方式（CPF / PHONE），中间为姓名与脱敏后的收款账号，右侧为「切换」。点击整行打开收款信息面板。详见第七章。</td></tr>
+<tr><td>5</td><td>金额输入区</td><td>输入框 + 「全部」</td><td class="chg">新增<b>清空键</b>，详见 4.2。</td></tr>
+<tr><td>6</td><td>快捷档位</td><td>三列栅格</td><td class="keep">保留，不变。</td></tr>
+<tr><td>7</td><td>底部结算</td><td>「您将收到」+ 提交按钮</td><td class="keep">保留。金额展示样式见《钱包一级页改造 PRD》5.7；提交态下底部导航的让位规则见该文档 5.5。</td></tr>
+</tbody></table>
+
+<div class="notice">
+<p>收款信息改为卡片的核心理由：这组信息<b>首次保存后即不可自行修改</b>（见 7.3），此后每次提款它都只是一行需要确认的事实，却以三个输入框的体量常驻在金额输入之前。改为卡片后该区块由约 200px 压缩到约 56px，会员进入页面即可看到金额输入区。</p>
+</div>
+
+<h2 id="s42">4.2 金额输入区</h2>
+<table>
+<thead><tr><th style="width:120px">元素</th><th>要求</th></tr></thead>
+<tbody>
+<tr><td>币种前缀</td><td>固定显示 <code>R$</code>，不可编辑。</td></tr>
+<tr><td>输入框</td><td>数字键盘，仅允许数字与小数分隔符，最多两位小数。占位符显示限额区间。</td></tr>
+<tr><td class="chg">清空键</td><td class="chg">输入框有值时显示，<b>不论金额是否合法</b>。点击清空并保持焦点。详见《钱包一级页改造 PRD》5.6。</td></tr>
+<tr><td>「全部」</td><td>一键填入当前可提余额。位于清空键右侧，始终显示。</td></tr>
+<tr><td>错误提示</td><td>输入框下方单行，金额不合法时显示，合法时该行留空但<b>高度保留</b>，避免页面跳动。</td></tr>
+</tbody></table>
+
+<h2 id="s43">4.3 已删除的区块</h2>
+<table>
+<thead><tr><th style="width:170px">原区块</th><th>原内容</th><th>删除理由</th></tr></thead>
+<tbody>
+<tr><td class="chg">收款信息区块标题</td><td>「收款信息」+ 右侧小字「需与本人银行账户一致」</td><td>卡片本身已标明提款方式与账号，标题属重复标注；「需与本人银行账户一致」的约束在面板内的字段说明处给出更有效，常驻页面只是噪声。</td></tr>
+<tr><td class="chg">提款规则说明</td><td>页面底部的多行规则文字（到账时间、手续费、审核说明等）</td><td>与提交确认弹窗的提示语重复。规则在<b>提交前的确认弹窗</b>里给出，比常驻页面底部更可能被读到。</td></tr>
+<tr><td class="chg">金额输入框上方标题</td><td>「提款金额」+ 右侧限额提示文字</td><td>输入框已有币种前缀与限额占位符，标题与提示均为重复信息。</td></tr>
+<tr><td class="chg">收款信息下方提示</td><td>填写引导类文字</td><td>改为卡片后不再需要填写引导，引导移入面板内。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s5">
+<h1>五、提款方式与字段定义</h1>
+
+<h2 id="s51">5.1 提款方式</h2>
+<p>本期提款方式为 CPF 与 PHONE 两种，均为 PIX 收款形态，区别在于使用哪一类 PIX 键。</p>
+<table>
+<thead><tr><th style="width:90px">方式</th><th style="width:200px">所需字段</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>CPF</td><td>姓名 + CPF ID</td><td>以 CPF 号作为 PIX 键收款。</td></tr>
+<tr><td>PHONE</td><td>姓名 + 手机号 + CPF ID</td><td>以手机号作为 PIX 键收款。<b>CPF ID 仍为必填</b>——它用于实名核验，不因 PIX 键换成手机号而免除。</td></tr>
+</tbody></table>
+<p>每个提款方式有三项属性决定它是否出现在会员面前：<b>状态</b>（后台开启或关闭）、<b>解锁</b>（对当前会员是否已解锁）、<b>排序值</b>（展示与兜底排序的权重）。三项均由后台配置，取值与配置入口不在本文档范围。<b>可用</b>指状态开启且已解锁，两个条件缺一不可。</p>
+
+<h2 id="s52">5.2 字段归属与完整性判定</h2>
+<table>
+<thead><tr><th style="width:110px">字段</th><th style="width:110px">归属</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>姓名</td><td class="chg">账户级</td><td>全局只存一份，两种提款方式共用。</td></tr>
+<tr><td>CPF ID</td><td class="chg">账户级</td><td>全局只存一份，两种提款方式共用。会员的实名标识，与使用哪种 PIX 键无关。</td></tr>
+<tr><td>手机号</td><td>PHONE 方式专属</td><td>仅 PHONE 方式需要，CPF 方式不采集。</td></tr>
+</tbody></table>
+
+<div class="notice">
+<p><b>账户级共享带来的连带效果</b>：会员保存 PHONE 方式时会同时填入姓名与 CPF ID，而这两项正是 CPF 方式所需的全部字段——因此<b>保存过 PHONE 方式后，CPF 方式自动判定为信息完整</b>，无需会员再次填写。反之保存 CPF 方式后，PHONE 方式仍缺手机号，不会自动完整。</p>
+<p>这一设计避免会员为同一个人填两遍实名信息，也杜绝了两份实名信息填得不一致的风控隐患。代价是「只有一个方式信息完整」这种状态，实际上只会出现在「只保存过 CPF 方式」的会员身上。</p>
+</div>
+
+<h3>信息完整的判定</h3>
+<p>某提款方式<b>信息完整</b>，当且仅当该方式所需的全部字段均<b>已保存</b>。「已保存」指字段值已写入会员账户并锁定，不含面板内尚未提交的草稿。</p>
+<table>
+<thead><tr><th style="width:220px">已保存的字段</th><th style="width:120px">CPF 方式</th><th style="width:120px">PHONE 方式</th></tr></thead>
+<tbody>
+<tr><td>无</td><td>不完整</td><td>不完整</td></tr>
+<tr><td>仅姓名</td><td>不完整</td><td>不完整</td></tr>
+<tr><td>姓名 + CPF ID</td><td class="keep">完整</td><td>不完整（缺手机号）</td></tr>
+<tr><td>姓名 + CPF ID + 手机号</td><td class="keep">完整</td><td class="keep">完整</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s6">
+<h1>六、提款地址的默认选择逻辑</h1>
+<p>会员<b>进入提款页</b>、或在页内<b>把渠道切到 BESTPAY</b> 时执行本判定，决定页面默认落在哪个提款方式、并填入该方式已保存的信息。判定流程见第三章流程图，规则逐条如下。</p>
+
+<h2>判定顺序</h2>
+<table>
+<thead><tr><th style="width:50px">级</th><th style="width:190px">判定</th><th>结果</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>取<b>可用</b>的提款方式，按排序值降序排列</td><td>列表为空 → 进入「暂无可用提款方式」空状态，提交按钮置灰。</td></tr>
+<tr><td>1</td><td>可用方式中<b>信息完整</b>的有几个</td><td>0 个 → 规则一；1 个 → 规则二；多个 → 规则三。</td></tr>
+</tbody></table>
+
+<h3>规则一　没有信息完整的方式</h3>
+<p>页面进入<b>初始待填写状态</b>：收款信息区显示「添加收款信息」入口，没有卡片。会员点击后打开面板，面板默认选中可用列表中排序值最高的方式。</p>
+<p><b>已保存的字段预填并锁定。</b>例如会员此前只保存过姓名，则打开面板时姓名已填入且不可编辑，只需补填 CPF ID。部分保存的情况按本规则处理——只要还缺字段，就不算完整。</p>
+
+<h3>规则二　只有一个方式信息完整</h3>
+<p>页面<b>默认选中该方式</b>，收款信息区直接显示卡片，卡片内填入该方式已保存的信息。</p>
+
+<h3>规则三　多个方式信息完整</h3>
+<table>
+<thead><tr><th style="width:230px">条件</th><th>默认选中</th></tr></thead>
+<tbody>
+<tr><td>存在成功提款记录</td><td>取<b>最近一次成功提款</b>所使用的方式。</td></tr>
+<tr><td>该方式当前已不可用，或已不完整</td><td><b>回退</b>：在其余可用且完整的方式中按排序值取最高。</td></tr>
+<tr><td>不存在成功提款记录</td><td>按<b>排序值</b>取最高。</td></tr>
+</tbody></table>
+
+<div class="notice">
+<p><b>「成功提款记录」的口径</b>：该提款方式最近一次<b>出款成功</b>的时间。处理中、审核中、审核驳回的订单<b>均不计入</b>——未完成的订单不能代表会员的使用偏好，驳回的订单更不应被当作推荐依据。</p>
+<p><b>兜底用排序值而非保存时间</b>：排序值由运营配置、行为稳定可预测，且不依赖会员数据；而在账户级字段共享的前提下，「自动变完整」的那个方式并没有属于自己的保存时间，用保存时间排序还需额外定义它的取值。</p>
+</div>
+
+<h2>手动切换不写入记忆</h2>
+<p>会员在页面上手动切换提款方式后，该选择<b>仅在本次停留内生效</b>，不写入记忆。下次进入提款页仍按上述规则重新判定。</p>
+<div class="notice notice-info">
+<p>这条看似「不听话」，实际自洽：如果会员这次切换后提款成功了，下次自然会因为规则三而默认到它；如果没提成功，说明这次切换未必代表稳定偏好。若另行记忆手动选择，会与规则三产生冲突——记忆的方式和最近成功的方式不一致时，需要再定一套优先级，徒增复杂度。</p>
+</div>
+</div>
+
+<div class="section" id="s7">
+<h1>七、收款信息面板</h1>
+
+<h2 id="s71">7.1 三种显示形态</h2>
+<p>提款面板中收款信息区的显示由「可用方式数量」与「是否有完整信息」共同决定，共三种形态。</p>
+<table>
+<thead><tr><th style="width:130px">形态</th><th style="width:200px">出现条件</th><th>展示</th></tr></thead>
+<tbody>
+<tr><td>空状态</td><td>可用提款方式数量为 0</td><td>灰底提示「暂无可用的提款方式，请完成充值后再试或联系客服」。不显示添加入口，提交按钮置灰。</td></tr>
+<tr><td>待填写</td><td>有可用方式，但无信息完整的方式</td><td>虚线框按钮「＋ 添加收款信息」，点击打开面板。</td></tr>
+<tr><td>已填写</td><td>至少一个方式信息完整</td><td>一行卡片：左侧提款方式标识（CPF / PHONE）、中间姓名与脱敏账号、右侧「切换」。<b>整行可点</b>，打开面板。</td></tr>
+</tbody></table>
+
+<h3>卡片内的脱敏规则</h3>
+<table>
+<thead><tr><th style="width:90px">方式</th><th style="width:200px">脱敏格式</th><th>示例</th></tr></thead>
+<tbody>
+<tr><td>CPF</td><td>前 6 位隐藏，保留后 5 位</td><td><code>***.***.890-09</code></td></tr>
+<tr><td>PHONE</td><td>保留区号与后 4 位</td><td><code>(11) *****-1111</code></td></tr>
+</tbody></table>
+<p>卡片右侧在信息已锁定时显示<b>锁形标识</b>，提示该组信息不可自行修改。</p>
+
+<h2 id="s72">7.2 面板内交互</h2>
+<p>面板自底部升起，内容自上而下为：提款方式选择器、对应字段表单、取消与保存两个按钮。</p>
+<table>
+<thead><tr><th style="width:130px">元素</th><th>要求</th></tr></thead>
+<tbody>
+<tr><td>方式选择器</td><td>横向排列全部<b>可用</b>方式，按排序值降序。当前选中项高亮。<b>信息已保存后仍可切换</b>——锁定的是字段值，不是方式的选择权。</td></tr>
+<tr><td>切换方式</td><td>切换后表单按新方式所需字段重绘：账户级字段（姓名、CPF ID）的已保存值<b>保留并保持锁定</b>，方式级字段（手机号）按新方式决定是否出现。</td></tr>
+<tr><td>字段顺序</td><td>CPF 方式：姓名 → CPF ID。PHONE 方式：姓名 → 手机号 → CPF ID。</td></tr>
+<tr><td>已保存字段</td><td>预填入值并置为<b>只读</b>，视觉上与可编辑字段区分，不提供清除。</td></tr>
+<tr><td>未保存字段</td><td>可编辑，带占位符。失焦时做格式校验，错误提示显示在字段下方。</td></tr>
+<tr><td>「保存」按钮</td><td>全部必填字段通过校验前置灰。点击保存后关闭面板、刷新卡片，轻提示「收款信息已填写」。</td></tr>
+<tr><td>「取消」按钮</td><td>关闭面板，<b>丢弃本次未保存的编辑</b>，不改变已保存的值与当前选中的方式。</td></tr>
+</tbody></table>
+
+<h3>字段校验</h3>
+<table>
+<thead><tr><th style="width:110px">字段</th><th style="width:220px">规则</th><th>未通过时的提示</th></tr></thead>
+<tbody>
+<tr><td>姓名</td><td>非空，需包含姓与名</td><td>请输入完整姓名</td></tr>
+<tr><td>手机号</td><td>位数符合巴西手机号规则</td><td>手机号位数不正确</td></tr>
+<tr><td>CPF ID</td><td>11 位数字</td><td>CPF ID 需为 11 位数字</td></tr>
+</tbody></table>
+
+<h2 id="s73">7.3 保存与锁定</h2>
+<ul>
+<li><b>锁定时机</b>：字段在<b>本次提款成功后</b>锁定，而非保存即锁。保存只是写入草稿级的账户信息，会员在首次提款成功前仍可修改。</li>
+<li><b>锁定范围</b>：按字段锁定，不按方式锁定。姓名与 CPF ID 一经锁定，两种方式都读取同一份值。</li>
+<li><b>首次确认</b>：当本次提交会导致字段<b>首次锁定</b>时，提交前弹出二次确认：「请确认提款信息」，正文说明「本次提款成功后，所填写的提款信息将保存至您的账户并不可自行修改。请确认姓名与收款账号准确无误。」，按钮为「返回修改」「确认无误」。</li>
+<li><b>锁定后的修改</b>：会员不可自行修改，需联系客服。前台不提供修改入口，卡片上以锁形标识说明。</li>
+</ul>
+</div>
+
+<div class="section" id="s8">
+<h1>八、提交校验与拦截顺序</h1>
+<p>点击提交按钮后按以下顺序判定，任一环节不通过即中止，<b>不继续后续判定</b>。顺序不可调换——越靠前的条件越是「根本无法提交」，越靠后的越接近「可以提交但需确认」。</p>
+<table>
+<thead><tr><th style="width:50px">序</th><th style="width:190px">判定</th><th style="width:200px">不通过时</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>收款信息是否已填</td><td>弹窗「请先添加收款信息」<br>按钮：暂不添加 / 去添加</td><td>点「去添加」关闭弹窗并打开收款信息面板。</td></tr>
+<tr><td>2</td><td>是否有未完结的提款</td><td>弹窗「有未完结的提款」<br>按钮：关闭 / 查看记录</td><td>点「查看记录」进入提款记录页。规则见《提款未完结拦截弹窗 PRD》。</td></tr>
+<tr><td>3</td><td>绑定占用数是否超限</td><td>轻提示「该 CPF 绑定次数已达上限」或「该手机号绑定次数已达上限」</td><td>按当前选中方式判定：CPF 方式校验 CPF 绑定数，PHONE 方式校验手机号绑定数。上限由后台配置。</td></tr>
+<tr><td>4</td><td>本次提交是否导致字段首次锁定</td><td>弹窗「请确认提款信息」<br>按钮：返回修改 / 确认无误</td><td>点「确认无误」继续进入第 5 步；点「返回修改」返回页面不提交。详见 7.3。</td></tr>
+<tr><td>5</td><td>提交二次确认</td><td>弹窗「确认取款」，列出提款金额、提款方式、收款账号三行，附说明「提交后进入审核，审核通过即按收款账号出款。」</td><td>点「确认取款」正式提交，轻提示「提交成功，请等待审核」。</td></tr>
+</tbody></table>
+<p>金额相关的校验（低于下限、高于上限、超出可提余额）在<b>输入时</b>即时完成并置灰提交按钮，不进入上述顺序。有效流水未达标的校验沿用现行规则。</p>
+</div>
+
+<div class="section" id="s9">
+<h1>九、中文 / 葡语文案对照表</h1>
+<p>共 47 条。标记含义：<span class="keep">[P]</span> 沿用既有参考原文或通用词；<span class="chg">[T]</span> 为新拟或本次调整，<b>上线前需运营确认</b>。</p>
+<table>
+<thead><tr><th style="width:110px">键</th><th style="width:270px">中文</th><th>Português</th><th style="width:60px">标记</th></tr></thead>
+<tbody><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">收款信息区</td></tr><tr><td class="src"><code>payeeAdd</code></td><td>添加收款信息</td><td class="ptx">Adicionar dados de recebimento</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>payeeChg</code></td><td>切换</td><td class="ptx">Alterar</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>noMethod</code></td><td>暂无可用的提款方式，请完成充值后再试或联系客服</td><td class="ptx">Nenhum método de saque disponível. Faça um depósito ou fale com o suporte.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>lbMethod</code></td><td>提款方式</td><td class="ptx">Método de saque</td><td><span class="keep">[P]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">面板字段</td></tr><tr><td class="src"><code>fName</code></td><td>姓名</td><td class="ptx">Nome</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>fNamePh</code></td><td>请输入您的姓名</td><td class="ptx">Por favor, insira seu nome</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fPhone</code></td><td>手机号</td><td class="ptx">Telefone</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>fPhonePh</code></td><td>请输入您的手机号</td><td class="ptx">Por favor, insira o número de telefone</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fCpf</code></td><td>CPF ID</td><td class="ptx">CPF ID</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>fCpfPh</code></td><td>请输入您的CPF(巴西税务识别号码)</td><td class="ptx">Por favor, insira o CPF</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>save</code></td><td>保存</td><td class="ptx">Salvar</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>cancel</code></td><td>取消</td><td class="ptx">Cancelar</td><td><span class="keep">[P]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">字段校验</td></tr><tr><td class="src"><code>errName</code></td><td>请输入完整姓名</td><td class="ptx">Digite o nome completo</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>errPhone</code></td><td>手机号位数不正确</td><td class="ptx">Número de telefone inválido</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>errCpf</code></td><td>CPF ID 需为 11 位数字</td><td class="ptx">O CPF deve ter 11 dígitos</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>tSaved</code></td><td>收款信息已填写</td><td class="ptx">Dados de recebimento salvos</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">拦截弹窗</td></tr><tr><td class="src"><code>noPayeeT</code></td><td>请先添加收款信息</td><td class="ptx">Adicione os dados de recebimento</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>noPayeeB</code></td><td>提款前需要先登记接收款项的账户，保存后即可发起提款。</td><td class="ptx">Cadastre a conta que vai receber o valor para poder solicitar o saque.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>later</code></td><td>暂不添加</td><td class="ptx">Agora não</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>goAdd</code></td><td>去添加</td><td class="ptx">Adicionar</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>pdT</code></td><td>有未完结的提款</td><td class="ptx">Saque em andamento</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>pdB</code></td><td>请等待上一笔提款完成后，再申请新的提款。</td><td class="ptx">Aguarde a conclusão do saque anterior antes de solicitar outro.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>seeRec</code></td><td>查看记录</td><td class="ptx">Ver extrato</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>close</code></td><td>关闭</td><td class="ptx">Fechar</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>fsT</code></td><td>请确认提款信息</td><td class="ptx">Confirme os dados de saque</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fsB1</code></td><td>本次提款成功后，所填写的提款信息将保存至您的账户并</td><td class="ptx">Após a conclusão deste saque, os dados informados serão salvos na sua conta e</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fsLock</code></td><td>不可自行修改</td><td class="ptx">não poderão ser alterados por você</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fsB2</code></td><td>。请确认姓名与收款账号准确无误。</td><td class="ptx">. Confira o nome e a conta de recebimento.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fsBack</code></td><td>返回修改</td><td class="ptx">Voltar e editar</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>fsOk</code></td><td>确认无误</td><td class="ptx">Confirmar</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">提交确认</td></tr><tr><td class="src"><code>cfTitleWd</code></td><td>确认取款</td><td class="ptx">Confirmar saque</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>cfAmtK</code></td><td>提款金额</td><td class="ptx">Valor do saque</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>cfWayK</code></td><td>提款方式</td><td class="ptx">Método de saque</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>cfToK</code></td><td>收款账号</td><td class="ptx">Conta de recebimento</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>cfNoteWd</code></td><td>提交后进入审核，审核通过即按收款账号出款。</td><td class="ptx">Após o envio, o saque passa por análise e é pago na conta informada.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>cfOkWd</code></td><td>确认取款</td><td class="ptx">Confirmar saque</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">页面其他</td></tr><tr><td class="src"><code>acct</code></td><td>账户余额：</td><td class="ptx">Saldo da conta:</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>flow</code></td><td>提款需投注：</td><td class="ptx">Apostas necessárias:</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>detail</code></td><td>查看详情 ›</td><td class="ptx">Ver detalhes ›</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>wdAll</code></td><td>全部</td><td class="ptx">Tudo</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>wdCta</code></td><td>立即取款</td><td class="ptx">Sacar agora</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>minWd</code></td><td>最低提款 R$</td><td class="ptx">Saque mínimo: R$</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>maxWd</code></td><td>单笔最高 R$</td><td class="ptx">Máximo por transação: R$</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>insuffBal</code></td><td>可提余额不足，当前可提</td><td class="ptx">Saldo disponível insuficiente. Disponível:</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>tLimCpf</code></td><td>该 CPF 绑定次数已达上限</td><td class="ptx">Este CPF atingiu o limite de vínculos.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>tLimPhone</code></td><td>该手机号绑定次数已达上限</td><td class="ptx">Este telefone atingiu o limite de vínculos.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>tWdOk</code></td><td>提交成功，请等待审核</td><td class="ptx">Solicitação enviada. Aguarde a análise.</td><td><span class="chg">[T]</span></td></tr></tbody></table>
+</div>
+
+<div class="section" id="s10">
+<h1>十、边界与异常处理</h1>
+<table>
+<thead><tr><th style="width:250px">场景</th><th>处理</th></tr></thead>
+<tbody>
+<tr><td>可用提款方式全部关闭或未解锁</td><td>收款信息区进入空状态，提交按钮置灰。金额仍可输入，但无法提交。</td></tr>
+<tr><td>会员停留期间，某提款方式被后台关闭</td><td>不打断当前操作。下次执行默认选择判定时按新状态重算；若被关闭的正是当前选中方式，按规则三回退。</td></tr>
+<tr><td>最近成功提款的方式已不可用</td><td>按规则三回退到其余可用且完整的方式中排序值最高的那个。</td></tr>
+<tr><td>可用方式仅一个，且信息不完整</td><td>进入待填写状态。面板内方式选择器仍显示该唯一方式，不可切换。</td></tr>
+<tr><td>部分字段已保存（如仅姓名）</td><td>归入规则一的待填写状态。打开面板时已保存字段预填并锁定，只需补填其余字段。</td></tr>
+<tr><td>面板内切换方式后点「取消」</td><td>丢弃未保存的编辑，<b>并恢复到打开面板前选中的方式</b>，不保留面板内的切换。</td></tr>
+<tr><td>字段已锁定，会员仍点开卡片</td><td>正常打开面板。锁定字段只读展示，可切换方式，可补填该方式缺少的字段。</td></tr>
+<tr><td>渠道从 BESTPAY 切到 NEWGPAY</td><td>整个收款信息区隐藏，NEWGPAY 不采集收款信息。切回时按默认选择规则重新判定。</td></tr>
+<tr><td>提交过程中网络失败</td><td>沿用平台现有处理，保留页面状态与已填金额，不清空。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s11">
+<h1>十一、关联需求同步检查</h1>
+<table>
+<thead><tr><th style="width:230px">关联文档</th><th style="width:260px">同步点</th><th>处理</th></tr></thead>
+<tbody>
+<tr><td>《增加Phone提款方式 PRD》</td><td>该文档定义了 CPF 与 PHONE 两种方式及各自字段，并约定提款信息首次成功后不可自行修改。</td><td>本文档<b>沿用</b>其字段定义与锁定规则，新增字段归属（账户级 / 方式级）与完整性判定，补齐该文档未定义的多方式默认选择逻辑。</td></tr>
+<tr><td>《钱包一级页改造 PRD》</td><td>5.5 提交态下的导航与返回键、5.6 金额输入框清空键、5.7 金额展示规范。</td><td>本文档第四章<b>引用</b>，不重复定义。</td></tr>
+<tr><td>《NewGPay支付渠道 PRD》</td><td>第五章定义 NEWGPAY 渠道下隐藏提款方式与收款信息区块。</td><td>一致，无冲突。本文档的布局调整仅作用于 BESTPAY 渠道。</td></tr>
+<tr><td>《提款未完结拦截弹窗 PRD》</td><td>未完结提款的判定与拦截弹窗。</td><td>本文档第八章将其纳入拦截顺序的第 2 位，弹窗内容沿用该文档定义。</td></tr>
+<tr><td>《提现密码设置优化 PRD》</td><td>提现密码的校验时机。</td><td>本次不涉及。若该需求上线，其校验应插入第八章顺序的第 5 步之后。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s12">
+<h1>十二、修订记录</h1>
+<table>
+<thead><tr><th style="width:90px">版本</th><th style="width:120px">日期</th><th style="width:90px">修订人</th><th>修订内容</th></tr></thead>
+<tbody>
+<tr><td>v1.0</td><td>2026-10-20</td><td>Laura</td><td>首次发布。收款信息由常驻展开表单改为卡片加弹出面板；删除区块标题、填写提示、提款规则与金额区标题四处冗余文案；确立姓名与 CPF ID 为账户级共享字段、手机号为 PHONE 方式专属，并据此定义信息完整性判定；新增提款地址默认选择逻辑（可用方式 → 信息完整性 → 最近成功提款 → 排序值兜底，含不可用回退与手动切换不记忆）；定义收款信息面板的三种显示形态、面板内交互、保存与锁定规则；明确提交校验的五级拦截顺序；补充中葡文案对照与边界处理。</td></tr>
+</tbody></table>
+</div>
+
+</div>
+</body>
+</html>

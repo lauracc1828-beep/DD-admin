@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>新增 NewGPay 支付渠道 PRD v1.1</title>
+<title>新增 NewGPay 支付渠道 PRD v1.4</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -49,7 +49,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">新增 NewGPay 支付渠道</div>
   <div class="cover-sub">PRD 产品需求文档 · H5 存款页 / 取款页</div>
-  <div class="cover-meta"><span>版本：v1.1</span><span>作者：Laura</span><span>更新日期：2026-10-06</span></div>
+  <div class="cover-meta"><span>版本：v1.6</span><span>作者：Laura</span><span>更新日期：2026-10-20</span></div>
 </div>
 
 <div class="toc">
@@ -58,31 +58,29 @@ b,strong{color:#1a1a2e}
     <li><a href="#s1">一、需求背景与范围</a></li>
     <li><a href="#s2">二、名词解释</a></li>
     <li><a href="#s3">三、交互逻辑流程图</a></li>
-    <li><a href="#s4">四、后台配置说明</a></li>
-    <li><a href="#s5">五、前台存款页 —— NEWGPAY 渠道</a>
+    <li><a href="#s5">四、前台存款页 —— NEWGPAY 渠道</a>
       <ol>
-        <li><a href="#s51">5.1 渠道选择区</a></li>
-        <li><a href="#s52">5.2 NGC 钱包卡片</a></li>
-        <li><a href="#s53">5.3 充值金额选择与输入</a></li>
-        <li><a href="#s54">5.4 赠送比例与实际到账</a></li>
-        <li><a href="#s55">5.5 提交与结果处理</a></li>
+        <li><a href="#s51">4.1 渠道选择区</a></li>
+        <li><a href="#s52">4.2 NewGPay 钱包卡片</a></li>
+        <li><a href="#s53">4.3 充值金额选择与输入</a></li>
+        <li><a href="#s54">4.4 赠送比例与实际到账</a></li>
+        <li><a href="#s55">4.5 提交与结果处理</a></li>
       </ol>
     </li>
-    <li><a href="#s6">六、前台取款页 —— NEWGPAY 渠道</a>
+    <li><a href="#s6">五、前台取款页 —— NEWGPAY 渠道</a>
       <ol>
-        <li><a href="#s61">6.1 渠道选择区与账户信息</a></li>
-        <li><a href="#s62">6.2 NGC 钱包卡片</a></li>
-        <li><a href="#s63">6.3 提款方式与收款信息区块的隐藏</a></li>
-        <li><a href="#s64">6.4 有效流水校验</a></li>
-        <li><a href="#s65">6.5 提款金额选择与输入</a></li>
-        <li><a href="#s66">6.6 提交与结果处理</a></li>
+        <li><a href="#s61">5.1 渠道选择区与账户信息</a></li>
+        <li><a href="#s62">5.2 NewGPay 钱包卡片</a></li>
+        <li><a href="#s63">5.3 提款方式与收款信息区块的隐藏</a></li>
+        <li><a href="#s64">5.4 有效流水校验</a></li>
+        <li><a href="#s65">5.5 提款金额选择与输入</a></li>
+        <li><a href="#s66">5.6 提交与结果处理</a></li>
       </ol>
     </li>
-    <li><a href="#s7">七、NewGPay 钱包 WebView</a></li>
-    <li><a href="#s8">八、中文 / 葡语文案对照表</a></li>
-    <li><a href="#s9">九、边界与异常处理</a></li>
-    <li><a href="#s10">十、待确认事项</a></li>
-    <li><a href="#s11">十一、修订记录</a></li>
+    <li><a href="#s7">六、NewGPay 钱包 WebView</a></li>
+    <li><a href="#s9">七、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s10">八、边界与异常处理</a></li>
+    <li><a href="#s12">九、修订记录</a></li>
   </ol>
 </div>
 
@@ -96,15 +94,16 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:150px">模块</th><th>范围</th><th style="width:120px">对应章节</th></tr></thead>
     <tbody>
-      <tr><td>后台配置</td><td>NEWGPAY 渠道的上下线开关、可见会员层级、赠送比例、单笔限额、快捷金额档位等配置项。<b>本期 PRD 暂不展开，待后台原型与字段清单确认后补充。</b></td><td>第四章</td></tr>
-      <tr><td>前台 H5 存款页</td><td>渠道区新增 NEWGPAY；NGC 钱包卡片（余额 / 购买入口 / 获取说明）；快捷与自定义金额；渠道赠送角标与实际到账计算；余额不足引导购买；同步充值结果。</td><td>第五章</td></tr>
-      <tr><td>前台 H5 取款页</td><td>渠道区新增 NEWGPAY；NGC 钱包卡片（钱包地址 / 余额 / 钱包入口）；隐藏提款方式与收款信息区块；有效流水校验；金额输入与「全部」快填；提交后跳转提款记录。</td><td>第六章</td></tr>
-      <tr><td>第三方页面衔接</td><td>App 内 WebView 打开 NewGPay 买币页与钱包首页，返回后刷新余额。</td><td>第七章</td></tr>
+      
+      <tr><td>前台 H5 存款页</td><td>渠道区新增 NEWGPAY；NewGPay 钱包卡片（余额 / 购买入口 / <span class="chg">卡内要点条</span>）；快捷与自定义金额；渠道赠送角标与实际到账计算；余额不足引导购买；同步充值结果。<span class="chg">原说明折叠条取消，改由《NewGPay新手引导 PRD》承担。</span></td><td>第四章</td></tr>
+      <tr><td>前台 H5 取款页</td><td>渠道区新增 NEWGPAY；NewGPay 钱包卡片（<span class="chg">余额 / 钱包入口 / 卡内要点条</span>）；隐藏提款方式与收款信息区块；有效流水校验；金额输入与「全部」快填；提交后跳转取款记录。<span class="chg">钱包地址不再展示。</span></td><td>第五章</td></tr>
+      <tr><td>第三方页面衔接</td><td>App 内 WebView 打开 NewGPay 买币页与钱包首页，返回后刷新余额。</td><td>第六章</td></tr>
+      
     </tbody>
   </table>
 
   <div class="notice notice-info">
-    <p><b>不在本期范围</b>：NEWGPAY 相关的后台提现审核流程改造、提现报表字段扩展、对账与结算规则。BESTPAY 渠道的充值与提款逻辑本需求不做调整；其收银环节由三方 WebView 改为站内页面一事属独立需求，见《BESTPAY 收银页站内化 PRD》。</p>
+    <p><b>不在本期范围</b>：本文档<b>仅定义前台 H5 页面</b>。NEWGPAY 的后台配置项、后台报表字段与取值口径、提现审核流程、对账与结算规则<b>均不属于本文档范围</b>，由后台相关需求单独承载。BESTPAY 渠道的充值与提款逻辑本需求不做调整；其收银环节由三方 WebView 改为站内页面一事属独立需求，见《BESTPAY 收银页站内化 PRD》。</p>
   </div>
 </div>
 
@@ -169,7 +168,7 @@ b,strong{color:#1a1a2e}
     <text x="230" y="772" text-anchor="middle" font-size="12.5" fill="#333">充值金额 ×（1＋赠送比例）入账</text>
 
     <rect x="110" y="814" width="240" height="50" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
-    <text x="230" y="835" text-anchor="middle" font-size="12.5" fill="#15542f">提示「充值成功」，停留当前页</text>
+    <text x="230" y="835" text-anchor="middle" font-size="12.5" fill="#15542f">提示「存款成功」，停留当前页</text>
     <text x="230" y="852" text-anchor="middle" font-size="12.5" fill="#15542f">并刷新 NGC 余额与账户余额</text>
 
     <!-- ====== 存款分支 ====== -->
@@ -244,7 +243,7 @@ b,strong{color:#1a1a2e}
     <text x="790" y="738" text-anchor="middle" font-size="12.5" fill="#333">提示「提交成功，请等待审核」</text>
 
     <rect x="670" y="784" width="240" height="50" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
-    <text x="790" y="805" text-anchor="middle" font-size="12.5" fill="#15542f">跳转提款记录页，订单状态</text>
+    <text x="790" y="805" text-anchor="middle" font-size="12.5" fill="#15542f">跳转取款记录页，订单状态</text>
     <text x="790" y="822" text-anchor="middle" font-size="12.5" fill="#15542f">为「审核中」</text>
 
     <!-- ====== 取款分支 ====== -->
@@ -280,22 +279,10 @@ b,strong{color:#1a1a2e}
 </div>
 
 <!-- 四 -->
-<div class="section" id="s4">
-  <h1>四、后台配置说明</h1>
-  <div class="pending">
-    本章待补充。<br>
-    NEWGPAY 渠道的后台配置项（渠道开关、可见会员层级、赠送比例、单笔限额、快捷金额档位、排序等）待后台原型与字段清单确认后，按「含义 / 控件 / 必填 / 输入要求」逐字段补齐。
-  </div>
-  <div class="notice notice-info">
-    <p>第五、六章中凡标注「由后台配置」的取值（赠送比例、单笔限额、快捷金额档位、渠道可见性），其配置入口、取值范围与校验规则均以本章补充后的内容为准。前台原型中的具体数值仅为示意，不作为需求取值。</p>
-  </div>
-</div>
-
-<!-- 五 -->
 <div class="section" id="s5">
-  <h1>五、前台存款页 —— NEWGPAY 渠道</h1>
+  <h1>四、前台存款页 —— NEWGPAY 渠道</h1>
 
-  <h2 id="s51">5.1 渠道选择区</h2>
+  <h2 id="s51">4.1 渠道选择区</h2>
   <ol>
     <li><b>展示形式</b>：在「在线充值」Tab 下的渠道区，NEWGPAY 与 BESTPAY 并列横向排列，<b>互斥单选</b>，顺序由后台配置。</li>
     <li><b>切换行为</b>：点击渠道按钮仅替换下方内容区，<b>不跳转页面</b>、不清空已加载的钱包数据。页面默认选中渠道由后台排序的首个可用渠道决定。</li>
@@ -303,36 +290,51 @@ b,strong{color:#1a1a2e}
     <li><b>赠送角标</b>：当后台配置的赠送比例大于 0 时，NEWGPAY 按钮右上角显示角标，内容为「+N%」，N 取后台配置的赠送比例；赠送比例为 0 时<b>不显示角标</b>。角标仅在存款页展示，取款页不展示。</li>
   </ol>
 
-  <h2 id="s52">5.2 NGC 钱包卡片</h2>
-  <p>渠道内容区顶部为 NGC 钱包卡片，单行结构、高度固定，自左至右为：渠道图标、NGC 余额、「购买NGC」按钮。</p>
+  <h2 id="s52">4.2 NewGPay 钱包卡片</h2>
+  <p>渠道内容区顶部为 NewGPay 钱包卡片，三行结构，自上而下为：标题行、余额行、<span class="chg">卡内要点条</span>。</p>
   <table>
-    <thead><tr><th style="width:130px">元素</th><th>逻辑说明</th></tr></thead>
+    <thead><tr><th style="width:120px">元素</th><th>逻辑说明</th></tr></thead>
     <tbody>
+      <tr><td>标题行</td><td>渠道图标 + 标题「NewGPay 数字钱包」。<span class="chg">汇率角标由本行移入卡内要点条，标题行右侧不再放置元素。</span></td></tr>
       <tr><td>NGC 余额</td><td>进入渠道时实时向 NewGPay 查询并展示，格式为「数值 + NGC」。数值按客户端语言的千分位规则格式化。</td></tr>
-      <tr><td>加载失败态</td><td>查询失败时余额位显示「--」，其下方显示「加载失败，点击重试」，点击后重新发起查询。此状态下点击「立即充值」不提交，轻提示同一文案。</td></tr>
-      <tr><td>购买NGC</td><td>点击在 App 内 WebView 打开 NewGPay 买币页，详见第七章。</td></tr>
-      <tr><td>获取说明</td><td>卡片下方为可折叠条，收起态仅显示「如何获得更多 NGC？」，点击展开后显示购买路径说明（文案见第八章）。采用折叠条而非卡片内嵌文字，避免多语言下长文案撑高卡片。默认收起。</td></tr>
+      <tr><td>加载失败态</td><td>查询失败时余额位显示「--」，其下方显示「加载失败，点击重试」，点击后重新发起查询。此状态下点击「立即存款」不提交，轻提示同一文案。</td></tr>
+      <tr><td>购买NGC</td><td>点击在 App 内 WebView 打开 NewGPay 买币页，详见第六章。</td></tr>
     </tbody>
   </table>
 
-  <h2 id="s53">5.3 充值金额选择与输入</h2>
+  <h3 class="chg">卡内要点条</h3>
+  <p>卡片底部单行<b>三栏等宽</b>，栏间以竖线分隔，每栏为图标加一行文案。</p>
+  <table>
+    <thead><tr><th style="width:140px">栏位</th><th style="width:150px">文案</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>第 1 栏</td><td><code>1 NGC = 1 R$</code></td><td>固定汇率，使用<b>锁形图标</b>表达比例锁定。该信息原位于标题行右侧的角标，本次移入要点条，避免同一卡片内重复展示。</td></tr>
+      <tr><td>第 2 栏</td><td>可提回钱包</td><td>说明 NGC 并非单向消耗，可通过取款页转回 NewGPay 钱包。</td></tr>
+      <tr><td>第 3 栏</td><td>新手教程</td><td><b>可点入口</b>，品牌蓝加下划线，带扫光动效。点击重播存款引导，规则详见《NewGPay新手引导 PRD》第六章。</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice">
+    <p><span class="chg">原「秒级到账」「加密安全」两栏与卡片下方的<b>说明折叠条</b>（收起态显示「什么是 NGC？如何获得？」）本次一并取消。</span>折叠条承担的「NGC 是什么、怎么获得」说明，已由新手引导的品牌介绍屏与买 NGC 四步演示完整覆盖，且后者用录屏演示了 NewGPay 侧的真实操作，信息量远高于一段折叠文字。保留两者会形成两个并列的说明入口。</p>
+  </div>
+
+  <h2 id="s53">4.3 充值金额选择与输入</h2>
   <ol>
-    <li><b>快捷金额</b>：标题「快捷金额」，档位数量与取值由后台配置，单位 NGC。按配置顺序以<b>两列栅格</b>依次排列。点击某档位即选中该档位并将金额<b>回填至自定义输入框</b>；手动修改输入框内容后，已选中的档位取消选中态。</li>
+    <li><b>快捷金额</b>：标题「快捷金额」，档位数量与取值由后台配置，单位 NGC。按配置顺序以<b>三列栅格</b>依次排列，与取款页保持一致。<span class="chg">档位数值<b>保留两位小数</b>展示（如 <code>5,00 NGC</code>、<code>1.000,00 NGC</code>），与 NGC 作为代币金额的精度一致；格式沿用 pt-BR 规范，点作千分位、逗号作小数位。</span>点击某档位即选中该档位并将金额<b>回填至自定义输入框</b>；手动修改输入框内容后，已选中的档位取消选中态。</li>
     <li><b>自定义金额</b>：标题「自定义充值金额」，输入框前缀固定显示单位 NGC，键盘类型为数字键盘，仅允许输入数字与小数分隔符。</li>
     <li><b>限额提示</b>：输入框下方常驻显示「单笔限额 {最低} NGC - {最高} NGC」，取值由后台配置。</li>
     <li><b>汇率提示</b>：金额区下方固定展示「1 NGC = 1 R$」。</li>
-    <li><b>按钮状态</b>：「立即充值」在<b>输入金额为空或为 0 时置灰</b>（不可点击），输入有效金额后激活。<b>NGC 余额为 0 或不足不影响按钮激活状态</b>，该校验在点击后以弹窗形式引导，不以置灰阻断（避免会员误判为渠道不可用而放弃充值）。</li>
+    <li><b>按钮状态</b>：「立即存款」在<b>输入金额为空或为 0 时置灰</b>（不可点击），输入有效金额后激活。<b>NGC 余额为 0 或不足不影响按钮激活状态</b>，该校验在点击后以弹窗形式引导，不以置灰阻断（避免会员误判为渠道不可用而放弃充值）。</li>
   </ol>
 
-  <h2 id="s54">5.4 赠送比例与实际到账</h2>
+  <h2 id="s54">4.4 赠送比例与实际到账</h2>
   <ol>
     <li>赠送比例由后台配置，<b>默认 0</b>。</li>
     <li>金额区下方<b>始终展示</b>「实际到账金额：{数值}」，数值 ＝ 输入金额 ×（1 + 赠送比例），保留 2 位小数。输入金额为空或为 0 时该行不展示数值。</li>
     <li>赠送比例为 0 时该行仍展示，数值与输入金额相等。</li>
   </ol>
 
-  <h2 id="s55">5.5 提交与结果处理</h2>
-  <p>点击「立即充值」后按以下顺序校验，任一环节不通过即中止提交：</p>
+  <h2 id="s55">4.5 提交与结果处理</h2>
+  <p>点击「立即存款」后按以下顺序校验，任一环节不通过即中止提交：</p>
   <table>
     <thead><tr><th style="width:50px">顺序</th><th style="width:220px">校验项</th><th>未通过时的处理</th></tr></thead>
     <tbody>
@@ -345,61 +347,76 @@ b,strong{color:#1a1a2e}
   </table>
   <p>校验全部通过后发起提交，按钮进入<b>处理中</b>状态（置灰、文案改为「处理中...」）以防重复提交。</p>
   <ol>
-    <li><b>成功</b>：本渠道为<b>同步返回</b>。轻提示「充值成功」，<b>停留当前页</b>不跳转，清空输入框与已选档位，并刷新 NGC 余额与账户余额。此处与 BESTPAY 不同：BESTPAY 为 PIX 扫码支付，提交后跳转站内收银页等待会员付款，见《BESTPAY 收银页站内化 PRD》6.1。</li>
+    <li><b>成功</b>：本渠道为<b>同步返回</b>。轻提示「存款成功」，清空输入框与已选档位，刷新 NGC 余额与账户余额，随后<b>自动返回会员进入钱包页之前所在的一级页</b>（规则见《存款页优化说明（PIX / NewGPay）》5.2）。此处与 BESTPAY 不同：BESTPAY 为 PIX 扫码支付，提交后跳转站内收银页等待会员付款，见《BESTPAY 收银页站内化 PRD》6.1。</li>
     <li><b>失败</b>：轻提示渠道返回的失败原因，按钮恢复可点击状态，输入内容保留。</li>
   </ol>
 </div>
 
 <!-- 六 -->
 <div class="section" id="s6">
-  <h1>六、前台取款页 —— NEWGPAY 渠道</h1>
+  <h1>五、前台取款页 —— NEWGPAY 渠道</h1>
 
-  <h2 id="s61">6.1 渠道选择区与账户信息</h2>
+  <h2 id="s61">5.1 渠道选择区与账户信息</h2>
   <ol>
     <li>渠道区的展示形式、互斥单选、切换行为与可见性规则与 5.1 一致；<b>取款页不展示赠送角标</b>。</li>
     <li>页面顶部沿用现有的「账户余额：R$ XX」展示行，不随渠道切换变化。</li>
-    <li>导航栏右侧沿用现有的提款记录入口。</li>
+    <li>导航栏右侧沿用现有的取款记录入口。</li>
   </ol>
 
-  <h2 id="s62">6.2 NGC 钱包卡片</h2>
-  <p>渠道内容区顶部为 NGC 钱包卡片，自左至右为：渠道图标、钱包信息、「进入钱包」按钮。钱包信息区为<b>两行</b>结构。</p>
+  <h2 id="s62">5.2 NewGPay 钱包卡片</h2>
+  <p>渠道内容区顶部为 NewGPay 钱包卡片，结构与 4.2 <b>保持一致</b>：标题行、余额行、卡内要点条，仅第三行的栏位内容与按钮文案不同。</p>
   <table>
-    <thead><tr><th style="width:130px">元素</th><th>逻辑说明</th></tr></thead>
+    <thead><tr><th style="width:120px">元素</th><th>逻辑说明</th></tr></thead>
     <tbody>
-      <tr><td>钱包地址</td><td>第一行为标签「NewGPay 地址：」<b>独占一行</b>，第二行为地址值<b>完整展示</b>，不截断、不省略，过长时自动换行。</td></tr>
-      <tr><td>自动开通</td><td>未开通 NGC 钱包的会员进入取款页并选择 NEWGPAY 时<b>由系统自动开通</b>并返回钱包地址，<b>无空状态、无开通引导页</b>。</td></tr>
-      <tr><td>NGC 余额</td><td>实时查询并展示，格式与加载失败态的处理与 5.2 一致。该余额为参考信息，不参与提现金额校验。</td></tr>
-      <tr><td>进入钱包</td><td>点击在 App 内 WebView 打开 NewGPay 钱包首页，详见第七章。</td></tr>
+      <tr><td>标题行</td><td>渠道图标 + 标题「NewGPay 数字钱包」，右侧不放置元素。</td></tr>
+      <tr><td class="chg">钱包地址</td><td class="chg"><b>本次取消，前台不再展示。</b>地址属于技术标识，对会员无操作价值，且完整展示会占据两行高度并带来抄写、误读与客诉风险。会员通过「进入钱包」按钮即可在 NewGPay 侧看到自己的账户，无需在本站阅读地址。</td></tr>
+      <tr><td>自动开通</td><td>未开通 NewGPay 钱包的会员进入取款页并选择 NEWGPAY 时<b>由系统自动开通</b>，<b>无空状态、无开通引导页</b>。开通动作本身对会员不可见。</td></tr>
+      <tr><td>NGC 余额</td><td>实时查询并展示，格式与加载失败态的处理与 4.2 一致。该余额为参考信息，<b>不参与提现金额校验</b>。</td></tr>
+      <tr><td>进入钱包</td><td>点击在 App 内 WebView 打开 NewGPay 钱包首页，详见第六章。<span class="chg">该按钮同时是提款引导第 4 步的高亮对象，是本站交接到 NewGPay 的唯一出口。</span></td></tr>
     </tbody>
   </table>
 
-  <h2 id="s63">6.3 提款方式与收款信息区块的隐藏</h2>
-  <p>选中 NEWGPAY 后，取款页的<b>「提款方式」选择区（PHONE / CPF）及姓名、手机号码、CPF ID 三项收款信息字段整块隐藏</b>。原因是本渠道资金直接入账至会员 NGC 钱包，不依赖 PIX 收款标识。</p>
+  <h3 class="chg">卡内要点条</h3>
+  <table>
+    <thead><tr><th style="width:140px">栏位</th><th style="width:150px">文案</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>第 1 栏</td><td><code>1 NGC = 1 R$</code></td><td>与存款页同一栏位、同一锁形图标。</td></tr>
+      <tr><td>第 2 栏</td><td>PIX 收款</td><td>说明在 NewGPay 侧卖出 NGC 后，款项经 PIX 到账。</td></tr>
+      <tr><td>第 3 栏</td><td>新手教程</td><td>可点入口，点击重播<b>提款</b>引导，规则详见《NewGPay新手引导 PRD》第六章。</td></tr>
+    </tbody>
+  </table>
+
   <div class="notice">
-    <p>该隐藏仅作用于 NEWGPAY 渠道内容区。切回 BESTPAY 时上述区块正常展示，已填写或已绑定的提现资料不受影响，亦不因本渠道的使用而产生绑定或占用。相关绑定与唯一性校验规则见《增加Phone提款方式 PRD》第七章。</p>
+    <p><span class="chg">原约定的「首次选择 NEWGPAY 渠道时弹出三步到账说明」本次取消。</span>该说明的内容（金额先转入 NewGPay 钱包、需自行卖出、卖出后到账 PIX 账户）已由提款引导的页内四步高亮逐步呈现，并用录屏演示了卖出的真实操作。原弹窗为纯文字且只出现一次，会员读过即忘，是「转出后不去卖、资金滞留钱包」这类客诉的主要成因。</p>
   </div>
 
-  <h2 id="s64">6.4 有效流水校验</h2>
+  <h2 id="s63">5.3 提款方式与收款信息区块的隐藏</h2>
+  <p>选中 NEWGPAY 后，取款页的<b>「提款方式」选择区（PHONE / CPF）及姓名、手机号码、CPF ID 三项收款信息字段整块隐藏</b>。原因是本渠道资金直接入账至会员 NGC 钱包，不依赖 PIX 收款标识。</p>
+  <div class="notice">
+    <p>该隐藏仅作用于 NEWGPAY 渠道内容区。切回 BESTPAY 时上述区块正常展示，已填写或已绑定的提现资料不受影响，亦不因本渠道的使用而产生绑定或占用。相关绑定与唯一性校验规则见《增加Phone提款方式 PRD》第六章。</p>
+  </div>
+
+  <h2 id="s64">5.4 有效流水校验</h2>
   <ol>
     <li>沿用平台现有有效流水规则与计算口径，<b>本渠道不新增规则</b>。</li>
     <li><b>已达标时</b>：流水提示行<b>整行不展示</b>（「提款需投注 R$ XX」文案与「查看详情」链接一并隐藏）。</li>
     <li><b>未达标时</b>：在账户余额行下方展示「提款需投注 R$ XX」及右侧「查看详情」链接，点击展示流水规则说明。</li>
-    <li>未达标时「立即提现」按钮<b>仍为激活状态</b>，点击后轻提示「有效流水未达标，无法提现」并中止提交，与平台现有渠道的交互保持一致。</li>
+    <li>未达标时「立即取款」按钮<b>仍为激活状态</b>，点击后轻提示「有效流水未达标，无法提现」并中止提交，与平台现有渠道的交互保持一致。</li>
   </ol>
 
-  <h2 id="s65">6.5 提款金额选择与输入</h2>
+  <h2 id="s65">5.5 提款金额选择与输入</h2>
   <ol>
     <li><b>快捷金额</b>：标题「提款金额」，沿用平台现有档位，按配置顺序以<b>三列栅格</b>排列，单位 R$。点击档位即回填至输入框，手动修改输入框后档位取消选中态。</li>
     <li><b>金额输入</b>：输入框前缀固定显示单位 R$，键盘类型为数字键盘。</li>
     <li><b>「全部」快填</b>：输入框右侧提供「全部」按钮，点击后将<b>可提金额</b>一键填入，取值为「账户可提余额」与「单笔最高限额」中的较小值。</li>
     <li><b>限额提示</b>：输入框下方常驻显示「单笔限额 R$ {最低} - R$ {最高}」，NEWGPAY 的限额<b>独立配置</b>，不沿用 BESTPAY 的取值。</li>
     <li><b>单位与换算</b>：前台金额<b>统一以 R$ 展示与输入</b>，底层按 1:1 换算为 NGC 入账。金额区下方固定展示「1 NGC = 1 R$」。</li>
-    <li><b>按钮状态</b>：「立即提现」在输入金额为空或为 0 时置灰，输入有效金额后激活。</li>
+    <li><b>按钮状态</b>：「立即取款」在输入金额为空或为 0 时置灰，输入有效金额后激活。</li>
     <li>本渠道<b>不提供金额滑块</b>。</li>
   </ol>
 
-  <h2 id="s66">6.6 提交与结果处理</h2>
-  <p>点击「立即提现」后按以下顺序校验，任一环节不通过即中止提交：</p>
+  <h2 id="s66">5.6 提交与结果处理</h2>
+  <p>点击「立即取款」后按以下顺序校验，任一环节不通过即中止提交：</p>
   <table>
     <thead><tr><th style="width:50px">顺序</th><th style="width:220px">校验项</th><th>未通过时的处理</th></tr></thead>
     <tbody>
@@ -411,7 +428,7 @@ b,strong{color:#1a1a2e}
   </table>
   <p>校验全部通过后发起提交，按钮进入<b>处理中</b>状态（置灰、文案改为「处理中...」）以防重复提交。</p>
   <ol>
-    <li><b>成功</b>：扣减账户余额并按 1:1 生成入账至会员 NGC 钱包的提现订单。轻提示「提交成功，请等待审核」，随后<b>跳转提款记录页</b>，该笔订单状态为「审核中」，渠道显示为 NEWGPAY。</li>
+    <li><b>成功</b>：扣减账户余额并按 1:1 生成入账至会员 NGC 钱包的提现订单。轻提示「提交成功，请等待审核」，随后<b>跳转取款记录页</b>，该笔订单状态为「审核中」，渠道显示为 NEWGPAY。</li>
     <li><b>无手续费</b>：本渠道不收取提现手续费，因此取款页<b>不展示「实际到账」行</b>。</li>
     <li><b>失败</b>：轻提示失败原因，按钮恢复可点击状态，输入内容保留，账户余额不变动。</li>
   </ol>
@@ -419,7 +436,7 @@ b,strong{color:#1a1a2e}
 
 <!-- 七 -->
 <div class="section" id="s7">
-  <h1>七、NewGPay 钱包 WebView</h1>
+  <h1>六、NewGPay 钱包 WebView</h1>
   <table>
     <thead><tr><th style="width:120px">入口</th><th style="width:180px">目标页面</th><th>返回后的刷新范围</th></tr></thead>
     <tbody>
@@ -430,14 +447,15 @@ b,strong{color:#1a1a2e}
   </table>
   <ol>
     <li>统一在 <b>App 内 WebView</b> 打开，不跳出至外部浏览器。</li>
+    <li><b>页面内容归属</b>：买币页与钱包首页的页面内容由 NewGPay 维护，平台不参与设计与文案。其中买币页顶部为渠道信息区（品牌名与定位、一句话用途说明、到账速度 / 安全性 / 汇率三项要点），此处列出仅用于说明会员在该页所见，<b>不属平台交付范围</b>，相关文案亦不纳入第七章的中葡对照表。</li>
     <li>WebView 顶部提供返回栏（返回按钮 + 页面标题），标题取对应入口的按钮文案。</li>
     <li>返回平台页面后按上表范围刷新，刷新完成后轻提示「余额已更新」；刷新失败时余额位按 5.2 的加载失败态处理。</li>
   </ol>
 </div>
 
 <!-- 八 -->
-<div class="section" id="s8">
-  <h1>八、中文 / 葡语文案对照表</h1>
+<div class="section" id="s9">
+  <h1>七、中文 / 葡语文案对照表</h1>
   <table>
     <thead><tr><th style="width:70px">页面</th><th style="width:130px">位置</th><th style="width:34%">中文</th><th>Português</th></tr></thead>
     <tbody>
@@ -451,15 +469,18 @@ b,strong{color:#1a1a2e}
       <tr><td>存款</td><td>页面标题</td><td>存款</td><td>Depósito</td></tr>
       <tr><td>存款</td><td>Tab</td><td>在线充值</td><td>Recarga Online</td></tr>
       <tr><td>存款</td><td>买币按钮</td><td>购买NGC</td><td>Comprar NGC</td></tr>
-      <tr><td>存款</td><td>说明入口</td><td>如何获得更多 NGC？</td><td>Como obter mais NGC?</td></tr>
-      <tr><td>存款</td><td>说明展开</td><td>如何获得更多NGC币：请点击右侧【购买NGC】，在新开的 NewGPay 页面中点击【买币】，交易成功后立即可获得</td><td>Como obter mais NGC: toque em [Comprar NGC] à direita e, na página do NewGPay, toque em [Comprar moedas]. O saldo é creditado assim que a transação for concluída.</td></tr>
-      <tr><td>存款</td><td>快捷金额</td><td>快捷金额</td><td>Valores rápidos</td></tr>
+      
+      
+      
+      
+      
+      <tr class="chg"><td>存款</td><td>要点条-汇率</td><td>1 NGC = 1 R$</td><td>1 NGC = 1 R$</td></tr><tr class="chg"><td>存款</td><td>要点条-可提回</td><td>可提回钱包</td><td>Resgatável</td></tr><tr class="chg"><td>存款 / 取款</td><td>要点条-教程入口</td><td>新手教程</td><td>Tutorial</td></tr><tr class="chg"><td>取款</td><td>要点条-收款</td><td>PIX 收款</td><td>Recebe via PIX</td></tr><tr><td>存款</td><td>快捷金额</td><td>快捷金额</td><td>Valores rápidos</td></tr>
       <tr><td>存款</td><td>自定义金额</td><td>自定义充值金额</td><td>Valor personalizado</td></tr>
       <tr><td>存款</td><td>输入占位</td><td>请输入充值金额</td><td>Digite o valor da recarga</td></tr>
       <tr><td>存款</td><td>限额</td><td>单笔限额 {最低} NGC - {最高} NGC</td><td>Limite por transação: {最低} NGC - {最高} NGC</td></tr>
       <tr><td>存款</td><td>渠道角标</td><td>+{N}%</td><td>+{N}%</td></tr>
       <tr><td>存款</td><td>到账金额</td><td>实际到账金额：{数值}</td><td>Valor a receber: {数值}</td></tr>
-      <tr><td>存款</td><td>主按钮</td><td>立即充值</td><td>Recarregar agora</td></tr>
+      <tr><td>存款</td><td>主按钮</td><td>立即存款</td><td>Recarregar agora</td></tr>
       <tr><td>存款</td><td>最低限制</td><td>最低充值 {最低} NGC</td><td>Recarga mínima: {最低} NGC</td></tr>
       <tr><td>存款</td><td>最高限制</td><td>单笔最高 {最高} NGC</td><td>Máximo por transação: {最高} NGC</td></tr>
       <tr><td>存款</td><td>余额为零-标题</td><td>NGC 余额为 0</td><td>Saldo NGC zerado</td></tr>
@@ -467,7 +488,7 @@ b,strong{color:#1a1a2e}
       <tr><td>存款</td><td>余额为零-确认</td><td>立即购买</td><td>Comprar agora</td></tr>
       <tr><td>存款</td><td>余额不足-标题</td><td>余额不足</td><td>Saldo insuficiente</td></tr>
       <tr><td>存款</td><td>余额不足-正文</td><td>当前 NGC 余额不足以完成本次充值，是否前往购买 NGC？</td><td>Seu saldo NGC não cobre esta recarga. Deseja comprar NGC agora?</td></tr>
-      <tr><td>存款</td><td>成功提示</td><td>充值成功</td><td>Recarga realizada com sucesso</td></tr>
+      <tr><td>存款</td><td>成功提示</td><td>存款成功</td><td>Recarga realizada com sucesso</td></tr>
       <tr><td>取款</td><td>页面标题</td><td>取款</td><td>Saque</td></tr>
       <tr><td>取款</td><td>账户余额</td><td>账户余额：</td><td>Saldo da conta:</td></tr>
       <tr><td>取款</td><td>流水未达标</td><td>提款需投注 R$ {数值}</td><td>Apostas necessárias: R$ {数值}</td></tr>
@@ -480,12 +501,12 @@ b,strong{color:#1a1a2e}
       <tr><td>取款</td><td>输入占位</td><td>{最低} - {最高}</td><td>{最低} - {最高}</td></tr>
       <tr><td>取款</td><td>限额</td><td>单笔限额 R$ {最低} - R$ {最高}</td><td>Limite por transação: R$ {最低} - R$ {最高}</td></tr>
       <tr><td>取款</td><td>全部</td><td>全部</td><td>Tudo</td></tr>
-      <tr><td>取款</td><td>主按钮</td><td>立即提现</td><td>Sacar agora</td></tr>
+      <tr><td>取款</td><td>主按钮</td><td>立即取款</td><td>Sacar agora</td></tr>
       <tr><td>取款</td><td>最低限制</td><td>最低提款 R$ {最低}</td><td>Saque mínimo: R$ {最低}</td></tr>
       <tr><td>取款</td><td>最高限制</td><td>单笔最高 R$ {最高}</td><td>Máximo por transação: R$ {最高}</td></tr>
       <tr><td>取款</td><td>余额不足</td><td>可提余额不足</td><td>Saldo disponível insuficiente</td></tr>
       <tr><td>取款</td><td>提交成功</td><td>提交成功，请等待审核</td><td>Solicitação enviada. Aguarde a análise.</td></tr>
-      <tr><td>取款</td><td>记录页标题</td><td>提款记录</td><td>Histórico de saques</td></tr>
+      <tr><td>取款</td><td>记录页标题</td><td>取款记录</td><td>Histórico de saques</td></tr>
       <tr><td>取款</td><td>订单状态</td><td>审核中</td><td>Em análise</td></tr>
     </tbody>
   </table>
@@ -494,14 +515,14 @@ b,strong{color:#1a1a2e}
   </div>
 </div>
 
-<!-- 九 -->
-<div class="section" id="s9">
-  <h1>九、边界与异常处理</h1>
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>八、边界与异常处理</h1>
   <table>
     <thead><tr><th style="width:190px">场景</th><th>处理方式</th></tr></thead>
     <tbody>
       <tr><td>NGC 余额查询超时或失败</td><td>余额位显示「--」并展示「加载失败，点击重试」；折叠说明条内容不展示；提交时中止并轻提示同一文案。点击重试重新发起查询。</td></tr>
-      <tr><td>NGC 钱包自动开通失败</td><td>取款页 NEWGPAY 渠道内容区展示失败提示与重试入口，「立即提现」置灰；渠道区仍保留，会员可切换至其他渠道。</td></tr>
+      <tr><td>NGC 钱包自动开通失败</td><td>取款页 NEWGPAY 渠道内容区展示失败提示与重试入口，「立即取款」置灰；渠道区仍保留，会员可切换至其他渠道。</td></tr>
       <tr><td>渠道在会员停留页面期间被后台下线</td><td>提交时由服务端拦截并返回渠道不可用，前台轻提示并刷新渠道区（该渠道按钮不再渲染，自动切换至首个可用渠道）。</td></tr>
       <tr><td>重复提交</td><td>提交期间按钮置灰并显示「处理中...」，直至接口返回或超时后方可再次点击。</td></tr>
       <tr><td>充值提交后渠道返回超时</td><td>按失败处理，轻提示失败原因并恢复按钮，不扣减 NGC、不入账；以渠道最终对账结果为准。</td></tr>
@@ -509,45 +530,26 @@ b,strong{color:#1a1a2e}
       <tr><td>输入金额超出限额或可提余额</td><td>按 5.5 / 6.6 的校验顺序轻提示对应文案并中止提交，不清空输入内容。</td></tr>
       <tr><td>「全部」填入后账户余额发生变化</td><td>以提交时的服务端校验为准；超出可提余额则轻提示「可提余额不足」。</td></tr>
       <tr><td>赠送比例在会员停留页面期间被修改</td><td>以提交时服务端取到的配置为准；若与前台展示的「实际到账金额」不一致，按服务端结果入账，刷新后的余额即为准确值。</td></tr>
-      <tr><td>WebView 加载失败或会员中途返回</td><td>返回平台页面后仍按第七章的范围刷新余额；若无变化则余额保持原值，不做额外提示。</td></tr>
+      <tr><td>WebView 加载失败或会员中途返回</td><td>返回平台页面后仍按本章的范围刷新余额；若无变化则余额保持原值，不做额外提示。</td></tr>
       <tr><td>会员未登录或登录态失效</td><td>沿用平台现有处理，跳转登录流程。</td></tr>
     </tbody>
   </table>
 </div>
 
-<!-- 十 -->
-<div class="section" id="s10">
-  <h1>十、待确认事项</h1>
-  <table>
-    <thead><tr><th style="width:50px">序号</th><th style="width:230px">事项</th><th>说明与影响</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>NEWGPAY 的存款与取款开关是否分开配置</td>
-        <td>即是否允许「存款开启、取款关闭」这类单边上线。若分开配置，5.1 与 6.1 的渠道可见性需按存款 / 取款两套开关分别判定；若合并为单一渠道开关，则两页可见性同步变化。影响第四章字段设计与前台判定逻辑，待需求方确认。</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>快捷金额档位是否由后台配置</td>
-        <td>存款页档位（含栅格列数的呈现）与取款页档位是否均开放后台配置、以及档位数量上限，待第四章确认。若为固定档位，需在第四章明确取值。</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>NEWGPAY 提现订单的审核流程与报表字段</td>
-        <td>本渠道无 CPF / 手机号等收款信息，提现审核与提现订单记录中相关列的取值与展示方式需确认（留空、显示钱包地址或新增列）。涉及《增加Phone提款方式 PRD》第六章的报表字段，需同步评估。</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
 <!-- 十一 -->
-<div class="section" id="s11">
-  <h1>十一、修订记录</h1>
+<div class="section" id="s12">
+  <h1>九、修订记录</h1>
   <table>
     <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
     <tbody>
+      
+      <tr><td>v1.6</td><td>2026-10-20</td><td><b>收敛文档范围为前台页面</b>：删除「后台配置说明」「后台报表字段定义」「口径生效范围与审核流程」三章，相关内容移交后台需求承载；章节与小节重新编号，跨章引用同步修正。</td></tr>
+      <tr><td>v1.5</td><td>2026-10-20</td><td>存款页与取款页的 NewGPay 钱包卡片改为三行结构，新增<b>卡内要点条</b>；存款要点条为「1 NGC = 1 R$ / 可提回钱包 / 新手教程」，取款要点条为「1 NGC = 1 R$ / PIX 收款 / 新手教程」；标题行的汇率角标移入要点条；<b>取消</b>存款页说明折叠条与取款页首次选择渠道的三步到账说明弹窗，二者由《NewGPay新手引导 PRD》承担；<b>取消</b>取款页钱包卡片的钱包地址展示；快捷金额档位补充保留两位小数；文案对照表同步。</td></tr>
+      <tr><td>v1.4</td><td>2026-10-09</td><td>跨需求同步：5.5 存款成功后的页面行为变更——由「停留当前页」改为「自动返回进入钱包页之前的一级页」，依据《存款页优化说明（PIX / NewGPay）》5.2；前台文案与底部按钮固定见同文档，页面层级与底部导航见《钱包页结构调整 PRD》。同步刷齐前台术语（立即存款 / 立即取款 / 存款记录 / 取款记录 / 存款成功），后台报表名称不变。</td></tr>
+      <tr><td>v1.3</td><td>2026-10-06</td><td>存款页 NEWGPAY 面板顶部新增<b>渠道要点条</b>（秒级到账 / 加密安全 / 1 NGC = 1 R$，固定内容不可配置）；说明折叠条由「如何获得更多 NGC？」改为<b>「什么是 NGC？如何获得？」</b>，合并 NGC 性质与获取路径为单一入口；买币页内容归属说明与文案对照表同步。</td></tr>
+      <tr><td>v1.2</td><td>2026-10-06</td><td>新增「后台报表字段定义」章（该章已于 v1.6 移出本文档）：确立提款方式与账户类型的从属关系（账户类型为提款方式的下级枚举，系统校验不允许越界组合），澄清前后台「提款方式」同名不同义；NEWGPAY 新增提款方式取值 <code>NGC_Wallet</code> 与充值方式取值 <code>NGC</code>；修正 <code>CPF ID</code> 列在非 CPF 收款时留空的填值口径。相关报表口径已于 v1.6 随章节一并移出本文档。</td></tr>
       <tr><td>v1.1</td><td>2026-10-06</td><td>跨需求同步：第一章范围说明与 5.5 补充与《BESTPAY 收银页站内化 PRD》的边界区分——BESTPAY 收银环节站内化属独立需求，本 PRD 不覆盖；并明确两渠道提交后的页面行为差异（NEWGPAY 同步返回停留当前页，BESTPAY 跳转站内收银页）。</td></tr>
-      <tr><td>v1.0</td><td>2026-10-06</td><td>初稿：新增 NEWGPAY 支付渠道，覆盖前台 H5 存款页与取款页的显示与交互逻辑、NewGPay 钱包 WebView 衔接、中葡文案对照、边界与异常处理。后台配置章节待补充。</td></tr>
+      <tr><td>v1.0</td><td>2026-10-06</td><td>初稿：新增 NEWGPAY 支付渠道，覆盖前台 H5 存款页与取款页的显示与交互逻辑、NewGPay 钱包 WebView 衔接、中葡文案对照、边界与异常处理。（后台配置章节已于 v1.6 移出本文档。）</td></tr>
     </tbody>
   </table>
 </div>

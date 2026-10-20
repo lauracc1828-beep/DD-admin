@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NewGPay 新手引导 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.chg{color:#b1500a;font-weight:600}
+.keep{color:#1a7a3a;font-weight:600}
+.src{white-space:nowrap}
+
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.flow .n{background:#eaf2fb;border:1px solid #c3d8ef;border-radius:7px;padding:6px 12px;font-size:12.5px;color:#0b3f78;white-space:nowrap}
+.flow .n.alt{background:#fff4e6;border-color:#f0cfa0;color:#8a5200}
+.flow .a{color:#9aa7b5}
+.cn{min-width:300px}
+.ptx{min-width:340px;color:#24407a}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">NewGPay 新手引导</div>
+  <div class="cover-sub">PRD 产品需求文档 · 存款引导 / 提款引导 / 教程入口</div>
+  <div class="cover-meta">
+    <span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-20</span>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、名词解释</a></li>
+    <li><a href="#s3">三、引导总体结构与流程图</a></li>
+    <li><a href="#s4">四、触发规则与频次</a></li>
+    <li><a href="#s5">五、存款引导
+      <ol><li><a href="#s51">5.1 浮层第 1 屏：品牌介绍</a></li>
+          <li><a href="#s52">5.2 浮层第 2–5 屏：买 NGC 四步</a></li>
+          <li><a href="#s53">5.3 页内高亮四步</a></li></ol></a></li>
+    <li><a href="#s6">六、提款引导
+      <ol><li><a href="#s61">6.1 浮层：品牌介绍</a></li>
+          <li><a href="#s62">6.2 页内高亮四步</a></li>
+          <li><a href="#s63">6.3 浮层：卖出演示两屏</a></li></ol></a></li>
+    <li><a href="#s7">七、教程入口与重播</a></li>
+    <li><a href="#s8">八、浮层与高亮的通用控件规则</a></li>
+    <li><a href="#s9">九、素材规格与加载策略</a></li>
+    <li><a href="#s10">十、后台配置说明</a></li>
+    <li><a href="#s11">十一、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s12">十二、边界与异常处理</a></li>
+    <li><a href="#s13">十三、关联需求同步检查</a></li>
+    <li><a href="#s14">十四、修订记录</a></li>
+  </ol>
+</div>
+
+<div class="section" id="s1">
+<h1>一、需求背景与范围</h1>
+<p>NEWGPAY 是钱包页新增的存取款渠道，其资金路径与平台既有的 BESTPAY 完全不同：存款前会员需先在第三方 NewGPay 侧持有 NGC 代币，提款则是把平台余额转入 NewGPay 钱包后、由会员自行在该侧卖出才真正到账。这两段关键操作都发生在<b>平台之外</b>，平台既看不到、也无法代劳。现网仅在提款渠道切换时弹过一个纯文字的三步说明，存款侧只有一条可折叠的「什么是 NGC？如何获得？」说明条，两者都只讲规则、不讲怎么做，会员看完仍不知道在 NewGPay 里该点哪里。由此产生两类客诉：存款侧会员不知道 NGC 从哪来，在平台反复尝试；提款侧会员完成站内转出后以为已经提款成功，资金停留在 NewGPay 钱包不动。</p>
+<p>本次需求为 NEWGPAY 渠道建立一套<b>首次进入即触发、随时可重播</b>的新手引导：用浮层承载平台之外的操作（以录屏 GIF 演示 NewGPay 侧的真实界面），用页内高亮承载平台之内的操作（直接指向会员眼前的控件）。存款与提款各一条完整链路，两条链路共用同一张品牌介绍屏与同一套控件规则。</p>
+
+<h2>本次需求范围</h2>
+<table>
+<thead><tr><th>模块</th><th>范围</th><th>对应章节</th></tr></thead>
+<tbody>
+<tr><td>引导触发</td><td>首次切换到 NEWGPAY 渠道自动触发；按存款、提款两条链路分别记录是否已看过。</td><td>第四章</td></tr>
+<tr><td>存款引导</td><td>浮层 5 屏（品牌介绍 1 屏 + 买 NGC 四步 4 屏）接页内高亮 4 步。</td><td>第五章</td></tr>
+<tr><td>提款引导</td><td>浮层 1 屏（品牌介绍）接页内高亮 4 步，再接浮层 2 屏（卖出演示）。</td><td>第六章</td></tr>
+<tr><td>教程入口</td><td>存款、提款两张 NewGPay 钱包卡功能条末位各一个「新手教程」入口，带扫光动效，点击重播本页整套引导。</td><td>第七章</td></tr>
+<tr><td>通用控件</td><td>浮层的关闭键、圆点、底部双按钮；页内高亮的遮罩、光圈、提示框、跳过与步进。</td><td>第八章</td></tr>
+<tr><td>演示素材</td><td>7 段 NewGPay 侧录屏 GIF 的内容、尺寸、体积与按需加载策略。</td><td>第九章</td></tr>
+<tr><td>文案</td><td>全部引导文案的中葡对照，含赠送比例占位符的两种形态。</td><td>第十一章</td></tr>
+</tbody></table>
+
+<div class="notice">
+<p><b>不在本期范围</b>：BESTPAY 渠道不配引导，本次引导仅在 NEWGPAY 渠道下出现。NewGPay 侧 App 的任何界面与流程均由第三方提供，本需求只做<b>录屏演示</b>，不做任何跳转后的深链定位。引导不承载营销活动的报名、领取等动作，赠送比例仅作<b>展示</b>，其配置与结算沿用《充值返现 PRD》。引导不拦截业务流程——任意一屏都可关闭，关闭后不影响会员继续操作。</p>
+</div>
+</div>
+
+<div class="section" id="s2">
+<h1>二、名词解释</h1>
+<table>
+<thead><tr><th>名词</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>引导浮层</td><td>自屏幕底部升起的半屏面板，承载<b>平台之外</b>的内容：品牌介绍与 NewGPay 侧的操作演示。可左右分屏翻页，带圆点指示。</td></tr>
+<tr><td>页内高亮</td><td>覆盖全屏的半透明遮罩，在其上开一个圆角透明光圈框住页面中的某个真实控件，并在光圈附近显示提示框。承载<b>平台之内</b>的操作。</td></tr>
+<tr><td>引导链路</td><td>一条完整的教学序列。本次共两条：存款链路、提款链路。两条链路的「已看过」状态彼此独立。</td></tr>
+<tr><td>品牌介绍屏</td><td>浮层的第 1 屏，回答「NGC 是什么、NewGPay 是什么、为什么用」。存款与提款两条链路<b>共用同一屏</b>，内容完全一致。</td></tr>
+<tr><td>教程入口</td><td>NewGPay 钱包卡功能条末位的「新手教程」按钮，常驻显示，点击从头重播当前 Tab 的整条引导。</td></tr>
+<tr><td>扫光</td><td>教程入口文字上周期性掠过的一道白色高光，用于在不增加面积的前提下提示该入口可点。</td></tr>
+<tr><td>赠送比例占位符</td><td>品牌介绍屏「存款额外赠送」一句中的比例数字。后台未配置比例时使用不含数字的措辞，配置后替换为含具体比例的措辞。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s3">
+<h1>三、引导总体结构与流程图</h1>
+<p>引导按操作发生的位置分工：<b>平台之内</b>的步骤用页内高亮，直接圈住会员眼前的真实控件；<b>平台之外</b>（NewGPay 侧）的步骤用浮层播放录屏 GIF。存款的平台外动作（买 NGC）发生在站内操作<b>之前</b>，所以浮层在前；提款的平台外动作（卖 NGC）发生在站内操作<b>之后</b>，所以浮层在后。两条链路的段落顺序由此确定，与会员的真实操作顺序一致。</p>
+<div class="fc-wrap"><svg viewBox="0 0 980 560" width="100%" style="max-width:980px" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9aa7b5"/></marker></defs><rect x="20" y="24" width="200" height="40" rx="7" fill="#e8f6ec" stroke="#9ed3b0" stroke-width="1.2"/><text x="120.0" y="48.5" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#1a6b3a" font-weight='600'>会员切换到 NEWGPAY 渠道</text><rect x="250" y="24" width="170" height="40" rx="7" fill="#fff4e6" stroke="#f0cfa0" stroke-width="1.2"/><text x="335.0" y="48.5" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#8a5200" font-weight='600'>点击「新手教程」入口</text><path d="M120 64 L120 94" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><path d="M335 64 L335 80" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><path d="M335 80 L126 80" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><rect x="20" y="96" width="400" height="38" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="220.0" y="119.5" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#444" font-weight='600'>当前 Tab？</text><path d="M120 134 L120 168" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><text x="98" y="156" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">存款</text><path d="M320 134 L320 168" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><text x="348" y="156" text-anchor="middle" font-family="PingFang SC,Arial" font-size="11" fill="#7a869a">提款</text><rect x="20" y="170" width="200" height="46" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="120.0" y="190.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">浮层 5 屏</text><text x="120.0" y="205.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">品牌介绍 + 买 NGC 四步</text><path d="M120 216 L120 248" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><rect x="20" y="250" width="200" height="46" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="120.0" y="270.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">页内高亮 4 步</text><text x="120.0" y="285.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">钱包卡→金额→提交→教程入口</text><path d="M120 296 L120 328" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><rect x="20" y="330" width="200" height="34" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="120.0" y="351.5" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#666">结束</text><rect x="240" y="170" width="200" height="46" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="340.0" y="190.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">浮层 1 屏</text><text x="340.0" y="205.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">品牌介绍（与存款同屏）</text><path d="M340 216 L340 248" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><rect x="240" y="250" width="200" height="46" rx="7" fill="#eaf2fb" stroke="#9dc1e8" stroke-width="1.2"/><text x="340.0" y="270.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">页内高亮 4 步</text><text x="340.0" y="285.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#0b3f78">金额→转入→余额→进入钱包</text><path d="M340 296 L340 328" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><rect x="240" y="330" width="200" height="46" rx="7" fill="#fff4e6" stroke="#f0cfa0" stroke-width="1.2"/><text x="340.0" y="350.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#8a5200">浮层 2 屏</text><text x="340.0" y="365.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#8a5200">NewGPay 侧卖出演示</text><path d="M340 376 L340 408" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><rect x="240" y="410" width="200" height="34" rx="7" fill="#f3f5f8" stroke="#ccd4de" stroke-width="1.2"/><text x="340.0" y="431.5" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="12.5" fill="#666">结束</text><rect x="500" y="170" width="210" height="274" rx="7" fill="#fbfcfd" stroke="#e2e8f0" stroke-width="1.2"/><text x="605" y="196" text-anchor="middle" font-family="PingFang SC,Arial" font-size="12.5" font-weight="600" fill="#0b3f78">任意一屏均可退出</text><rect x="516" y="214" width="178" height="44" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/><text x="605.0" y="233.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">浮层右上角 ✕</text><text x="605.0" y="248.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">立即关闭，不再自动弹</text><rect x="516" y="270" width="178" height="44" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/><text x="605.0" y="289.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">浮层左键「暂不查看」</text><text x="605.0" y="304.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">同上</text><rect x="516" y="326" width="178" height="44" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/><text x="605.0" y="345.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">高亮左键「跳过」</text><text x="605.0" y="360.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">收起遮罩，留在当前页</text><rect x="516" y="382" width="178" height="44" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/><text x="605.0" y="401.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">点击遮罩空白处</text><text x="605.0" y="416.0" text-anchor="middle" font-family="PingFang SC,Helvetica Neue,Arial" font-size="11.5" fill="#555">不关闭，防误触</text><path d="M442 250 L512 250" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><path d="M222 250 L236 250" stroke="#9aa7b5" stroke-width="1.3" fill="none" marker-end="url(#ah)"/><text x="20" y="500" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">绿色为自动触发入口，橙色为手动入口与平台外演示，蓝色为引导环节，灰色为判断与终态。</text><text x="20" y="520" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">两条链路的「已看过」状态彼此独立：看完存款引导不影响提款引导首次触发，反之亦然。</text><text x="20" y="540" font-family="PingFang SC,Arial" font-size="11.5" fill="#888">提款链路第 ③ 段在页内高亮走完后自动弹出，不需要会员再次点击。</text></svg></div>
+<h2>两条链路的段落对照</h2>
+<table>
+<thead><tr><th>段</th><th>存款链路</th><th>提款链路</th><th>承载形式</th></tr></thead>
+<tbody>
+<tr><td>①</td><td>品牌介绍（1 屏）+ 买 NGC 四步（4 屏）</td><td>品牌介绍（1 屏）</td><td>浮层</td></tr>
+<tr><td>②</td><td>站内存款四步</td><td>站内提款四步</td><td>页内高亮</td></tr>
+<tr><td>③</td><td>—</td><td>NewGPay 侧卖出两步</td><td>浮层</td></tr>
+</tbody></table>
+<div class="notice notice-info">
+<p>品牌介绍屏在两条链路中<b>是同一屏</b>，不做两份内容。差异只在它后面接什么：存款链路接买 NGC 四步，提款链路直接接页内高亮。实现上两条链路指向同一个浮层容器，仅配置可见屏数（存款 5 屏、提款 1 屏），以保证介绍文案改动时两处同步。</p>
+</div>
+</div>
+
+<div class="section" id="s4">
+<h1>四、触发规则与频次</h1>
+<table>
+<thead><tr><th>触发条件</th><th>行为</th><th>延时</th></tr></thead>
+<tbody>
+<tr><td>在存款 Tab 首次把渠道切到 NEWGPAY</td><td>弹出存款链路第 ① 段浮层（5 屏）。</td><td>切换后 450ms</td></tr>
+<tr><td>在存款 Tab 再次切到 NEWGPAY，浮层已看过、页内高亮未看过</td><td>跳过浮层，直接起页内高亮 4 步。</td><td>切换后 600ms</td></tr>
+<tr><td>在提款 Tab 首次把渠道切到 NEWGPAY</td><td>弹出提款链路第 ① 段浮层（1 屏）。</td><td>切换后 450ms</td></tr>
+<tr><td>在提款 Tab 再次切到 NEWGPAY，浮层已看过、页内高亮未看过</td><td>跳过浮层，直接起页内高亮 4 步。</td><td>切换后 500ms</td></tr>
+<tr><td>两段都已看过</td><td>不再自动触发，仅可由「新手教程」入口手动重播。</td><td>—</td></tr>
+<tr><td>通过直达链接（锚点）进入 NEWGPAY 渠道</td><td><b>不自动触发</b>任何引导，四个状态位直接置为已看过。</td><td>—</td></tr>
+</tbody></table>
+
+<h2>频次与状态</h2>
+<ul>
+<li><b>按链路分别记录</b>：存款与提款各维护「浮层已看过」「页内高亮已看过」两个标记，共四个状态位。看完存款引导不影响提款引导的首次触发。</li>
+<li><b>以会员为维度</b>，不以设备为维度。同一会员换设备登录不重复触发。</li>
+<li><b>自动触发仅一次</b>。关闭、跳过、看完三种结束方式都计入「已看过」，不作区分。会员想重看走教程入口。</li>
+<li>延时的作用是等渠道切换引起的布局变化与流光动效结束，避免浮层压在正在变化的页面上。</li>
+</ul>
+
+<div class="notice">
+<p>直达链接不触发引导，是因为这类链接多用于活动投放与客服指路，会员带着明确目的进入，此时弹教学浮层会打断目标动作。该规则与《钱包一级页改造 PRD》第六章定义的锚点进入方式配套。</p>
+</div>
+</div>
+
+<div class="section" id="s5">
+<h1>五、存款引导</h1>
+<p>存款链路共 9 个节拍：浮层 5 屏 + 页内高亮 4 步。浮层讲「NGC 从哪来」，高亮讲「拿到 NGC 后在本站怎么充」。</p>
+
+<h2 id="s51">5.1 浮层第 1 屏：品牌介绍</h2>
+<p>自上而下由四个板块构成，<b>品牌头固定在最顶部</b>，其余三块按「GIF → 亮点 → 问答」排布。该顺序的取舍见本节末。</p>
+<table>
+<thead><tr><th>板块</th><th>内容</th><th>字段与样式要求</th></tr></thead>
+<tbody>
+<tr><td>品牌头</td><td>NewGPay 方形 logo + 品牌名「NewGPay」+ 副标题</td><td>logo 42px 圆角方块；品牌名 16px 白色加粗；副标题取 <code>introTag</code>，11.5px，次级灰蓝色。</td></tr>
+<tr><td>① GIF</td><td>品牌片截取，展示 NewGPay App 的多端界面</td><td>横版，宽度自适应、上限 272px，圆角 12px。素材见第九章 <code>w1-wallet.gif</code>。</td></tr>
+<tr><td>② 亮点区</td><td>小标题「为什么用 NewGPay？」+ 两条权益卡</td><td>两条卡片<b>上下顺序固定为 🎁 在前、💰 在后</b>。🎁 卡用金色底与金色描边（本平台直接给的利益），💰 卡用中性蓝灰（NewGPay 侧的机会），两者权重必须区分。</td></tr>
+<tr><td>③ 问答区</td><td>两问两答：什么是 NGC？NewGPay 是什么？</td><td>排在亮点区之后，并<b>整体弱化</b>：去掉答案中的金色加粗，问句降一档字号与明度，问句前的色条由金色改中性。目的是把金色这个最强视觉只留给亮点区。</td></tr>
+</tbody></table>
+
+<h3>两条权益卡的文案规则</h3>
+<table>
+<thead><tr><th>卡</th><th>条件</th><th>中文</th></tr></thead>
+<tbody>
+<tr><td rowspan="2">🎁</td><td>后台<b>未配置</b> NEWGPAY 充值赠送比例</td><td>用 NGC 充值本平台，享受<b>惊喜加赠</b>！</td></tr>
+<tr><td>后台<b>已配置</b>比例（示例 2.5%）</td><td>用 NGC 充值本平台，额外赠 <b>2.5%</b>！</td></tr>
+<tr><td>💰</td><td>常驻，不随配置变化</td><td>在钱包出售 NGC，额外赚取<b>矿工费</b>！</td></tr>
+</tbody></table>
+<div class="notice">
+<p>两种 🎁 文案与 💰 文案采用<b>同一句式</b>（「在何处做何事，得到什么！」），三句并排时结构一致。比例数字取自《充值返现 PRD》中 NEWGPAY 渠道的返现配置，本引导只读不写；比例为 0 或该渠道返现关闭时，一律使用未配置态文案，不显示「0%」。</p>
+</div>
+
+<h3>板块顺序的取舍</h3>
+<p>曾比对三种排序：①②③（GIF→问答→亮点）、①③②（GIF→亮点→问答）、③①②（亮点→GIF→问答）。最终采用 <b>①③②</b>。第一种的认知顺序最自然，但会员要滑到底才看到赠送；第三种一上来就是促销，品牌感最弱。第二种在品牌片之后立刻给出利益点，首屏可见区即可看到赠送比例，同时保留了品牌片作为开场。</p>
+
+<h2 id="s52">5.2 浮层第 2–5 屏：买 NGC 四步</h2>
+<p>四屏结构完全一致：标题行（组名 + 组内序号）、步骤名、GIF、说明文字。组名统一为「如何买 NGC」，序号为 1/4 至 4/4。</p>
+<table>
+<thead><tr><th>屏</th><th>序号</th><th>步骤名</th><th>说明文字</th><th>素材</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>1/4</td><td>挑选卖家</td><td>进入 <b>Comprar</b>，列表标明各卖家的成功率与平均响应时间，选择其一下单。</td><td class="src">w2-buy-pick.gif</td></tr>
+<tr><td>3</td><td>2/4</td><td>填金额下单</td><td>输入购买金额，选择 <b>PIX</b> 付款方式，点击 <b>Comprar NGC</b> 生成订单。</td><td class="src">w3-buy-order.gif</td></tr>
+<tr><td>4</td><td>3/4</td><td>向卖家付款</td><td>按卖家提供的 PIX 信息付款，须<b>在倒计时结束前</b>完成，订单方可继续。</td><td class="src">w4-buy-pay.gif</td></tr>
+<tr><td>5</td><td>4/4</td><td>卖家放币，NGC 到账</td><td>卖家确认后，状态由<b>等待放币</b>转为<b>交易完成</b>，NGC 计入钱包余额。</td><td class="src">w5-buy-done.gif</td></tr>
+</tbody></table>
+
+<h2 id="s53">5.3 页内高亮四步</h2>
+<p>浮层末屏点「开始使用」后关闭浮层，转入页内高亮。四步<b>按页面自上而下排列</b>，不跳回。</p>
+<table>
+<thead><tr><th>步</th><th>高亮对象</th><th>提示文案</th><th>右键文案</th></tr></thead>
+<tbody>
+<tr><td>1/4</td><td>NewGPay 钱包卡</td><td>此处为你的 <b>NewGPay 钱包余额</b>，1 NGC 抵 R$ 1,00 存款额度。</td><td>下一步</td></tr>
+<tr><td>2/4</td><td>金额输入框</td><td>选择或输入存款金额，支持快捷档位。</td><td>下一步</td></tr>
+<tr><td>3/4</td><td>底部「立即存款」按钮</td><td>确认金额后提交，额度实时到账。</td><td>下一步</td></tr>
+<tr><td>4/4</td><td>功能条「新手教程」入口</td><td>点击此处可重新查看完整教程。</td><td>知道了</td></tr>
+</tbody></table>
+<div class="notice notice-info">
+<p>第 4 步专门用来<b>教会员这个入口在哪</b>。教程入口被收进功能条后面积很小，不主动指出来基本不会被发现；放在最后一步收尾，也顺带回答了「以后想重看怎么办」。</p>
+</div>
+</div>
+
+<div class="section" id="s6">
+<h1>六、提款引导</h1>
+<p>提款链路共 7 个节拍：浮层 1 屏 + 页内高亮 4 步 + 浮层 2 屏。关键差异在于<b>平台外的动作在后</b>，所以演示放在站内操作讲完之后。</p>
+
+<h2 id="s61">6.1 浮层：品牌介绍</h2>
+<p>与 5.1 <b>完全同一屏</b>，内容、板块顺序、弱化规则、两条权益卡的条件文案均一致，不另做一份。差异仅两处：不显示圆点（只有 1 屏），右键文案为「下一步」而非「查看操作步骤」。</p>
+<div class="notice">
+<p>该屏的 🎁 卡讲的是<b>充值</b>赠送，对正在提款的会员并非当下利益。保留它是为了让两条链路共用一份品牌介绍、避免双份维护，同时向提款会员传达「这个钱包充值也有好处」。若后续希望提款侧改为突出 💰（卖出赚矿工费），需在本节增加按场景切换的变体定义。</p>
+</div>
+
+<h2 id="s62">6.2 页内高亮四步</h2>
+<p>四步全部发生在本站，因此步骤计数带<b>地点前缀</b>，显示为「本站 · N/4」，与第 ③ 段浮层的「NewGPay」归属标识形成对照，让会员随时知道自己该在哪个 App 里操作。</p>
+<table>
+<thead><tr><th>步</th><th>高亮对象</th><th>提示文案</th><th>右键文案</th></tr></thead>
+<tbody>
+<tr><td>本站 · 1/4</td><td>金额输入框</td><td>选择或输入提款金额，支持快捷档位。</td><td>下一步</td></tr>
+<tr><td>本站 · 2/4</td><td>底部「转入 NewGPay 钱包」按钮</td><td>提交后，金额由账户余额转入你的 <b>NewGPay 钱包</b>。</td><td>下一步</td></tr>
+<tr><td>本站 · 3/4</td><td>NewGPay 钱包卡</td><td>转入完成后，此处显示你的 <b>NewGPay 钱包</b>余额。</td><td>下一步</td></tr>
+<tr><td>本站 · 4/4</td><td>钱包卡「进入钱包」按钮</td><td>点击<b>进入钱包</b>，在 NewGPay 卖出 NGC，提现于该处完成。</td><td>查看如何卖币</td></tr>
+</tbody></table>
+<div class="notice notice-info">
+<p>步骤顺序遵循真实因果：先填金额、再提交，<b>之后</b>余额才会出现在钱包卡上，所以钱包卡排在第 3 步而非第 1 步。第 4 步指向「进入钱包」按钮——这是从本站交接到 NewGPay 的唯一出口，此前整条引导都没提过它。末步右键文案改为「查看如何卖币」，让按钮本身预告下一段内容。</p>
+</div>
+
+<h2 id="s63">6.3 浮层：卖出演示两屏</h2>
+<p>页内高亮第 4 步点击右键后<b>自动弹出</b>，不需要会员再次操作。两屏顶部均带归属标识条：蓝色「NewGPay」徽标 + 说明「以下操作在钱包内完成」，明确区分于前一段的「本站」。</p>
+<table>
+<thead><tr><th>屏</th><th>序号</th><th>步骤名</th><th>说明文字</th><th>素材</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>1/2</td><td>填卖出数量</td><td>输入卖出数量，选择 <b>PIX</b> 收款方式。</td><td class="src">w6-sell-amt.gif</td></tr>
+<tr><td>2</td><td>2/2</td><td>卖出到账</td><td>状态显示<b>交易完成</b>，账单列明本次卖出明细，款项转入你的 PIX 账户。</td><td class="src">w7-sell-done.gif</td></tr>
+</tbody></table>
+<p>组名统一为「在 NewGPay 卖出 NGC」，序号徽标用金色（区别于买入组的蓝色）。末屏说明文字下方以分隔线加一行提示：「如需重看，可在钱包卡中点击<b>新手教程</b>。」，告知重看路径后整条链路结束。</p>
+</div>
+
+<div class="section" id="s7">
+<h1>七、教程入口与重播</h1>
+<p>存款、提款两张 NewGPay 钱包卡的功能条<b>末位</b>各设一个「新手教程」入口，常驻显示，不随引导是否看过而变化。</p>
+<table>
+<thead><tr><th>项</th><th>定义</th></tr></thead>
+<tbody>
+<tr><td>位置</td><td>钱包卡底部功能条的第 3 项（末位）。功能条共 3 项，前两项为渠道说明，见《NewGPay支付渠道 PRD》。</td></tr>
+<tr><td>样式</td><td>播放键图标 + 文字，整体用品牌蓝并加下划线，与同行其余两项的中性灰形成区分，表明此项可点。</td></tr>
+<tr><td>点击区</td><td>视觉尺寸不变，点击区向外扩展 10px（上下）/ 5px（左右），不占用布局宽度。</td></tr>
+<tr><td>扫光</td><td>一道白色高光自左向右掠过<b>文字笔画</b>，循环周期 3 秒（掠过约 0.69 秒，其余时间静止）。实现上以同字复制层叠加并裁剪在字形内，<b>底字颜色不参与动画</b>。开启系统「减弱动态效果」时不播放。</td></tr>
+<tr><td>点击行为</td><td>从<b>第 ① 段</b>重新播放当前 Tab 的整条引导：存款回到浮层第 1 屏，提款回到品牌介绍屏。四个「已看过」状态位中对应本链路的两位被重置，播放完毕后再次置为已看过。</td></tr>
+<tr><td>渠道联动</td><td>整张钱包卡仅在 NEWGPAY 渠道下显示，因此该入口在 BESTPAY 渠道下随卡片一并隐藏，无需单独控制。</td></tr>
+</tbody></table>
+<div class="notice">
+<p>扫光做在文字笔画上而非按钮矩形上。若做成矩形扫光，整块区域会随高光泛白，在钱包卡这种信息密集的区域显得嘈杂；裁进字形后只有四个字发亮，既能吸引注意又不影响同行其余两项的阅读。</p>
+</div>
+</div>
+
+<div class="section" id="s8">
+<h1>八、浮层与高亮的通用控件规则</h1>
+
+<h2>8.1 引导浮层</h2>
+<table>
+<thead><tr><th>控件</th><th>规则</th></tr></thead>
+<tbody>
+<tr><td>容器</td><td>自底部升起，圆角上收，最大高度为屏幕的 92%，超出部分区域内滚动。背景为 NewGPay 品牌蓝到深灰的渐变，顶部带一道蓝色光晕。</td></tr>
+<tr><td>关闭键</td><td>右上角 30px 圆形 ✕，<b>常驻于所有屏</b>。点击立即关闭整条引导，本链路状态位置为已看过。</td></tr>
+<tr><td>圆点</td><td>居中显示，数量等于本链路的浮层屏数，当前屏为加长的蓝色条。<b>仅 1 屏时整体不显示</b>。圆点可点，直接跳转到对应屏。</td></tr>
+<tr><td>底部左键</td><td>第 1 屏为「暂不查看」（等同关闭）；第 2 屏起为「上一步」。</td></tr>
+<tr><td>底部右键</td><td>末屏为「开始使用」（存款链路第 ③ 段浮层同此）；提款链路品牌介绍屏为「下一步」；存款链路第 1 屏为「查看操作步骤」；其余中间屏为「下一步」。按钮固定单行不折行。</td></tr>
+<tr><td>遮罩</td><td>60% 黑色遮罩覆盖整页。点击遮罩空白处<b>不关闭</b>浮层，避免误触中断教学。</td></tr>
+<tr><td>翻页</td><td>仅支持底部按钮与圆点两种方式，不支持左右滑动手势，避免与页面纵向滚动冲突。</td></tr>
+</tbody></table>
+
+<h2>8.2 页内高亮</h2>
+<table>
+<thead><tr><th>控件</th><th>规则</th></tr></thead>
+<tbody>
+<tr><td>遮罩与光圈</td><td>全屏 74% 黑色遮罩，在目标控件处开一个圆角 12px 的透明光圈，光圈外扩 6px 并描金色边。光圈<b>不可点</b>，不透传点击到被框住的控件。</td></tr>
+<tr><td>提示框</td><td>优先显示在光圈<b>下方</b> 12px；若下方空间不足则翻到上方。左右与屏幕各留 14px。</td></tr>
+<tr><td>提示框底栏</td><td>左为「跳过」，中为步骤计数，右为步进按钮。三者单行排列，按钮不折行。</td></tr>
+<tr><td>步骤计数</td><td>存款链路显示「N/4」；提款链路显示「本站 · N/4」，带地点前缀。</td></tr>
+<tr><td>跳过</td><td>点击立即收起遮罩，不再继续后续步骤，状态位置为已看过。提款链路跳过时<b>不弹</b>第 ③ 段卖出演示。</td></tr>
+<tr><td>自动滚动</td><td>若目标控件不在可视区内，先将其滚动到距顶部 110px 处再显示光圈。</td></tr>
+<tr><td>进出场</td><td>浮层下滑的同时预滚目标；遮罩插入后光圈与提示框<b>先无动画就位</b>，随后整体淡入 0.26 秒，提示框带 7px 上浮。就位完成后恢复步骤间的光圈平移动画。收起时先淡出再移除。</td></tr>
+</tbody></table>
+<div class="notice">
+<p>「先就位再淡入」是为了消除交接时的突兀感。若光圈带着平移动画直接出现，它会从上一个位置（或左上角原点）飞向目标；先禁用动画定位、再整体淡入，视觉上就是遮罩平稳浮现，光圈已经在正确位置上。</p>
+</div>
+
+<h2>8.3 可访问性与降级</h2>
+<ul>
+<li>关闭键、教程入口、步进按钮均提供无障碍标签。</li>
+<li>系统开启「减弱动态效果」时，关闭扫光、遮罩淡入、光圈平移与提示框上浮，仅保留状态切换。</li>
+<li>所有固定高度的按钮强制单行，文案过长时裁切而非折行溢出。</li>
+</ul>
+</div>
+
+<div class="section" id="s9">
+<h1>九、素材规格与加载策略</h1>
+<p>全部演示素材取自 NewGPay 官方录屏，统一裁为竖版 1080×1505（裁去原片的葡语批注与底部 Tab 栏，只保留手机界面本身），导出为 GIF。</p>
+<table>
+<thead><tr><th>文件</th><th>用于</th><th>内容</th><th>尺寸</th><th>体积</th></tr></thead>
+<tbody>
+<tr><td class="src">w1-wallet.gif</td><td>品牌介绍屏</td><td>品牌片，多端界面展示</td><td>280×158（横版）</td><td>236 KB</td></tr>
+<tr><td class="src">w2-buy-pick.gif</td><td>存款 1/4</td><td>Comprar 卖家列表，含成功率与平均响应时间</td><td>230×320</td><td>116 KB</td></tr>
+<tr><td class="src">w3-buy-order.gif</td><td>存款 2/4</td><td>输入金额、选 PIX、点 Comprar NGC</td><td>230×320</td><td>82 KB</td></tr>
+<tr><td class="src">w4-buy-pay.gif</td><td>存款 3/4</td><td>Pagar ao vendedor 页，含付款倒计时</td><td>230×320</td><td>125 KB</td></tr>
+<tr><td class="src">w5-buy-done.gif</td><td>存款 4/4</td><td>状态由 Aguardando liberação 翻转为 Transação concluída</td><td>230×320</td><td>69 KB</td></tr>
+<tr><td class="src">w6-sell-amt.gif</td><td>提款 1/2</td><td>填卖出数量、选 PIX 收款</td><td>230×320</td><td>46 KB</td></tr>
+<tr><td class="src">w7-sell-done.gif</td><td>提款 2/2</td><td>Transação concluída，账单列出卖出明细</td><td>230×320</td><td>90 KB</td></tr>
+</tbody></table>
+
+<h2>加载策略</h2>
+<ul>
+<li><b>按需加载</b>：打开浮层时只请求当前屏与下一屏的素材，翻页时再加载后续。存款链路打开时仅下载 w1 + w2 约 352 KB，而非全部 764 KB。</li>
+<li><b>缺失降级</b>：素材请求失败时隐藏该屏的图片容器，保留标题与说明文字，不显示破图、不留空白框。</li>
+<li><b>循环播放</b>：所有 GIF 无限循环，不提供播放控制。</li>
+<li>横版素材宽度上限 272px，竖版 196px，均居中显示并带圆角与描边。</li>
+</ul>
+
+<div class="notice">
+<p>未采用的素材另作说明：原片中讲 Ganhe、套利、Moeda do Minerador 的片段属于 NewGPay 的另一套功能，与本站存取款无关；USDT 科普动画的主体不是 NGC，放进引导会与 NGC 混淆。品牌片中把 NGC 称作 stablecoin 与 Decentralized 的字幕段落<b>不予采用</b>，前台不对代币作资产性质定性，仅描述其在本站的使用规则。</p>
+</div>
+</div>
+
+<div class="section" id="s10">
+<h1>十、后台配置说明</h1>
+<p>本引导<b>不新增任何后台配置项</b>。唯一与配置联动的是品牌介绍屏 🎁 卡的赠送比例，其取值来自既有的充值返现配置，本引导只读。</p>
+<table>
+<thead><tr><th>读取项</th><th>来源</th><th>对引导的影响</th></tr></thead>
+<tbody>
+<tr><td>NEWGPAY 渠道充值返现开关</td><td>《充值返现 PRD》渠道返现配置</td><td>关闭时 🎁 卡使用未配置态文案。</td></tr>
+<tr><td>NEWGPAY 渠道返现比例</td><td>同上</td><td>大于 0 时 🎁 卡使用含比例文案，数字即配置值；等于 0 时视同未配置。</td></tr>
+<tr><td>提款方式状态与解锁</td><td>《增加Phone提款方式 PRD》</td><td>不影响引导。引导内容针对 NEWGPAY 渠道本身，与 PIX 提款方式无关。</td></tr>
+</tbody></table>
+<p>引导的开关、顺序、屏数、文案均为固定逻辑，变更需发版，不通过后台配置。演示素材以静态资源形式随版本发布，替换素材需同步更新文件名或版本号以避免缓存。</p>
+</div>
+
+<div class="section" id="s11">
+<h1>十一、中文 / 葡语文案对照表</h1>
+<p>共 44 条。标记含义：<span class="keep">[P]</span> 沿用既有参考原文或通用词，可直接使用；<span class="chg">[T]</span> 为本次新拟，<b>上线前需运营确认</b>。<code>{n}</code> 为赠送比例占位符，由后台配置值替换。</p>
+<table>
+<thead><tr><th>键</th><th>中文</th><th>Português</th><th>标记</th></tr></thead>
+<tbody><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">品牌介绍屏</td></tr><tr><td class="src"><code>introTag</code></td><td class="cn">NGC 官方钱包 · 全球通用</td><td class="ptx">Carteira oficial do NGC · global</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>introQ1</code></td><td class="cn">什么是 NGC？</td><td class="ptx">O que é NGC?</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>introA1</code></td><td class="cn">NGC 是 NewGPay <b>官方发行的去中心化代币</b>。用 NGC 充值本平台，<b>固定按 1 NGC = R$ 1 入账</b>。</td><td class="ptx"><b>Token descentralizado oficial da NewGPay.</b> Na recarga aqui a conversão é fixa: <b>1 NGC = R$ 1</b>.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>introQ2</code></td><td class="cn">NewGPay 是什么？</td><td class="ptx">O que é a NewGPay?</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>introA2</code></td><td class="cn"><b>NGC 官方钱包</b>。存储、转账、买卖一站完成，全球通用。本站与 NGC 官方<b>直连</b>，存提款不定期享<b>额外奖励</b>！</td><td class="ptx"><b>Carteira oficial do NGC</b>: guardar, transferir e negociar num só lugar. <b>Conexão direta</b> com a NewGPay: depósitos e saques com <b>bônus extras</b> de tempos em tempos!</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>introQ3</code></td><td class="cn">为什么用 NewGPay？</td><td class="ptx">Por que usar a NewGPay?</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>introB2</code></td><td class="cn">用 NGC 充值本平台，享受<b>惊喜加赠</b>！</td><td class="ptx"><b>Bônus surpresa</b> ao recarregar com NGC!</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>introB2n</code></td><td class="cn">用 NGC 充值本平台，额外赠 <b>{n}%</b>！</td><td class="ptx"><b>Bônus de {n}%</b> ao recarregar com NGC!</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>introB1</code></td><td class="cn">在钱包出售 NGC，额外赚取<b>矿工费</b>！</td><td class="ptx"><b>ExtraBônus</b> ao vender NGC na carteira!</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">浮层 · 买 NGC 四步</td></tr><tr><td class="src"><code>igBuy</code></td><td class="cn">如何买 NGC</td><td class="ptx">Como comprar NGC</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>is1t</code></td><td class="cn">挑选卖家</td><td class="ptx">Escolha o vendedor</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is1d</code></td><td class="cn">进入 <b>Comprar</b>，列表标明各卖家的成功率与平均响应时间，选择其一下单。</td><td class="ptx">Em <b>Comprar</b>, a lista mostra a taxa de sucesso e o tempo médio de resposta de cada vendedor. Selecione um e faça o pedido.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is2t</code></td><td class="cn">填金额下单</td><td class="ptx">Informe o valor</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is2d</code></td><td class="cn">输入购买金额，选择 <b>PIX</b> 付款方式，点击 <b>Comprar NGC</b> 生成订单。</td><td class="ptx">Informe o valor, escolha <b>PIX</b> como forma de pagamento e toque em <b>Comprar NGC</b> para gerar o pedido.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is3t</code></td><td class="cn">向卖家付款</td><td class="ptx">Pague ao vendedor</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is3d</code></td><td class="cn">按卖家提供的 PIX 信息付款，须<b>在倒计时结束前</b>完成，订单方可继续。</td><td class="ptx">Pague com os dados PIX do vendedor. É preciso concluir <b>antes do fim da contagem</b> para o pedido prosseguir.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is4t</code></td><td class="cn">卖家放币，NGC 到账</td><td class="ptx">Liberação do NGC</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is4d</code></td><td class="cn">卖家确认后，状态由<b>等待放币</b>转为<b>交易完成</b>，NGC 计入钱包余额。</td><td class="ptx">Após a confirmação do vendedor, o status passa de <b>Aguardando liberação</b> para <b>Transação concluída</b> e o NGC entra no saldo da carteira.</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">浮层 · 卖出两步</td></tr><tr><td class="src"><code>igSellApp</code></td><td class="cn">在 NewGPay 卖出 NGC</td><td class="ptx">Vender NGC na NewGPay</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>whApp</code></td><td class="cn">NewGPay</td><td class="ptx">NewGPay</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>whAppTip</code></td><td class="cn">以下操作在钱包内完成</td><td class="ptx">Feito dentro da carteira</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is5t</code></td><td class="cn">填卖出数量</td><td class="ptx">Informe a quantidade</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is5d</code></td><td class="cn">输入卖出数量，选择 <b>PIX</b> 收款方式。</td><td class="ptx">Informe a quantidade a vender e escolha <b>PIX</b> para receber.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is6t</code></td><td class="cn">卖出到账</td><td class="ptx">Venda concluída</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>is6d</code></td><td class="cn">状态显示<b>交易完成</b>，账单列明本次卖出明细，款项转入你的 PIX 账户。</td><td class="ptx">O status fica <b>Transação concluída</b>; o extrato detalha a venda e o valor entra na sua conta PIX.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>wdReplayTip</code></td><td class="cn">如需重看，可在钱包卡中点击<b>新手教程</b>。</td><td class="ptx">Para rever, toque em <b>Tutorial</b> no cartão da carteira.</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">页内高亮 · 存款</td></tr><tr><td class="src"><code>coach1</code></td><td class="cn">此处为你的 <b>NewGPay 钱包余额</b>，1 NGC 抵 R$ 1,00 存款额度。</td><td class="ptx">Aqui fica o seu <b>saldo na carteira NewGPay</b>: 1 NGC equivale a R$ 1,00 de crédito.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>coach2</code></td><td class="cn">选择或输入存款金额，支持快捷档位。</td><td class="ptx">Escolha ou digite o valor do depósito. Há valores rápidos disponíveis.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>coach4</code></td><td class="cn">确认金额后提交，额度实时到账。</td><td class="ptx">Confira o valor e envie. O crédito entra na hora.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>coach3</code></td><td class="cn">点击此处可重新查看完整教程。</td><td class="ptx">Toque aqui para rever o tutorial completo.</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">页内高亮 · 提款</td></tr><tr><td class="src"><code>whSiteS</code></td><td class="cn">本站</td><td class="ptx">Aqui</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>wcoach1</code></td><td class="cn">选择或输入提款金额，支持快捷档位。</td><td class="ptx">Escolha ou digite o valor do saque. Há valores rápidos disponíveis.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>wcoach2</code></td><td class="cn">提交后，金额由账户余额转入你的 <b>NewGPay 钱包</b>。</td><td class="ptx">Ao enviar, o valor sai do seu saldo e entra na sua <b>carteira NewGPay</b>.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>wcoach3</code></td><td class="cn">转入完成后，此处显示你的 <b>NewGPay 钱包</b>余额。</td><td class="ptx">Concluída a transferência, o saldo da <b>carteira NewGPay</b> aparece aqui.</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>wcoach4</code></td><td class="cn">点击<b>进入钱包</b>，在 NewGPay 卖出 NGC，提现于该处完成。</td><td class="ptx">Toque em <b>Abrir carteira</b> e venda o NGC na NewGPay. O saque é concluído lá.</td><td><span class="chg">[T]</span></td></tr><tr><td colspan="4" style="background:#eaf2fb;font-weight:600;color:#0b3f78">通用按钮</td></tr><tr><td class="src"><code>introLater</code></td><td class="cn">暂不查看</td><td class="ptx">Agora não</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>introGo</code></td><td class="cn">查看操作步骤</td><td class="ptx">Ver o passo a passo</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>introBack</code></td><td class="cn">上一步</td><td class="ptx">Voltar</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>introStart</code></td><td class="cn">开始使用</td><td class="ptx">Começar</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>coachSkip</code></td><td class="cn">跳过</td><td class="ptx">Pular</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>coachNext</code></td><td class="cn">下一步</td><td class="ptx">Próximo</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>coachDone</code></td><td class="cn">知道了</td><td class="ptx">Entendi</td><td><span class="keep">[P]</span></td></tr><tr><td class="src"><code>wdSeeSell</code></td><td class="cn">查看如何卖币</td><td class="ptx">Como vender</td><td><span class="chg">[T]</span></td></tr><tr><td class="src"><code>guideBtn</code></td><td class="cn">新手教程</td><td class="ptx">Tutorial</td><td><span class="chg">[T]</span></td></tr></tbody></table>
+
+<h2>葡语字宽约束</h2>
+<p>以下位置为固定宽度的单行容器，葡语文案长度受限，调整文案时须复核：</p>
+<table>
+<thead><tr><th>位置</th><th>最窄机型可用宽度</th><th>当前占用</th></tr></thead>
+<tbody>
+<tr><td>钱包卡功能条「新手教程」</td><td>79px（320px 屏，三列均分）</td><td><code>Tutorial</code> 约 39px</td></tr>
+<tr><td>页内高亮步进按钮</td><td>约 130px</td><td><code>Como vender</code> 约 107px</td></tr>
+<tr><td>页内高亮步骤计数</td><td>约 60px</td><td><code>Aqui · 4/4</code> 约 57px</td></tr>
+<tr><td>浮层底部双按钮</td><td>152px（两键均分）</td><td>最长 <code>Ver o passo a passo</code> 约 133px</td></tr>
+<tr><td>卖出屏归属说明</td><td>约 240px</td><td><code>Feito dentro da carteira</code> 约 161px</td></tr>
+</tbody></table>
+<div class="notice">
+<p>葡语普遍比中文长 60% 以上，多处文案是按窄屏单行放得下反推确定的，并非直译。<code>Aqui</code>（本站）、<code>Como vender</code>（查看如何卖币）、<code>Feito dentro da carteira</code>（以下操作在钱包内完成）三处均为压缩后的表述。运营若调整这些文案，需同时确认其在 320px 屏下仍能单行显示。</p>
+</div>
+</div>
+
+<div class="section" id="s12">
+<h1>十二、边界与异常处理</h1>
+<table>
+<thead><tr><th>场景</th><th>处理</th></tr></thead>
+<tbody>
+<tr><td>引导播放中会员切换 Tab</td><td>立即收起当前引导（浮层与遮罩一并关闭），不保留进度。新 Tab 按第四章规则独立判断是否触发。</td></tr>
+<tr><td>引导播放中会员切换渠道至 BESTPAY</td><td>同上，立即收起。NEWGPAY 的状态位不变。</td></tr>
+<tr><td>页内高亮的目标控件不存在或不可见</td><td>整条高亮<b>直接结束</b>，不显示空光圈，不报错。</td></tr>
+<tr><td>演示素材加载失败</td><td>隐藏该屏图片容器，保留文字，翻页不受影响。详见第九章。</td></tr>
+<tr><td>赠送比例配置为 0 或渠道返现关闭</td><td>🎁 卡使用未配置态文案，不显示「0%」。</td></tr>
+<tr><td>提款链路跳过页内高亮</td><td>不弹第 ③ 段卖出演示，整条链路结束。</td></tr>
+<tr><td>提款链路看完第 ③ 段</td><td>末屏点「开始使用」关闭浮层，不再接任何内容。</td></tr>
+<tr><td>会员在引导播放中点击被光圈框住的控件</td><td>不透传，点击无效。会员需先走完或跳过引导。</td></tr>
+<tr><td>语言在引导播放中切换</td><td>当前屏文案即时切换，进度与屏数不变。扫光的文字复制层同步更新，不出现中葡叠字。</td></tr>
+<tr><td>系统开启「减弱动态效果」</td><td>关闭扫光与全部过渡动画，功能不受影响。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s13">
+<h1>十三、关联需求同步检查</h1>
+<table>
+<thead><tr><th>关联文档</th><th>同步点</th><th>处理</th></tr></thead>
+<tbody>
+<tr><td>《NewGPay支付渠道 PRD》</td><td>该文档第四章定义了存款页「说明折叠条」，收起态显示「什么是 NGC？如何获得？」。本引导的品牌介绍屏已完整覆盖该内容。</td><td><b>折叠条取消</b>，该文档第四章需同步删除，并改为指向本文档。</td></tr>
+<tr><td>《NewGPay支付渠道 PRD》</td><td>该文档第五章定义了提款页 NGC 钱包卡片含「钱包地址」，并约定首次切换渠道时弹出纯文字的到账说明。</td><td>钱包地址取消；到账说明由本引导的提款链路承担，原弹窗<b>不再单独出现</b>。该文档第五章需同步。</td></tr>
+<tr><td>《充值返现 PRD》</td><td>本引导品牌介绍屏 🎁 卡读取 NEWGPAY 渠道的返现开关与比例。</td><td>只读不写。该文档调整比例时，引导文案自动跟随，无需改动本文档。</td></tr>
+<tr><td>《钱包一级页改造 PRD》</td><td>第六章定义的锚点直达方式；第五章定义的钱包页结构与钱包卡所在位置。</td><td>本引导约定锚点进入<b>不触发</b>引导，需在该文档第六章补一句例外说明。</td></tr>
+<tr><td>《增加Phone提款方式 PRD》</td><td>提款方式（CPF / PHONE）与本引导无交叉。</td><td>无需同步。本引导仅针对 NEWGPAY 渠道，不涉及 PIX 提款方式。</td></tr>
+</tbody></table>
+</div>
+
+<div class="section" id="s14">
+<h1>十四、修订记录</h1>
+<table>
+<thead><tr><th>版本</th><th>日期</th><th>修订人</th><th>修订内容</th></tr></thead>
+<tbody>
+<tr><td>v1.0</td><td>2026-10-20</td><td>Laura</td><td>首次发布。定义 NEWGPAY 渠道存款、提款两条新手引导链路的结构、触发规则、分屏内容、页内高亮步骤、教程入口与重播、通用控件规则、演示素材规格与加载策略、中葡文案对照及边界处理。</td></tr>
+</tbody></table>
+</div>
+
+</div>
+</body>
+</html>
