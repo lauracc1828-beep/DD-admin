@@ -39,6 +39,12 @@
   /* ================= 顶部 Tab（参考代码） ================= */
   .tabs{display:flex;align-items:center;gap:6px;background:var(--tabbar);border-radius:14px;padding:5px;
     margin-top:var(--safet)}
+  /* 底部导航收起时，顶部左侧补一个返回键，保证一级页始终有出口 */
+  .tback{flex:0 0 36px;width:36px;height:44px;display:flex;align-items:center;justify-content:center;
+    color:#cfcfcf;border-radius:11px;margin-left:-1px;animation:tbIn .22s ease}
+  .tback svg{width:21px;height:21px;display:block}
+  .tback:active{background:rgba(255,255,255,.08)}
+  @keyframes tbIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
   .tab,.method{position:relative;--tc:var(--grey)}
   .tab{flex:1;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:7px;
     font-size:16px;font-weight:600;color:var(--grey);border:1.5px solid transparent;
@@ -441,6 +447,9 @@
 
         <!-- 顶部 Tab -->
         <div class="tabs" role="tablist">
+          <button class="tback" id="tBack" hidden aria-label="返回" onclick="leaveWallet()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
           <button class="tab active" id="tDep" role="tab" onclick="switchWTab('dep')">
             <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7M9 6l3 3 3-3"/><ellipse cx="8" cy="14" rx="5" ry="2"/><path d="M3 14v3c0 1.1 2.2 2 5 2s5-.9 5-2v-3"/><ellipse cx="16" cy="17" rx="5" ry="2"/><path d="M11 17v3c0 1.1 2.2 2 5 2s5-.9 5-2v-3"/></svg>
             <span class="label" data-i="tabDep">存款</span>
@@ -840,11 +849,18 @@ var NAV = function(){ return [
 ]; };
 /* CTA 亮起 → 收导航；灰掉 → 放导航。存款/取款面板共用。 */
 function syncNavTuck(){
-  var cta = document.getElementById(wTab === 'dep' ? 'dCta' : 'wCta');
-  var nav = document.getElementById('navBar');
+  var cta  = document.getElementById(wTab === 'dep' ? 'dCta' : 'wCta');
+  var nav  = document.getElementById('navBar');
+  var back = document.getElementById('tBack');
   if (!cta || !nav) return;
-  nav.classList.toggle('tuck', sub === null && !cta.disabled);
+  var amt  = wTab === 'dep' ? dAmt : wAmt;
+  /* 只有真要提交金额时才收导航；「添加收款信息」这种按钮亮但不是提交的状态不收 */
+  var tuck = sub === null && !cta.disabled && amt > 0;
+  nav.classList.toggle('tuck', tuck);
+  if (back) back.hidden = !tuck;      /* 导航收起时，顶部返回键顶上 */
 }
+/* 顶部返回：接入时走真实返回逻辑；原型里只给演示提示，不改页面状态 */
+function leaveWallet(){ toast(t('tBack')); }
 function renderNav(){
   var navHtml = NAV().map(function(n){
     return '<a href="javascript:void(0)" class="'+(n.on?'on ':'')+(n.mid?'mid':'')+'">'
@@ -1032,6 +1048,7 @@ var I18N = {
   tLimCpf:['该 CPF 绑定次数已达上限','Este CPF atingiu o limite de vínculos.'],   // [P]
   tLimPhone:['该手机号绑定次数已达上限','Este telefone atingiu o limite de vínculos.'], // [P]
   tWdOk:['提交成功，请等待审核','Solicitação enviada. Aguarde a análise.'],       // [P]
+  tBack:['演示：返回进入钱包前的页面','Demo: voltar à página anterior à carteira'],
   tNgcOk:['已转入 NewGPay 钱包','Enviado para a carteira NewGPay']
 };
 var LANG = 0;   /* 0=中文 1=Português */
