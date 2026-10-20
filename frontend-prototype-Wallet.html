@@ -927,8 +927,8 @@ var I18N = {
   introLater:['暂不查看','Agora não'],
   introGo:['查看操作步骤','Ver o passo a passo'],
   /* —— 4 步引导 —— */
-  coach1:['此处为你的 <b>NGC 钱包余额</b>，1 NGC 抵 R$ 1,00 存款额度。',
-          'Aqui fica o seu <b>saldo NGC</b>: 1 NGC equivale a R$ 1,00 de crédito.'],              // [T]
+  coach1:['此处为你的 <b>NewGPay 钱包余额</b>，1 NGC 抵 R$ 1,00 存款额度。',
+          'Aqui fica o seu <b>saldo na carteira NewGPay</b>: 1 NGC equivale a R$ 1,00 de crédito.'],              // [T]
   coach2:['选择或输入存款金额，支持快捷档位。',
           'Escolha ou digite o valor do depósito. Há valores rápidos disponíveis.'],              // [T]
   coach3:['点击此处可重新查看完整教程。',
@@ -1004,14 +1004,15 @@ var I18N = {
   fsB2:['。请确认姓名与收款账号准确无误。','. Confira o nome e a conta de recebimento.'],          // [T]
   fsBack:['返回修改','Voltar e editar'], fsOk:['确认无误','Confirmar'],                           // [T]/[R]
   cfTitleWd:['确认取款','Confirmar saque'],                           // [T]
-  cfTitleNgc:['确认转入 NGC 钱包','Confirmar envio para a carteira NGC'], // [T]
+  ngWallet:['NewGPay 钱包','Carteira NewGPay'],                      // [T]
+  cfTitleNgc:['确认转入 NewGPay 钱包','Confirmar envio para a NewGPay'],          // [T]
   cfAmtK:['提款金额','Valor do saque'],                               // [P]
   cfWayK:['提款方式','Método de saque'],                              // [P]
   cfToK:['收款账号','Conta de recebimento'],                          // [T]
   cfNoteWd:['提交后进入审核，审核通过即按收款账号出款。',
             'Após o envio, o saque passa por análise e é pago na conta informada.'],              // [T]
-  cfNoteNgc:['款项转入 NGC 钱包后，需在 NewGPay 侧卖出方可到账。',
-             'Depois de enviado para a carteira NewGPay, é preciso vender o NGC para receber.'],     // [T]
+  cfNoteNgc:['款项转入 NewGPay 钱包后，需在 NewGPay 内卖出 NGC 方可到账。',
+             'Depois de enviado para a carteira NewGPay, é preciso vender o NGC lá para receber.'],  // [T]
   cfOkWd:['确认取款','Confirmar saque'], cfOkNgc:['确认','Confirmar'],
   pdT:['有未完结的提款','Saque em andamento'],                                                   // [P]
   pdB:['请等待上一笔提款完成后，再申请新的提款。',
@@ -1031,7 +1032,7 @@ var I18N = {
   tLimCpf:['该 CPF 绑定次数已达上限','Este CPF atingiu o limite de vínculos.'],   // [P]
   tLimPhone:['该手机号绑定次数已达上限','Este telefone atingiu o limite de vínculos.'], // [P]
   tWdOk:['提交成功，请等待审核','Solicitação enviada. Aguarde a análise.'],       // [P]
-  tNgcOk:['已转入 NGC 钱包','Enviado para a carteira NewGPay']
+  tNgcOk:['已转入 NewGPay 钱包','Enviado para a carteira NewGPay']
 };
 var LANG = 0;   /* 0=中文 1=Português */
 function t(k){ var v = I18N[k]; return v ? v[LANG] : k; }
@@ -1407,7 +1408,7 @@ function openConfirm(){
   document.getElementById('cfTitle').textContent = t(wM === 'ngc' ? 'cfTitleNgc' : 'cfTitleWd');
   document.getElementById('cfAmt').textContent = 'R$ ' + brl(wAmt);
   document.getElementById('cfWay').textContent = wM === 'ngc' ? 'NewGPay' : ('PIX · ' + PAYEE.type);
-  document.getElementById('cfTo').textContent  = wM === 'ngc' ? 'NGC' : maskKey(PAYEE);
+  document.getElementById('cfTo').textContent  = wM === 'ngc' ? t('ngWallet') : maskKey(PAYEE);
   document.getElementById('cfNote').innerHTML  = t(wM === 'ngc' ? 'cfNoteNgc' : 'cfNoteWd');
   document.getElementById('cfOk').textContent = t(wM === 'ngc' ? 'cfOkNgc' : 'cfOkWd');
   openMask('dlgConfirm');
