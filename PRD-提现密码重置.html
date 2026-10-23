@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>提现密码重置 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.ptx{color:#24407a}
+.grp td{background:#f0f4fa !important;color:#0b3f78;font-weight:600}
+.pill{display:inline-block;font-size:12px;padding:1px 9px;border-radius:10px;border:1px solid;white-space:nowrap}
+.p-new{color:#0a5c3a;border-color:#8fceb0;background:#e8f7ef}
+.p-mod{color:#7a4b00;border-color:#e0b878;background:#fdf3e3}
+.p-keep{color:#0b3f78;border-color:#9cc4ea;background:#eef4fb}
+.p-del{color:#c0341d;border-color:#e6a5a5;background:#fdecec}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">提现密码重置</div>
+  <div class="cover-sub">PRD 产品需求文档 · 短信验证码自助重置提现密码</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-23</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与目标</a>
+      <ol><li><a href="#s1a">1.1 现状与问题</a></li>
+          <li><a href="#s1b">1.2 需求目标</a></li>
+          <li><a href="#s1c">1.3 本次需求范围</a></li>
+          <li><a href="#s1d">1.4 适用范围与基准页面</a></li></ol></li>
+    <li><a href="#s2">二、名词解释</a></li>
+    <li><a href="#s3">三、交互逻辑流程图</a></li>
+    <li><a href="#s4">四、入口与页面说明</a>
+      <ol><li><a href="#s41">4.1 入口一：提款页 · 提现密码弹窗</a></li>
+          <li><a href="#s42">4.2 入口二：安全中心 · 安全验证页</a></li>
+          <li><a href="#s43">4.3 重置流程页面通用结构</a></li>
+          <li><a href="#s44">4.4 第一步：验证注册手机号</a></li>
+          <li><a href="#s45">4.5 第二步：设置新提现密码</a></li>
+          <li><a href="#s46">4.6 重置成功页</a></li>
+          <li><a href="#s47">4.7 「收不到验证码？」底部面板</a></li>
+          <li><a href="#s48">4.8 放弃确认弹窗</a></li></ol></li>
+    <li><a href="#s5">五、交互与校验规则</a>
+      <ol><li><a href="#s51">5.1 短信验证码规则</a></li>
+          <li><a href="#s52">5.2 第一步校验与提示</a></li>
+          <li><a href="#s53">5.3 第二步动态校验</a></li>
+          <li><a href="#s54">5.4 返回与中断逻辑</a></li></ol></li>
+    <li><a href="#s6">六、命名统一</a></li>
+    <li><a href="#s7">七、与现网流程差异</a></li>
+    <li><a href="#s8">八、后台配置说明</a></li>
+    <li><a href="#s9">九、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s10">十、边界与异常处理</a></li>
+    <li><a href="#s11">十一、关联需求同步检查</a></li>
+    <li><a href="#s12">十二、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+<h1>一、需求背景与目标</h1>
+
+<h2 id="s1a">1.1 现状与问题</h2>
+<p>提现密码是会员发起提现时的二次身份确认凭据，一旦遗忘即无法完成提款。现网在「找回」这一环节存在三处缺口：</p>
+<ol>
+  <li><b>无自助通道</b>：安全中心 · 安全验证页的「忘记资产密码？」链接直接跳转至消息中心 · 支持页，全部交由客服人工处理，会员需等待客服响应，期间提款流程完全中断。</li>
+  <li><b>入口缺失</b>：提款页的提现密码弹窗内没有任何找回入口。会员恰在提款时发现密码遗忘，却必须退出提款流程、自行找到安全中心才能求助。</li>
+  <li><b>命名不统一</b>：同一个密码在提款页称「提现密码 / senha de saque」，在安全验证页称「资产密码 / Senha de Ativos」，会员难以判断两处是否为同一密码；安全验证页的单行文本框与提款弹窗的 6 位格子输入形态也不一致。</li>
+</ol>
+
+<h2 id="s1b">1.2 需求目标</h2>
+<p><b>本次需求的目的为建立提现密码的自助重置通道</b>，使会员在遗忘密码时可通过注册手机号短信验证码自行完成重置，并在最接近问题发生点的位置（提款页密码弹窗）提供入口，将中断的提款流程在同一会话内闭环；同时统一提现密码在全站的名称与输入形态。提现密码本身的位数规则、加密方式与业务用途不变。</p>
+
+<h2 id="s1c">1.3 本次需求范围</h2>
+<table>
+  <thead><tr><th style="width:230px">页面 / 模块</th><th style="width:90px">类型</th><th>改动内容</th></tr></thead>
+  <tbody>
+    <tr><td>提款页 · 提现密码弹窗</td><td><span class="pill p-mod">修改</span></td><td>输入格下方新增「忘记提现密码？」链接；重置成功返回本弹窗时展示一次性成功提示。</td></tr>
+    <tr><td>安全中心 · 安全验证页</td><td><span class="pill p-mod">修改</span></td><td>名称统一为「提现密码」；输入形态由单行文本框改为 6 位输入格，键盘改为调起设备系统自带数字键盘，保留「确定」按钮；「忘记提现密码？」由跳转客服页改为进入重置流程。</td></tr>
+    <tr><td>重置 · 第一步：验证注册手机号</td><td><span class="pill p-new">新增</span></td><td>单页面两态：获取验证码态 → 输入验证码态。</td></tr>
+    <tr><td>重置 · 第二步：设置新提现密码</td><td><span class="pill p-keep">复用</span></td><td>复用《提现密码设置优化》的「设置提现密码」页，仅替换标题、说明并新增客服入口。</td></tr>
+    <tr><td>重置成功页</td><td><span class="pill p-keep">复用</span></td><td>复用《提现密码设置优化》的设置成功页，按来源入口调整标题与按钮。</td></tr>
+    <tr><td>「收不到验证码？」底部面板</td><td><span class="pill p-new">新增</span></td><td>自查原因说明与客服入口。</td></tr>
+    <tr><td>放弃确认弹窗</td><td><span class="pill p-new">新增</span></td><td>流程中途返回时的二次确认。</td></tr>
+    <tr><td>提款页 · 提现密码弹窗键盘</td><td><span class="pill p-mod">修改</span></td><td>移除页面自绘数字键盘，改为调起设备系统自带数字键盘。</td></tr>
+    <tr><td>消息中心 · 支持页</td><td><span class="pill p-keep">沿用</span></td><td>不改动，作为全流程「联系客服」的统一跳转目标。</td></tr>
+  </tbody>
+</table>
+<div class="notice notice-info"><p><b>不在本次范围</b>：提现密码的首次设置流程（见《提现密码设置优化》）、提款业务规则与提款页其余区块、客服工单处理逻辑、短信通道本身的接入与配置。</p></div>
+<div class="notice"><p>提现密码的自助重置<b>保留人工兜底</b>：重置流程的每一步均提供「联系客服」入口，供手机号已停用、或注册手机号非本人持有的会员转入人工处理。</p></div>
+
+<h2 id="s1d">1.4 适用范围与基准页面</h2>
+<ul>
+  <li><b>适用终端</b>：H5（含 APP 内嵌 H5）。</li>
+  <li><b>展示语言</b>：跟随客户端语言，上线以目标市场语言（葡语）为准。</li>
+  <li><b>提款页基准</b>：以现网新版「取款」页为准，即顶栏「取款」、「账户余额」与「提款需投注 / 查看详情」、渠道 BESTPAY / NEWGPAY / PIX2_U2CPAY、提现密码弹窗标题「请输入您的提现密码」。本次仅在该弹窗内新增「忘记提现密码？」链接与重置后提示，提款页其余区块不改动，页面布局以《提款页改版优化》为准。</li>
+  <li><b>视觉规格</b>：本文档定义页面元素的构成、层级与交互行为；字号、间距、圆角、配色等视觉规格以 UI 设计稿为准，不在本文档内约定。</li>
+</ul>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+<h1>二、名词解释</h1>
+<table>
+  <thead><tr><th style="width:170px">名词</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>提现密码</td><td>会员发起提现时用于身份二次确认的 6 位纯数字密码，与登录密码相互独立。本次需求后为该密码在全站的唯一名称。</td></tr>
+    <tr><td>重置</td><td>会员在<b>不知道原密码</b>的前提下，经短信验证码验证身份后设定新提现密码的过程。区别于已知原密码时的「修改」。</td></tr>
+    <tr><td>注册手机号</td><td>会员注册时绑定、且经平台验证的手机号码，为本次重置流程的唯一身份验证渠道。</td></tr>
+    <tr><td>来源入口</td><td>会员进入重置流程的起点，分「提款页」与「安全中心」两类。来源入口决定重置成功页的按钮形态与返回目标，流程中全程保持不变。</td></tr>
+    <tr><td>一次性重置凭证</td><td>第一步手机号验证通过后由服务端下发的临时凭证，提交新密码时必须携带，用于阻断绕过第一步直接调用设密接口的行为。有效期 5 分钟。</td></tr>
+    <tr><td>输入格</td><td>密码或验证码输入区中的单个字符格，每组固定 6 格，与 6 位数一一对应。</td></tr>
+    <tr><td>系统自带数字键盘</td><td>由设备操作系统提供的纯数字键盘（iOS / Android 原生数字键盘），区别于页面自行绘制的数字键盘。本次需求涉及的全部密码与验证码输入场景统一使用该键盘。</td></tr>
+    <tr><td>动态校验</td><td>在输入过程中实时判定并反馈校验结果，不依赖会员点击提交触发。</td></tr>
+    <tr><td>行内错误提示</td><td>常驻于输入区下方的红色文字提示，区别于居中浮层提示，指向明确且不遮挡输入区。</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+<h1>三、交互逻辑流程图</h1>
+<p>下图描述会员自两个入口进入重置流程后，手机号验证、新密码设定与按来源返回的完整判定逻辑。</p>
+<div class="fc-wrap">
+<svg viewBox="0 0 1010 990" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:1010px;display:block;margin:0 auto;font-family:'PingFang SC',Arial,sans-serif">
+  <defs>
+    <marker id="arwR" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L8,5 L0,10 Z" fill="#5a7ba6"/></marker>
+  </defs>
+
+  <rect x="55" y="20" width="250" height="44" rx="22" fill="#0961BD"/>
+  <text x="180" y="47" fill="#fff" font-size="13" text-anchor="middle">入口一：提款页 · 提现密码弹窗</text>
+  <rect x="335" y="20" width="250" height="44" rx="22" fill="#0961BD"/>
+  <text x="460" y="47" fill="#fff" font-size="13" text-anchor="middle">入口二：安全中心 · 安全验证页</text>
+
+  <line x1="180" y1="64" x2="180" y2="86" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="460" y1="64" x2="460" y2="86" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="180" y1="86" x2="460" y2="86" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="320" y1="86" x2="320" y2="108" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <rect x="135" y="108" width="370" height="44" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+  <text x="320" y="135" fill="#0b3f78" font-size="13" text-anchor="middle">点击「忘记提现密码？」，记录来源入口</text>
+  <line x1="320" y1="152" x2="320" y2="182" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <rect x="145" y="182" width="350" height="44" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+  <text x="320" y="209" fill="#0b3f78" font-size="13" text-anchor="middle">第一步 · 状态 A：点击「获取验证码」</text>
+  <line x1="320" y1="226" x2="320" y2="256" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <rect x="145" y="256" width="350" height="44" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+  <text x="320" y="283" fill="#0b3f78" font-size="13" text-anchor="middle">发送短信，切换至状态 B：输入验证码</text>
+  <line x1="320" y1="300" x2="320" y2="330" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <rect x="145" y="330" width="350" height="44" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+  <text x="320" y="357" fill="#0b3f78" font-size="13" text-anchor="middle">输入 6 位验证码，填满自动校验</text>
+  <line x1="320" y1="374" x2="320" y2="404" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <polygon points="320,404 470,458 320,512 170,458" fill="#fff8e8" stroke="#e0b878"/>
+  <text x="320" y="463" fill="#6a4a00" font-size="13" text-anchor="middle">验证码是否正确且有效？</text>
+  <line x1="470" y1="458" x2="640" y2="458" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+  <text x="555" y="448" fill="#c0341d" font-size="12" text-anchor="middle">否</text>
+  <rect x="640" y="416" width="330" height="84" rx="6" fill="#fdecec" stroke="#e6a5a5"/>
+  <text x="805" y="440" fill="#c0341d" font-size="13" text-anchor="middle">输入格清空并抖动，下方红字提示</text>
+  <text x="805" y="460" fill="#c0341d" font-size="13" text-anchor="middle">错误 / 已过期 / 错误次数过多</text>
+  <text x="805" y="480" fill="#c0341d" font-size="13" text-anchor="middle">会员重新输入或重新获取验证码</text>
+
+  <line x1="320" y1="512" x2="320" y2="548" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+  <text x="334" y="534" fill="#0a7d3e" font-size="12" text-anchor="start">是</text>
+
+  <rect x="145" y="548" width="350" height="44" rx="6" fill="#e8f7ef" stroke="#8fceb0"/>
+  <text x="320" y="575" fill="#0a5c3a" font-size="13" text-anchor="middle">下发一次性重置凭证，进入第二步</text>
+  <line x1="320" y1="592" x2="320" y2="622" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <rect x="145" y="622" width="350" height="44" rx="6" fill="#eef4fb" stroke="#9cc4ea"/>
+  <text x="320" y="649" fill="#0b3f78" font-size="13" text-anchor="middle">输入「新提现密码」「确认新密码」</text>
+  <line x1="320" y1="666" x2="320" y2="696" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <polygon points="320,696 470,750 320,804 170,750" fill="#fff8e8" stroke="#e0b878"/>
+  <text x="320" y="755" fill="#6a4a00" font-size="13" text-anchor="middle">两栏是否均满 6 位且一致？</text>
+  <line x1="470" y1="750" x2="640" y2="750" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+  <text x="555" y="740" fill="#c0341d" font-size="12" text-anchor="middle">否</text>
+  <rect x="640" y="708" width="330" height="84" rx="6" fill="#fdecec" stroke="#e6a5a5"/>
+  <text x="805" y="732" fill="#c0341d" font-size="13" text-anchor="middle">「确认」按钮置灰不可点</text>
+  <text x="805" y="752" fill="#c0341d" font-size="13" text-anchor="middle">不一致时红框 + 行内红字提示</text>
+  <text x="805" y="772" fill="#c0341d" font-size="13" text-anchor="middle">保留已输入内容，焦点停在末位</text>
+
+  <line x1="320" y1="804" x2="320" y2="840" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+  <text x="334" y="826" fill="#0a7d3e" font-size="12" text-anchor="start">是</text>
+
+  <rect x="145" y="840" width="350" height="44" rx="6" fill="#0961BD"/>
+  <text x="320" y="867" fill="#fff" font-size="13" text-anchor="middle">点击「确认」提交，进入重置成功页</text>
+
+  <line x1="320" y1="884" x2="320" y2="904" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="175" y1="904" x2="495" y2="904" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="175" y1="904" x2="175" y2="918" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+  <line x1="495" y1="904" x2="495" y2="918" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+
+  <rect x="40" y="918" width="270" height="56" rx="6" fill="#e8f7ef" stroke="#8fceb0"/>
+  <text x="175" y="941" fill="#0a5c3a" font-size="13" text-anchor="middle">来源＝提款页：回提款页并</text>
+  <text x="175" y="961" fill="#0a5c3a" font-size="13" text-anchor="middle">自动弹出密码弹窗（带已重置提示）</text>
+  <rect x="360" y="918" width="270" height="56" rx="6" fill="#e8f7ef" stroke="#8fceb0"/>
+  <text x="495" y="941" fill="#0a5c3a" font-size="13" text-anchor="middle">来源＝安全中心：回安全验证页，</text>
+  <text x="495" y="961" fill="#0a5c3a" font-size="13" text-anchor="middle">输入格清空并调起系统数字键盘</text>
+
+  <line x1="970" y1="458" x2="988" y2="458" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="988" y1="458" x2="988" y2="352" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="988" y1="352" x2="495" y2="352" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+  <line x1="970" y1="750" x2="988" y2="750" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="988" y1="750" x2="988" y2="644" stroke="#5a7ba6" stroke-width="1.6"/>
+  <line x1="988" y1="644" x2="495" y2="644" stroke="#5a7ba6" stroke-width="1.6" marker-end="url(#arwR)"/>
+</svg>
+</div>
+<p class="legend">流程中任一步点击「联系客服」均进入消息中心 · 支持页，自支持页返回时回到离开时所处的步骤与状态；已获取验证码后点击左上返回，先弹出放弃确认弹窗，详见 5.4。</p>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+<h1>四、入口与页面说明</h1>
+<p>重置流程共两个入口，入口决定来源标记，并进而决定重置成功页的按钮形态与返回目标；两个入口进入后的第一步、第二步页面完全一致。</p>
+
+<h2 id="s41">4.1 入口一：提款页 · 提现密码弹窗 <span class="pill p-mod">修改</span></h2>
+<h3>沿用部分</h3>
+<p>弹窗标题、提款金额、6 位输入格、关闭按钮与「填满自动提交」行为均沿用现网，不作改动。</p>
+<h3>本次改动</h3>
+<table>
+  <thead><tr><th style="width:170px">元素</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>「忘记提现密码？」链接 <span class="pill p-new">新增</span></td><td>位于 6 位输入格下方、右对齐的文字链接，与安全验证页同名链接保持一致的形态。该链接与输入格须保留足够的点击安全间距，避免会员输入末位时误触，具体间距以 UI 设计稿为准。</td></tr>
+    <tr><td>链接点击行为</td><td>关闭提现密码弹窗，进入重置第一步，并将来源入口记为「提款页」。弹窗内已输入的内容不保留。</td></tr>
+    <tr><td>键盘 <span class="pill p-mod">修改</span></td><td>移除弹窗内的自绘数字键盘，改为调起设备系统自带数字键盘；弹窗打开时自动聚焦首格并调起键盘。</td></tr>
+    <tr><td>重置后提示 <span class="pill p-new">新增</span></td><td>自重置成功页返回本弹窗时，在输入格上方展示绿色对勾与「提现密码已重置，请输入新密码」。该提示<b>仅在本次弹窗内展示一次</b>，关闭弹窗后再次打开不再出现。</td></tr>
+  </tbody>
+</table>
+<div class="notice notice-info"><p>自重置成功页返回时，提款页已填写的提款金额、已选渠道与提款方式<b>全部保持不变</b>，会员输入新密码即可直接完成本次提款。</p></div>
+
+<h2 id="s42">4.2 入口二：安全中心 · 安全验证页 <span class="pill p-mod">修改</span></h2>
+<p>会员自安全中心进入「提现账号管理」前须先通过本页验证提现密码。本次对该页作三项改动：</p>
+<table>
+  <thead><tr><th style="width:170px">改动项</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>名称统一</td><td>页面说明文字、输入栏标签、链接文案中的「资产密码 / Senha de Ativos」全部替换为「提现密码 / senha de saque」，对照见第六章。</td></tr>
+    <tr><td>输入形态</td><td>由单行文本框改为 6 位输入格；进入页面自动聚焦首格并调起设备系统自带数字键盘；输入后以圆点掩码显示，不作明文回显。原输入框占位文案随之取消。</td></tr>
+    <tr><td>「确定」按钮</td><td><b>保留</b>。不足 6 位时置灰不可点；满 6 位后转为可点态；点击后输入格下方展示「验证中…」，校验期间按钮保持不可点。本页不启用「填满自动提交」。</td></tr>
+    <tr><td>「忘记提现密码？」链接</td><td>由跳转消息中心 · 支持页改为进入重置第一步，并将来源入口记为「安全中心」。</td></tr>
+  </tbody>
+</table>
+
+<h2 id="s43">4.3 重置流程页面通用结构</h2>
+<p>重置第一步与现网「安全验证」页沿用同一套页面结构，自上而下依次为：</p>
+<ol>
+  <li>顶栏：左侧返回箭头，居中标题「重置提现密码」。</li>
+  <li>锁形图标。</li>
+  <li>居中说明文字：按步骤与状态取不同文案，见 4.4。</li>
+  <li>卡片：左上角为输入栏标签，下方为 6 位输入格；校验提示与重发区置于卡片内、输入格下方。</li>
+  <li>卡片下方右对齐的下划线文字链接：「收不到验证码？」或「遇到问题？联系客服」。</li>
+</ol>
+<p>流程<b>不展示步骤条与步骤序号</b>，当前所处步骤由说明文字与卡片标签表达。第二步页面结构复用设置页，见 4.5。</p>
+
+<h2 id="s44">4.4 第一步：验证注册手机号 <span class="pill p-new">新增</span></h2>
+<p>第一步为单页面，含获取验证码（状态 A）与输入验证码（状态 B）两个状态，状态间原地切换，不作页面跳转。</p>
+<h3>状态 A · 获取验证码</h3>
+<table>
+  <thead><tr><th style="width:170px">元素</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>说明文字</td><td>「为保障资金安全，需验证您的注册手机号」；下一行加粗展示脱敏后的注册手机号。</td></tr>
+    <tr><td>手机号脱敏规则</td><td>保留国际区号、号码前 3 位与后 2 位，中间以星号替代，如 <code>+55 119******12</code>。规则与提款页现网一致。</td></tr>
+    <tr><td>主按钮</td><td>通栏「获取验证码」，常态可点。点击后发送短信并切换至状态 B，同时自动聚焦首格并调起设备系统自带数字键盘。</td></tr>
+    <tr><td>「收不到验证码？」链接</td><td>本状态下置于主按钮下方，与按钮保留足够的点击安全间距以防误触。点击弹出底部面板，见 4.7。</td></tr>
+  </tbody>
+</table>
+<h3>状态 B · 输入验证码</h3>
+<table>
+  <thead><tr><th style="width:170px">元素</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>说明文字</td><td>「验证码已发送至」，下一行加粗展示脱敏手机号。状态切换本身即为发送成功的反馈，不另行弹出 Toast。</td></tr>
+    <tr><td>卡片标签</td><td>「短信验证码」。</td></tr>
+    <tr><td>输入格</td><td>6 位，<b>明文展示数字</b>，不作掩码；输入调起设备系统自带数字键盘，并支持 iOS / Android 系统的一次性验证码自动填充。</td></tr>
+    <tr><td>提交方式</td><td>填满 6 位<b>自动校验</b>，不设「下一步」按钮；校验期间输入格下方展示「验证中…」并禁止继续输入。</td></tr>
+    <tr><td>重发区</td><td>置于卡片内、输入格下方。倒计时期间为灰字「{n} 秒后可重新获取」，倒计时结束后转为可点击的「重新获取验证码」。</td></tr>
+    <tr><td>「收不到验证码？」链接</td><td>置于卡片下方右对齐，与卡片内的重发区保留足够的点击安全间距以防误触。</td></tr>
+  </tbody>
+</table>
+<div class="notice"><p>会员在 60 秒重发间隔内重新进入第一步并点击「获取验证码」时，<b>不重复下发短信</b>，直接切换至状态 B 并继续沿用上一条尚在有效期内的验证码，倒计时接续原计时。</p></div>
+
+<h2 id="s45">4.5 第二步：设置新提现密码 <span class="pill p-keep">复用</span></h2>
+<p>本步的页面结构、输入交互与校验规则<b>完全复用</b>《提现密码设置优化》的「设置提现密码」页，前端可直接复用同一组件，细则以该文档第五章、第九章为准。要点摘录如下：</p>
+<table>
+  <thead><tr><th style="width:150px">交互项</th><th>规则</th></tr></thead>
+  <tbody>
+    <tr><td>键盘</td><td>调起设备系统自带纯数字键盘；进入页面自动聚焦「新提现密码」首格。</td></tr>
+    <tr><td>字符限制</td><td>仅接受 0–9，非数字字符（含粘贴内容）自动过滤，单栏最多 6 位。</td></tr>
+    <tr><td>明文回显</td><td>每输入一位先展示明文约 0.55 秒后转为圆点掩码，删除时不回显。</td></tr>
+    <tr><td>自动跳栏</td><td>「新提现密码」满 6 位后焦点自动跳至「确认新密码」首格。</td></tr>
+    <tr><td>删除回退</td><td>「确认新密码」为空时按删除键，焦点回到「新提现密码」末位。</td></tr>
+    <tr><td>联动清空</td><td>「新提现密码」发生任何输入或删除，立即清空「确认新密码」并清除错误提示。</td></tr>
+    <tr><td>动态校验</td><td>见 5.3。</td></tr>
+    <tr><td>提交</td><td>请求发出后按钮立即置灰并禁用，防重复提交；接口失败沿用平台通用异常提示，保留两栏内容并恢复按钮可点态。</td></tr>
+  </tbody>
+</table>
+<h3>与设置页的差异</h3>
+<table>
+  <thead><tr><th style="width:150px">位置</th><th style="width:270px">《提现密码设置优化》设置页</th><th>本次重置流程第二步</th></tr></thead>
+  <tbody>
+    <tr><td>顶栏标题</td><td>提现密码</td><td>重置提现密码（与第一步一致）</td></tr>
+    <tr><td>页内标题</td><td>设置提现密码</td><td>设置新提现密码</td></tr>
+    <tr><td>底部说明</td><td>首次提现前，请先设置提现密码</td><td>请设置 6 位数字新提现密码</td></tr>
+    <tr><td>客服入口</td><td>无</td><td><span class="pill p-new">新增</span> 「确认」按钮下方居中展示「遇到问题？联系客服」</td></tr>
+    <tr><td>左上返回</td><td>返回上一页</td><td><span class="pill p-mod">调整</span> 弹出放弃确认弹窗，见 4.8</td></tr>
+  </tbody>
+</table>
+<ul>
+  <li>新密码<b>允许与原密码相同</b>，不作重复性校验。</li>
+  <li>第二步须凭第一步下发的一次性重置凭证方可提交，服务端校验凭证有效性与有效期（5 分钟），防止绕过第一步直接调用设密接口。</li>
+</ul>
+
+<h2 id="s46">4.6 重置成功页 <span class="pill p-keep">复用</span></h2>
+<p>复用《提现密码设置优化》的设置成功页，页面结构、图标与说明文字不变，按来源入口调整标题与按钮：</p>
+<table>
+  <thead><tr><th style="width:150px">元素</th><th style="width:270px">来源＝提款页</th><th>来源＝安全中心</th></tr></thead>
+  <tbody>
+    <tr><td>标题</td><td colspan="2">重置成功</td></tr>
+    <tr><td>说明文字</td><td colspan="2">新密码设置成功，请牢记您的密码（沿用设置页文案）</td></tr>
+    <tr><td>按钮</td><td>「返回首页」「继续提现」两个按钮，沿用设置页</td><td>单个按钮「完成」</td></tr>
+    <tr><td>按钮去向</td><td>「继续提现」回到提款页并自动弹出提现密码弹窗，弹窗内展示重置后提示</td><td>「完成」回到安全验证页，输入格清空并自动调起系统数字键盘</td></tr>
+    <tr><td>左上返回</td><td colspan="2">与本行所在来源入口的主按钮去向一致，不再弹出放弃确认弹窗</td></tr>
+  </tbody>
+</table>
+
+<h2 id="s47">4.7 「收不到验证码？」底部面板 <span class="pill p-new">新增</span></h2>
+<ul>
+  <li>自页面底部弹出，上方覆盖半透明遮罩。标题「收不到验证码？」。</li>
+  <li>标题下方以有序列表展示 3 条自查原因：① 请确认手机信号正常，并检查短信是否被拦截；② 短信可能有延迟，请稍候再重新获取；③ 手机号已停用或不是本人号码，请联系客服处理。</li>
+  <li>主按钮「联系客服」：进入消息中心 · 支持页。</li>
+  <li>次按钮「我知道了」：关闭面板，回到打开面板时所处的状态；点击遮罩区同样关闭面板。</li>
+  <li>面板展开期间，第一步页面的倒计时继续计时，不暂停、不重置。</li>
+</ul>
+
+<h2 id="s48">4.8 放弃确认弹窗 <span class="pill p-new">新增</span></h2>
+<ul>
+  <li>触发条件见 5.4。标题「确定放弃重置提现密码？」，说明「放弃后，下次需要重新验证手机号」。</li>
+  <li>左按钮「放弃」：退出重置流程并按来源入口返回，已输入内容与一次性重置凭证一并作废。</li>
+  <li>右按钮「继续重置」：关闭弹窗，留在当前页面与状态，已输入内容保留。</li>
+</ul>
+
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+<h1>五、交互与校验规则</h1>
+
+<h2 id="s51">5.1 短信验证码规则</h2>
+<table>
+  <thead><tr><th style="width:210px">规则项</th><th>取值与处理</th></tr></thead>
+  <tbody>
+    <tr><td>位数</td><td>6 位纯数字。</td></tr>
+    <tr><td>有效期</td><td>自下发时刻起 5 分钟。超期后输入该验证码按「已过期」处理。</td></tr>
+    <tr><td>重发间隔</td><td>60 秒。倒计时期间重发区不可点击，用于防止连续点击造成重复下发。</td></tr>
+    <tr><td>发送次数</td><td><b>不设上限</b>。会员在遵守 60 秒重发间隔的前提下可无限次获取验证码，不设每日次数限制，亦不因次数触发任何拦截。</td></tr>
+    <tr><td>单个验证码错误次数上限</td><td>同一验证码累计输错 5 次后立即作废，须重新获取。</td></tr>
+    <tr><td>重新发送后的旧验证码</td><td>新验证码下发成功后，旧验证码立即失效。</td></tr>
+    <tr><td>短信通道</td><td>沿用平台现有短信通道，本次不新增通道接入。</td></tr>
+    <tr><td>验证码用途隔离</td><td>本流程下发的验证码仅用于提现密码重置，不可用于登录、绑定等其他业务场景。</td></tr>
+  </tbody>
+</table>
+
+<h2 id="s52">5.2 第一步校验与提示</h2>
+<table>
+  <thead><tr><th style="width:120px">状态</th><th style="width:200px">触发条件</th><th style="width:130px">提示形式</th><th>处理与文案</th></tr></thead>
+  <tbody>
+    <tr><td>状态 A → B</td><td>发送成功</td><td>无 Toast</td><td>直接切换至状态 B，以说明文字「验证码已发送至 …」作为反馈。</td></tr>
+    <tr><td>状态 B</td><td>输入满 6 位</td><td>输入格下方灰字 + 加载态</td><td>展示「验证中…」，校验返回前不响应继续输入。</td></tr>
+    <tr><td>状态 B</td><td>验证码错误</td><td>输入格下方红字</td><td>输入格抖动一次、边框转红并清空内容，提示「验证码错误，请重新输入」；会员重新输入首位时提示与红框即刻清除。</td></tr>
+    <tr><td>状态 B</td><td>验证码已过期</td><td>输入格下方红字</td><td>清空输入格，提示「验证码已过期，请重新获取」；重发区同步转为可点态。</td></tr>
+    <tr><td>状态 B</td><td>同一验证码错误达 5 次</td><td>输入格下方红字</td><td>该验证码作废，输入格转为不可输入态，提示「错误次数过多，请重新获取验证码」；重发区转为可点态，重新获取后输入格恢复可输入。</td></tr>
+  </tbody>
+</table>
+<p>第一步的全部提示均为<b>行内提示</b>，不设自动消失时间，停留至会员重新输入或重新获取为止。</p>
+
+<h2 id="s53">5.3 第二步动态校验</h2>
+<p>沿用《提现密码设置优化》的动态校验规则，在输入过程中实时判定，不依赖点击「确认」触发：</p>
+<table>
+  <thead><tr><th style="width:230px">输入状态</th><th style="width:150px">「确认」按钮</th><th>页面反馈</th></tr></thead>
+  <tbody>
+    <tr><td>两栏未同时满 6 位</td><td>置灰不可点</td><td>不触发校验，不展示任何提示。</td></tr>
+    <tr><td>两栏均满 6 位但内容不一致</td><td>保持置灰不可点</td><td>两栏抖动、输入格边框转红；「确认新密码」下方展示行内红字「两次输入的密码不一致」（该行固定预留一行高度，不造成页面跳动）；<b>保留</b>已输入内容，焦点停在「确认新密码」末位。</td></tr>
+    <tr><td>两栏均满 6 位且内容一致</td><td>亮起可点</td><td>清除错误提示与红色边框。</td></tr>
+  </tbody>
+</table>
+<p>错误提示态下，会员对任一输入栏执行输入或删除，即刻清除红字与红框并重新判定；错误提示不设自动消失时间。「新提现密码」内容发生变化时联动清空「确认新密码」，规则见 4.5。</p>
+
+<h2 id="s54">5.4 返回与中断逻辑</h2>
+<h3>左上返回按钮</h3>
+<table>
+  <thead><tr><th style="width:230px">所处位置</th><th style="width:260px">来源＝提款页</th><th>来源＝安全中心</th></tr></thead>
+  <tbody>
+    <tr><td>第一步 · 状态 A（未获取验证码）</td><td>直接返回提款页并自动弹出提现密码弹窗，不展示重置后提示</td><td>直接返回安全验证页</td></tr>
+    <tr><td>第一步 · 状态 B（已获取验证码）</td><td colspan="2">先弹出放弃确认弹窗（见 4.8）；选「放弃」按上一行规则返回，选「继续重置」留在当前页</td></tr>
+    <tr><td>第二步</td><td colspan="2">同上，先弹出放弃确认弹窗</td></tr>
+    <tr><td>重置成功页</td><td>回到提款页并自动弹出提现密码弹窗，弹窗内展示重置后提示</td><td>回到安全验证页，输入格清空并自动调起系统数字键盘</td></tr>
+  </tbody>
+</table>
+<h3>「联系客服」</h3>
+<p>重置流程内任一位置点击「联系客服」，均进入消息中心 · 支持页。自支持页返回时，<b>回到离开时所处的步骤与状态</b>：停留在状态 B 的，倒计时按实际经过时间继续展示剩余秒数，已超过 60 秒的直接展示为可点击的「重新获取验证码」；停留在第二步的，已输入内容不保留，两栏均为空态。</p>
+<h3>流程中断后的凭证处理</h3>
+<p>会员选择「放弃」、或以系统返回手势 / 物理返回键退出流程时，一次性重置凭证即刻作废；下次进入须自第一步重新验证手机号。未使用的短信验证码不随流程退出而失效，在 5 分钟有效期内仍可用于再次进入的第一步。</p>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+<h1>六、命名统一</h1>
+<p>本次将提现密码在全站的名称统一为「提现密码 / senha de saque」，以提款页现有叫法为准。安全验证页的替换对照如下：</p>
+<table>
+  <thead><tr><th style="width:170px">位置</th><th style="width:320px">现网</th><th>统一后</th></tr></thead>
+  <tbody>
+    <tr><td>页面说明文字</td><td>为了进入提现账号管理，请确认您的资产密码。<br><span class="ptx">Para acessar a Gestão da Conta de Retirada, confirme sua Senha de Ativos.</span></td><td>为了进入提现账号管理，请确认您的提现密码。<br><span class="ptx">Para acessar a Gestão da Conta de Retirada, confirme sua senha de saque.</span></td></tr>
+    <tr><td>输入栏标签</td><td>资产密码 / <span class="ptx">Senha de Ativos</span></td><td>提现密码 / <span class="ptx">Senha de saque</span></td></tr>
+    <tr><td>输入框占位文字</td><td>请输入资产密码 / <span class="ptx">Digite sua senha de ativos</span></td><td>随输入形态改为 6 位输入格一并移除，无占位文字</td></tr>
+    <tr><td>「确定」按钮</td><td>确定 / <span class="ptx">Confirmar</span></td><td>不变</td></tr>
+    <tr><td>忘记密码链接</td><td>忘记资产密码？ / <span class="ptx">Esqueceu a senha de ativos?</span></td><td>忘记提现密码？ / <span class="ptx">Esqueceu a senha de saque?</span></td></tr>
+  </tbody>
+</table>
+<div class="notice"><p>除安全验证页外，平台其他页面若存在「资产密码 / Senha de Ativos」等指代同一密码的叫法，一并替换为「提现密码 / senha de saque」。</p></div>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+<h1>七、与现网流程差异</h1>
+<table>
+  <thead><tr><th style="width:180px">环节</th><th style="width:300px">现网</th><th>本次</th></tr></thead>
+  <tbody>
+    <tr><td>忘记密码（安全验证页）</td><td>跳转消息中心 · 支持页，全部由客服人工处理</td><td><span class="pill p-mod">调整</span> 进入短信验证码自助重置流程，流程内保留客服入口作为兜底</td></tr>
+    <tr><td>忘记密码（提款页弹窗）</td><td>无入口</td><td><span class="pill p-new">新增</span> 输入格下方新增「忘记提现密码？」，重置后可在同一会话内继续提款</td></tr>
+    <tr><td>密码名称</td><td>提款页为「提现密码 / senha de saque」，安全验证页为「资产密码 / Senha de Ativos」</td><td><span class="pill p-mod">调整</span> 全站统一为「提现密码 / senha de saque」</td></tr>
+    <tr><td>安全验证页输入形态</td><td>单行文本框 + 「确定」按钮</td><td><span class="pill p-mod">调整</span> 改为 6 位输入格，「确定」按钮保留并增加置灰态</td></tr>
+    <tr><td>数字键盘</td><td>提款弹窗与安全验证页使用页面自绘数字键盘</td><td><span class="pill p-del">移除</span> 自绘数字键盘全部下线，统一改为调起设备系统自带数字键盘</td></tr>
+    <tr><td>设置新密码页与成功页</td><td>已有（《提现密码设置优化》）</td><td><span class="pill p-keep">复用</span> 结构与交互不变，仅替换标题、说明并新增客服入口</td></tr>
+    <tr><td>重置后的提现限制</td><td>不适用</td><td><span class="pill p-keep">沿用</span> 重置成功后不设冷却期，会员可立即使用新密码提款</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+<h1>八、后台配置说明</h1>
+<p>本次需求<b>不新增、不调整任何后台配置项</b>。第 5.1 节的验证码规则（位数 6 位、有效期 5 分钟、重发间隔 60 秒、发送次数不设上限、单个验证码错误 5 次作废）由前端与服务端硬性约定，不开放后台可配置入口；提现密码的位数与加密方式沿用现网，同样不提供配置项。</p>
+<p>后台「提现管理」「消息管理」等既有模块的配置逻辑不受本次改动影响。会员发起的重置行为须按平台现有口径计入<b>操作日志</b>，便于客服与风控追溯，日志字段沿用现有规范，本次不扩展。</p>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+<h1>九、中文 / 葡语文案对照表</h1>
+<p>覆盖本次涉及页面的全部固定展示文案。前台上线以葡语为准，中文仅用于需求沟通与原型演示。标 <span class="pill p-new">新增</span> 为本次新增文案，标 <span class="pill p-mod">修改</span> 为替换现网文案，未标注者为沿用现网。</p>
+<table>
+  <thead><tr><th style="width:230px">位置 / 元素</th><th style="width:270px">中文</th><th>Português</th></tr></thead>
+  <tbody>
+    <tr class="grp"><td colspan="3">入口</td></tr>
+    <tr><td>提款页弹窗 · 链接 <span class="pill p-new">新增</span></td><td>忘记提现密码？</td><td class="ptx">Esqueceu a senha de saque?</td></tr>
+    <tr><td>提款页弹窗 · 重置后提示 <span class="pill p-new">新增</span></td><td>提现密码已重置，请输入新密码</td><td class="ptx">Senha redefinida. Digite a nova senha</td></tr>
+    <tr><td>安全验证页 · 说明 <span class="pill p-mod">修改</span></td><td>为了进入提现账号管理，请确认您的提现密码。</td><td class="ptx">Para acessar a Gestão da Conta de Retirada, confirme sua senha de saque.</td></tr>
+    <tr><td>安全验证页 · 标签 <span class="pill p-mod">修改</span></td><td>提现密码</td><td class="ptx">Senha de saque</td></tr>
+    <tr><td>安全验证页 · 链接 <span class="pill p-mod">修改</span></td><td>忘记提现密码？</td><td class="ptx">Esqueceu a senha de saque?</td></tr>
+    <tr><td>安全验证页 · 按钮</td><td>确定</td><td class="ptx">Confirmar</td></tr>
+
+    <tr class="grp"><td colspan="3">第一步 · 验证注册手机号</td></tr>
+    <tr><td>顶栏标题（两步共用） <span class="pill p-new">新增</span></td><td>重置提现密码</td><td class="ptx">Redefinir senha de saque</td></tr>
+    <tr><td>状态 A · 说明 <span class="pill p-new">新增</span></td><td>为保障资金安全，需验证您的注册手机号</td><td class="ptx">Para a segurança dos seus fundos, precisamos verificar seu telefone cadastrado</td></tr>
+    <tr><td>状态 A · 主按钮 <span class="pill p-new">新增</span></td><td>获取验证码</td><td class="ptx">Enviar código</td></tr>
+    <tr><td>状态 B · 说明 <span class="pill p-new">新增</span></td><td>验证码已发送至 +55 119******12</td><td class="ptx">Código enviado para +55 119******12</td></tr>
+    <tr><td>状态 B · 卡片标签 <span class="pill p-new">新增</span></td><td>短信验证码</td><td class="ptx">Código SMS</td></tr>
+    <tr><td>重发区 · 倒计时 <span class="pill p-new">新增</span></td><td>59 秒后可重新获取</td><td class="ptx">Reenviar em 59s</td></tr>
+    <tr><td>重发区 · 可点态 <span class="pill p-new">新增</span></td><td>重新获取验证码</td><td class="ptx">Reenviar código</td></tr>
+    <tr><td>校验中 <span class="pill p-new">新增</span></td><td>验证中…</td><td class="ptx">Verificando…</td></tr>
+    <tr><td>卡片下方链接 <span class="pill p-new">新增</span></td><td>收不到验证码？</td><td class="ptx">Não recebeu o código?</td></tr>
+
+    <tr class="grp"><td colspan="3">「收不到验证码？」底部面板</td></tr>
+    <tr><td>标题 <span class="pill p-new">新增</span></td><td>收不到验证码？</td><td class="ptx">Não recebeu o código?</td></tr>
+    <tr><td>原因 1 <span class="pill p-new">新增</span></td><td>请确认手机信号正常，并检查短信是否被拦截</td><td class="ptx">Verifique o sinal do celular e se o SMS não foi bloqueado</td></tr>
+    <tr><td>原因 2 <span class="pill p-new">新增</span></td><td>短信可能有延迟，请稍候再重新获取</td><td class="ptx">O SMS pode atrasar. Aguarde e solicite novamente</td></tr>
+    <tr><td>原因 3 <span class="pill p-new">新增</span></td><td>手机号已停用或不是本人号码，请联系客服处理</td><td class="ptx">Se o número não está mais em uso ou não é seu, contate o suporte</td></tr>
+    <tr><td>主按钮 <span class="pill p-new">新增</span></td><td>联系客服</td><td class="ptx">Contate o suporte</td></tr>
+    <tr><td>次按钮 <span class="pill p-new">新增</span></td><td>我知道了</td><td class="ptx">Entendi</td></tr>
+
+    <tr class="grp"><td colspan="3">第二步 · 设置新提现密码</td></tr>
+    <tr><td>顶栏标题</td><td>重置提现密码</td><td class="ptx">Redefinir senha de saque</td></tr>
+    <tr><td>页内标题 <span class="pill p-new">新增</span></td><td>设置新提现密码</td><td class="ptx">Configurar Novo Saque Senha</td></tr>
+    <tr><td>输入栏 1 标签</td><td>新提现密码</td><td class="ptx">Novo Saque Senha</td></tr>
+    <tr><td>输入栏 2 标签</td><td>确认新密码</td><td class="ptx">Confirmar Nova Senha</td></tr>
+    <tr><td>底部说明 <span class="pill p-new">新增</span></td><td>请设置 6 位数字新提现密码</td><td class="ptx">Defina uma nova senha de saque de 6 dígitos</td></tr>
+    <tr><td>主按钮</td><td>确认</td><td class="ptx">Confirmar</td></tr>
+    <tr><td>客服入口 <span class="pill p-new">新增</span></td><td>遇到问题？联系客服</td><td class="ptx">Precisa de ajuda? Contate o suporte</td></tr>
+
+    <tr class="grp"><td colspan="3">提示文案</td></tr>
+    <tr><td>验证码错误 <span class="pill p-new">新增</span></td><td>验证码错误，请重新输入</td><td class="ptx">Código incorreto, tente novamente</td></tr>
+    <tr><td>验证码过期 <span class="pill p-new">新增</span></td><td>验证码已过期，请重新获取</td><td class="ptx">Código expirado. Solicite um novo código</td></tr>
+    <tr><td>错误次数过多 <span class="pill p-new">新增</span></td><td>错误次数过多，请重新获取验证码</td><td class="ptx">Muitas tentativas incorretas. Solicite um novo código</td></tr>
+    <tr><td>第二步行内错误提示</td><td>两次输入的密码不一致</td><td class="ptx">As senhas inseridas duas vezes não correspondem</td></tr>
+
+    <tr class="grp"><td colspan="3">重置成功页</td></tr>
+    <tr><td>标题 <span class="pill p-new">新增</span></td><td>重置成功</td><td class="ptx">Redefinida com sucesso</td></tr>
+    <tr><td>说明文字</td><td>新密码设置成功，请牢记您的密码</td><td class="ptx">Nova senha definida com sucesso, lembre-se da sua senha</td></tr>
+    <tr><td>按钮（来源＝提款页）</td><td>返回首页</td><td class="ptx">Retornar à página inicial</td></tr>
+    <tr><td>按钮（来源＝提款页）</td><td>继续提现</td><td class="ptx">Continuar com o saque</td></tr>
+    <tr><td>按钮（来源＝安全中心） <span class="pill p-new">新增</span></td><td>完成</td><td class="ptx">Concluir</td></tr>
+
+    <tr class="grp"><td colspan="3">放弃确认弹窗</td></tr>
+    <tr><td>弹窗标题 <span class="pill p-new">新增</span></td><td>确定放弃重置提现密码？</td><td class="ptx">Deseja cancelar a redefinição da senha de saque?</td></tr>
+    <tr><td>弹窗说明 <span class="pill p-new">新增</span></td><td>放弃后，下次需要重新验证手机号</td><td class="ptx">Será necessário verificar o telefone novamente</td></tr>
+    <tr><td>弹窗左按钮 <span class="pill p-new">新增</span></td><td>放弃</td><td class="ptx">Cancelar</td></tr>
+    <tr><td>弹窗右按钮 <span class="pill p-new">新增</span></td><td>继续重置</td><td class="ptx">Continuar</td></tr>
+  </tbody>
+</table>
+<div class="notice notice-info"><p>沿用类文案的葡语取现网原文；第二步输入栏 2 的葡语按《提现密码设置优化》第八章的修正结果取 <code>Confirmar Nova Senha</code>。</p></div>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+<h1>十、边界与异常处理</h1>
+<table>
+  <thead><tr><th style="width:280px">场景</th><th>处理规则</th></tr></thead>
+  <tbody>
+    <tr><td>会员未设置过提现密码时点击「忘记提现密码？」</td><td>该场景不成立。未设置提现密码的会员不会进入提款页的提现密码弹窗或安全验证页，而由提款流程引导至《提现密码设置优化》的首次设置页。</td></tr>
+    <tr><td>会员无注册手机号</td><td>平台注册流程强制绑定手机号，不存在无手机号的会员，流程不设该分支。</td></tr>
+    <tr><td>短信下发接口失败 / 网络异常</td><td>沿用平台通用接口异常提示，页面保持当前状态不切换，不进入 60 秒倒计时，会员可直接重试。</td></tr>
+    <tr><td>验证码校验接口失败 / 网络异常</td><td>沿用平台通用接口异常提示，清除「验证中…」，保留输入格内容，不计入该验证码的错误次数，会员可直接重试。</td></tr>
+    <tr><td>第二步提交接口失败 / 网络异常</td><td>沿用平台通用接口异常提示，停留在第二步并<b>保留</b>两栏内容，按钮恢复可点态；一次性重置凭证在有效期内仍可继续使用。</td></tr>
+    <tr><td>一次性重置凭证超时（超过 5 分钟）后提交</td><td>服务端拒绝本次提交，前端沿用平台通用异常提示并将会员退回第一步状态 A，须重新验证手机号。</td></tr>
+    <tr><td>倒计时进行中退出并重新进入第一步</td><td>按 4.4 规则不重复下发短信，直接进入状态 B 并接续原倒计时；上一条验证码在 5 分钟有效期内仍然有效。</td></tr>
+    <tr><td>验证码已下发但会员直接在状态 B 停留超过有效期</td><td>输入已过期验证码时按「验证码已过期」提示处理，重发区转为可点态，会员重新获取即可。</td></tr>
+    <tr><td>重复点击「获取验证码」/「重新获取验证码」</td><td>请求发出后按钮立即置灰并禁用，接口返回前不响应再次点击；下发成功后随即进入 60 秒倒计时，期间重发区不可点击。</td></tr>
+    <tr><td>重复点击第二步「确认」</td><td>提交请求发出后按钮立即置灰并禁用，接口返回前不响应再次点击。</td></tr>
+    <tr><td>输入格粘贴内容含非数字或超过 6 位</td><td>自动过滤非数字字符并按前 6 位截断，不报错；截断后按当前步骤规则重新判定。</td></tr>
+    <tr><td>系统键盘遮挡</td><td>键盘调起后页面自动上推，保证当前输入区、提示区与主按钮均可见；上推量按实际键盘高度动态计算，不使用固定值。</td></tr>
+    <tr><td>重置过程中会员账号被禁用或冻结</td><td>沿用平台现有账号状态拦截逻辑，在接口层拦截并按通用提示处理，不在本流程内另设提示。</td></tr>
+    <tr><td>重置成功后立即发起提款</td><td>不设冷却期与额外限制，会员可使用新密码直接完成提款。</td></tr>
+    <tr><td>同一账号在多端同时发起重置</td><td>以服务端最后一次下发的验证码与最后一次产生的一次性重置凭证为准，先前的验证码与凭证即刻失效。</td></tr>
+    <tr><td>重置成功后返回提款页，原提款信息已失效</td><td>按提款页现有校验逻辑重新校验（如额度、渠道可用性），校验不通过时沿用提款页既有提示，不在本流程内另设提示。</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 十一 -->
+<div class="section" id="s11">
+<h1>十一、关联需求同步检查</h1>
+<p>本需求与下列需求存在复用或流程衔接关系，改动后须同步核对：</p>
+<table>
+  <thead><tr><th style="width:230px">关联需求</th><th style="width:200px">衔接点</th><th>同步核对项</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>《提现密码设置优化》</td>
+      <td>第二步与成功页整体复用</td>
+      <td>设置页的输入交互、动态校验与行内错误提示规则若后续调整，本需求第二步须同步；两份文档对同一组件的描述口径须保持一致，以《提现密码设置优化》第五章、第九章为准。</td>
+    </tr>
+    <tr>
+      <td>《提现密码设置优化》第八章 文案对照</td>
+      <td>复用页面的文案</td>
+      <td>「新提现密码」「确认新密码」「确认」「两次输入的密码不一致」等复用文案的中葡取值须两份一致；本需求仅新增差异项，不改动沿用项。</td>
+    </tr>
+    <tr>
+      <td>《提款页改版优化》</td>
+      <td>提款页密码弹窗与返回后的页面状态</td>
+      <td>弹窗内新增链接后的元素排布与安全间距须与改版后的提款页一致；自重置成功页返回时提款金额、渠道与提款方式的保持规则，须与该需求的提款地址默认选择逻辑不冲突。</td>
+    </tr>
+    <tr>
+      <td>《增加Phone提款方式》</td>
+      <td>提现前置校验顺序</td>
+      <td>「未设置提现密码」「未绑定提现资料」「提现密码校验失败」三类拦截的触发顺序与提示口径须统一，避免会员在多个引导页之间往返。</td>
+    </tr>
+    <tr>
+      <td>《公告消息》所属的消息中心</td>
+      <td>客服入口跳转目标</td>
+      <td>本流程三处「联系客服」均跳转至消息中心 · 支持页，该页的入口路径或页面结构若调整，须同步核对本流程的跳转与返回行为。</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 十二 -->
+<div class="section" id="s12">
+<h1>十二、修订记录</h1>
+<table>
+  <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
+  <tbody>
+    <tr><td>v1.0</td><td>2026-10-23</td><td>初版：由《提现密码重置需求文档》v1.8 按 PRD 规范重构文档结构，补充名词解释、交互逻辑流程图、后台配置说明、边界与异常处理、关联需求同步检查五章；明确验证码规则全部硬性约定、不开放后台配置；字号、间距、圆角等视觉规格归 UI 设计稿，不纳入本文档。重构前的内容演进为：两个入口与两步重置框架、验证码规则与中葡文案（原 v1.0）；参考主流支付产品优化交互，新增「收不到验证码？」面板与放弃确认弹窗（原 v1.1）；重置流程页面结构改回平台现有样式，安全验证页保留「确定」按钮（原 v1.2–v1.3）；第二步与成功页改为整体复用设置页（原 v1.4）；统一注册手机号脱敏规则为与提款页一致（原 v1.5）；第二步交互全面对齐《提现密码设置优化》的动态校验（原 v1.7）。本次重构同时确认两项规则变更：短信发送不设每日上限；页面自绘数字键盘全部下线，提款弹窗、安全验证页与重置两步统一调起设备系统自带数字键盘。</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+</body>
+</html>
