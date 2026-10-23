@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="author" content="Laura">
+<!-- 署名 / Author: Laura -->
+<title>重置提现密码 - 前台原型</title>
+<style>
+  :root{
+    --bg:#171717; --bar:#24221f; --card:#212121; --card2:#262421; --line:#353535;
+    --text:#f2f2f2; --muted:#8c8c8c; --t3:#5e5e5e;
+    --yellow:#f6f542; --yellow-dis:#453f1c; --gold:#f4e500;
+    --box-line:#5a5a5a; --box-act:#f6f542; --err:#ff5a4f; --ok:#36c275;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;padding:24px 16px 48px;background:#0e0e0f;color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex;flex-direction:column;align-items:center}
+  .ctl{width:390px;max-width:100%;margin-bottom:14px}
+  .ctl h1{font-size:17px;margin:0 0 4px}
+  .ctl .sub{font-size:12px;color:#7d7d7d;margin:0 0 12px}
+  .ctl .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .ctl button{background:#252525;color:#ddd;border:1px solid #3a3a3a;border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer}
+  .ctl button.on{background:var(--yellow);color:#1a1a1a;border-color:var(--yellow);font-weight:700}
+  .ctl .tip{font-size:12px;color:#8a8a8a;line-height:1.6}
+
+  /* ======== 平台页面规范（按现网截图量取，390 宽基准） ========
+     顶栏 41 / 标题 14 粗；页边距 16；正文 12；说明/提示/链接 12（最小字号）；标签 12；
+     卡片圆角 8、内边距 13；按钮高 41；6 位格 间距 7、圆角 6；键盘键高 42、间距 5 */
+  .phone{width:390px;height:844px;border-radius:36px;border:9px solid #000;background:var(--bg);
+    position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg)}
+  .screen.on{display:flex}
+  .bar{height:41px;flex:0 0 auto;background:var(--bar);display:flex;align-items:center;padding:0 6px}
+  .bar .bk{width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .bar .bk svg{width:8px;height:14px}
+  .bar .tt{flex:1;text-align:center;font-size:14px;font-weight:700}
+  .bar .sp{width:32px;display:flex;justify-content:center}
+  .bar .sp svg{width:15px;height:17px}
+  .body{flex:1;overflow-y:auto;padding:0 16px 24px}
+  .body::-webkit-scrollbar{width:0}
+
+  /* ---------- 提款页（新版） ---------- */
+  .bal{font-size:12px;color:#8c8c8c;padding:22px 0 0;line-height:1.4}
+  .bal b{color:var(--gold);font-weight:400;margin-left:6px}
+  .bal2{font-size:12px;color:#8c8c8c;padding:12px 0 0;display:flex;align-items:center;line-height:1.4}
+  .bal2 b{color:var(--gold);font-weight:400;margin-left:4px}
+  .bal2 .lk{color:#3b82f6;margin-left:24px;cursor:pointer}
+  .chs{display:flex;gap:8px;padding:16px 0 13px;border-bottom:1px solid var(--line)}
+  .ch{height:33px;padding:0 13px;border-radius:5px;border:1px solid #3a3a3a;color:#8f8f8f;font-size:12px;font-weight:500;display:flex;align-items:center}
+  .ch.on{background:#a9a52a;color:#141400;border-color:#a9a52a;font-weight:700}
+  .lbl{font-size:14px;font-weight:700;color:#cfcfcf;margin:14px 0 13px}
+  .amts{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+  .amt{height:39px;border-radius:5px;background:#1f1f1f;display:flex;align-items:center;justify-content:center;color:#5c5c5c;font-size:12px}
+  .ipt{margin-top:18px;height:33px;border-radius:5px;background:#1f1f1f;display:flex;align-items:center;padding:0 12px;font-size:12px;color:#cfcfcf}
+  .divider{height:1px;background:var(--line);margin-top:13px}
+  .mth{display:inline-flex;align-items:center;height:32px;padding:0 16px;border:1px solid #a9a52a;border-radius:5px;color:#d9d6a0;font-weight:700;font-size:12px}
+  .fld{border-bottom:1px solid var(--line);padding:14px 0 15px}
+  .fld .k{font-size:14px;color:#6f6f6f;font-weight:700;margin-bottom:16px}
+  .fld .v{font-size:12px;color:#8c8c8c}
+  .note{font-size:12px;color:#666;margin-top:12px}
+  .note a,.lnk{color:#9a9a9a;text-decoration:underline;cursor:pointer}
+  .cta{margin-top:24px;width:100%;height:41px;border:0;border-radius:21px;background:var(--yellow);color:#1a1a1a;
+    font-size:14px;font-weight:700;cursor:pointer}
+
+  /* ---------- 提款弹窗 ---------- */
+  .mask{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;z-index:20}
+  .mask.on{display:block}
+  .modal{position:absolute;left:53px;right:53px;top:277px;background:var(--card2);border-radius:12px;padding:16px 13px 20px}
+  .modal .mh{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700}
+  .modal .x{font-size:15px;color:#bbb;cursor:pointer;padding:0 2px}
+  .modal .ma{text-align:center;margin:16px 0 4px;font-size:12px;color:#ccc}
+  .modal .mv{text-align:center;font-size:17px;font-weight:700;color:var(--gold);padding-bottom:16px;border-bottom:1px solid #3a3a3a;margin-bottom:16px}
+  .modal .fg{text-align:right;margin-top:24px;font-size:12px}
+  .mhint{display:none;align-items:center;gap:5px;font-size:12px;color:var(--ok);margin:-6px 0 10px}
+  .mhint.on{display:flex}
+
+  /* ---------- 6 位格子 ---------- */
+  .boxes{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;cursor:pointer}
+  .boxes.shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+  .cell{aspect-ratio:1/1;border-radius:6px;border:1px solid var(--box-line);display:flex;align-items:center;justify-content:center;position:relative;font-size:16px;font-weight:600;transition:border-color .15s}
+  .cell.act{border-color:var(--box-act)}
+  .boxes.err .cell{border-color:var(--err)}
+  .cell .dot{width:8px;height:8px;border-radius:50%;background:var(--text)}
+  .cell .car{position:absolute;width:2px;height:16px;background:var(--box-act);animation:blink 1s steps(1,start) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- 安全验证页 ---------- */
+  .lock{width:35px;height:35px;border-radius:50%;background:#3a3417;margin:23px auto 15px;display:flex;align-items:center;justify-content:center}
+  .lock svg{width:10px;height:11px}
+  .desc{text-align:center;font-size:12px;color:#9a9a9a;line-height:1.6;margin:0 4px 18px}
+  .panel{background:var(--card);border-radius:8px;padding:13px 13px 16px;margin-bottom:0}
+  .panel .pl{font-size:12px;color:#a8a8a8;margin-bottom:11px}
+  .rlink{text-align:right;font-size:12px;margin:24px 0 24px}
+
+  /* ---------- 重置流程（沿用安全验证页布局） ---------- */
+  .desc b{color:var(--text);font-weight:600;letter-spacing:.2px;white-space:nowrap}
+  .stage{transition:opacity .2s,transform .2s}
+  .stage.out{opacity:0;transform:translateX(-14px)}
+  .stage.in{opacity:0;transform:translateX(14px)}
+  .msg{min-height:18px;margin:9px 0 0;font-size:12px;line-height:1.5}
+  .msg:empty{min-height:0;margin:0}
+  .msg.err{color:var(--err)}
+  .msg.wait{color:var(--muted);display:flex;align-items:center;gap:6px}
+  .spin{width:11px;height:11px;border-radius:50%;border:2px solid #555;border-top-color:var(--yellow);animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .resend{margin-top:24px;font-size:12px}
+  .resend .cdTxt{color:var(--muted)}
+  .resend .go{color:var(--yellow);cursor:pointer;font-weight:600}
+  .btn{width:100%;height:41px;border:0;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer}
+  .btn.dis{background:var(--yellow-dis);color:#1d1d1d}
+  .btn.ok{background:var(--yellow);color:#1a1a1a}
+  .rlink .muted{color:#7a7a7a;margin-right:4px}
+
+  /* ---------- 第 2 步：复用「设置提现密码」页（结构不变，尺寸按平台规范） ---------- */
+  .sp-body{padding:18px 16px 0;flex:1;overflow-y:auto}
+  .sp-h1{font-size:14px;font-weight:700;margin:0 0 18px}
+  .sp-label{font-size:12px;color:#8a8783;margin:0 0 11px}
+  .boxes.sp{margin-bottom:20px}
+  .boxes.sp .cell{background:#211f1d;border-color:#3a3733}
+  .boxes.sp .cell.act{border-color:var(--box-act);background:#2a2724}
+  .boxes.sp.err .cell{border-color:var(--err)}
+  .sp-hint{font-size:12px;color:#8a8783;margin:0 0 6px;line-height:1.5;min-height:16px}
+  .boxes.sp2{margin-bottom:6px}
+  .sp-err{min-height:18px;line-height:18px;font-size:12px;color:var(--err);margin:0 0 12px;opacity:0;transition:opacity .15s}
+  .sp-err.show{opacity:1}
+  .hid{position:absolute;opacity:0;pointer-events:none;height:0;width:0;border:0;padding:0}
+  .sp-btn:disabled{background:#33302c;color:#6e6a65;cursor:default}
+  .sp-btn{margin-top:22px;height:41px;border:none;border-radius:21px;background:var(--yellow);color:#1a1a1a;font-size:14px;font-weight:700;width:100%;cursor:pointer}
+  .sp-help{text-align:center;font-size:12px;color:#7a7a7a;margin-top:28px}
+  .sp-help .lnk{color:#b5b5b5}
+  .sp-ok{flex:1;display:flex;flex-direction:column;align-items:center;padding:48px 16px 0}
+  .sp-check{width:64px;height:64px;border-radius:50%;background:#2ecc71;display:flex;align-items:center;justify-content:center;margin-bottom:18px;animation:pop .3s ease-out}
+  @keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+  .sp-check svg{width:34px;height:34px}
+  .sp-check path{stroke:#fff;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;fill:none;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .35s .18s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .sp-title{font-size:16px;font-weight:700;margin:0 0 12px;text-align:center}
+  .sp-desc{font-size:12px;color:#9a9a9a;line-height:1.5;text-align:center;margin:0 0 36px}
+  .sp-acts{display:flex;gap:16px;align-self:stretch}
+  .sp-acts button{flex:1;height:41px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;border:none}
+  .sp-acts .primary{background:var(--yellow);color:#1a1a1a}
+  .sp-acts .ghost{background:#211f1d;color:var(--text);border:1px solid #3a3733}
+
+  /* ---------- 底部面板（收不到验证码） ---------- */
+  .sheetMask{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:50;display:none}
+  .sheetMask.on{display:block}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#232323;border-radius:12px 12px 0 0;padding:18px 16px 20px;
+    transform:translateY(100%);transition:transform .22s ease-out}
+  .sheetMask.on .sheet{transform:translateY(0)}
+  .sheet h4{margin:0 0 12px;font-size:14px;text-align:center}
+  .sheet ol{margin:0 0 8px;padding-left:18px;color:#c9c9c9;font-size:12px;line-height:1.6}
+  .sheet ol li{margin-bottom:6px}
+  .sheet .btn2{width:100%;height:41px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;border:0;margin-top:16px}
+  .sheet .b1{background:var(--yellow);color:#1a1a1a}
+  .sheet .b2{background:transparent;color:#bdbdbd;border:1px solid #444}
+
+  /* ---------- 确认对话框 ---------- */
+  .dlgMask{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:55;display:none;align-items:center;justify-content:center}
+  .dlgMask.on{display:flex}
+  .dlg{width:284px;background:#262626;border-radius:12px;overflow:hidden;text-align:center}
+  .dlg .dt{padding:20px 16px 6px;font-size:14px;font-weight:700;line-height:1.45}
+  .dlg .dd{padding:0 16px 18px;font-size:12px;color:#9a9a9a;line-height:1.5}
+  .dlg .db{display:flex;border-top:1px solid #383838}
+  .dlg .db div{flex:1;padding:12px 0;font-size:14px;cursor:pointer}
+  .dlg .db div+div{border-left:1px solid #383838}
+  .dlg .db .y{color:var(--yellow);font-weight:700}
+  .dlg .db .g{color:#9a9a9a}
+
+  /* ---------- 支持页 / 账号管理 ---------- */
+  .tabs{display:flex;border-bottom:1px solid #333}
+  .tabs div{flex:1;text-align:center;padding:10px 0;font-size:14px;color:#777}
+  .tabs div.on{color:#fff;font-weight:700;border-bottom:2px solid var(--gold)}
+  .cs{background:var(--card);border-radius:8px;padding:12px;margin-top:12px;display:flex;gap:10px}
+  .cs .av{width:46px;height:46px;border-radius:50%;background:#5b4a3c;flex:0 0 auto}
+  .cs b{display:block;font-size:14px}
+  .cs small{color:#888;font-size:12px}
+  .cs button{margin-top:8px;background:var(--yellow);border:0;border-radius:5px;padding:6px 16px;font-size:12px;font-weight:600}
+
+  /* ---------- 安全数字键盘 ---------- */
+  .kbWrap{position:absolute;left:0;right:0;bottom:0;background:#24201c;z-index:40;display:none}
+  .kbWrap.on{display:block}
+  .kbHd{height:24px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#8a8a8a}
+  .kb{padding:0 5px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .kb div{height:42px;border-radius:5px;background:#3a3631;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;user-select:none}
+  .kb div:active{background:#4a4640}
+  .kb div svg{transform:scale(.9)}
+
+  .toast{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);background:rgba(20,20,20,.94);border:1px solid #3a3a3a;
+    color:#fff;padding:12px 16px;border-radius:8px;font-size:12px;text-align:center;max-width:80%;width:max-content;line-height:1.5;
+    opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+  .toast.on{opacity:1}
+  .toast .ic{width:30px;height:30px;border-radius:50%;background:var(--ok);margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
+
+  @media (max-width:500px){
+    body{padding:0;background:var(--bg)}
+    .ctl{display:none}
+    .phone{width:100%;height:100vh;height:100dvh;border:0;border-radius:0;box-shadow:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="ctl">
+  <h1>重置提现密码 · 前台原型</h1>
+  <p class="sub">H5 · 390×844 · 尺寸按现网页面规范 · 对应《提现密码重置 PRD》v1.0 · 作者：Laura</p>
+  <div class="row">
+    <button class="on" id="lzh" onclick="setLang('zh')">中文</button>
+    <button id="lpt" onclick="setLang('pt')">Português</button>
+  </div>
+  <div class="row">
+    <button onclick="goEntry('wd')">入口 1：提款页</button>
+    <button onclick="goEntry('sec')">入口 2：安全中心 → 提现账号管理</button>
+  </div>
+  <div class="tip">第 2 步按设置页需求调起系统数字键盘：电脑上点击格子后直接用键盘输入。<br>演示数据：验证码输入 000000 视为错误，其他任意 6 位数字视为正确；单日获取验证码第 6 次触发上限提示。</div>
+</div>
+
+<div class="phone" id="phone">
+
+  <!-- ============ 提款页 ============ -->
+  <div class="screen on" id="sWd">
+    <div class="bar"><span class="bk"></span><div class="tt" data-t="wdTitle"></div>
+      <span class="sp"><svg width="22" height="24" viewBox="0 0 22 24" fill="none"><rect x="1" y="1" width="20" height="22" rx="3" stroke="#9a9a9a" stroke-width="1.6"/><path d="M6 8h10M6 12h10M6 16h6" stroke="#9a9a9a" stroke-width="1.6" stroke-linecap="round"/></svg></span></div>
+    <div class="body">
+      <div class="bal"><span data-t="balance"></span><b>R$ 13.737,20</b></div>
+      <div class="bal2"><span data-t="needBet"></span><b>R$ 161,36</b><span class="lk" data-t="viewDetail"></span></div>
+      <div class="chs"><span class="ch on">BESTPAY</span><span class="ch">NEWGPAY</span><span class="ch">PIX2_U2CPAY</span></div>
+      <div class="lbl" data-t="amountLbl"></div>
+      <div class="amts"><div class="amt">100,00</div><div class="amt">200,00</div><div class="amt">300,00</div></div>
+      <div class="ipt">200</div>
+      <div class="divider"></div>
+      <div class="lbl" data-t="method"></div>
+      <span class="mth">PHONE</span>
+      <div class="fld"><div class="k" data-t="name"></div><div class="v">1231</div></div>
+      <div class="fld"><div class="k" data-t="phone"></div><div class="v">+55&nbsp;&nbsp;119******12</div></div>
+      <div class="fld"><div class="k">CPF ID</div><div class="v">333******5566</div></div>
+      <div class="note"><span data-t="changeAcct"></span><a onclick="openSupport('sWd')" data-t="contactLow"></a></div>
+      <button class="cta" onclick="openModal(false)" data-t="submit"></button>
+    </div>
+
+    <div class="mask" id="mask">
+      <div class="modal">
+        <div class="mh"><span data-t="modalTitle"></span><span class="x" onclick="closeModal()">✕</span></div>
+        <div class="ma" data-t="amountLbl"></div>
+        <div class="mv">200,00 R$</div>
+        <div class="mhint" id="mHint"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#36c275"/><path d="M4 7.2l2 2 4-4.2" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="mHint"></span></div>
+        <div class="boxes" id="mPw"></div>
+        <div class="fg"><span class="lnk" onclick="startReset('wd')" data-t="forgot"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 安全验证（提现账号管理前置） ============ -->
+  <div class="screen" id="sVerify">
+    <div class="bar"><span class="bk" onclick="toast(t('demoBackSec'))"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="tt" data-t="verifyTitle"></div><span class="sp"></span></div>
+    <div class="body">
+      <div class="lock"><svg width="20" height="22" viewBox="0 0 20 22"><rect x="2" y="9" width="16" height="12" rx="2" fill="#f6f542"/><path d="M5.5 9V6.5a4.5 4.5 0 0 1 9 0V9" stroke="#f6f542" stroke-width="2.2" fill="none"/></svg></div>
+      <div class="desc" data-t="verifyDesc"></div>
+      <div class="panel"><div class="pl" data-t="pwLbl"></div><div class="boxes" id="vPw"></div>
+        <div class="msg" id="vMsg"></div></div>
+      <div class="rlink"><span class="lnk" onclick="startReset('sec')" data-t="forgot"></span></div>
+      <button class="btn dis" id="vBtn" onclick="verifySubmit()" data-t="confirm"></button>
+    </div>
+  </div>
+
+  <!-- ============ 重置 · 第 1 步：验证手机号 ============ -->
+  <div class="screen" id="sCode">
+    <div class="bar"><span class="bk" onclick="tryLeave()"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="tt" data-t="resetTitle"></div><span class="sp"></span></div>
+    <div class="body">
+      <div class="lock"><svg width="20" height="22" viewBox="0 0 20 22"><rect x="2" y="9" width="16" height="12" rx="2" fill="#f6f542"/><path d="M5.5 9V6.5a4.5 4.5 0 0 1 9 0V9" stroke="#f6f542" stroke-width="2.2" fill="none"/></svg></div>
+      <!-- 状态 A：未发送 -->
+      <div class="stage" id="stA">
+        <div class="desc"><span data-t="h2Phone"></span><br><b>+55 119******12</b></div>
+        <button class="btn ok" onclick="sendCode()" data-t="getCode"></button>
+        <div class="msg err" id="aMsg"></div>
+      </div>
+      <!-- 状态 B：已发送，输入验证码 -->
+      <div class="stage" id="stB" style="display:none">
+        <div class="desc"><span data-t="h2Code"></span><br><b>+55 119******12</b></div>
+        <div class="panel"><div class="pl" data-t="codeLbl"></div>
+          <div class="boxes" id="cCode"></div>
+          <div class="msg" id="cMsg"></div>
+          <div class="resend" id="resend"></div>
+        </div>
+      </div>
+      <div class="rlink"><span class="lnk" onclick="openSheet()" data-t="noCode"></span></div>
+    </div>
+  </div>
+
+  <!-- ============ 重置 · 第 2 步：复用「设置提现密码」页 ============ -->
+  <div class="screen" id="sNew">
+    <div class="bar"><span class="bk" onclick="tryLeave()"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="tt" data-t="spBar"></div><span class="sp"></span></div>
+    <div class="sp-body">
+      <div class="sp-h1" data-t="spH1"></div>
+      <div class="sp-label" data-t="lbNew"></div>
+      <div class="boxes sp" id="nPw1" data-target="npi1"></div>
+      <div class="sp-label" data-t="lbCf"></div>
+      <div class="boxes sp sp2" id="nPw2" data-target="npi2"></div>
+      <div class="sp-err" id="nErr"></div>
+      <div class="sp-hint" data-t="spHint"></div>
+      <button class="sp-btn" id="nBtn" onclick="newSubmit()" data-t="cfmBtn" disabled></button>
+      <input class="hid" id="npi1" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
+      <input class="hid" id="npi2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off">
+      <div class="sp-help"><span data-t="help2"></span> <span class="lnk" onclick="openSupport('sNew')" data-t="contactCap"></span></div>
+    </div>
+  </div>
+
+  <!-- ============ 重置成功：复用「设置提现密码」成功页 ============ -->
+  <div class="screen" id="sDone">
+    <div class="bar"><span class="bk" onclick="doneBack()"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="tt" data-t="spBar"></div><span class="sp"></span></div>
+    <div class="sp-ok">
+      <div class="sp-check"><svg viewBox="0 0 64 64"><path d="M18 33 L28 43 L47 22"/></svg></div>
+      <div class="sp-title" data-t="okTitle"></div>
+      <div class="sp-desc" data-t="okDesc"></div>
+      <div class="sp-acts" id="okActs"></div>
+    </div>
+  </div>
+
+  <!-- ============ 提现账号管理（验证通过后，示意） ============ -->
+  <div class="screen" id="sAcct">
+    <div class="bar"><span class="bk" onclick="goEntry('sec')"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="tt" data-t="acctTitle"></div><span class="sp"></span></div>
+    <div class="body"><div class="desc" style="margin-top:40px" data-t="acctDemo"></div></div>
+  </div>
+
+  <!-- ============ 消息中心 · 支持（现网页面） ============ -->
+  <div class="screen" id="sSupport">
+    <div class="bar"><span class="bk" onclick="closeSupport()"><svg width="11" height="19" viewBox="0 0 11 19" fill="none"><path d="M9.5 1.5L2 9.5l7.5 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="tt" data-t="msgTitle"></div><span class="sp"></span></div>
+    <div class="tabs"><div class="on" data-t="tabSup"></div><div data-t="tabNoti"></div><div data-t="tabAnn"></div></div>
+    <div class="body">
+      <div class="cs"><span class="av"></span><div><b data-t="csName"></b><small data-t="csDesc"></small><br><button data-t="csBtn" onclick="toast(t('demoCs'))"></button></div></div>
+    </div>
+  </div>
+
+  <!-- 收不到验证码 -->
+  <div class="sheetMask" id="sheet" onclick="if(event.target===this)closeSheet()">
+    <div class="sheet">
+      <h4 data-t="noCode"></h4>
+      <ol><li data-t="tip1"></li><li data-t="tip2"></li><li data-t="tip3"></li></ol>
+      <button class="btn2 b1" onclick="closeSheet();openSupport('sCode')" data-t="contactCap"></button>
+      <button class="btn2 b2" onclick="closeSheet()" data-t="gotIt"></button>
+    </div>
+  </div>
+
+  <!-- 放弃确认 -->
+  <div class="dlgMask" id="dlg">
+    <div class="dlg">
+      <div class="dt" data-t="leaveT"></div>
+      <div class="dd" data-t="leaveD"></div>
+      <div class="db"><div class="g" onclick="closeDlg();backToOrigin(false)" data-t="leaveYes"></div><div class="y" onclick="closeDlg()" data-t="leaveNo"></div></div>
+    </div>
+  </div>
+
+  <div class="kbWrap" id="kbWrap">
+    <div class="kbHd"><svg width="11" height="12" viewBox="0 0 20 22"><rect x="2" y="9" width="16" height="12" rx="2" fill="#8a8a8a"/><path d="M5.5 9V6.5a4.5 4.5 0 0 1 9 0V9" stroke="#8a8a8a" stroke-width="2.4" fill="none"/></svg><span data-t="kbHd"></span></div>
+    <div class="kb" id="kb"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ===================== 文案 ===================== */
+var S = {
+  zh:{
+    wdTitle:'取款', balance:'账户余额：', needBet:'提款需投注', viewDetail:'查看详情', amountLbl:'提款金额', method:'提款方式', name:'姓名', phone:'手机号码',
+    changeAcct:'如需修改提款账户，请 ', contactLow:'联系客服', submit:'立即提现',
+    modalTitle:'请输入您的提现密码', forgot:'忘记提现密码？', mHint:'提现密码已重置，请输入新密码',
+    verifyTitle:'安全验证', verifyDesc:'为了进入提现账号管理，请确认您的提现密码。', pwLbl:'提现密码',
+    resetTitle:'重置提现密码', confirm:'确定', codeLbl:'短信验证码',
+    h2Phone:'为保障资金安全，需验证您的注册手机号', getCode:'获取验证码',
+    h2Code:'验证码已发送至',
+    cd:'{s} 秒后可重新获取', resend:'重新获取验证码', verifying:'验证中…',
+    noCode:'收不到验证码？',
+    tip1:'请确认手机信号正常，并检查短信是否被拦截',
+    tip2:'短信可能有延迟，请稍候再重新获取',
+    tip3:'手机号已停用或不是本人号码，请联系客服处理',
+    gotIt:'我知道了', contactCap:'联系客服', help2:'遇到问题？',
+    spBar:'重置提现密码', spH1:'设置新提现密码', spHint:'请设置 6 位数字新提现密码',
+    lbNew:'新提现密码', lbCf:'确认新密码', cfmBtn:'确认',
+    okTitle:'重置成功', okDesc:'新密码设置成功，请牢记您的密码', okHome:'返回首页', okWd:'继续提现', okDone:'完成', demoHome:'演示：返回首页',
+    pwMismatch:'两次输入的密码不一致',
+    errCode:'验证码错误，请重新输入', errLocked:'错误次数过多，请重新获取验证码',
+    errDaily:'今日获取次数已达上限，请明天再试或联系客服',
+    resetOk:'提现密码重置成功', wdOk:'演示：提款申请已提交',
+    leaveT:'确定放弃重置提现密码？', leaveD:'放弃后，下次需要重新验证手机号', leaveYes:'放弃', leaveNo:'继续重置',
+    kbHd:'安全键盘',
+    acctTitle:'提现账号管理', acctDemo:'演示：已进入提现账号管理',
+    msgTitle:'消息中心', tabSup:'支持', tabNoti:'通知', tabAnn:'公告', csName:'在线客服', csDesc:'7x24小时全天侯专线服务', csBtn:'联系客服',
+    demoCs:'演示：打开在线客服', demoBackSec:'演示：返回安全中心'
+  },
+  pt:{
+    wdTitle:'Saque', balance:'Conta Saldo:', needBet:'Aposta necessária', viewDetail:'Ver detalhes', amountLbl:'Valor do Saque', method:'Método de Retirada', name:'Nome', phone:'Telefone',
+    changeAcct:'Para alterar a conta de retirada, ', contactLow:'contate o suporte', submit:'Retirar Agora',
+    modalTitle:'Digite sua senha de saque', forgot:'Esqueceu a senha de saque?', mHint:'Senha redefinida. Digite a nova senha',
+    verifyTitle:'Verificação de segurança', verifyDesc:'Para acessar a Gestão da Conta de Retirada, confirme sua senha de saque.', pwLbl:'Senha de saque',
+    resetTitle:'Redefinir senha de saque', confirm:'Confirmar', codeLbl:'Código SMS',
+    h2Phone:'Para a segurança dos seus fundos, precisamos verificar seu telefone cadastrado', getCode:'Enviar código',
+    h2Code:'Código enviado para',
+    cd:'Reenviar em {s}s', resend:'Reenviar código', verifying:'Verificando…',
+    noCode:'Não recebeu o código?',
+    tip1:'Verifique o sinal do celular e se o SMS não foi bloqueado',
+    tip2:'O SMS pode atrasar. Aguarde e solicite novamente',
+    tip3:'Se o número não está mais em uso ou não é seu, contate o suporte',
+    gotIt:'Entendi', contactCap:'Contate o suporte', help2:'Precisa de ajuda?',
+    spBar:'Redefinir senha de saque', spH1:'Configurar Novo Saque Senha', spHint:'Defina uma nova senha de saque de 6 dígitos',
+    lbNew:'Novo Saque Senha', lbCf:'Confirmar Nova Senha', cfmBtn:'Confirmar',
+    okTitle:'Redefinida com sucesso', okDesc:'Nova senha definida com sucesso, lembre-se da sua senha', okHome:'Retornar à página inicial', okWd:'Continuar com o saque', okDone:'Concluir', demoHome:'Demo: voltar à página inicial',
+    pwMismatch:'As senhas inseridas duas vezes não correspondem',
+    errCode:'Código incorreto, tente novamente', errLocked:'Muitas tentativas incorretas. Solicite um novo código',
+    errDaily:'Limite diário de envios atingido. Tente amanhã ou contate o suporte',
+    resetOk:'Senha de saque redefinida com sucesso', wdOk:'Demo: solicitação de saque enviada',
+    leaveT:'Deseja cancelar a redefinição da senha de saque?', leaveD:'Será necessário verificar o telefone novamente', leaveYes:'Cancelar', leaveNo:'Continuar',
+    kbHd:'Teclado seguro',
+    acctTitle:'Gestão da Conta de Retirada', acctDemo:'Demo: Gestão da Conta de Retirada',
+    msgTitle:'Central de mensagens', tabSup:'Suporte', tabNoti:'Notificações', tabAnn:'Anúncios', csName:'Atendimento online', csDesc:'Atendimento 24 horas, 7 dias por semana', csBtn:'Contate o suporte',
+    demoCs:'Demo: abrir atendimento online', demoBackSec:'Demo: voltar à Central de Segurança'
+  }
+};
+var lang = 'zh';
+function t(k){ return S[lang][k]; }
+function setLang(l){
+  lang = l;
+  document.getElementById('lzh').classList.toggle('on', l==='zh');
+  document.getElementById('lpt').classList.toggle('on', l==='pt');
+  document.documentElement.lang = (l==='zh') ? 'zh-CN' : 'pt-BR';
+  document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = t(el.dataset.t); });
+  renderResend(); if (typeof NP!=='undefined') NP.refreshLang(); if (document.getElementById('sDone').classList.contains('on')) renderOk();
+  // 已显示的提示随语言刷新
+  ['aMsg','cMsg'].forEach(function(id){ var m=document.getElementById(id); if(m.dataset.k) setMsg(id, m.dataset.k, m.dataset.kind); });
+}
+
+/* ===================== 6 位格子 + 安全键盘 ===================== */
+var rows = {}, active = null;
+function makeRow(id, onFull, plain){
+  var el = document.getElementById(id);
+  for (var i=0;i<6;i++){ var c=document.createElement('div'); c.className='cell'; el.appendChild(c); }
+  rows[id] = {el:el, val:'', plain:!!plain, onFull:onFull||function(){}, onInput:null, lock:false, reveal:false, rv:-1, rvT:null};
+  el.addEventListener('click', function(e){ e.stopPropagation(); focusRow(id); });
+  renderRow(id);
+}
+function renderRow(id){
+  var r = rows[id];
+  Array.prototype.forEach.call(r.el.children, function(c,i){
+    c.className = 'cell' + ((active===id && i===r.val.length) ? ' act' : '');
+    c.innerHTML = (i < r.val.length) ? ((r.plain || i===r.rv) ? r.val[i] : '<span class="dot"></span>') : ((active===id && i===r.val.length) ? '<span class="car"></span>' : '');
+  });
+}
+function focusRow(id){
+  var prev = active; active = id;
+  if (prev && rows[prev]) renderRow(prev);
+  renderRow(id);
+  document.getElementById('kbWrap').classList.add('on');
+}
+function blurRow(){
+  var prev = active; active = null;
+  if (prev && rows[prev]) renderRow(prev);
+  document.getElementById('kbWrap').classList.remove('on');
+}
+function clearRow(id){ clearTimeout(rows[id].rvT); rows[id].rv=-1; rows[id].val=''; rows[id].lock=false; rows[id].el.classList.remove('err'); renderRow(id); }
+function shake(id){ var el=rows[id].el; el.classList.add('shake','err'); setTimeout(function(){ el.classList.remove('shake'); },420); }
+
+(function buildKb(){
+  var kb = document.getElementById('kb');
+  ['1','2','3','4','5','6','7','8','9','hide','0','del'].forEach(function(k){
+    var d = document.createElement('div');
+    if (k==='hide') d.innerHTML='<svg width="30" height="22" viewBox="0 0 30 22" fill="none"><rect x="1" y="1" width="28" height="15" rx="2" stroke="#fff" stroke-width="1.6"/><path d="M5 6h2M10 6h2M15 6h2M20 6h2M8 11h14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M12 18l3 3 3-3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>';
+    else if (k==='del') d.innerHTML='<svg width="30" height="20" viewBox="0 0 30 20" fill="none"><path d="M9 1h19v18H9L1 10 9 1Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 6l8 8M22 6l-8 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    else d.textContent = k;
+    d.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (!active) return;
+      var r = rows[active];
+      if (k==='hide'){ blurRow(); return; }
+      if (r.lock) return;
+      clearTimeout(r.rvT); r.rv=-1;
+      if (k==='del'){ r.val = r.val.slice(0,-1); }
+      else if (r.val.length < 6){
+        r.val += k;
+        /* 设置新密码：每位先明文显示约 0.55 秒再变为圆点（沿用「提现密码输入页优化」） */
+        if (r.reveal){ r.rv=r.val.length-1; var rid=active; r.rvT=setTimeout(function(){ rows[rid].rv=-1; renderRow(rid); },550); }
+      }
+      r.el.classList.remove('err');
+      if (r.onInput) r.onInput(r.val);
+      renderRow(active);
+      if (r.val.length===6){ r.lock=true; var id=active; setTimeout(function(){ rows[id].onFull(rows[id].val); },120); }
+    });
+    kb.appendChild(d);
+  });
+})();
+
+/* ===================== 通用 ===================== */
+function show(id){
+  blurRow();
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.id===id); });
+  document.getElementById('mask').classList.remove('on');
+}
+function setMsg(id, key, kind, extra){
+  var m=document.getElementById(id);
+  m.dataset.k = key||''; m.dataset.kind = kind||'';
+  m.className = 'msg' + (kind ? ' '+kind : '');
+  if (!key){ m.innerHTML=''; return; }
+  m.innerHTML = (kind==='wait' ? '<span class="spin"></span>' : '') + t(key);
+}
+var tTimer;
+function toast(msg, ok){
+  var el=document.getElementById('toast');
+  el.innerHTML = (ok ? '<div class="ic"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M5 10.5l3.2 3.2L15 7" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' : '') + msg;
+  el.classList.toggle('sp', document.getElementById('sNew').classList.contains('on'));
+  el.classList.add('on');
+  clearTimeout(tTimer); tTimer=setTimeout(function(){ el.classList.remove('on'); }, ok ? 1400 : 2000);
+}
+function swap(stageId, fn){
+  var s=document.getElementById(stageId);
+  s.classList.add('out');
+  setTimeout(function(){ fn(); s.classList.remove('out'); s.classList.add('in'); requestAnimationFrame(function(){ requestAnimationFrame(function(){ s.classList.remove('in'); }); }); },180);
+}
+
+/* ---------- 入口 1：提款弹窗 ---------- */
+function openModal(afterReset){
+  show('sWd');
+  clearRow('mPw');
+  document.getElementById('mHint').classList.toggle('on', !!afterReset);
+  document.getElementById('mask').classList.add('on');
+  focusRow('mPw');
+}
+function closeModal(){ blurRow(); document.getElementById('mask').classList.remove('on'); }
+makeRow('mPw', function(){ closeModal(); toast(t('wdOk')); });
+
+/* ---------- 入口 2：安全验证（填满 6 位自动提交） ---------- */
+makeRow('vPw', function(){ rows.vPw.lock=false; setBtn('vBtn', true); });
+rows.vPw.onInput = function(v){ setBtn('vBtn', v.length===6); };
+function setBtn(id, ok){ var b=document.getElementById(id); b.classList.toggle('ok', ok); b.classList.toggle('dis', !ok); }
+function verifySubmit(){
+  if (rows.vPw.val.length<6){ shake('vPw'); return; }
+  blurRow(); setMsg('vMsg','verifying','wait');
+  setTimeout(function(){ setMsg('vMsg'); show('sAcct'); },600);
+}
+function goEntry(which){
+  if (which==='wd'){ show('sWd'); }
+  else { clearRow('vPw'); setBtn('vBtn', false); setMsg('vMsg'); show('sVerify'); focusRow('vPw'); }
+}
+
+/* ---------- 重置流程 ---------- */
+var origin='wd', sent=false, wrong=0, sendsToday=0, cd=0, cdTimer=null;
+
+function startReset(from){
+  origin = from; sent=false; wrong=0;
+  clearRow('cCode'); setMsg('aMsg'); setMsg('cMsg');
+  document.getElementById('stA').style.display='';
+  document.getElementById('stB').style.display='none';
+  show('sCode');
+}
+function backToOrigin(afterReset){
+  if (origin==='wd') openModal(afterReset); else goEntry('sec');
+}
+function tryLeave(){
+  var onNew = document.getElementById('sNew').classList.contains('on');
+  if (sent || onNew){ blurRow(); document.activeElement && document.activeElement.blur(); document.getElementById('dlg').classList.add('on'); }
+  else backToOrigin(false);
+}
+function closeDlg(){ document.getElementById('dlg').classList.remove('on'); if (document.getElementById('sNew').classList.contains('on')) NP.focusCur(); else if (sent && !rows.cCode.lock) focusRow('cCode'); }
+
+function renderResend(){
+  var el=document.getElementById('resend');
+  if (cd>0) el.innerHTML='<span class="cdTxt">'+t('cd').replace('{s}',cd)+'</span>';
+  else el.innerHTML='<span class="go" onclick="sendCode()">'+t('resend')+'</span>';
+}
+function toB(){
+  swap('stA', function(){
+    document.getElementById('stA').style.display='none';
+    document.getElementById('stB').style.display='';
+    focusRow('cCode');
+  });
+}
+function sendCode(){
+  var onA = document.getElementById('stB').style.display==='none';
+  /* 60 秒内已发过：不重复发送，直接进入输入（上一条验证码仍有效） */
+  if (cd>0){ if (onA){ sent=true; renderResend(); toB(); } return; }
+  if (sendsToday>=5){ setMsg(onA?'aMsg':'cMsg','errDaily','err'); return; }
+  sendsToday++; sent=true; wrong=0;
+  clearRow('cCode'); setMsg('aMsg'); setMsg('cMsg');
+  cd=60; renderResend();
+  clearInterval(cdTimer);
+  cdTimer=setInterval(function(){ cd--; renderResend(); if(cd<=0) clearInterval(cdTimer); },1000);
+  if (onA) toB(); else focusRow('cCode');
+}
+makeRow('cCode', function(v){
+  setMsg('cMsg','verifying','wait');
+  setTimeout(function(){
+    if (v==='000000'){
+      wrong++; shake('cCode');
+      setTimeout(function(){ rows.cCode.val=''; rows.cCode.lock = wrong>=5; renderRow('cCode'); },420);
+      setMsg('cMsg', wrong>=5 ? 'errLocked' : 'errCode', 'err');
+      return;
+    }
+    setMsg('cMsg');
+    startNew();
+  },700);
+}, true);
+
+/* 第 2 步：共用《提现密码设置优化》PRD v1.4 的设置交互
+   系统数字键盘；明文回显 0.55s；动态校验 + 「确认」置灰；不一致行内红字、保留内容；
+   改第一栏联动清空第二栏；第一栏满 6 位自动跳栏；第二栏为空时删除回退到第一栏 */
+var NP = (function(){
+  var LEN=6, REVEAL=550, errShown=false;
+  function bind(rowId){
+    var row=document.getElementById(rowId), input=document.getElementById(row.dataset.target), cells=[];
+    for (var i=0;i<LEN;i++){ var c=document.createElement('div'); c.className='cell'; row.appendChild(c); cells.push(c); }
+    var prev=0, rv=-1, rvT=null;
+    var api={row:row,input:input,cells:cells};
+    function render(){
+      var v=input.value, f=document.activeElement===input;
+      cells.forEach(function(c,i){
+        c.className='cell'+((f && i===v.length)?' act':'');
+        c.innerHTML = i<v.length ? (i===rv ? v[i] : '<span class="dot"></span>') : ((f && i===v.length)?'<span class="car"></span>':'');
+      });
+    }
+    input.addEventListener('input',function(){
+      input.value=input.value.replace(/\D/g,'').slice(0,LEN);
+      var v=input.value, grew=v.length>prev;
+      clearTimeout(rvT);
+      if (grew){ rv=v.length-1; rvT=setTimeout(function(){ rv=-1; render(); },REVEAL); } else rv=-1;
+      prev=v.length; render(); onChange(api,grew);
+    });
+    input.addEventListener('focus',render);
+    input.addEventListener('blur',function(){ rv=-1; clearTimeout(rvT); render(); });
+    row.addEventListener('click',function(e){ e.stopPropagation(); blurRow(); input.focus(); });
+    api.render=render;
+    api.clear=function(){ input.value=''; prev=0; rv=-1; clearTimeout(rvT); render(); };
+    return api;
+  }
+  var p1=bind('nPw1'), p2=bind('nPw2'), btn=document.getElementById('nBtn'), errEl=document.getElementById('nErr');
+  p2.input.addEventListener('keydown',function(e){ if(e.key==='Backspace' && p2.input.value===''){ p1.input.focus(); } });
+  function showErr(){ errEl.textContent=t('pwMismatch'); errEl.classList.add('show'); p1.row.classList.add('err'); p2.row.classList.add('err'); errShown=true; }
+  function clearErr(){ if(!errShown) return; errEl.classList.remove('show'); p1.row.classList.remove('err'); p2.row.classList.remove('err'); errShown=false; }
+  function shakeRow(el){ el.classList.add('shake'); setTimeout(function(){ el.classList.remove('shake'); },420); }
+  function onChange(src,grew){
+    clearErr();
+    if (src===p1 && p2.input.value!=='') p2.clear();
+    var a=p1.input.value, b=p2.input.value;
+    if (grew && src===p1 && a.length===LEN && b.length<LEN) p2.input.focus();
+    if (a.length<LEN || b.length<LEN){ btn.disabled=true; return; }
+    if (a!==b){ btn.disabled=true; shakeRow(p1.row); shakeRow(p2.row); showErr(); p2.input.focus(); return; }
+    btn.disabled=false;
+  }
+  return {
+    start:function(){ clearErr(); p1.clear(); p2.clear(); btn.disabled=true; setTimeout(function(){ p1.input.focus(); },50); },
+    focusCur:function(){ (p1.input.value.length<LEN ? p1 : p2).input.focus(); },
+    refreshLang:function(){ if(errShown) errEl.textContent=t('pwMismatch'); },
+    btn:btn
+  };
+})();
+function startNew(){ show('sNew'); NP.start(); }
+function newSubmit(){
+  if (NP.btn.disabled) return;
+  NP.btn.disabled=true;                       /* 请求中禁用，防重复提交 */
+  document.activeElement && document.activeElement.blur();
+  setTimeout(function(){ renderOk(); show('sDone'); },500);
+}
+/* 成功页按钮随入口变化：提款页进入 → 返回首页 / 继续提现（与设置页一致）；安全中心进入 → 完成 */
+function renderOk(){
+  var el=document.getElementById('okActs');
+  if (origin==='wd') el.innerHTML='<button class="primary" onclick="toast(t(\'demoHome\'))">'+t('okHome')+'</button><button class="ghost" onclick="backToOrigin(true)">'+t('okWd')+'</button>';
+  else el.innerHTML='<button class="primary" onclick="backToOrigin(true)">'+t('okDone')+'</button>';
+}
+function doneBack(){ backToOrigin(true); }
+rows.cCode.onInput = function(){ if (document.getElementById('cMsg').dataset.k==='errCode') setMsg('cMsg'); };
+
+/* ---------- 收不到验证码 / 客服 ---------- */
+function openSheet(){ blurRow(); document.getElementById('sheet').classList.add('on'); }
+function closeSheet(){ document.getElementById('sheet').classList.remove('on'); if (document.getElementById('stB').style.display!=='none' && !rows.cCode.lock) focusRow('cCode'); }
+var supportFrom='sWd';
+function openSupport(from){ supportFrom=from; show('sSupport'); }
+function closeSupport(){ show(supportFrom); }
+
+/* 点击空白处收起键盘（弹窗内除外） */
+document.getElementById('phone').addEventListener('click', function(e){
+  if (!active) return;
+  if (e.target.closest('.kbWrap') || e.target.closest('.boxes') || e.target.closest('.go') || e.target.closest('button')) return;
+  if (active==='mPw') return;
+  blurRow();
+});
+
+setLang('zh');
+</script>
+</body>
+</html>
