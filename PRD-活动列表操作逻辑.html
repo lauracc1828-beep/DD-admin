@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活动列表操作逻辑 PRD</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:40px 24px}
+h1{font-size:26px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:28px;display:flex;gap:20px;flex-wrap:wrap}
+h2{font-size:18px;font-weight:700;color:#0961BD;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+h3{font-size:15px;font-weight:700;color:#1a1a2e;margin:22px 0 10px}
+h3:first-of-type{margin-top:0}
+p{margin-bottom:12px;color:#444}
+ol,ul{padding-left:22px;margin-bottom:12px}
+li{margin-bottom:6px}
+.card{background:#fff;border-radius:8px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.toc ol{margin-bottom:0}
+.toc li{margin-bottom:2px}
+.toc a{color:#0961BD;text-decoration:none}
+.note{background:#f0f6ff;border:1px solid #bcd6ff;border-radius:6px;padding:12px 16px;margin:12px 0;color:#1d4f99}
+.note p:last-child{margin-bottom:0}
+code{background:#f2f4f7;border-radius:4px;padding:1px 6px;font-size:12px;color:#c0392b}
+strong{color:#1a1a2e}
+table{border-collapse:collapse;margin-bottom:12px}
+th,td{border:1px solid #e3e8f0;padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#f0f6ff;color:#0961BD;font-weight:700;white-space:nowrap}
+td.k{white-space:nowrap;font-weight:600;color:#1a1a2e}
+.tag{display:inline-block;border-radius:4px;padding:0 7px;font-size:12px;border:1px solid}
+.t-new{background:#f6ffed;color:#389e0d;border-color:#b7eb8f}
+.t-chg{background:#fff7e6;color:#d48806;border-color:#ffd591}
+.t-keep{background:#f5f5f5;color:#8c8c8c;border-color:#d9d9d9}
+.red{color:#cf1322}
+.fig{margin:6px 0 18px}
+.fig-cap{font-size:13px;color:#6b7280;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>活动列表操作逻辑 PRD</h1>
+<div class="meta"><span>📄 版本：v1.1</span><span>✏️ 作者：Laura</span><span>📅 更新日期：2026-10-27</span></div>
+
+<div class="card toc">
+<h2>目录</h2>
+<ol>
+<li><a href="#s1">概述</a></li>
+<li><a href="#s2">活动类型属性</a></li>
+<li><a href="#s3">活动列表操作逻辑</a></li>
+<li><a href="#s4">新增活动 · 单例型校验</a></li>
+<li><a href="#s5">交互逻辑流程图</a></li>
+<li><a href="#s6">文案一览</a></li>
+<li><a href="#s7">边界与异常</a></li>
+<li><a href="#s8">修订记录</a></li>
+</ol>
+</div>
+
+<div class="card" id="s1">
+<h2>一、概述</h2>
+
+<h3>1.1 背景</h3>
+<p>活动列表中，已关闭活动不区分活动类型，统一提供「查看 / 编辑 / 开启」，存在以下问题：</p>
+<ol>
+<li><strong>过期活动开启后无法处理</strong>：活动时间已过期的已关闭活动点击「开启」后，状态变为已结束，仅剩「关闭」操作，无法编辑活动时间。</li>
+<li><strong>已关闭活动可修改配置</strong>：活动关闭后可编辑配置并重新开启，同一活动 ID 下存在多轮不同配置的领奖记录，统计与对账无法对应当时规则。</li>
+<li><strong>无法复用</strong>：复用历史活动只能修改原活动，无法基于原配置新建。</li>
+<li><strong>无法清理</strong>：仅草稿可删除，已关闭活动持续堆积在列表中。</li>
+</ol>
+
+<h3>1.2 目标</h3>
+<p>按活动类型的「单例型 / 多实例型」属性区分已关闭活动的操作：单例型关闭视为暂停，可编辑后重新开启；多实例型关闭视为归档，配置锁定，通过复制新建、通过删除清理。同时约束单例型活动在同一商户下只能存在一个。</p>
+
+<h3>1.3 范围</h3>
+<table>
+<tr><th>模块</th><th>类型</th><th>改动</th></tr>
+<tr><td class="k">活动类型属性</td><td><span class="tag t-new">新增</span></td><td>活动类型增加「单例型 / 多实例型」属性，系统内置</td></tr>
+<tr><td class="k">活动列表 · 已结束</td><td><span class="tag t-chg">修改</span></td><td>操作增加「查看」</td></tr>
+<tr><td class="k">活动列表 · 已关闭 · 单例型</td><td><span class="tag t-chg">修改</span></td><td>操作不变；「开启」增加过期拦截；编辑保存后保持已关闭</td></tr>
+<tr><td class="k">活动列表 · 已关闭 · 多实例型</td><td><span class="tag t-chg">修改</span></td><td>操作由「查看 / 编辑 / 开启」改为「查看 / 复制 / 删除」</td></tr>
+<tr><td class="k">新增活动 · 保存</td><td><span class="tag t-new">新增</span></td><td>单例型活动已存在时不允许保存</td></tr>
+<tr><td class="k">活动列表 · 草稿 / 待生效 / 进行中</td><td><span class="tag t-keep">不变</span></td><td>操作与现网一致</td></tr>
+</table>
+
+<h3>1.4 名词定义</h3>
+<table>
+<tr><th>名词</th><th>定义</th></tr>
+<tr><td class="k">单例型活动</td><td>同一商户下，该活动类型只能存在一个活动（不区分活动状态）。</td></tr>
+<tr><td class="k">多实例型活动</td><td>同一商户下，该活动类型可同时存在多个活动（可按不同条件、时段、层级配置）。</td></tr>
+<tr><td class="k">活动状态</td><td>草稿、待生效、进行中、已结束、已关闭，共五种。</td></tr>
+<tr><td class="k">活动时间已过期</td><td>活动时间的结束时间早于当前时间，按商户所在时区判定。活动时间为「永久」的活动不会过期。</td></tr>
+</table>
+</div>
+
+<div class="card" id="s2">
+<h2>二、活动类型属性</h2>
+<p>活动类型的单例型 / 多实例型属性由系统按活动类型内置，商户后台不提供配置入口。</p>
+<table>
+<tr><th>字段</th><th>含义</th><th>控件</th><th>必填</th><th>输入要求</th><th>说明</th></tr>
+<tr><td class="k">实例类型</td><td>标识该活动类型在同一商户下允许存在的活动数量</td><td>无（系统内置）</td><td>—</td><td>取值：单例型 / 多实例型；每个活动类型固定一个取值，不可修改</td><td>决定已关闭活动的可用操作（见 3.1）及新增活动保存校验（见第四章）</td></tr>
+</table>
+</div>
+
+<div class="card" id="s3">
+<h2>三、活动列表操作逻辑</h2>
+
+<h3>3.1 操作按钮矩阵</h3>
+<table>
+<tr><th>活动状态</th><th>单例型</th><th>多实例型</th><th>相比现网</th></tr>
+<tr><td class="k">草稿</td><td>查看 / 编辑 / 发布 / 删除</td><td>查看 / 编辑 / 发布 / 删除</td><td><span class="tag t-keep">不变</span></td></tr>
+<tr><td class="k">待生效</td><td>查看 / 编辑 / 关闭</td><td>查看 / 编辑 / 关闭</td><td><span class="tag t-keep">不变</span></td></tr>
+<tr><td class="k">进行中</td><td>查看 / 编辑 / 关闭</td><td>查看 / 编辑 / 关闭</td><td><span class="tag t-keep">不变</span></td></tr>
+<tr><td class="k">已结束</td><td>查看 / 关闭</td><td>查看 / 关闭</td><td><span class="tag t-new">新增</span> 查看</td></tr>
+<tr><td class="k">已关闭</td><td>查看 / 编辑 / 开启</td><td>查看 / 复制 / 删除</td><td>多实例型：<span class="tag t-chg">移除</span> 编辑、开启；<span class="tag t-new">新增</span> 复制、删除</td></tr>
+</table>
+<p>操作以图标按钮展示，悬停显示文字提示（见第六章）。草稿、待生效、进行中的各项操作沿用现网规则，本文档不展开。</p>
+
+<h3>3.2 已结束 · 查看</h3>
+<ul>
+<li>打开活动详情页，只读，与其他状态的查看页一致。</li>
+</ul>
+
+<h3>3.3 已结束 · 关闭</h3>
+<ul>
+<li>点击后弹出二次确认，提示关闭后会员所有未领取奖励全部作废（文案见第六章）。</li>
+<li>确认后状态变为已关闭，按所属活动类型适用 3.1 已关闭规则。</li>
+</ul>
+
+<h3>3.4 已关闭 · 单例型 · 编辑</h3>
+<ul>
+<li>打开编辑页，可编辑项与现网编辑页一致。</li>
+<li>保存后活动<strong>保持已关闭</strong>，不自动开启。</li>
+</ul>
+
+<h3>3.5 已关闭 · 单例型 · 开启</h3>
+<table>
+<tr><th>条件</th><th>处理</th></tr>
+<tr><td class="k">活动时间未过期（含永久）</td><td>弹出二次确认；确认后开启，状态按活动时间判定：开始时间晚于当前时间为待生效，否则为进行中。</td></tr>
+<tr><td class="k">活动时间已过期</td><td>不执行开启，弹出拦截弹框。点击「去编辑」进入该活动编辑页；点击「取消」关闭弹框，活动保持已关闭。</td></tr>
+</table>
+
+<h3>3.6 已关闭 · 多实例型 · 复制</h3>
+<ul>
+<li>点击后打开新增活动页，按原活动配置预填全部字段。</li>
+<li>「活动时间」「显示时间」清空，需重新选择；未选择活动时间时不允许保存。</li>
+<li>「活动名称」与原活动一致，不追加后缀。</li>
+<li>点击保存前不生成数据；关闭页面不产生新活动。</li>
+<li>保存后生成新的活动 ID，状态按新增活动规则判定。新活动与原活动无关联，原活动保持已关闭，数据不变。</li>
+</ul>
+
+<h3>3.7 已关闭 · 多实例型 · 删除</h3>
+<ul>
+<li>点击后弹出二次确认（文案见第六章），确认后执行<strong>逻辑删除</strong>。</li>
+<li>删除后活动从活动列表移除，任何状态筛选（含「全部」）均不展示。</li>
+<li>活动统计、优惠统计、待审核奖励记录、已审核奖励记录中保留该活动的数据，可正常查询。</li>
+</ul>
+</div>
+
+<div class="card" id="s4">
+<h2>四、新增活动 · 单例型校验</h2>
+<table>
+<tr><th>项目</th><th>规则</th></tr>
+<tr><td class="k">校验时机</td><td>新增活动页点击「保存」时。</td></tr>
+<tr><td class="k">校验条件</td><td>所选活动类型为单例型，且当前商户下该活动类型已存在活动。</td></tr>
+<tr><td class="k">判定范围</td><td>已存在活动包括所有状态：草稿、待生效、进行中、已结束、已关闭。</td></tr>
+<tr><td class="k">校验不通过</td><td>不保存，提示「只能创建一个{活动类型}活动」；停留在新增活动页，已填内容保留。</td></tr>
+<tr><td class="k">校验通过</td><td>正常保存，生成新活动。</td></tr>
+</table>
+<p>活动类型下拉框中单例型类型仍可选择，校验在保存时进行。</p>
+</div>
+
+<div class="card" id="s5">
+<h2>五、交互逻辑流程图</h2>
+<h3>5.1 已关闭活动操作</h3>
+<div class="fig"><svg width="910" height="690" viewBox="0 0 910 690" xmlns="http://www.w3.org/2000/svg"><style>.n{fill:#fff;stroke:#0961BD;stroke-width:1.2}.e{fill:#f0f6ff;stroke:#0961BD;stroke-width:1.2}.w{fill:#fff7e6;stroke:#d48806;stroke-width:1.2}.d{fill:#f6ffed;stroke:#389e0d;stroke-width:1.2}.l{fill:none;stroke:#5b6475;stroke-width:1.2}text{font-size:13px;fill:#1f2329;text-anchor:middle;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}.lb{font-size:12px;fill:#6b7280}</style><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6475"/></marker></defs><rect class="e" x="360" y="20" width="200" height="40" rx="6"/><text x="460.0" y="44.5">已关闭活动</text><polyline class="l" points="460,60 460,83" marker-end="url(#ar)"/><polygon class="d" points="460,85.0 570.0,120 460,155.0 350.0,120"/><text x="460" y="124.5">活动类型？</text><polyline class="l" points="350,120 230,120 230,198" marker-end="url(#ar)"/><text class="lb" x="290" y="112" text-anchor="middle">单例型</text><polyline class="l" points="570,120 690,120 690,198" marker-end="url(#ar)"/><text class="lb" x="630" y="112" text-anchor="middle">多实例型</text><rect class="n" x="130" y="200" width="200" height="44" rx="6"/><text x="230.0" y="226.5">查看 / 编辑 / 开启</text><rect class="n" x="580" y="200" width="220" height="44" rx="6"/><text x="690.0" y="226.5">查看 / 复制 / 删除</text><polyline class="l" points="230,244 230,278" marker-end="url(#ar)"/><rect class="n" x="130" y="280" width="200" height="40" rx="6"/><text x="230.0" y="304.5">点击「开启」</text><polyline class="l" points="230,320 230,343" marker-end="url(#ar)"/><polygon class="d" points="230,345.0 330.0,380 230,415.0 130.0,380"/><text x="230" y="384.5">活动时间已过期？</text><polyline class="l" points="130,380 110,380 110,468" marker-end="url(#ar)"/><text class="lb" x="96" y="430" text-anchor="end">是</text><polyline class="l" points="330,380 350,380 350,468" marker-end="url(#ar)"/><text class="lb" x="364" y="430" text-anchor="start">否</text><rect class="w" x="20" y="470" width="180" height="58" rx="6"/><text x="110.0" y="494.5">拦截：活动时间已过期</text><text x="110.0" y="512.5">请先编辑活动时间</text><polyline class="l" points="110,528 110,556" marker-end="url(#ar)"/><rect class="n" x="20" y="558" width="180" height="40" rx="6"/><text x="110.0" y="582.5">去编辑 → 编辑页</text><polyline class="l" points="110,598 110,626" marker-end="url(#ar)"/><rect class="e" x="20" y="628" width="180" height="40" rx="6"/><text x="110.0" y="652.5">保存后保持已关闭</text><rect class="n" x="260" y="470" width="180" height="40" rx="6"/><text x="350.0" y="494.5">二次确认后开启</text><polyline class="l" points="350,510 350,538" marker-end="url(#ar)"/><rect class="e" x="260" y="540" width="180" height="58" rx="6"/><text x="350.0" y="564.5">按活动时间判定</text><text x="350.0" y="582.5">进行中或待生效</text><polyline class="l" points="690,244 690,264 590,264 590,298" marker-end="url(#ar)"/><polyline class="l" points="690,264 810,264 810,298" marker-end="url(#ar)"/><rect class="n" x="510" y="300" width="160" height="40" rx="6"/><text x="590.0" y="324.5">点击「复制」</text><polyline class="l" points="590,340 590,368" marker-end="url(#ar)"/><rect class="n" x="510" y="370" width="160" height="58" rx="6"/><text x="590.0" y="394.5">新增页预填原配置</text><text x="590.0" y="412.5">清空活动/显示时间</text><polyline class="l" points="590,428 590,456" marker-end="url(#ar)"/><rect class="n" x="510" y="458" width="160" height="40" rx="6"/><text x="590.0" y="482.5">选择时间并保存</text><polyline class="l" points="590,498 590,526" marker-end="url(#ar)"/><rect class="e" x="510" y="528" width="160" height="40" rx="6"/><text x="590.0" y="552.5">生成新活动</text><rect class="n" x="730" y="300" width="160" height="40" rx="6"/><text x="810.0" y="324.5">点击「删除」</text><polyline class="l" points="810,340 810,368" marker-end="url(#ar)"/><rect class="n" x="730" y="370" width="160" height="40" rx="6"/><text x="810.0" y="394.5">二次确认</text><polyline class="l" points="810,410 810,438" marker-end="url(#ar)"/><rect class="e" x="730" y="440" width="160" height="58" rx="6"/><text x="810.0" y="464.5">逻辑删除</text><text x="810.0" y="482.5">统计与记录保留</text></svg><div class="fig-cap">图 1　已关闭活动按实例类型分流</div></div>
+<h3>5.2 新增活动保存校验</h3>
+<div class="fig"><svg width="840" height="510" viewBox="0 0 840 510" xmlns="http://www.w3.org/2000/svg"><style>.n{fill:#fff;stroke:#0961BD;stroke-width:1.2}.e{fill:#f0f6ff;stroke:#0961BD;stroke-width:1.2}.w{fill:#fff7e6;stroke:#d48806;stroke-width:1.2}.d{fill:#f6ffed;stroke:#389e0d;stroke-width:1.2}.l{fill:none;stroke:#5b6475;stroke-width:1.2}text{font-size:13px;fill:#1f2329;text-anchor:middle;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}.lb{font-size:12px;fill:#6b7280}</style><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6475"/></marker></defs><rect class="e" x="200" y="20" width="200" height="40" rx="6"/><text x="300.0" y="44.5">新增活动：点击「保存」</text><polyline class="l" points="300,60 300,88" marker-end="url(#ar)"/><polygon class="d" points="300,90.0 420.0,125 300,160.0 180.0,125"/><text x="300" y="129.5">表单校验通过？</text><polyline class="l" points="420,125 558,125" marker-end="url(#ar)"/><text class="lb" x="489" y="117" text-anchor="middle">否</text><rect class="w" x="560" y="105" width="260" height="40" rx="6"/><text x="690.0" y="129.5">字段报错，不保存</text><polyline class="l" points="300,160 300,208" marker-end="url(#ar)"/><text class="lb" x="312" y="188" text-anchor="start">是</text><polygon class="d" points="300,210.0 420.0,245 300,280.0 180.0,245"/><text x="300" y="249.5">活动类型为单例型？</text><polyline class="l" points="420,245 558,245" marker-end="url(#ar)"/><text class="lb" x="489" y="237" text-anchor="middle">否</text><rect class="e" x="560" y="225" width="260" height="40" rx="6"/><text x="690.0" y="249.5">保存成功，生成新活动</text><polyline class="l" points="300,280 300,328" marker-end="url(#ar)"/><text class="lb" x="312" y="308" text-anchor="start">是</text><polygon class="d" points="300,330.0 420.0,365 300,400.0 180.0,365"/><text x="300" y="369.5">该类型已存在活动？</text><polyline class="l" points="420,365 558,365" marker-end="url(#ar)"/><text class="lb" x="489" y="357" text-anchor="middle">是</text><rect class="w" x="560" y="329" width="260" height="72" rx="6"/><text x="690.0" y="351.5">报错「只能创建一个</text><text x="690.0" y="369.5">{活动类型}活动」</text><text x="690.0" y="387.5">停留新增页，已填内容保留</text><polyline class="l" points="300,400 300,448" marker-end="url(#ar)"/><text class="lb" x="312" y="428" text-anchor="start">否</text><rect class="e" x="200" y="450" width="200" height="40" rx="6"/><text x="300.0" y="474.5">保存成功，生成新活动</text></svg><div class="fig-cap">图 2　新增活动保存时的单例型校验</div></div>
+</div>
+
+<div class="card" id="s6">
+<h2>六、文案一览</h2>
+<p>以下为本需求涉及的后台固定文案（后台语言为中文）。</p>
+<h3>6.1 操作按钮悬停提示</h3>
+<table>
+<tr><th>按钮</th><th>悬停提示</th><th>类型</th></tr>
+<tr><td class="k">查看</td><td>查看活动</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">编辑</td><td>修改活动</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">发布</td><td>发布活动</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">删除</td><td>删除活动</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">关闭</td><td>关闭活动</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">开启</td><td>开启活动</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">复制</td><td>复制活动</td><td><span class="tag t-new">新增</span></td></tr>
+</table>
+
+<h3>6.2 弹框与提示</h3>
+<table>
+<tr><th>场景</th><th>形式</th><th>标题</th><th>内容</th><th>按钮</th><th>类型</th></tr>
+<tr><td class="k">已结束 · 关闭</td><td>二次确认弹框</td><td>温馨提示</td><td>确认是否要关闭该活动？<br><span class="red">注：强制关闭后会员所有未领取奖励全部作废</span></td><td>取消 / 确定</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">单例型 · 开启（未过期）</td><td>二次确认弹框</td><td>温馨提示</td><td>确定开启这个活动吗？</td><td>取消 / 确定</td><td><span class="tag t-keep">沿用</span></td></tr>
+<tr><td class="k">单例型 · 开启（已过期）</td><td>拦截弹框</td><td>温馨提示</td><td>活动时间已过期，请先编辑活动时间</td><td>取消 / 去编辑</td><td><span class="tag t-new">新增</span></td></tr>
+<tr><td class="k">多实例型 · 删除</td><td>二次确认弹框</td><td>温馨提示</td><td>删除后活动将从列表中移除，相关统计和奖励记录仍保留</td><td>取消 / 确定</td><td><span class="tag t-new">新增</span></td></tr>
+<tr><td class="k">多实例型 · 删除成功</td><td>Toast</td><td>—</td><td>删除成功</td><td>—</td><td><span class="tag t-new">新增</span></td></tr>
+<tr><td class="k">复制 · 未选择活动时间</td><td>字段错误提示</td><td>—</td><td>请选择活动时间</td><td>—</td><td><span class="tag t-new">新增</span></td></tr>
+<tr><td class="k">新增 · 单例型已存在</td><td>错误提示</td><td>—</td><td>只能创建一个{活动类型}活动<br>（{活动类型} 替换为活动类型名称，如「只能创建一个分享赚钱活动」）</td><td>—</td><td><span class="tag t-new">新增</span></td></tr>
+</table>
+</div>
+
+<div class="card" id="s7">
+<h2>七、边界与异常</h2>
+<table>
+<tr><th>场景</th><th>处理</th></tr>
+<tr><td class="k">永久活动开启</td><td>活动时间为永久的已关闭单例型活动不判定过期，二次确认后开启为进行中。</td></tr>
+<tr><td class="k">过期判定时区</td><td>按商户所在时区比较活动结束时间与当前时间。</td></tr>
+<tr><td class="k">拦截后去编辑</td><td>编辑页保存后活动保持已关闭；需再次点击「开启」，重新执行过期判定。</td></tr>
+<tr><td class="k">复制中途退出</td><td>新增活动页未保存即关闭，不生成新活动，原活动不受影响。</td></tr>
+<tr><td class="k">删除后的数据</td><td>逻辑删除的活动不在活动列表展示；活动统计、优惠统计、待审核与已审核奖励记录照常展示该活动数据。</td></tr>
+<tr><td class="k">已结束活动关闭</td><td>关闭后会员所有未领取奖励全部作废。</td></tr>
+<tr><td class="k">单例型新增校验</td><td>只要当前商户下存在该类型的活动（任意状态）即校验不通过。</td></tr>
+</table>
+</div>
+
+<div class="card" id="s8">
+<h2>八、修订记录</h2>
+<table>
+<tr><th>版本</th><th>日期</th><th>修订内容</th></tr>
+<tr><td>v1.1</td><td>2026-10-27</td><td>按 PRD 制作规范重整文档结构；补充名词定义、活动类型属性字段规格、交互逻辑流程图、边界与异常；明确实例类型由系统内置，不提供配置入口</td></tr>
+<tr><td>v1.0</td><td>2026-10-24</td><td>首版：活动类型单例 / 多实例属性；已结束增加查看；已关闭按实例类型区分操作；复制、逻辑删除、过期开启拦截；单例型新增校验</td></tr>
+</table>
+</div>
+
+</div>
+</body>
+</html>
