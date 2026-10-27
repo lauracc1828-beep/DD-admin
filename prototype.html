@@ -451,6 +451,22 @@ select.fs.ph{color:#bfbfbf}
 .aa-cond-add2:hover{background:#e6f0ff}
 /* ── tbl-icon close ── */
 .tbl-icon-close{color:#ff4d4f;border-color:#ffc6c6;background:#fff0f0}
+/* 活动列表：操作图标（按活动状态 + 单例/多实例类型显示） */
+.tbl-icon-open{color:#1f9d5c;border-color:#b7e4c7;background:#effaf3}
+.tbl-icon-open:hover{background:#dcf3e5}
+.tbl-icon-off{color:#ff4d4f;border-color:#ffc6c6;background:#fff0f0}
+.tbl-icon-off:hover{background:#ffe1e1}
+.tbl-icon-copy{color:#0961BD;border-color:#c6d9f5;background:#f0f5ff}
+.tbl-icon-copy:hover{background:#dceeff}
+.tbl-icon-pub{color:#0961BD;border-color:#c6d9f5;background:#f0f5ff}
+.tbl-icon-pub:hover{background:#dceeff}
+.al-ops-wrap{display:flex;gap:8px}
+.al-st-tag{display:inline-block;font-size:12px;line-height:20px;padding:0 8px;border-radius:4px;border:1px solid;white-space:nowrap}
+.al-st-draft{color:#595959;border-color:#d9d9d9;background:#fafafa}
+.al-st-pending{color:#0961BD;border-color:#c6d9f5;background:#f0f5ff}
+.al-st-running{color:#0a7d3e;border-color:#b7e4c7;background:#effaf3}
+.al-st-ended{color:#c27a0e;border-color:#f5d9a8;background:#fff8ec}
+.al-st-closed{color:#e34d4d;border-color:#ffc6c6;background:#fff0f0}
 /* ── 展示时间 field ── */
 #aa-show-time-wrap{display:none;align-items:center;gap:8px;margin-top:8px;font-size:13px}
 
@@ -1395,9 +1411,9 @@ select.fs.ph{color:#bfbfbf}
             <div class="filter-item"><span class="filter-label">活动分类：</span><select class="f-select"><option>全部</option><option>综合</option><option>存款</option></select></div>
             <div class="filter-item"><span class="filter-label">活动类型：</span><select class="f-select"><option>全部</option><option>神秘彩金</option><option>签到</option><option>救援金</option><option>会员答谢</option><option>充值</option></select></div>
             <div class="filter-item"><span class="filter-label">活动名称：</span><input class="f-input" placeholder="请输入" style="min-width:130px"></div>
-            <div class="filter-item"><span class="filter-label">活动状态：</span><select class="f-select"><option>全部</option><option>开启</option><option>关闭</option></select></div>
-            <button class="btn btn-white" style="margin-left:4px">重置</button>
-            <button class="btn btn-query">查询</button>
+            <div class="filter-item"><span class="filter-label">活动状态：</span><select class="f-select" id="al-f-status"><option value="">全部</option><option value="draft">草稿</option><option value="pending">待生效</option><option value="running">进行中</option><option value="ended">已结束</option><option value="closed">已关闭</option></select></div>
+            <button class="btn btn-white" style="margin-left:4px" onclick="alFilterReset()">重置</button>
+            <button class="btn btn-query" onclick="alFilter()">查询</button>
           </div>
         </div>
         <!-- Actions -->
@@ -1415,56 +1431,46 @@ select.fs.ph{color:#bfbfbf}
                 <th>置顶</th><th>操作人</th><th>操作时间</th><th>操作</th>
               </tr></thead>
               <tbody id="al-tbody">
-                <tr><td>1</td><td>7201</td><td>综合</td><td>神秘彩金活动</td><td>神秘彩金</td><td>—</td>
-                  <td>全部会员</td><td>2</td><td>永久</td><td>永久</td><td>2026-08-20 10:00:00</td><td><span style="color:#0a7d3e">进行中</span></td>
-                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-08-20 10:00:00</td>
-                  <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewActivity(0)">👁<span class="tip-box">查看活动</span></span>
-                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditActivity(0)">✏️<span class="tip-box">修改活动</span></span>
-                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="" style="color:#e34d4d">✕<span class="tip-box">删除活动</span></span>
-                  </div></td>
+                <tr data-type="mystery" data-status="closed" data-idx="0" data-end="" data-start=""><td>1</td><td>7201</td><td>综合</td><td>神秘彩金活动</td><td>神秘彩金</td><td>—</td>
+                  <td>全部会员</td><td>2</td><td>永久</td><td>永久</td><td>2026-08-20 10:00:00</td><td class="al-st"></td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-09-15 10:00:00</td>
+                  <td class="al-ops"></td>
                 </tr>
-                <tr><td>2</td><td>7202</td><td>综合</td><td>会员答谢活动</td><td>会员答谢</td><td>—</td>
-                  <td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>2026-08-20 11:00:00</td><td><span style="color:#0a7d3e">进行中</span></td>
-                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-08-20 11:00:00</td>
-                  <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewMember()">👁<span class="tip-box">查看活动</span></span>
-                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditMember()">✏️<span class="tip-box">修改活动</span></span>
-                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="" style="color:#e34d4d">✕<span class="tip-box">删除活动</span></span>
-                  </div></td>
+                <tr data-type="member" data-status="closed" data-idx="0" data-end="2026-08-31 23:59:59" data-start="2026-08-01 00:00:00"><td>2</td><td>7202</td><td>综合</td><td>会员答谢活动</td><td>会员答谢</td><td>—</td>
+                  <td>全部会员</td><td>1</td><td>2026-08-01 00:00:00 ~ 2026-08-31 23:59:59</td><td>2026-08-01 00:00:00 ~ 2026-08-31 23:59:59</td><td>2026-08-01 00:00:00</td><td class="al-st"></td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-09-01 08:00:00</td>
+                  <td class="al-ops"></td>
                 </tr>
-                <tr id="chg-row-0"><td>3</td><td>7235</td><td>综合</td><td class="chg-name">首笔充值奖励</td><td>充值</td><td class="chg-cond">首笔充值</td>
-                  <td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>2026-08-24 06:02:36</td><td><span style="color:#0a7d3e">进行中</span></td>
+                <tr id="chg-row-0" data-type="charge" data-status="running" data-idx="0" data-end="" data-start=""><td>3</td><td>7235</td><td>综合</td><td class="chg-name">首笔充值奖励</td><td>充值</td><td class="chg-cond">首笔充值</td>
+                  <td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>2026-08-24 06:02:36</td><td class="al-st"></td>
                   <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-08-25 09:02:46</td>
-                  <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewCharge(0)">👁<span class="tip-box">查看活动</span></span>
-                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditCharge(0)">✏️<span class="tip-box">修改活动</span></span>
-                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="" style="color:#e34d4d">✕<span class="tip-box">删除活动</span></span>
-                  </div></td>
+                  <td class="al-ops"></td>
                 </tr>
-                <tr id="chg-row-1"><td>4</td><td>7236</td><td>综合</td><td class="chg-name">每日累计充值奖励</td><td>充值</td><td class="chg-cond">累计充值</td>
-                  <td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>2026-08-25 03:43:03</td><td><span style="color:#0a7d3e">进行中</span></td>
-                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-08-26 07:32:02</td>
-                  <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewCharge(1)">👁<span class="tip-box">查看活动</span></span>
-                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditCharge(1)">✏️<span class="tip-box">修改活动</span></span>
-                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="" style="color:#e34d4d">✕<span class="tip-box">删除活动</span></span>
-                  </div></td>
+                <tr id="chg-row-1" data-type="charge" data-status="pending" data-idx="1" data-end="2026-11-30 23:59:59" data-start="2026-11-01 00:00:00"><td>4</td><td>7236</td><td>综合</td><td class="chg-name">每日累计充值奖励</td><td>充值</td><td class="chg-cond">累计充值</td>
+                  <td>全部会员</td><td>1</td><td>2026-11-01 00:00:00 ~ 2026-11-30 23:59:59</td><td>2026-11-01 00:00:00 ~ 2026-11-30 23:59:59</td><td>2026-10-20 03:43:03</td><td class="al-st"></td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-10-20 03:43:03</td>
+                  <td class="al-ops"></td>
                 </tr>
-                <tr id="chg-row-2"><td>5</td><td>7238</td><td>综合</td><td class="chg-name">每周连续充值奖励</td><td>充值</td><td class="chg-cond">连续天数充值</td>
-                  <td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>2026-08-25 03:43:45</td><td><span style="color:#0a7d3e">进行中</span></td>
-                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-08-26 07:43:27</td>
-                  <td><div style="display:flex;gap:5px">
-                    <span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewCharge(2)">👁<span class="tip-box">查看活动</span></span>
-                    <span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditCharge(2)">✏️<span class="tip-box">修改活动</span></span>
-                    <span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="" style="color:#e34d4d">✕<span class="tip-box">删除活动</span></span>
-                  </div></td>
+                <tr id="chg-row-2" data-type="charge" data-status="ended" data-idx="2" data-end="2026-09-30 23:59:59" data-start="2026-09-01 00:00:00"><td>5</td><td>7238</td><td>综合</td><td class="chg-name">每周连续充值奖励</td><td>充值</td><td class="chg-cond">连续天数充值</td>
+                  <td>全部会员</td><td>1</td><td>2026-09-01 00:00:00 ~ 2026-09-30 23:59:59</td><td>2026-09-01 00:00:00 ~ 2026-09-30 23:59:59</td><td>2026-09-01 00:00:00</td><td class="al-st"></td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-09-01 00:00:00</td>
+                  <td class="al-ops"></td>
+                </tr>
+                <tr id="chg-row-3" data-type="charge" data-status="closed" data-idx="3" data-end="2026-07-31 23:59:59" data-start="2026-07-01 00:00:00"><td>6</td><td>7240</td><td>综合</td><td class="chg-name">首笔充值奖励</td><td>充值</td><td class="chg-cond">首笔充值</td>
+                  <td>全部会员</td><td>1</td><td>2026-07-01 00:00:00 ~ 2026-07-31 23:59:59</td><td>2026-07-01 00:00:00 ~ 2026-07-31 23:59:59</td><td>2026-07-01 00:00:00</td><td class="al-st"></td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-08-02 10:12:00</td>
+                  <td class="al-ops"></td>
+                </tr>
+                <tr id="chg-row-4" data-type="charge" data-status="draft" data-idx="4" data-end="" data-start=""><td>7</td><td>7241</td><td>综合</td><td class="chg-name">每日累计充值奖励</td><td>充值</td><td class="chg-cond">累计充值</td>
+                  <td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>—</td><td class="al-st"></td>
+                  <td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>2026-10-22 16:30:00</td>
+                  <td class="al-ops"></td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="pagination">
-            <div class="pg-info">共 5 条数据</div>
+            <div class="pg-info">共 7 条数据</div>
             <div class="pg-controls">
               <div class="pg-btn">‹</div>
               <div class="pg-btn active">1</div>
@@ -3242,6 +3248,26 @@ select.fs.ph{color:#bfbfbf}
     <div class="mf">
       <button class="btn btn-white" onclick="closeM('m-mafia-upload')">取消</button>
       <button class="btn btn-blue" onclick="saveMafiaUpload()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 活动列表：通用二次确认（关闭 / 开启 / 删除 / 发布 / 过期开启拦截） -->
+<div class="overlay" id="m-al-confirm">
+  <div class="modal" style="width:420px">
+    <div class="mb" style="padding:28px 28px 8px">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#1c6fe0;color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:700">i</span>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#262626;margin-bottom:8px">温馨提示</div>
+          <div style="font-size:13px;color:#8c8c8c" id="al-cf-msg"></div>
+          <div style="font-size:13px;color:#e34d4d;margin-top:8px;display:none" id="al-cf-warn"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mf" style="justify-content:flex-end;border-top:none;padding-top:8px;gap:16px">
+      <button class="btn btn-white" onclick="closeM('m-al-confirm')">取消</button>
+      <button class="btn btn-blue" id="al-cf-ok" onclick="alConfirmOk()">确定</button>
     </div>
   </div>
 </div>
@@ -5270,6 +5296,131 @@ function actSecTab(el, tabId){
   if(panel) panel.style.display='block';
 }
 
+// ─── 活动列表：操作逻辑（按活动状态 + 活动类型的单例 / 多实例属性） ───
+// mode: single = 单例型（同商户下该类型只存在一个活动）；multi = 多实例型
+// 原型演示配置：各活动类型的单例 / 多实例归属以实际配置为准
+var AL_TYPES={
+  mystery:{label:'神秘彩金',mode:'single'},
+  member:{label:'会员答谢',mode:'single'},
+  charge:{label:'充值',mode:'multi'}
+};
+var AL_STATUS={draft:'草稿',pending:'待生效',running:'进行中',ended:'已结束',closed:'已关闭'};
+var alCfAction=null, alCurRow=null;
+
+function alIcon(cls,ic,tip,act){
+  return '<span class="tbl-icon '+cls+' has-tip tip-bottom" onclick="alAct(this,\''+act+'\')">'+ic+'<span class="tip-box">'+tip+'</span></span>';
+}
+// 按状态与类型生成操作按钮
+function alOpsHtml(status,mode){
+  var v=alIcon('tbl-icon-view','👁','查看活动','view'),
+      e=alIcon('tbl-icon-edit','✏️','修改活动','edit'),
+      off=alIcon('tbl-icon-off','⏻','关闭活动','close'),
+      on=alIcon('tbl-icon-open','▶','开启活动','open'),
+      cp=alIcon('tbl-icon-copy','⧉','复制活动','copy'),
+      pub=alIcon('tbl-icon-pub','➤','发布活动','publish'),
+      del=alIcon('tbl-icon-close','✕','删除活动','delete');
+  var list;
+  if(status==='draft') list=[v,e,pub,del];
+  else if(status==='pending'||status==='running') list=[v,e,off];
+  else if(status==='ended') list=[v,off];
+  else if(status==='closed') list=(mode==='single')?[v,e,on]:[v,cp,del];
+  else list=[v];
+  return '<div class="al-ops-wrap">'+list.join('')+'</div>';
+}
+function alRenderRow(tr){
+  var st=tr.getAttribute('data-status'), t=AL_TYPES[tr.getAttribute('data-type')]||{};
+  var sc=tr.querySelector('.al-st'); if(sc) sc.innerHTML='<span class="al-st-tag al-st-'+st+'">'+(AL_STATUS[st]||st)+'</span>';
+  var oc=tr.querySelector('.al-ops'); if(oc) oc.innerHTML=alOpsHtml(st,t.mode);
+}
+function alRenderAll(){ document.querySelectorAll('#al-tbody tr').forEach(alRenderRow); }
+function alRenumber(){
+  var rows=document.querySelectorAll('#al-tbody tr'), n=0;
+  rows.forEach(function(r){ r.children[0].textContent=++n; });
+  var info=document.querySelector('#al-main .pg-info'); if(info) info.textContent='共 '+n+' 条数据';
+}
+// 活动时间已过期：结束时间早于当前时间（永久活动不会过期）
+function alIsExpired(tr){
+  var end=tr.getAttribute('data-end'); if(!end) return false;
+  return new Date(end.replace(' ','T')).getTime() < Date.now();
+}
+function alIsFuture(tr){
+  var st=tr.getAttribute('data-start'); if(!st) return false;
+  return new Date(st.replace(' ','T')).getTime() > Date.now();
+}
+function alConfirm(msg,warn,okText,fn){
+  document.getElementById('al-cf-msg').textContent=msg;
+  var w=document.getElementById('al-cf-warn'); w.textContent=warn||''; w.style.display=warn?'block':'none';
+  document.getElementById('al-cf-ok').textContent=okText||'确定';
+  alCfAction=fn; openM('m-al-confirm');
+}
+function alConfirmOk(){ closeM('m-al-confirm'); var fn=alCfAction; alCfAction=null; if(fn) fn(); }
+function alSetStatus(tr,st){ tr.setAttribute('data-status',st); alRenderRow(tr); }
+
+function alView(tr){
+  var t=tr.getAttribute('data-type'), i=parseInt(tr.getAttribute('data-idx'),10);
+  if(t==='charge') openViewCharge(i); else if(t==='member') openViewMember(); else openViewActivity(i);
+}
+function alEdit(tr){
+  var t=tr.getAttribute('data-type'), i=parseInt(tr.getAttribute('data-idx'),10);
+  if(t==='charge') openEditCharge(i); else if(t==='member') openEditMember(); else openEditActivity(i);
+}
+// 复制：打开新增活动页并预填原活动配置；清空活动时间/显示时间；活动名称不变；保存后生成新活动
+function alCopy(tr){
+  var t=tr.getAttribute('data-type'), i=parseInt(tr.getAttribute('data-idx'),10);
+  if(t==='charge'){
+    aaChargeLoad(CHARGE_ACTS[i]);
+    aaChargeEditIdx=null;
+    aaSetEditMode(false);
+    aaChargeEditLock(false);
+  } else {
+    alEdit(tr); aaSetEditMode(false);
+  }
+  document.getElementById('aa-modal-title').textContent='增加活动';
+  document.querySelectorAll('input[name="aa-time"]').forEach(function(r){ r.checked=false; });
+  var tr2=document.getElementById('aa-time-range'); if(tr2) tr2.style.display='none';
+  var ds=document.getElementById('aa-date-start'); if(ds){ ds.textContent='开始日期'; ds.style.color='rgba(0,0,0,.45)'; }
+  var de=document.getElementById('aa-date-end'); if(de){ de.textContent='结束日期'; de.style.color='rgba(0,0,0,.45)'; }
+}
+
+function alAct(el,act){
+  var tr=el.closest('tr'); alCurRow=tr;
+  var st=tr.getAttribute('data-status');
+  if(act==='view'){ alView(tr); return; }
+  if(act==='edit'){ alEdit(tr); return; }   // 单例型已关闭：编辑保存后保持已关闭
+  if(act==='copy'){ alCopy(tr); return; }
+  if(act==='close'){
+    alConfirm('确认是否要关闭该活动？', st==='ended'?'注：强制关闭后会员所有未领取奖励全部作废':'', '确定', function(){
+      alSetStatus(tr,'closed'); toast('关闭成功');
+    });
+    return;
+  }
+  if(act==='open'){
+    if(alIsExpired(tr)){
+      alConfirm('活动时间已过期，请先编辑活动时间','', '去编辑', function(){ alEdit(tr); });
+      return;
+    }
+    alConfirm('确定开启这个活动吗？','', '确定', function(){
+      alSetStatus(tr, alIsFuture(tr)?'pending':'running'); toast('开启成功');
+    });
+    return;
+  }
+  if(act==='delete'){
+    var msg = st==='closed' ? '删除后活动将从列表中移除，相关统计和奖励记录仍保留' : '确认是否要删除该活动？';
+    alConfirm(msg,'', '确定', function(){ tr.remove(); alRenumber(); toast('删除成功'); });
+    return;
+  }
+  if(act==='publish'){
+    alSetStatus(tr, alIsFuture(tr)?'pending':'running'); toast('发布成功');
+  }
+}
+// 状态筛选
+function alFilter(){
+  var v=document.getElementById('al-f-status').value;
+  document.querySelectorAll('#al-tbody tr').forEach(function(r){ r.style.display=(!v||r.getAttribute('data-status')===v)?'':'none'; });
+}
+function alFilterReset(){ document.getElementById('al-f-status').value=''; alFilter(); }
+window.addEventListener('DOMContentLoaded', alRenderAll);
+
 // ─── OPEN ADD ACTIVITY ───
 // ── 编辑模式：活动分类/类型不可修改（已生效活动） ──
 // 未来新增活动只需在 openEditXxx 中调用 aaSetEditMode(true)，无需改其他地方
@@ -6109,7 +6260,9 @@ function aaChargeUpdateTierPlaceholders(){
 var CHARGE_ACTS=[
   {cond:'first',reset:'none',claim:'realtime',audit:'gift',expire:'1',expDays:'',dayMin:'',nameMode:'sys',name:'',tiers:[['20','5'],['40','10'],['60','15']]},
   {cond:'accum',reset:'day', claim:'realtime',audit:'gift',expire:'1',expDays:'',dayMin:'',nameMode:'sys',name:'',tiers:[['20','3'],['40','7'],['60','12']]},
-  {cond:'days', reset:'week',claim:'realtime',audit:'gift',expire:'1',expDays:'',dayMin:'20',nameMode:'sys',name:'',tiers:[['3','8']]}
+  {cond:'days', reset:'week',claim:'realtime',audit:'gift',expire:'1',expDays:'',dayMin:'20',nameMode:'sys',name:'',tiers:[['3','8']]},
+  {cond:'first',reset:'none',claim:'realtime',audit:'gift',expire:'1',expDays:'',dayMin:'',nameMode:'sys',name:'',tiers:[['30','6'],['50','12']]},
+  {cond:'accum',reset:'day', claim:'realtime',audit:'gift',expire:'1',expDays:'',dayMin:'',nameMode:'sys',name:'',tiers:[['50','5'],['100','12']]}
 ];
 var aaChargeEditIdx=null;
 
@@ -6193,16 +6346,14 @@ function aaChargeAddRow(idx,a){
   var id=7250+idx;
   var now='2026-08-26 12:00:00';
   var tr=document.createElement('tr'); tr.id='chg-row-'+idx;
+  tr.setAttribute('data-type','charge'); tr.setAttribute('data-status','running'); tr.setAttribute('data-idx',idx); tr.setAttribute('data-start',''); tr.setAttribute('data-end','');
   tr.innerHTML='<td>'+seq+'</td><td>'+id+'</td><td>综合</td><td class="chg-name">'+aaChargeDisplayName(a)+'</td><td>充值</td><td class="chg-cond">'+aaChargeCondLabel(a.cond)+'</td>'
-    +'<td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>'+now+'</td><td><span style="color:#0a7d3e">进行中</span></td>'
+    +'<td>全部会员</td><td>1</td><td>永久</td><td>永久</td><td>'+now+'</td><td class="al-st"></td>'
     +'<td><label class="sw"><input type="checkbox" class="sw-input"><span class="sw-track"></span><span class="sw-knob"></span></label></td><td>Laura888</td><td>'+now+'</td>'
-    +'<td><div style="display:flex;gap:5px">'
-    +'<span class="tbl-icon tbl-icon-view has-tip tip-bottom" onclick="openViewCharge('+idx+')">👁<span class="tip-box">查看活动</span></span>'
-    +'<span class="tbl-icon tbl-icon-edit has-tip tip-bottom" onclick="openEditCharge('+idx+')">✏️<span class="tip-box">修改活动</span></span>'
-    +'<span class="tbl-icon tbl-icon-close has-tip tip-bottom" onclick="" style="color:#e34d4d">✕<span class="tip-box">删除活动</span></span>'
-    +'</div></td>';
+    +'<td class="al-ops"></td>';
   tb.appendChild(tr);
-  var info=document.querySelector('#al-main .pg-info'); if(info) info.textContent='共 '+seq+' 条数据';
+  alRenderRow(tr);
+  alRenumber();
 }
 
 function openEditCharge(idx){
@@ -6327,6 +6478,8 @@ function aaSave(){
     var endEmpty=!de||de.textContent==='结束日期'||de.textContent.trim()==='';
     if(startEmpty||endEmpty) fail('err-time','请选择活动的开始和结束时间',null,'aa-date-range-btn');
   }
+  // 2.1 活动时间未选择（复制活动时活动时间被清空）→ 必填
+  if(!timeMode) fail('err-time','请选择活动时间',null,'aa-date-range-btn');
   // 3. 领取方式=手动 → 申领终端必选、申领限制条件项内数值必填
   var claimEl=document.getElementById('aa-claim-manual');
   var isManual=claimEl&&claimEl.checked;
@@ -6395,6 +6548,16 @@ function aaSave(){
     if(el&&el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'center'});
     toast(firstErr.msg,true);
     return;
+  }
+
+  // ── 单例型活动：新增保存时校验，同商户下该类型已存在活动（任意状态）则不允许保存 ──
+  if(document.getElementById('aa-modal-title').textContent==='增加活动'){
+    var stEl=document.getElementById('aa-type');
+    var st=stEl?stEl.value:'';
+    if(AL_TYPES[st] && AL_TYPES[st].mode==='single' && document.querySelector('#al-tbody tr[data-type="'+st+'"]')){
+      toast('只能创建一个'+AL_TYPES[st].label+'活动',true);
+      return;
+    }
   }
 
   // ── 校验通过：默认值自动填充 ──
