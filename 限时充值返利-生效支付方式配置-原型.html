@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>限时充值返利活动 - 生效存款方式配置</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.6}
+.page{min-width:100%;width:fit-content;padding:32px 24px}
+h1{font-size:20px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.meta{font-size:13px;color:#888;margin-bottom:20px}
+.card{background:#fff;border-radius:8px;padding:24px 28px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:700;color:#0961BD;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #e8f0ff}
+
+.rp-form{display:flex;gap:16px}
+.rp-label{width:110px;flex:none;text-align:right;padding-top:30px}
+.rp-label .req{color:#f5222d;margin-right:2px}
+.rp-body{flex:1;min-width:0}
+.rp-row{display:grid;grid-template-columns:200px 90px 280px 88px;gap:16px;align-items:start;padding:6px 0}
+.rp-head{font-size:13px;color:#999;padding-bottom:0}
+.rp-select,.rp-input{width:100%;height:34px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:14px;color:#333;background:#fff;outline:none}
+.rp-select:focus,.rp-input:focus{border-color:#0961BD}
+.rp-input.bad,.rp-select.bad{border-color:#f5222d}
+.rp-input:disabled{background:#f5f5f5;color:#bbb;cursor:not-allowed}
+.rp-select option:disabled{color:#bbb}
+.rp-inwrap{display:flex;align-items:center;gap:8px}
+.rp-cnt{font-size:12px;color:#999;width:34px;flex:none}
+.rp-cnt.bad{color:#f5222d}
+.rp-err{font-size:12px;color:#f5222d;margin-top:3px}
+.rp-err:empty{display:none}
+
+.rp-swb{display:flex;align-items:center;gap:8px;margin-top:6px;background:none;border:none;cursor:pointer;padding:0;font-family:inherit}
+.rp-swb:disabled{cursor:not-allowed;opacity:.5}
+.rp-sw{position:relative;width:40px;height:22px;border-radius:11px;background:#bfbfbf;transition:background .15s;flex:none}
+.rp-sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.rp-swb.on .rp-sw{background:#0961BD}
+.rp-swb.on .rp-sw::after{left:21px}
+.rp-swl{font-size:14px;color:#999}
+.rp-swb.on .rp-swl{color:#0961BD;font-weight:700}
+
+.rp-ops{display:flex;gap:12px}
+.rp-ib{width:32px;height:32px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;font-size:18px;line-height:1;color:#333;cursor:pointer}
+.rp-ib:hover:not(:disabled){border-color:#0961BD;color:#0961BD}
+.rp-ib:disabled{color:#ccc;background:#f5f5f5;cursor:not-allowed}
+.rp-tip{font-size:12px;color:#999;margin-top:6px}
+
+.rp-preview{display:grid;grid-template-columns:repeat(auto-fill,120px);gap:18px 14px;padding-top:10px}
+.rp-pbtn{position:relative;border:1px solid #d9d9d9;border-radius:6px;padding:14px 10px 10px;text-align:center;font-size:14px;background:#fafafa}
+.rp-badge{position:absolute;top:-10px;right:-8px;background:#f5222d;color:#fff;font-size:11px;padding:1px 6px;border-radius:8px;white-space:nowrap}
+.rp-pnote{font-size:12px;color:#999;margin-bottom:6px}
+
+.rp-notes{padding-left:20px}
+.rp-notes li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>限时充值返利活动 - 生效存款方式配置</h1>
+<div class="meta">产品：Laura</div>
+
+<div class="card">
+<div class="card-title">后台配置</div>
+<div class="rp-form">
+<div class="rp-label"><span class="req">*</span>生效存款方式：</div>
+<div class="rp-body">
+<div class="rp-row rp-head"><div>支付方式</div><div>推荐</div><div>角标文案</div><div></div></div>
+<div id="rp-list"></div>
+<div class="rp-err" id="rp-gerr"></div>
+<div class="rp-tip">至少选择 1 个生效存款方式；已选的支付方式不可重复选择；开启推荐后角标文案必填，最多 8 个字符</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">前台充值页效果</div>
+<div class="rp-pnote">充值页支付方式列表按平台现有逻辑展示，仅推荐的支付方式显示角标</div>
+<div class="rp-preview" id="rp-preview"></div>
+</div>
+
+<div class="card">
+<div class="card-title">交互说明</div>
+<ol class="rp-notes">
+<li>支付方式下拉选项为「支付方式管理」中已启用的支付方式；已被其他行选中的选项显示「（已选）」并置灰，不可重复选择。</li>
+<li>「+」在当前行下方新增一行；行数达到可用支付方式总数时「+」置灰（不可点击）。</li>
+<li>「-」删除当前行；仅剩 1 行时「-」置灰（不可点击）。</li>
+<li>推荐为开关控件，旁边显示「是 / 否」，默认关闭；未选择支付方式的行不可开启推荐；推荐数量不限。</li>
+<li>推荐关闭时，角标文案输入框置灰不可填写；推荐由开启改为关闭时，自动清空已填写的角标文案。</li>
+<li>推荐开启时角标文案必填，支持任意文案，最多 8 个字符，实时显示已输入字数。</li>
+<li>校验（随活动配置页保存时触发，输入过程中实时提示）：
+  <br>· 所有行均未选择支付方式：提示「请至少选择 1 个生效存款方式」；
+  <br>· 推荐已开启但角标文案为空：提示「请输入角标文案」；
+  <br>· 角标文案超过 8 个字符：输入框标红，字数显示为红色，提示「角标文案最多 8 个字符」。</li>
+<li>前台充值页：推荐的支付方式按钮右上角显示配置的角标文案；同一支付方式同时存在多个充值类活动的角标时，优先显示限时充值返利活动的角标。</li>
+</ol>
+</div>
+</div>
+
+<script>
+var RP_ALL=['pix1','pix2','newgpay','pix3'];
+var RP_MAX=8;
+var rpRows=[{n:'pix1',r:true,t:'RECO',touched:false},{n:'pix2',r:false,t:'',touched:false},{n:'',r:false,t:'',touched:false}];
+var rpList=document.getElementById('rp-list'),rpPrev=document.getElementById('rp-preview'),rpGerr=document.getElementById('rp-gerr');
+function rpEsc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function rpRowErr(m){
+  if(!m.r)return '';
+  if(m.t.length>RP_MAX)return '角标文案最多 '+RP_MAX+' 个字符';
+  if(m.touched&&!m.t.trim())return '请输入角标文案';
+  return '';
+}
+function rpApplyRowState(row,m){
+  var ip=row.querySelector('.rp-input'),cnt=row.querySelector('.rp-cnt'),e2=row.querySelector('.e2');
+  var over=m.t.length>RP_MAX,err=rpRowErr(m);
+  cnt.textContent=m.t.length+'/'+RP_MAX;
+  cnt.className='rp-cnt'+(over?' bad':'');
+  ip.className='rp-input'+(err?' bad':'');
+  e2.textContent=err;
+}
+function rpGlobal(){
+  rpGerr.textContent=rpRows.some(function(m){return m.n;})?'':'请至少选择 1 个生效存款方式';
+}
+function rpRender(){
+  rpList.innerHTML='';
+  var used=rpRows.map(function(x){return x.n;}).filter(Boolean);
+  rpRows.forEach(function(m,i){
+    var row=document.createElement('div');row.className='rp-row';
+    var opts='<option value="">请选择支付方式</option>'+RP_ALL.map(function(a){
+      var taken=used.indexOf(a)>-1&&a!==m.n;
+      return '<option value="'+a+'"'+(a===m.n?' selected':'')+(taken?' disabled':'')+'>'+a+(taken?'（已选）':'')+'</option>';
+    }).join('');
+    var full=rpRows.length>=RP_ALL.length;
+    row.innerHTML=
+      '<div><select class="rp-select">'+opts+'</select></div>'+
+      '<button class="rp-swb'+(m.r?' on':'')+'" role="switch" aria-checked="'+m.r+'"'+(m.n?'':' disabled')+'><span class="rp-sw"></span><span class="rp-swl">'+(m.r?'是':'否')+'</span></button>'+
+      '<div><div class="rp-inwrap"><input class="rp-input" type="text" value="'+rpEsc(m.t)+'" placeholder="'+(m.r?'请输入角标文案':'开启推荐后填写')+'"'+(m.r?'':' disabled')+'><span class="rp-cnt"></span></div><div class="rp-err e2"></div></div>'+
+      '<div class="rp-ops"><button class="rp-ib add" title="在下方添加一行"'+(full?' disabled':'')+'>+</button><button class="rp-ib del" title="删除本行"'+(rpRows.length<=1?' disabled':'')+'>−</button></div>';
+    row.querySelector('select').onchange=function(e){m.n=e.target.value;if(!m.n){m.r=false;m.t='';m.touched=false;}rpRender();};
+    row.querySelector('.rp-swb').onclick=function(){if(!m.n)return;m.r=!m.r;if(!m.r){m.t='';m.touched=false;}rpRender();};
+    var ip=row.querySelector('.rp-input');
+    ip.oninput=function(){m.t=ip.value;rpApplyRowState(row,m);rpPreview();};
+    ip.onblur=function(){m.touched=true;rpApplyRowState(row,m);};
+    row.querySelector('.add').onclick=function(){if(rpRows.length<RP_ALL.length){rpRows.splice(i+1,0,{n:'',r:false,t:'',touched:false});rpRender();}};
+    row.querySelector('.del').onclick=function(){if(rpRows.length>1){rpRows.splice(i,1);rpRender();}};
+    rpList.appendChild(row);
+    rpApplyRowState(row,m);
+  });
+  rpGlobal();
+  rpPreview();
+}
+function rpPreview(){
+  rpPrev.innerHTML='';
+  RP_ALL.forEach(function(a){
+    var m=rpRows.filter(function(x){return x.n===a;})[0];
+    var show=m&&m.r&&m.t.trim()&&m.t.length<=RP_MAX;
+    var d=document.createElement('div');d.className='rp-pbtn';
+    d.innerHTML=a+(show?'<span class="rp-badge">'+rpEsc(m.t)+'</span>':'');
+    rpPrev.appendChild(d);
+  });
+}
+rpRender();
+</script>
+</body>
+</html>
