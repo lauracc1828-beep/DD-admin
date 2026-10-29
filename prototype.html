@@ -760,7 +760,8 @@ select.fs.ph{color:#bfbfbf}
   <div class="submenu" id="sub-finance" style="display:none">
     <div class="submenu-item disabled">支付管理</div>
     <div class="submenu-item disabled">支付方式管理</div>
-    <div class="submenu-item disabled">充值返现设置</div>
+    <div class="submenu-item disabled">支付方式排序</div>
+    <div class="submenu-item" id="si-cashback" onclick="switchPage('cashback',this)">充提返现设置</div>
     <div class="submenu-item disabled">代付商户管理</div>
     <div class="submenu-item" id="si-withdraw" onclick="switchPage('withdraw',this)">提现管理</div>
   </div>
@@ -1580,6 +1581,16 @@ select.fs.ph{color:#bfbfbf}
       </div>
     </div>
 
+    <!-- PAGE: 充提返现设置（充值返现 / 提款返现） -->
+    <div id="pg-cashback" style="display:none">
+      <div class="cb-tabs">
+        <div class="cb-tab active" data-k="dep" onclick="cbTab(this)">充值返现</div>
+        <div class="cb-tab" data-k="wd" onclick="cbTab(this)">提款返现</div>
+      </div>
+      <div class="cb-panel" id="cb-p-dep"></div>
+      <div class="cb-panel hidden" id="cb-p-wd"></div>
+    </div>
+
     <!-- PAGE: 会员提现审核 -->
     <div id="pg-maudit" style="display:none">
       <div class="sec-tabs-bar" style="border-radius:6px 6px 0 0;margin-bottom:12px">
@@ -1967,6 +1978,99 @@ select.fs.ph{color:#bfbfbf}
 #wm-edit .wm-tip::after{content:'';position:absolute;left:14px;bottom:-8px;width:0;height:0;border:8px solid transparent;border-top-color:#303030;border-bottom:0}
 #wm-edit #wm-accum-row.on{display:flex}
 </style>
+
+<!-- 充提返现设置 · scoped styles -->
+<style>
+#pg-cashback .cb-tabs{background:#fff;padding:0 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;border-radius:6px 6px 0 0}
+#pg-cashback .cb-tab{padding:13px 0;font-size:14px;font-weight:600;color:#595959;cursor:pointer;border-bottom:2px solid transparent;margin-right:28px;user-select:none;white-space:nowrap;transition:color .15s}
+#pg-cashback .cb-tab:hover{color:#0961BD}
+#pg-cashback .cb-tab.active{color:#0961BD;border-bottom-color:#0961BD}
+#pg-cashback .cb-panel{background:#fff;border-radius:0 0 6px 6px;padding:20px}
+#pg-cashback .cb-panel.hidden{display:none}
+#pg-cashback .cb-filter{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+#pg-cashback .cb-range{display:flex;align-items:center;gap:6px;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;background:#fff}
+#pg-cashback .cb-range input{border:none;outline:none;font-size:13px;color:#333;width:138px;font-family:inherit}
+#pg-cashback .cb-tz{font-size:12px;color:#ff4d4f;margin-top:4px}
+#pg-cashback .cb-btns{margin-left:auto;display:flex;gap:10px}
+#pg-cashback .cb-tools{display:flex;justify-content:flex-end;gap:14px;color:#595959;font-size:15px;margin-bottom:10px}
+#pg-cashback .cb-tools span{cursor:pointer}
+#pg-cashback .cb-tools{align-items:center}
+#pg-cashback .cb-tools .btn[disabled]{background:#f5f5f5;border-color:#d9d9d9;color:#bbb;cursor:not-allowed}
+#pg-cashback .cb-ops{display:inline-flex;gap:8px}
+#pg-cashback .btn-del{background:#fff;color:#ff4d4f;border-color:#ff4d4f}
+#pg-cashback .btn-del:hover{background:#fff1f0}
+#pg-cashback table{width:100%;border-collapse:collapse;font-size:13px}
+#pg-cashback th{background:#fafafa;padding:12px 14px;text-align:center;font-weight:600;color:#595959;border-bottom:1px solid #f0f0f0}
+#pg-cashback td{padding:12px 14px;border-bottom:1px solid #f5f5f5;text-align:center;vertical-align:middle;color:#333}
+#pg-cashback tbody tr:hover td{background:#fafcff}
+#pg-cashback .cb-empty{color:#bfbfbf;padding:40px 0}
+/* 弹窗：复刻 UAT 后台公共弹窗（Ant Design Modal）样式，取值于 UAT「会员存款返现设置」弹窗实测 */
+.ub-ov .ub-modal{background:#fff;border-radius:2px;box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);max-height:90vh;display:flex;flex-direction:column;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:14px;line-height:22px;color:rgba(0,0,0,.85)}
+.ub-ov .ub-hd{display:flex;align-items:center;padding:16px;border-bottom:1px solid #f0f0f0;border-radius:2px 2px 0 0}
+.ub-ov .ub-title{flex:1;font-size:16px;font-weight:700;line-height:22px}
+.ub-ov .ub-ico{width:36px;height:24px;display:inline-flex;align-items:center;justify-content:center;color:rgba(0,0,0,.45);font-size:16px;cursor:pointer}
+.ub-ov .ub-ico:hover{color:rgba(0,0,0,.75)}
+.ub-ov .ub-bd{padding:14px 14px 32px;overflow-y:auto}
+.ub-ov .ub-h4{font-size:14px;font-weight:500;margin:0 0 7px}
+.ub-ov .ub-h4.pt{padding-top:10px}
+.ub-ov .ub-item{display:flex;align-items:flex-start;margin-bottom:8px}
+.ub-ov .ub-item.has-err{margin-bottom:0}
+.ub-ov .ub-lb{width:120px;flex-shrink:0;text-align:right;padding-right:10px;line-height:32px;white-space:nowrap}
+.ub-ov .ub-lb.req::before{content:'*';color:#ff4d4f;margin-right:4px}
+.ub-ov .ub-ctl{flex:1;min-width:0}
+.ub-ov .ub-in{width:100%;height:32px;border:1px solid #d9d9d9;border-radius:2px;padding:0 11px;font-size:14px;color:rgba(0,0,0,.85);background:#fff;outline:none;font-family:inherit;transition:all .3s}
+.ub-ov .ub-in::placeholder{color:#bfbfbf}
+.ub-ov .ub-in:hover{border-color:#40a9ff}
+.ub-ov .ub-in:focus{border-color:#40a9ff;box-shadow:0 0 0 2px rgba(24,144,255,.2)}
+.ub-ov .ub-in.err{border-color:#ff4d4f}
+.ub-ov .ub-in.err:focus{box-shadow:0 0 0 2px rgba(255,77,79,.2)}
+.ub-ov .ub-err{color:#ff4d4f;font-size:14px;line-height:22px;min-height:24px}
+.ub-ov .ub-tips{color:#ef4444}
+.ub-ov .ub-tips-k{width:100px;text-align:right}
+.ub-ov .ub-tips p{margin:0 0 14px}
+.ub-ov .ub-ft{padding:10px 16px;border-top:1px solid #f0f0f0;text-align:center;border-radius:0 0 2px 2px}
+.ub-ov .ub-btn{height:32px;padding:4px 15px;border-radius:2px;border:1px solid #d9d9d9;background:#fff;color:rgba(0,0,0,.85);font-size:14px;cursor:pointer;font-family:inherit;transition:all .3s}
+.ub-ov .ub-btn+.ub-btn{margin-left:8px}
+.ub-ov .ub-btn:hover{color:#40a9ff;border-color:#40a9ff}
+.ub-ov .ub-btn.pri{background:#1890ff;border-color:#1890ff;color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.045)}
+.ub-ov .ub-btn.pri:hover{background:#40a9ff;border-color:#40a9ff;color:#fff}
+</style>
+
+<!-- MODAL: 会员存款 / 提款返现设置（充提返现设置共用） -->
+<div class="overlay ub-ov" id="cb-edit">
+  <div class="ub-modal" style="width:600px">
+    <div class="ub-hd"><span class="ub-title" id="cb-title">会员存款返现设置</span><span class="ub-ico" title="全屏">⛶</span><span class="ub-ico" title="关闭" onclick="cbClose()">✕</span></div>
+    <div class="ub-bd">
+      <h4 class="ub-h4">基本信息</h4>
+      <div id="cb-name-row"><span id="cb-name-l">存款方式：</span><span id="cb-name"></span></div>
+      <div class="ub-item" id="cb-ch-row" style="display:none"><label class="ub-lb req">提款通道</label>
+        <div class="ub-ctl"><select class="ub-in" id="cb-ch" onchange="cbClrCh()"></select><div class="ub-err" id="cb-ch-h" style="display:none"></div></div></div>
+      <h4 class="ub-h4 pt">返现设置</h4>
+      <div class="ub-item"><label class="ub-lb req">返现百分比(%)</label><div class="ub-ctl"><input class="ub-in" id="cb-pct" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('pct')"><div class="ub-err" id="cb-pct-h" style="display:none"></div></div></div>
+      <div class="ub-item"><label class="ub-lb req">每日最高优惠</label><div class="ub-ctl"><input class="ub-in" id="cb-cap" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('cap')"><div class="ub-err" id="cb-cap-h" style="display:none"></div></div></div>
+      <div class="ub-item"><label class="ub-lb">提现稽核倍数</label><div class="ub-ctl"><input class="ub-in" id="cb-aud" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('aud')"><div class="ub-err" id="cb-aud-h" style="display:none"></div></div></div>
+      <div class="ub-tips">
+        <div class="ub-tips-k">温馨提示：</div>
+        <p>1、“返现百分比（%）”与“每日最高优惠”为必填项，必须同时填写</p>
+        <p>2、“返现百分比（%）”的输入区间“0.001~100.000”</p>
+        <p>3、“每日最高优惠”的输入区间“0.01~1000000.00”</p>
+        <p>4、“提现稽核倍数”非必填，不填时默认显示为0，加赠金额部分不参与提现流水稽核计算</p>
+        <p>5、“提现稽核倍数”的输入为大于等于1的整数</p>
+      </div>
+    </div>
+    <div class="ub-ft"><button class="ub-btn pri" onclick="cbSave()">保 存</button><button class="ub-btn" onclick="cbReset()">重 置</button></div>
+  </div>
+</div>
+
+<!-- MODAL: 提款返现 · 删除确认（同 UAT 公共弹窗样式） -->
+<div class="overlay ub-ov" id="cb-del">
+  <div class="ub-modal" style="width:416px">
+    <div class="ub-hd"><span class="ub-title">删除确认</span><span class="ub-ico" title="关闭" onclick="cbDelClose()">✕</span></div>
+    <div class="ub-bd" style="padding:14px 16px 24px" id="cb-del-msg"></div>
+    <div class="ub-ft"><button class="ub-btn pri" onclick="cbDelOk()">确 定</button><button class="ub-btn" onclick="cbDelClose()">取 消</button></div>
+  </div>
+</div>
 
 <!-- MODAL: 提款方式编辑 -->
 <div class="overlay" id="wm-edit">
@@ -4672,7 +4776,7 @@ function apkMethod(radioEl, actId, addrId, nameId){
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -4693,13 +4797,14 @@ function switchPage(page, el){
     'account':'系统管理 / 账号管理',
     'mafia':'系统管理 / 马甲包管理',
     'withdraw':'商户财务配置 / 提现管理',
+    'cashback':'商户财务配置 / 充提返现设置',
     'maudit':'商户财务管理 / 会员提现审核',
     'worder':'商户财务管理 / 提现订单记录',
     'warec':'商户财务管理 / 提现审核记录',
     'announce':'消息管理 / 公告消息',
     'inbox':'消息管理 / 站内信'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -4710,6 +4815,7 @@ function switchPage(page, el){
   if(page==='appstore') asRenderTable();
   if(page==='account') acctRender();
   if(page==='withdraw') wmRender();
+  if(page==='cashback') cbRender();
 }
 
 // ─── 马甲包管理：本地上传（一期）───
@@ -5264,7 +5370,7 @@ function acctConfirmDel(){
 // ─── HASH ROUTING — deep-link support ───
 // Usage: prototype.html#channel / #effect / #guide / #activity-list / #appstore / #account / #mafia / #withdraw / #maudit / #worder / #warec / #announce / #inbox
 (function(){
-  var validPages = ['channel','effect','guide','activity-list','appstore','account','mafia','withdraw','maudit','worder','warec','announce','inbox'];
+  var validPages = ['channel','effect','guide','activity-list','appstore','account','mafia','withdraw','cashback','maudit','worder','warec','announce','inbox'];
   function hashRoute(){
     var hash = location.hash.replace('#','');
     if(validPages.indexOf(hash) !== -1){
@@ -7915,6 +8021,199 @@ function rtLinkSave(){
   if(rtCurEditor && rtCurEditor.id==='an-editor') anWordCount();
   closeM('m-link'); toast('链接已插入');
 }
+
+/* ══ 商户财务配置/充提返现设置：充值返现 + 提款返现两个标签页（并入唯一后台原型）══ */
+(function(){
+  // 充值返现：存款方式由支付方式管理同步；提款返现：提款通道由「提现管理-提现通道配置」同步，本期不提供新增/删除
+  var CB = {
+    dep:{label:'存款方式', title:'会员存款返现设置', rows:[
+      {name:'u2cpay', pct:1.326, cap:10, aud:1, on:true,  t:'2026-10-28 04:01:47', op:'admin001'},
+      {name:'NewGPay',pct:2.5,   cap:20, aud:1, on:true,  t:'2026-10-27 02:30:41', op:'admin002'},
+      {name:'pix',    pct:1,     cap:8,  aud:0, on:true,  t:'2026-10-25 09:58:48', op:'admin003'},
+      {name:'银联',   pct:5,     cap:1000000, aud:0, on:false, t:'2026-10-24 07:06:11', op:'admin002'},
+      {name:'虚拟币', pct:0.2,   cap:1000000, aud:0, on:false, t:'2026-10-24 07:06:07', op:'admin002'},
+      {name:'ECNY',   pct:0,     cap:0,  aud:0, on:false, t:'2026-10-24 07:06:01', op:'admin002'},
+      {name:'ydpay',  pct:3,     cap:100000, aud:0, on:false, t:'2026-08-26 05:11:15', op:'admin004'},
+      {name:'OKPay',  pct:0,     cap:0,  aud:0, on:false, t:'2025-12-17 06:35:46', op:''}
+    ]},
+    // 提款返现不自动同步，只展示手动新增的通道（演示数据：已添加 2 条）
+    wd:{label:'提款通道', title:'会员提款返现设置', rows:[
+      {name:'NewGPay',pct:1.5, cap:50, aud:1, on:true,  t:'2026-10-29 05:42:10', op:'admin001'},
+      {name:'pix',    pct:0.5, cap:10, aud:0, on:true,  t:'2026-10-29 05:40:33', op:'admin001'}
+    ]}
+  };
+  // 新增下拉选项来源：提现管理-提现通道配置的全部通道（不区分启用/禁用），顺序同该页
+  var WD_CHANNELS = ['银联','虚拟币','ydpay','OKPay','pix','NewGPay','u2cpay','ECNY'];
+  function wdAdded(n){ return CB.wd.rows.some(function(r){ return r.name===n; }); }
+  var delIdx = -1;
+  var cur = {k:'dep', i:-1};
+  var flt = {dep:{}, wd:{}};
+  function trim0(v){ return String(+v); }  // 去除末尾无意义的 0
+  function nowStr(){ // UTC-3
+    var d=new Date(Date.now()-3*3600*1000), p=function(n){return (n<10?'0':'')+n;};
+    return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate())+' '+p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds());
+  }
+  function shell(k){
+    var c=CB[k], opts=c.rows.map(function(r){return '<option>'+r.name+'</option>';}).join('');
+    return '<div class="cb-filter">'+
+      '<div><div class="cb-range"><input id="cb-'+k+'-s" type="text" placeholder="最后操作时间(开始)" onfocus="this.type=\'date\'"><span style="color:#bfbfbf">→</span><input id="cb-'+k+'-e" type="text" placeholder="最后操作时间(结束)" onfocus="this.type=\'date\'"></div><div class="cb-tz">当前时间为 UTC-3 时区</div></div>'+
+      '<select class="f-select" id="cb-'+k+'-m" style="min-width:260px"><option value="">'+c.label+'</option>'+opts+'</select>'+
+      '<input class="f-input" id="cb-'+k+'-o" placeholder="操作人" style="min-width:260px;cursor:text">'+
+      '<div class="cb-btns"><button class="btn btn-white" onclick="cbResetFilter(\''+k+'\')">重 置</button><button class="btn btn-query" onclick="cbQuery(\''+k+'\')">查 询</button></div>'+
+    '</div>'+
+    '<div class="cb-tools">'+(k==='wd'?'<button class="btn btn-blue" id="cb-wd-add" onclick="cbAdd()">新 增</button>':'')+
+      '<span title="刷新" onclick="cbRender();toast(\'已刷新\')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>'+
+    '<div class="table-wrap"><div class="table-scroll"><table><thead><tr>'+
+      '<th>'+c.label+'</th><th>返现方式</th><th>返现百分比例(%)</th><th>每日最高优惠(元)</th><th>状态</th><th>最近操作时间</th><th>操作人</th><th>操作</th>'+
+    '</tr></thead><tbody id="cb-'+k+'-tb"></tbody></table></div></div>'+
+    '<div class="pagination"><div class="pg-info">共 <b id="cb-'+k+'-n">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select></div></div>';
+  }
+  function renderTab(k){
+    var c=CB[k], f=flt[k];
+    // 最近操作时间倒序，从未配置过的排在末尾
+    var list=c.rows.map(function(r,i){return {r:r,i:i};}).filter(function(o){
+      var r=o.r, day=r.t.slice(0,10);
+      if(f.m && r.name!==f.m) return false;
+      if(f.o && (!r.op || r.op.indexOf(f.o)<0)) return false;
+      if((f.s||f.e) && !r.t) return false;
+      if(f.s && day<f.s) return false;
+      if(f.e && day>f.e) return false;
+      return true;
+    }).sort(function(a,b){ return (b.r.t||'').localeCompare(a.r.t||''); });
+    document.getElementById('cb-'+k+'-n').textContent=list.length;
+    document.getElementById('cb-'+k+'-tb').innerHTML = list.length ? list.map(function(o){
+      var r=o.r;
+      return '<tr><td>'+r.name+'</td><td>比例金额</td><td>'+trim0(r.pct)+'</td><td>'+trim0(r.cap)+'</td>'+
+        '<td><span class="sw"><input type="checkbox" class="sw-input" '+(r.on?'checked':'')+' disabled><span class="sw-track" onclick="cbToggle(\''+k+'\','+o.i+')"></span><span class="sw-knob"></span></span></td>'+
+        '<td>'+(r.t?r.t+'<br>(UTC-3)':'')+'</td><td>'+(r.op||'')+'</td>'+
+        '<td><span class="cb-ops"><button class="btn btn-blue btn-sm" onclick="cbOpen(\''+k+'\','+o.i+')">编 辑</button>'+
+        (k==='wd'?'<button class="btn btn-del btn-sm" onclick="cbDel('+o.i+')">删 除</button>':'')+'</span></td></tr>';
+    }).join('') : '<tr><td colspan="8" class="cb-empty">暂无数据</td></tr>';
+    if(k==='wd'){
+      // 筛选下拉只列已添加的通道；全部通道已添加时「新增」置灰
+      var sel=document.getElementById('cb-wd-m'), v=sel.value;
+      sel.innerHTML='<option value="">提款通道</option>'+c.rows.map(function(r){return '<option>'+r.name+'</option>';}).join('');
+      sel.value=wdAdded(v)?v:'';
+      var full=WD_CHANNELS.every(wdAdded), btn=document.getElementById('cb-wd-add');
+      btn.disabled=full; btn.title=full?'全部提现通道均已添加':'';
+    }
+  }
+  window.cbRender=function(){
+    ['dep','wd'].forEach(function(k){
+      var p=document.getElementById('cb-p-'+k);
+      if(!p.firstChild) p.innerHTML=shell(k);
+      renderTab(k);
+    });
+  };
+  window.cbTab=function(el){
+    el.parentNode.querySelectorAll('.cb-tab').forEach(function(t){t.classList.remove('active');});
+    el.classList.add('active');
+    ['dep','wd'].forEach(function(k){ document.getElementById('cb-p-'+k).classList.toggle('hidden', k!==el.dataset.k); });
+  };
+  window.cbQuery=function(k){
+    flt[k]={s:document.getElementById('cb-'+k+'-s').value, e:document.getElementById('cb-'+k+'-e').value,
+            m:document.getElementById('cb-'+k+'-m').value, o:document.getElementById('cb-'+k+'-o').value.trim()};
+    renderTab(k);
+  };
+  window.cbResetFilter=function(k){
+    ['s','e'].forEach(function(x){var i=document.getElementById('cb-'+k+'-'+x); i.value=''; i.type='text';});
+    document.getElementById('cb-'+k+'-m').value=''; document.getElementById('cb-'+k+'-o').value='';
+    flt[k]={}; renderTab(k);
+  };
+  // 状态开关：行内即时生效，不弹二次确认，与配置值相互独立
+  window.cbToggle=function(k,i){
+    var r=CB[k].rows[i]; r.on=!r.on; r.t=nowStr(); r.op='admin001';
+    renderTab(k); toast('操作成功');
+  };
+  function cbMode(add){   // 新增：提款通道为必填下拉；编辑：纯文本只读
+    document.getElementById('cb-name-row').style.display=add?'none':'';
+    document.getElementById('cb-ch-row').style.display=add?'':'none';
+  }
+  window.cbOpen=function(k,i){
+    cur={k:k,i:i};
+    document.getElementById('cb-title').textContent=CB[k].title;
+    document.getElementById('cb-name-l').textContent=CB[k].label+'：';
+    document.getElementById('cb-name').textContent=CB[k].rows[i].name;  // 编辑：提款通道只读不可改
+    cbMode(false);
+    cbReset();
+    document.getElementById('cb-edit').classList.add('show');
+  };
+  // 新增：下拉选全部提现通道，已添加的置灰不可选
+  window.cbAdd=function(){
+    if(WD_CHANNELS.every(wdAdded)) return;
+    cur={k:'wd',i:-1};
+    document.getElementById('cb-title').textContent=CB.wd.title;
+    document.getElementById('cb-name-l').textContent='提款通道：';
+    document.getElementById('cb-ch').innerHTML='<option value="">请选择提款通道</option>'+WD_CHANNELS.map(function(n){
+      return '<option value="'+n+'"'+(wdAdded(n)?' disabled':'')+'>'+n+(wdAdded(n)?'（已添加）':'')+'</option>';
+    }).join('');
+    cbMode(true);
+    cbReset();
+    document.getElementById('cb-edit').classList.add('show');
+  };
+  window.cbClrCh=function(){ cbClr('ch'); };
+  // 删除：二次确认；删除后该通道在新增下拉中恢复可选
+  window.cbDel=function(i){
+    delIdx=i;
+    document.getElementById('cb-del-msg').textContent='确认删除「'+CB.wd.rows[i].name+'」的提款返现配置？删除后该通道不再发放提款返现，已发放的返现不受影响。';
+    document.getElementById('cb-del').classList.add('show');
+  };
+  window.cbDelClose=function(){ document.getElementById('cb-del').classList.remove('show'); };
+  window.cbDelOk=function(){
+    CB.wd.rows.splice(delIdx,1); delIdx=-1;
+    cbDelClose(); renderTab('wd'); toast('删除成功');
+  };
+  window.cbClose=function(){ document.getElementById('cb-edit').classList.remove('show'); };
+  // 重置 = 还原为本次打开弹窗时的已保存值（非清空）
+  window.cbReset=function(){
+    if(cur.i<0){   // 新增：清空全部输入
+      document.getElementById('cb-ch').value='';
+      document.getElementById('cb-pct').value=''; document.getElementById('cb-cap').value=''; document.getElementById('cb-aud').value='0';
+      cbClrCh(); ['pct','cap','aud'].forEach(cbClr); return;
+    }
+    var r=CB[cur.k].rows[cur.i];
+    document.getElementById('cb-pct').value = r.pct ? r.pct.toFixed(3) : '';
+    document.getElementById('cb-cap').value = r.cap ? r.cap.toFixed(2) : '';
+    document.getElementById('cb-aud').value = r.aud ? String(r.aud) : '0';
+    ['pct','cap','aud'].forEach(cbClr);
+  };
+  window.cbFilter=function(el){ var v=el.value.replace(/[^\d.]/g,''); if(v!==el.value) el.value=v; };
+  function cbClr(f){
+    var el=document.getElementById('cb-'+f); el.classList.remove('err');
+    document.getElementById('cb-'+f+'-h').style.display='none'; el.closest('.ub-item').classList.remove('has-err');
+  }
+  function cbErr(f,m){
+    var el=document.getElementById('cb-'+f), h=document.getElementById('cb-'+f+'-h');
+    el.classList.add('err'); h.textContent=m; h.style.display='block'; el.closest('.ub-item').classList.add('has-err'); return false;
+  }
+  // 与 UAT 一致：越界 / 超位数在失焦时自动修正为合法值（不标红）；仅必填为空时报「请输入{字段名}」
+  var CB_RULE={ pct:{min:0.001,max:100,dp:3,req:'请输入返现百分比(%)'}, cap:{min:0.01,max:1000000,dp:2,req:'请输入每日最高优惠'} };
+  window.cbCheck=function(f){
+    var el=document.getElementById('cb-'+f), v=el.value.trim();
+    cbClr(f);
+    if(f==='aud'){
+      // 留空或 0 视为未填（显示 0，不参与稽核）；其余取整且不小于 1
+      if(v==='' || +v===0){ el.value='0'; return true; }
+      el.value=String(Math.max(1,Math.round(+v)||1)); return true;
+    }
+    var r=CB_RULE[f];
+    if(v==='' || isNaN(+v)) return cbErr(f,r.req);
+    el.value=Math.min(r.max,Math.max(r.min,+v)).toFixed(r.dp);
+    return true;
+  };
+  window.cbSave=function(){
+    var ok=['pct','cap','aud'].map(cbCheck).every(Boolean), add=cur.i<0, ch=document.getElementById('cb-ch').value;
+    if(add && !ch){ cbErr('ch','请选择提款通道'); ok=false; }
+    if(!ok) return;
+    if(add){ CB.wd.rows.push({name:ch,pct:0,cap:0,aud:0,on:false,t:'',op:''}); cur.i=CB.wd.rows.length-1; }  // 新增后状态默认关闭
+    var r=CB[cur.k].rows[cur.i], a=document.getElementById('cb-aud').value.trim();
+    r.pct=+(+document.getElementById('cb-pct').value).toFixed(3);
+    r.cap=+(+document.getElementById('cb-cap').value).toFixed(2);
+    r.aud=a===''?0:+a;
+    r.t=nowStr(); r.op='admin001';
+    renderTab(cur.k); cbClose(); toast(add?'新增成功':'保存成功');
+  };
+})();
 
 </script>
 </body>

@@ -88,7 +88,7 @@
   .method{flex:0 0 120px;height:42px;border-radius:10px;font-size:14px;font-weight:600;
     background:var(--field);color:var(--grey2);transition:.2s}
   .method.on{background:var(--gold);color:#111}
-  .btag{position:absolute;top:-9px;right:-7px;z-index:3;background:#e53935;color:#fff;font-size:11px;
+  .btag{position:absolute;top:-9px;right:-7px;z-index:3;background:#E6961B;color:#fff;font-size:11px;
     font-weight:700;padding:3px 8px;border-radius:6px 6px 6px 0;box-shadow:0 2px 6px rgba(0,0,0,.35);
     pointer-events:none}
 
@@ -162,6 +162,12 @@
     font-size:12.5px;color:#d4d4d4;transition:.15s}
   .chip:active{transform:scale(.97)}
   .chip.on{border-color:var(--gold);color:var(--gold);background:var(--gold-soft)}
+  /* 快捷档位「+N%」返现比例角标（存款读充值返现、取款读提款返现） */
+  .chip{position:relative}
+  .ctag{position:absolute;top:-8px;right:-4px;z-index:2;background:#E6961B;color:#fff;font-size:10px;
+    font-weight:700;line-height:1;padding:3px 5px;border-radius:5px 5px 5px 0;white-space:nowrap;
+    box-shadow:0 2px 5px rgba(0,0,0,.35);pointer-events:none}
+  #wGrid.tagged,#depGrid.tagged{row-gap:14px;margin-top:16px}
 
   /* 收款信息 */
   .pixadd{margin-top:10px;width:100%;height:56px;border:1.5px dashed #3e3e42;border-radius:12px;
@@ -310,6 +316,7 @@
   .receive.sub{margin-top:-7px;margin-bottom:10px;font-size:11.5px;color:var(--grey)}
   .receive.sub b{font-size:12.5px;color:var(--gold);font-weight:700}
   .receive.sub b i{font-style:normal;margin-left:4px}
+  .sum b i,.rr i,.bpop b i{font-style:normal;margin-left:4px}
   .qmk{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;
     border-radius:50%;border:1px solid var(--grey);color:var(--grey);font-size:9px;font-style:normal;
     line-height:1;margin-left:4px;cursor:pointer;transform:translateY(1px)}
@@ -435,7 +442,7 @@
   @media (max-width:500px){
     html,body{height:100%;overflow:hidden}
     body{padding:0;background:var(--bg);display:block}
-    h1,.sub,.ctrl{display:none}
+    h1,.stage > .sub,.ctrl{display:none}   /* 只隐藏页头副标题，不误伤结算栏 .receive.sub */
     .phone{width:100%;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
     :root{--safeb:env(safe-area-inset-bottom, 0px);--safet:env(safe-area-inset-top, 0px)}
   }
@@ -520,8 +527,8 @@
           <p class="flowline"><span data-i="flow">提款需投注：</span><b>R$ 1.039,36</b><span class="lnk" data-i="detail" onclick="toast(t('tFlow'))">查看详情 ›</span></p>
 
           <div class="methods" id="wdMethods">
-            <button class="method on" data-m="pix"><span class="label">BESTPAY</span></button>
-            <button class="method" data-m="ngc"><span class="label">NewGPay</span></button>
+            <button class="method on" data-m="pix"><span class="label">BESTPAY</span><span class="btag" hidden></span></button>
+            <button class="method" data-m="ngc"><span class="label">NewGPay</span><span class="btag" hidden></span></button>
           </div>
 
           <!-- NewGPay 钱包区块 -->
@@ -585,7 +592,15 @@
         <button class="cta" id="dCta" disabled onclick="depSubmit()">立即充值</button>
       </div>
       <div class="foot" id="wFoot" hidden>
+        <div class="bpop" id="wBpop" hidden>
+          <div class="r" data-i="wbCredit">赠送金额将在取款成功后存入账户余额</div>
+          <div class="r"><span data-i="maxDailyK">每日最高奖励</span><b id="wbpMax">R$ 0,00</b></div>
+          <div class="r" id="wbpWagerRow"><span data-i="wagerK">提现流水要求</span><b id="wbpWager"></b></div>
+        </div>
         <div class="receive"><span data-i="recv">您将收到</span><b id="wRecv">0,00<i>R$</i></b></div>
+        <div class="receive sub" id="wSub" hidden>
+          <span><span data-i="wBonusK">额外赠送</span><i class="qmk" id="wQmk">?</i></span><b id="wSubV">+0,00<i>R$</i></b>
+        </div>
         <button class="cta" id="wCta" disabled onclick="wdSubmit()">立即提现</button>
       </div>
 
@@ -680,7 +695,7 @@
         <div class="sum">
           <div><span data-i="cfAmtK">提款金额</span><b class="y" id="cfAmt">R$ 0,00</b></div>
           <div><span data-i="cfWayK">提款方式</span><b id="cfWay">—</b></div>
-          <div><span data-i="cfToK">收款账号</span><b id="cfTo">—</b></div>
+          <div><span id="cfToK" data-i="cfToK">收款账号</span><b id="cfTo">—</b></div>
         </div>
         <p id="cfNote" style="margin-bottom:14px"></p>
         <div class="btns">
@@ -817,6 +832,12 @@
   <div class="grp"><span>NewGPay 充值返现（后台配置）</span>
     <div class="seg" id="cbNgc"><button data-v="0">未配置</button><button data-v="2.5|100|3" class="on">2.5%·上限100·3倍</button><button data-v="5|1000|0">5%·上限1000·不稽核</button></div>
   </div>
+  <div class="grp"><span>BESTPAY 提款返现（后台 pix 通道配置）</span>
+    <div class="seg" id="cwbPix"><button data-v="0">未配置</button><button data-v="0.5|10|0" class="on">0.5%·上限10·不稽核</button><button data-v="1|20|1">1%·上限20·1倍</button></div>
+  </div>
+  <div class="grp"><span>NewGPay 提款返现（后台 NewGPay 通道配置）</span>
+    <div class="seg" id="cwbNgc"><button data-v="0">未配置</button><button data-v="1.5|50|1" class="on">1.5%·上限50·1倍</button><button data-v="3|200|0">3%·上限200·不稽核</button></div>
+  </div>
   <div class="grp"><span>NGC 余额</span>
     <div class="seg" id="cNgc"><button data-v="0" class="on">0</button><button data-v="280">280</button><button data-v="5000">5.000</button></div>
   </div>
@@ -844,7 +865,8 @@
     · <b>顶部 Tab</b>：胶囊容器内两段式，选中态金边金底并显出图标；右侧分隔线 + 记录入口。<br>
     · <b>渠道切换</b>：选中态金色实心；<b>两个渠道各自读取后台「充值返现设置」</b>，配置了比例即带 +N% 角标，NewGPay 进入页面时流光一次引导注意。<br>
     · <b>充值返现</b>：结算栏「含赠送」副行随比例显隐，金额按<b>向下取 2 位小数</b>计算；点副行问号查看每日最高奖励与提现流水要求（稽核倍数为 0 时该行不展示）。<br>
-    · <b>提款</b>：收款信息走底部弹窗，弹窗内选方式并填对应字段；提现成功后才保存并锁定。
+    · <b>提款</b>：收款信息走底部弹窗，弹窗内选方式并填对应字段；提现成功后才保存并锁定。<br>
+    · <b>提款返现</b>：两个取款渠道各自读取后台「充提返现设置 — 提款返现」，配置了比例即带 +N% 角标；快捷档位右上角全部显示返现比例「+N%」（存款档位同理，读取充值返现）；角标色 #E6961B；结算栏「您将收到」不含返现，下方「额外赠送」副行随输入实时计算（向下取 2 位小数），点问号查看入账说明、每日最高奖励与提现流水要求。返现在出款成功后才存入账户余额。
   </p>
 </div>
 
@@ -986,6 +1008,9 @@ var I18N = {
   maxDailyK:['每日最高奖励','Bônus máximo diário'],         // [R]
   wagerK:['提现流水要求','Requisito de apostas para saque'],// [R]
   wagerV:['赠送金额 ×{n}','{n}× o valor do bônus'],         // [R]
+  /* —— 提款返现（后台「商户财务配置 — 充提返现设置 — 提款返现」） —— */
+  wBonusK:['额外赠送','Bônus extra'],                        // [T]
+  wbCredit:['赠送金额将在取款成功后存入账户余额','O bônus será creditado no saldo da conta após a conclusão do saque.'],   // [T]
   minDep:['最低充值','Recarga mínima:'],                    // [P]
   maxDep:['单笔最高','Máximo por transação:'],              // [P]
   insuffNgc:['余额不足，当前可用','Saldo insuficiente. Disponível:'],   // [P]「余额不足」= Saldo insuficiente
@@ -1034,7 +1059,8 @@ var I18N = {
   cfTitleNgc:['确认转入 NewGPay 钱包','Confirmar envio para a NewGPay'],          // [T]
   cfAmtK:['提款金额','Valor do saque'],                               // [P]
   cfWayK:['提款方式','Método de saque'],                              // [P]
-  cfToK:['收款账号','Conta de recebimento'],                          // [T]
+  cfToK:['收款账号','Conta de recebimento'],
+  cfNgcK:['转入数量','Quantidade enviada'],                            // [T]                          // [T]
   cfNoteWd:['提交后进入审核，审核通过即按收款账号出款。',
             'Após o envio, o saque passa por análise e é pago na conta informada.'],              // [T]
   cfNoteNgc:['款项转入 NewGPay 钱包后，需在 NewGPay 内卖出 NGC 方可到账。',
@@ -1090,6 +1116,15 @@ var CASHBACK = {
   ngc :{ on:true,  pct:2.5, dailyMax:100, wager:3 }           /* NewGPay 默认 2.5%，上限 R$100，稽核 3 倍 */
 };
 function cbLive(k){ var c = CASHBACK[k]; return !!(c && c.on && c.pct > 0); }
+/* 提款返现配置：后台「充提返现设置 — 提款返现」按提款通道逐条配置，前台只读；字段含义同 CASHBACK
+   BESTPAY 渠道读取 pix 通道、NewGPay 渠道读取 NewGPay 通道 */
+var WCASHBACK = {
+  pix:{ on:true, pct:0.5, dailyMax:10, wager:0 },             /* pix 通道 0.5%，上限 R$10，不稽核 */
+  ngc:{ on:true, pct:1.5, dailyMax:50, wager:1 }              /* NewGPay 通道 1.5%，上限 R$50，稽核 1 倍 */
+};
+function wcbLive(k){ var c = WCASHBACK[k]; return !!(c && c.on && c.pct > 0); }
+/* 返现预估：向下取 2 位小数；基数为预计出款金额（原型无提款手续费，即取款金额） */
+function wcbCalc(k, amt){ return wcbLive(k) ? Math.floor(amt * WCASHBACK[k].pct) / 100 : 0; }
 var BONUS = CASHBACK.ngc.pct;   /* = CASHBACK.ngc.pct，供 NGC 引导浮层文案取用 */
 var brl = function(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 var int = function(n){ return n.toLocaleString('pt-BR'); };
@@ -1177,9 +1212,12 @@ function renderDep(){
   document.getElementById('dBal').innerHTML = money(BAL);
   document.getElementById('depCur').textContent = L.cur;
   document.getElementById('depIn').placeholder  = L.ph;
+  /* 档位角标：当前存款方式返现生效时，每个档位均显示「+N%」 */
+  var dTag = cbLive(dM) ? '<span class="ctag">+' + (+CASHBACK[dM].pct) + '%</span>' : '';
+  document.getElementById('depGrid').classList.toggle('tagged', !!dTag);
   document.getElementById('depGrid').innerHTML = DEP_CHIPS[dM].map(function(v){
     var txt = dM === 'ngc' ? brl(v) : int(v);   /* NGC 是代币金额，保留两位小数 */
-    return '<button class="chip'+(v===dAmt?' on':'')+'" data-v="'+v+'">'+txt+' '+L.cur+'</button>';
+    return '<button class="chip'+(v===dAmt?' on':'')+'" data-v="'+v+'">'+txt+' '+L.cur+dTag+'</button>';
   }).join('');
   document.querySelectorAll('#depGrid .chip').forEach(function(c){
     c.onclick = function(){ setDAmt(+c.dataset.v); };
@@ -1211,7 +1249,7 @@ function renderDep(){
 function renderBonusPop(){
   var c = CASHBACK[dM], el = document.getElementById('bpMax');
   if (!el) return;
-  el.textContent = 'R$ ' + brl(c.dailyMax || 0);
+  el.innerHTML = money(c.dailyMax || 0);
   var wr = document.getElementById('bpWagerRow');
   wr.hidden = !(c.wager >= 1);                           /* 倍数为 0 → 该行不展示 */
   if (c.wager >= 1) document.getElementById('bpWager').textContent = t('wagerV').replace('{n}', String(c.wager));
@@ -1305,7 +1343,12 @@ function maskKey(p){
 function allSaved(){ return !!PAYEE && METHOD_FIELDS[PAYEE.type].every(isLocked); }
 
 function renderWd(){
-  document.querySelectorAll('#wdMethods .method').forEach(function(b){ b.classList.toggle('on', b.dataset.m === wM); });
+  document.querySelectorAll('#wdMethods .method').forEach(function(b){
+    b.classList.toggle('on', b.dataset.m === wM);
+    var bt = b.querySelector('.btag'), k = b.dataset.m;     /* 渠道角标：读取提款返现配置 */
+    bt.hidden = !wcbLive(k);
+    bt.textContent = wcbLive(k) ? '+' + (+WCASHBACK[k].pct) + '%' : '';
+  });
   document.getElementById('wBal').innerHTML = money(BAL);
   document.getElementById('wNgCard').hidden  = wM !== 'ngc';
   document.getElementById('wNgcBal').innerHTML = int(NGC) + ' <small>NGC</small>';
@@ -1323,8 +1366,12 @@ function renderWd(){
     /* 已保存后仍可点开卡片切换提款方式，锁定的只是已保存字段本身 */
   }
 
+  /* 档位角标：当前渠道提款返现生效时，每个档位均显示「+N%」 */
+  var wLive = wcbLive(wM);
+  var wTag  = wLive ? '<span class="ctag">+' + (+WCASHBACK[wM].pct) + '%</span>' : '';
+  document.getElementById('wGrid').classList.toggle('tagged', wLive);
   document.getElementById('wGrid').innerHTML = [20,50,100,300,500,1000,2000,5000,10000].map(function(v){
-    return '<button class="chip'+(v===wAmt?' on':'')+'" data-v="'+v+'">R$ '+brl(v)+'</button>';
+    return '<button class="chip'+(v===wAmt?' on':'')+'" data-v="'+v+'">R$ '+brl(v)+wTag+'</button>';
   }).join('');
   document.querySelectorAll('#wGrid .chip').forEach(function(c){
     c.onclick = function(){ setWAmt(+c.dataset.v); };
@@ -1341,7 +1388,12 @@ function renderWd(){
 
   var ok = wAmt > 0 && !err && (wM === 'ngc' || (!none && !!PAYEE));
   var needPayee = wM === 'pix' && !PAYEE && !none;
-  document.getElementById('wRecv').innerHTML = money(wAmt > 0 && !err ? wAmt : 0);
+  document.getElementById('wRecv').innerHTML = money(wAmt > 0 && !err ? wAmt : 0);   /* 「您将收到」不含返现 */
+  /* 「额外赠送」副行：返现进账户余额，不并入「您将收到」；状态关闭 / 比例为 0 → 副行与问号不渲染 */
+  document.getElementById('wSub').hidden = !wLive;
+  document.getElementById('wSubV').innerHTML = '+' + money(wcbCalc(wM, wAmt > 0 && !err ? wAmt : 0));
+  if (!wLive) document.getElementById('wBpop').hidden = true;
+  renderWBonusPop();
   document.getElementById('wCta').textContent  = needPayee ? t('payeeAdd')
                                                : (wM === 'ngc' ? t('wdCtaNgc') : t('wdCta'));
   document.getElementById('wCta').disabled     = !(ok || needPayee);
@@ -1354,6 +1406,21 @@ function setWAmt(v, fromInput){
   renderWd();
 }
 function wdMax(){ setWAmt(cents(Math.min(WD_LIM.max, BAL))); }
+/* 取款奖励规则气泡：入账说明 + 该提款通道的每日最高优惠与提现稽核倍数 */
+function renderWBonusPop(){
+  var c = WCASHBACK[wM];
+  document.getElementById('wbpMax').innerHTML = money(c.dailyMax || 0);
+  document.getElementById('wbpWagerRow').hidden = !(c.wager >= 1);   /* 倍数为 0 → 该行不展示 */
+  if (c.wager >= 1) document.getElementById('wbpWager').textContent = t('wagerV').replace('{n}', String(c.wager));
+}
+/* 后台提款返现配置写入：data-v 形如 "返现百分比|每日最高优惠|提现稽核倍数"，"0" 表示未配置 */
+function setWCb(k, v){
+  var a = String(v).split('|'), pct = +a[0] || 0;
+  WCASHBACK[k] = pct > 0
+    ? { on:true,  pct:pct, dailyMax:+(a[1] || 0), wager:+(a[2] || 0) }
+    : { on:false, pct:0,   dailyMax:0,            wager:0 };
+  renderWd(); syncHash();
+}
 document.getElementById('wAmt').oninput = function(e){
   var m = parseMoney(e.target.value); e.target.value = m.display; setWAmt(m.val, true);
 };
@@ -1445,9 +1512,11 @@ function wdSubmit(){
 }
 function openConfirm(){
   document.getElementById('cfTitle').textContent = t(wM === 'ngc' ? 'cfTitleNgc' : 'cfTitleWd');
-  document.getElementById('cfAmt').textContent = 'R$ ' + brl(wAmt);
+  document.getElementById('cfAmt').innerHTML = money(wAmt);
   document.getElementById('cfWay').textContent = wM === 'ngc' ? 'NewGPay' : ('PIX · ' + PAYEE.type);
-  document.getElementById('cfTo').textContent  = wM === 'ngc' ? t('ngWallet') : maskKey(PAYEE);
+  /* NewGPay 没有第三方收款账号，该行改为告知钱包将收到多少 NGC（1 NGC = 1 R$） */
+  document.getElementById('cfToK').textContent = t(wM === 'ngc' ? 'cfNgcK' : 'cfToK');
+  document.getElementById('cfTo').textContent  = wM === 'ngc' ? (brl(wAmt) + ' NGC') : maskKey(PAYEE);
   document.getElementById('cfNote').innerHTML  = t(wM === 'ngc' ? 'cfNoteNgc' : 'cfNoteWd');
   document.getElementById('cfOk').textContent = t(wM === 'ngc' ? 'cfOkNgc' : 'cfOkWd');
   openMask('dlgConfirm');
@@ -1475,7 +1544,7 @@ function renderRec(){
   var list = recs[wTab === 'dep' ? 'dep' : 'wd'], sign = wTab === 'dep' ? '+' : '-';
   document.getElementById('recList').innerHTML = list.map(function(r){
     return '<div class="rec"><div class="rl">'+t(wTab==='dep'?'tabDep':'tabWd')+' · '+r.ch+'<small>'+r.t+'</small></div>'
-      + '<div class="rr">'+sign+'R$ '+brl(r.amt)+'<br><span class="badge '+ST[r.s][1]+'">'+t(ST[r.s][0])+'</span></div></div>';
+      + '<div class="rr">'+sign+money(r.amt)+'<br><span class="badge '+ST[r.s][1]+'">'+t(ST[r.s][0])+'</span></div></div>';
   }).join('');
 }
 
@@ -1675,7 +1744,7 @@ function buildHash(){
   var h;
   if (sub === 'sRec') h = 'rec-' + (wTab === 'dep' ? 'dep' : 'wd');
   else if (wTab === 'dep') h = 'dep-' + (dM === 'best' ? 'best' : 'ngc') + (cbLive(dM) ? '-bonus' : '');
-  else h = 'wd-' + (wM === 'pix' ? 'best' : 'ngc');
+  else h = 'wd-' + (wM === 'pix' ? 'best' : 'ngc') + (wcbLive(wM) ? '-bonus' : '');
   return '#' + h + (LANG ? '-pt' : '');
 }
 function syncHash(){
@@ -1711,6 +1780,7 @@ function applyHash(){
     switchWTab('wd');
     wM = (ch === 'ngc') ? 'ngc' : 'pix';
     if (wM === 'ngc'){ wdIntroSeen = true; wdCoachSeen = true; }  /* 直达链接不弹首次引导 */
+    applyWCb(wM, wantBonus);                /* #wd-xxx-bonus 直达带提款返现态 */
   } else {
     switchWTab('dep');
     dM = (ch === 'ngc') ? 'ngc' : 'best';
@@ -1728,6 +1798,15 @@ function applyCb(k, on){
     b.classList.toggle('on', b.dataset.v === v);
   });
   setCb(k, v);
+}
+var WCB_DEMO = { pix:'0.5|10|0', ngc:'1.5|50|1' };
+function applyWCb(k, on){
+  var v  = on ? WCB_DEMO[k] : '0';
+  var id = (k === 'pix') ? 'cwbPix' : 'cwbNgc';
+  document.querySelectorAll('#' + id + ' button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.v === v);
+  });
+  setWCb(k, v);
 }
 window.addEventListener('hashchange', function(){ if (!HASH_LOCK) applyHash(); });
 
@@ -1747,9 +1826,15 @@ document.getElementById('dQmk').onclick = function(e){
   e.stopPropagation();
   var pop = document.getElementById('dBpop'); pop.hidden = !pop.hidden;
 };
+document.getElementById('wQmk').onclick = function(e){
+  e.stopPropagation();
+  var pop = document.getElementById('wBpop'); pop.hidden = !pop.hidden;
+};
 document.addEventListener('click', function(){
-  var pop = document.getElementById('dBpop'); if (pop) pop.hidden = true;
+  ['dBpop','wBpop'].forEach(function(id){ var pop = document.getElementById(id); if (pop) pop.hidden = true; });
 });
+seg('cwbPix', function(v){ setWCb('pix', v); });
+seg('cwbNgc', function(v){ setWCb('ngc', v); });
 seg('cNgc',   function(v){ NGC = +v; renderDep(); renderWd(); });
 seg('cPhone', function(v){
   WD_METHODS[1].unlocked = v === '1';

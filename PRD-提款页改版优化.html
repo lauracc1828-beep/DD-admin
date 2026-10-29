@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>提款页改版优化 PRD v1.0</title>
+<title>提款页改版优化 PRD v1.1</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -44,6 +44,8 @@ b,strong{color:#1a1a2e}
 .src{white-space:nowrap}
 
 .ptx{color:#24407a}
+.sync{background:#fff1a8;border-radius:2px;padding:0 2px}
+tr.sync td{background:#fff8d6}
 </style>
 </head>
 <body>
@@ -52,7 +54,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">提款页改版优化</div>
   <div class="cover-sub">PRD 产品需求文档 · 布局调整 / 提款地址交互</div>
-  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-20</span></div>
+  <div class="cover-meta"><span>版本：v1.1</span><span>作者：Laura</span><span>更新日期：2026-10-29</span></div>
 </div>
 
 <div class="toc">
@@ -98,7 +100,7 @@ b,strong{color:#1a1a2e}
 </tbody></table>
 
 <div class="notice notice-info">
-<p><b>不在本期范围</b>：本文档<b>仅定义前台 H5 提款页</b>，提款方式的后台配置项（状态、解锁条件、排序值、绑定占用数上限）与审核出款流程不属于本文档范围。NEWGPAY 渠道下的提款流程不涉及收款信息，其页面结构与交互沿用《NewGPay支付渠道 PRD》第六章，本文档仅在第四章的区块顺序中标明其位置。提款金额的限额、有效流水校验、提现密码、提交后的审核与出款流程均不变更。提款记录页不在本次改版范围。</p>
+<p><b>不在本期范围</b>：本文档<b>仅定义前台 H5 提款页</b>，提款方式的后台配置项（状态、解锁条件、排序值、绑定占用数上限）与审核出款流程不属于本文档范围。NewGPay 渠道下的提款流程不涉及收款信息，其页面结构与交互沿用《NewGPay支付渠道 PRD》第六章，本文档仅在第四章的区块顺序中标明其位置。提款金额的限额、有效流水校验、提现密码、提交后的审核与出款流程均不变更。提款记录页不在本次改版范围。</p>
 </div>
 </div>
 
@@ -128,17 +130,17 @@ b,strong{color:#1a1a2e}
 <h1>四、页面布局调整</h1>
 
 <h2 id="s41">4.1 区块顺序与改动对照</h2>
-<p>提款面板自上而下的区块顺序与改动如下。NEWGPAY 渠道下的区块差异见《NewGPay支付渠道 PRD》第五章，本表以 BESTPAY 渠道为准。</p>
+<p>提款面板自上而下的区块顺序与改动如下。NewGPay 渠道下的区块差异见《NewGPay支付渠道 PRD》第五章，本表以 BESTPAY 渠道为准。</p>
 <table>
 <thead><tr><th style="width:50px">序</th><th style="width:150px">区块</th><th>改动前</th><th>改动后</th></tr></thead>
 <tbody>
 <tr><td>1</td><td>账户余额</td><td>「账户余额：」+ 金额</td><td class="keep">保留。金额展示样式见《钱包一级页改造 PRD》5.7。</td></tr>
 <tr><td>2</td><td>提款需投注</td><td>投注要求 + 「查看详情 ›」</td><td class="keep">保留，不变。</td></tr>
-<tr><td>3</td><td>渠道区</td><td>BESTPAY / NEWGPAY</td><td class="keep">保留，不变。</td></tr>
+<tr><td>3</td><td>渠道区</td><td>BESTPAY / NewGPay</td><td class="keep">保留。<span class="sync">渠道按钮右上角新增「+N%」赠送角标，读取对应提款通道的提款返现配置，见《提款返现 PRD》6.1。</span></td></tr>
 <tr><td>4</td><td>收款信息</td><td><b>展开的表单</b>：区块标题 + 填写提示 + 姓名 / CPF ID / 手机号输入框常驻页面</td><td class="chg">改为<b>一行卡片</b>：左侧标明提款方式（CPF / PHONE），中间为姓名与脱敏后的收款账号，右侧为「切换」。点击整行打开收款信息面板。详见第七章。</td></tr>
 <tr><td>5</td><td>金额输入区</td><td>输入框 + 「全部」</td><td class="chg">新增<b>清空键</b>，详见 4.2。</td></tr>
-<tr><td>6</td><td>快捷档位</td><td>三列栅格</td><td class="keep">保留，不变。</td></tr>
-<tr><td>7</td><td>底部结算</td><td>「您将收到」+ 提交按钮</td><td class="keep">保留。金额展示样式见《钱包一级页改造 PRD》5.7；提交态下底部导航的让位规则见该文档 5.5。</td></tr>
+<tr><td>6</td><td>快捷档位</td><td>三列栅格</td><td class="keep">保留。<span class="sync">返现生效时，全部档位右上角新增返现比例角标「+N%」，见《提款返现 PRD》6.2。</span></td></tr>
+<tr><td>7</td><td>底部结算</td><td>「您将收到」+ 提交按钮</td><td class="keep">保留。金额展示样式见《钱包一级页改造 PRD》5.7；提交态下底部导航的让位规则见该文档 5.5。<span class="sync">「您将收到」下方新增「额外赠送」副行及奖励规则气泡，「您将收到」不含返现，见《提款返现 PRD》6.3 ~ 6.5。</span></td></tr>
 </tbody></table>
 
 <div class="notice">
@@ -310,9 +312,22 @@ b,strong{color:#1a1a2e}
 <tr><td>2</td><td>是否有未完结的提款</td><td>弹窗「有未完结的提款」<br>按钮：关闭 / 查看记录</td><td>点「查看记录」进入提款记录页。规则见《提款未完结拦截弹窗 PRD》。</td></tr>
 <tr><td>3</td><td>绑定占用数是否超限</td><td>轻提示「该 CPF 绑定次数已达上限」或「该手机号绑定次数已达上限」</td><td>按当前选中方式判定：CPF 方式校验 CPF 绑定数，PHONE 方式校验手机号绑定数。上限由后台配置。</td></tr>
 <tr><td>4</td><td>本次提交是否导致字段首次锁定</td><td>弹窗「请确认提款信息」<br>按钮：返回修改 / 确认无误</td><td>点「确认无误」继续进入第 5 步；点「返回修改」返回页面不提交。详见 7.3。</td></tr>
-<tr><td>5</td><td>提交二次确认</td><td>弹窗「确认取款」，列出提款金额、提款方式、收款账号三行，附说明「提交后进入审核，审核通过即按收款账号出款。」</td><td>点「确认取款」正式提交，轻提示「提交成功，请等待审核」。</td></tr>
+<tr><td>5</td><td>提交二次确认</td><td>弹窗「确认取款」，列出<b>提款金额、提款方式、收款账号</b>三行，附说明「提交后进入审核，审核通过即按收款账号出款。」</td><td>点「确认取款」正式提交，轻提示「提交成功，请等待审核」。</td></tr>
 </tbody></table>
 <p>金额相关的校验（低于下限、高于上限、超出可提余额）在<b>输入时</b>即时完成并置灰提交按钮，不进入上述顺序。有效流水未达标的校验沿用现行规则。</p>
+
+<h2>确认弹窗的三行内容</h2>
+<p>第 5 步弹窗的三行按渠道取不同内容，<b>保证三行各自承载不同信息、不重复</b>。</p>
+<table>
+<thead><tr><th style="width:110px">行</th><th style="width:230px">BESTPAY（PIX 收款）</th><th>NewGPay</th></tr></thead>
+<tbody>
+<tr><td>第 1 行</td><td colspan="2">提款金额 → 本次扣减的账户余额，写法为「数字 + R$」，与页面其余金额一致。</td></tr>
+<tr><td>第 2 行</td><td>提款方式 → <code>PIX · CPF</code> 或 <code>PIX · PHONE</code></td><td>提款方式 → <code>NewGPay</code></td></tr>
+<tr><td>第 3 行</td><td>收款账号 → 脱敏后的 PIX 键</td><td class="chg">转入数量 → <code>{金额} NGC</code></td></tr>
+</tbody></table>
+<div class="notice">
+<p>NewGPay 渠道<b>不存在第三方收款账号</b>——资金进入的是会员本人的 NewGPay 钱包。若该行沿用「收款账号 → NewGPay 钱包」，会与第 2 行的「提款方式 → NewGPay」表达同一件事，三行里有两行无效，且葡语下两侧文案过长会各自折行。改为展示<b>转入后钱包将收到的 NGC 数量</b>，既补上了该渠道特有的信息（R$ 如何换算为 NGC），也让三行各有各的用途。按 1 NGC = 1 R$，数量与金额数值相同、单位不同。</p>
+</div>
 </div>
 
 <div class="section" id="s9">
@@ -335,7 +350,7 @@ b,strong{color:#1a1a2e}
 <tr><td>部分字段已保存（如仅姓名）</td><td>归入规则一的待填写状态。打开面板时已保存字段预填并锁定，只需补填其余字段。</td></tr>
 <tr><td>面板内切换方式后点「取消」</td><td>丢弃未保存的编辑，<b>并恢复到打开面板前选中的方式</b>，不保留面板内的切换。</td></tr>
 <tr><td>字段已锁定，会员仍点开卡片</td><td>正常打开面板。锁定字段只读展示，可切换方式，可补填该方式缺少的字段。</td></tr>
-<tr><td>渠道从 BESTPAY 切到 NEWGPAY</td><td>整个收款信息区隐藏，NEWGPAY 不采集收款信息。切回时按默认选择规则重新判定。</td></tr>
+<tr><td>渠道从 BESTPAY 切到 NewGPay</td><td>整个收款信息区隐藏，NewGPay 不采集收款信息。切回时按默认选择规则重新判定。</td></tr>
 <tr><td>提交过程中网络失败</td><td>沿用平台现有处理，保留页面状态与已填金额，不清空。</td></tr>
 </tbody></table>
 </div>
@@ -347,9 +362,10 @@ b,strong{color:#1a1a2e}
 <tbody>
 <tr><td>《增加Phone提款方式 PRD》</td><td>该文档定义了 CPF 与 PHONE 两种方式及各自字段，并约定提款信息首次成功后不可自行修改。</td><td>本文档<b>沿用</b>其字段定义与锁定规则，新增字段归属（账户级 / 方式级）与完整性判定，补齐该文档未定义的多方式默认选择逻辑。</td></tr>
 <tr><td>《钱包一级页改造 PRD》</td><td>5.5 提交态下的导航与返回键、5.6 金额输入框清空键、5.7 金额展示规范。</td><td>本文档第四章<b>引用</b>，不重复定义。</td></tr>
-<tr><td>《NewGPay支付渠道 PRD》</td><td>第五章定义 NEWGPAY 渠道下隐藏提款方式与收款信息区块。</td><td>一致，无冲突。本文档的布局调整仅作用于 BESTPAY 渠道。</td></tr>
+<tr><td>《NewGPay支付渠道 PRD》</td><td>第五章定义 NewGPay 渠道下隐藏提款方式与收款信息区块。</td><td>一致，无冲突。本文档的布局调整仅作用于 BESTPAY 渠道。</td></tr>
 <tr><td>《提款未完结拦截弹窗 PRD》</td><td>未完结提款的判定与拦截弹窗。</td><td>本文档第八章将其纳入拦截顺序的第 2 位，弹窗内容沿用该文档定义。</td></tr>
 <tr><td>《提现密码设置优化 PRD》</td><td>提现密码的校验时机。</td><td>本次不涉及。若该需求上线，其校验应插入第八章顺序的第 5 步之后。</td></tr>
+<tr class="sync"><td>《提款返现 PRD》</td><td>取款页渠道区、快捷档位、底部结算栏新增返现呈现。</td><td>本文档 4.1 节区块表已标注新增点，具体规则以《提款返现 PRD》第六章为准；区块顺序与本文档其余交互不变。</td></tr>
 </tbody></table>
 </div>
 
@@ -358,6 +374,7 @@ b,strong{color:#1a1a2e}
 <table>
 <thead><tr><th style="width:90px">版本</th><th style="width:120px">日期</th><th style="width:90px">修订人</th><th>修订内容</th></tr></thead>
 <tbody>
+<tr><td>v1.1</td><td>2026-10-29</td><td>Laura</td><td>随《提款返现 PRD》同步（正文黄色高亮处）：4.1 节渠道区、快捷档位、底部结算三个区块补充返现角标与「额外赠送」副行；第十一章新增与《提款返现 PRD》的关联说明。</td></tr>
 <tr><td>v1.0</td><td>2026-10-20</td><td>Laura</td><td>首次发布。收款信息由常驻展开表单改为卡片加弹出面板；删除区块标题、填写提示、提款规则与金额区标题四处冗余文案；确立姓名与 CPF ID 为账户级共享字段、手机号为 PHONE 方式专属，并据此定义信息完整性判定；新增提款地址默认选择逻辑（可用方式 → 信息完整性 → 最近成功提款 → 排序值兜底，含不可用回退与手动切换不记忆）；定义收款信息面板的三种显示形态、面板内交互、保存与锁定规则；明确提交校验的五级拦截顺序；补充中葡文案对照与边界处理。</td></tr>
 </tbody></table>
 </div>
