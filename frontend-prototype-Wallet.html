@@ -1236,9 +1236,9 @@ function renderDep(){
   document.getElementById('dRecv').innerHTML = money(base + bonus);
   var sub = document.getElementById('dSub');
   if (sub){
-    sub.hidden = !live;                                  /* 比例为 0 / 状态关闭 → 副行与问号一并不渲染 */
+    sub.hidden = !live || !(base > 0);                   /* 比例为 0 / 状态关闭 / 未选有效金额 → 副行与问号一并不渲染 */
     document.getElementById('dSubV').innerHTML = '+' + money(bonus);
-    if (!live) document.getElementById('dBpop').hidden = true;
+    if (sub.hidden) document.getElementById('dBpop').hidden = true;
   }
   renderBonusPop();
   document.getElementById('dCta').disabled = !ok;
@@ -1390,9 +1390,10 @@ function renderWd(){
   var needPayee = wM === 'pix' && !PAYEE && !none;
   document.getElementById('wRecv').innerHTML = money(wAmt > 0 && !err ? wAmt : 0);   /* 「您将收到」不含返现 */
   /* 「额外赠送」副行：返现进账户余额，不并入「您将收到」；状态关闭 / 比例为 0 → 副行与问号不渲染 */
-  document.getElementById('wSub').hidden = !wLive;
-  document.getElementById('wSubV').innerHTML = '+' + money(wcbCalc(wM, wAmt > 0 && !err ? wAmt : 0));
-  if (!wLive) document.getElementById('wBpop').hidden = true;
+  var wBase = wAmt > 0 && !err ? wAmt : 0;
+  document.getElementById('wSub').hidden = !wLive || !(wBase > 0);   /* 未选有效金额时同存款页，不渲染副行 */
+  document.getElementById('wSubV').innerHTML = '+' + money(wcbCalc(wM, wBase));
+  if (document.getElementById('wSub').hidden) document.getElementById('wBpop').hidden = true;
   renderWBonusPop();
   document.getElementById('wCta').textContent  = needPayee ? t('payeeAdd')
                                                : (wM === 'ngc' ? t('wdCtaNgc') : t('wdCta'));

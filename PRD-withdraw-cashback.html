@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>提款返现 PRD v1.2</title>
+<title>提款返现 PRD v1.3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -50,7 +50,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">提款返现</div>
   <div class="cover-sub">PRD 产品需求文档 · 充提返现设置 / 提款返现发放与取款页呈现</div>
-  <div class="cover-meta"><span>版本：v1.2</span><span>作者：Laura</span><span>更新日期：2026-10-29</span></div>
+  <div class="cover-meta"><span>版本：v1.3</span><span>作者：Laura</span><span>更新日期：2026-10-29</span></div>
 </div>
 
 <div class="toc">
@@ -486,7 +486,7 @@ b,strong{color:#1a1a2e}
     <thead><tr><th style="width:130px">行</th><th>内容</th><th>规则</th></tr></thead>
     <tbody>
       <tr><td>「您将收到」主行</td><td>预计出款金额</td><td><b>不含返现</b>，保持现有取值不变——即会员收款账户将收到的金额。</td></tr>
-      <tr><td>「额外赠送」副行（新增）</td><td>「额外赠送　+R$ X,XX」，右侧带问号图标</td><td>X ＝ 向下取 2 位小数（ 预计出款金额 × 返现百分比 ÷ 100 ），随输入金额<b>实时计算</b>；预计出款金额为输入金额扣除提款手续费后的金额，无手续费时与输入金额相同。输入为空、为 0 或金额不合法时，副行显示「+R$ 0,00」。该行为<b>预估值</b>，不做额度预检。</td></tr>
+      <tr><td>「额外赠送」副行（新增）</td><td>「额外赠送　+R$ X,XX」，右侧带问号图标</td><td>X ＝ 向下取 2 位小数（ 预计出款金额 × 返现百分比 ÷ 100 ），随输入金额<b>实时计算</b>；预计出款金额为输入金额扣除提款手续费后的金额，无手续费时与输入金额相同。<b>显示条件</b>：返现生效<b>且</b>已输入或选中有效金额时显示；输入为空、为 0 或金额不合法（低于下限、高于上限、超出可提余额）时<b>不渲染该副行</b>（问号与气泡随之不出现），与存款页「含赠送」副行一致。该行为<b>预估值</b>，不做额度预检。</td></tr>
       <tr><td>主按钮</td><td>立即取款</td><td>不变。</td></tr>
     </tbody>
   </table>
@@ -603,6 +603,7 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.3</td><td>2026-10-29</td><td>Laura</td><td>6.3 「额外赠送」副行增加显示条件：未输入或未选中有效金额时不渲染，与存款页一致。</td></tr>
       <tr><td>v1.2</td><td>2026-10-29</td><td>Laura</td><td>4.7 校验改为与 UAT 现网弹窗一致（失焦自动修正越界值、必填提示「请输入{字段名}」）；6.2 快捷档位角标由预估金额改为全部显示「+N%」；第十一章待确认事项更新（《充值返现 PRD》已同步为 UAT 校验口径）。</td></tr>
       <tr><td>v1.1</td><td>2026-10-29</td><td>Laura</td><td>提款返现列表由「自动同步全部提现通道」改为<b>手动新增</b>：列表右上角新增「新增」按钮；新增弹窗以下拉框选择提款通道，选项为提现通道配置页全部通道（不区分状态），已添加的置灰；新增后状态默认关闭；行内新增「删除」及二次确认；编辑时提款通道不可修改。同步调整名词定义、生效判定、流程图、前台降级条件、边界、权限与关联说明。</td></tr>
       <tr><td>v1.0</td><td>2026-10-29</td><td>Laura</td><td>首版。菜单「充值返现设置」更名为「充提返现设置」并拆分「充值返现」「提款返现」两个标签页；定义「提款返现」列表（全量提现通道同步、不提供新增）、状态开关与「会员提款返现设置」弹窗；确立以出款成功为触发、实际出款金额为基数、向下取 2 位小数、按「会员 × 提款通道 × UTC-3 自然日」独立封顶且与充值返现额度独立；在「活动优惠」下新增二类账变「提款返现」及出款退回的回收规则；定义取款页渠道角标、快捷档位角标、「额外赠送」副行与奖励规则气泡；补充权限、边界、关联需求同步与待确认事项。</td></tr>

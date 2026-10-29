@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>提款返现 · 页面与状态设计稿清单</title>
+<style>
+:root{
+  --page:#0d0d0f; --panel:#17171a; --edge:#26262b; --ink:#e8e8ec; --dim:#8e8e98;
+  --new:#3fb37a; --keep:#6f8fbf; --yellow:#f6f542;
+  --bg:#141415; --pn:#1c1c1e; --field:#232325; --line:#2c2c2e; --gold:#ffe600; --tag:#E6961B; --grey:#8a8a8f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--page);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.65;padding:32px 28px 90px}
+.hd{border:1px solid var(--edge);background:var(--panel);border-radius:14px;padding:26px 30px;margin-bottom:18px}
+.hd h1{font-size:25px;margin-bottom:6px}
+.hd .sub{color:var(--dim);font-size:13.5px;margin-bottom:16px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#1f1f24;border:1px solid var(--edge);border-radius:999px;padding:3px 13px;font-size:12.5px;color:var(--dim)}
+.chip b{color:var(--ink);font-weight:600}
+.legend{border:1px solid var(--edge);background:var(--panel);border-radius:14px;padding:20px 30px;margin-bottom:26px}
+.legend h3{font-size:15px;margin-bottom:10px}
+.legend table{border-collapse:collapse;font-size:13px}
+.legend th,.legend td{border:1px solid var(--edge);padding:7px 12px;text-align:left;vertical-align:top}
+.legend th{background:#1f1f24;color:#c9c9d2;font-weight:600;white-space:nowrap}
+.legend .note{color:var(--dim);font-size:12.5px;margin-top:10px}
+.grp{margin-bottom:34px}
+.grp-hd{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--edge);padding-bottom:10px;margin-bottom:18px}
+.grp-hd .gid{width:30px;height:30px;border-radius:8px;background:var(--yellow);color:#15150a;font-weight:800;font-size:15px;
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.grp-hd h2{font-size:18px}
+.grp-hd .cnt{color:var(--dim);font-size:12.5px;white-space:nowrap}
+.grp-hd .gd{color:var(--dim);font-size:12.5px;line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:20px}
+.card{width:296px;border:1px solid var(--edge);background:var(--panel);border-radius:14px;padding:14px;display:flex;flex-direction:column}
+.card .ct{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.card .code{background:#2b2b31;border:1px solid #3a3a42;border-radius:6px;padding:1px 8px;font-size:12.5px;font-weight:700;color:var(--yellow)}
+.card .nm{font-size:13.5px;font-weight:600}
+.card .tg{margin-left:auto;font-size:11px;border-radius:999px;padding:1px 8px;border:1px solid;white-space:nowrap}
+.tg.design{color:var(--new);border-color:rgba(63,179,122,.45);background:rgba(63,179,122,.12)}
+.tg.ref{color:var(--keep);border-color:rgba(111,143,191,.45);background:rgba(111,143,191,.12)}
+.card.ref{border-style:dashed;border-color:#2f2f36;background:#131316}
+.card.ref .shot{opacity:.5;filter:grayscale(.55)}
+.card.ref .code,.card.ref .nm{color:#9a9aa6}
+.shot{width:268px;height:580px;overflow:hidden;border-radius:26px;position:relative;flex:0 0 auto;margin:0 auto}
+.scale{transform:scale(.6872);transform-origin:top left}
+.ann{margin-top:13px;font-size:12.5px;line-height:1.6}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:4px 8px}
+.ann dt{color:#7f7f8a}
+.ann dd{color:#cfcfd6}
+.ann dd b{color:var(--yellow);font-weight:600}
+.ann .cp{margin-top:9px;padding-top:9px;border-top:1px dashed #33333a;color:#9aa6bd;font-size:12px;line-height:1.55}
+.ann .prd{margin-top:7px;font-size:11.5px;color:#6f6f79}
+
+/* ============ 手机画面（沿用钱包前台原型样式，390×844 基准） ============ */
+.phone{width:390px;height:844px;background:var(--bg);position:relative;overflow:hidden;color:#eee;line-height:1.5;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC",sans-serif}
+.tabs{display:flex;align-items:center;gap:8px;margin:12px 14px 0;padding:4px;background:var(--pn);border-radius:14px;height:52px}
+.tabs .bk{width:30px;text-align:center;color:#aaa;font-size:18px}
+.tabs .t{flex:1;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--grey)}
+.tabs .t.on{border:1.5px solid var(--gold);color:var(--gold);background:rgba(255,230,0,.08);font-weight:700}
+.tabs .rc{width:36px;text-align:center;color:#aaa;font-size:16px;border-left:1px solid #333}
+.pb{padding:0 14px}
+.bal{margin-top:16px;font-size:14px;color:#ddd}
+.bal b{margin-left:6px;color:#fff}
+.flow{margin-top:4px;font-size:12px;color:var(--grey);display:flex;align-items:center}
+.flow b{color:var(--gold);font-weight:600;margin-left:4px}
+.flow .lk{margin-left:auto;color:#5aa0ff}
+.methods{display:flex;gap:10px;padding:14px 0 12px;border-bottom:1px solid var(--line)}
+.m{position:relative;width:120px;height:42px;border-radius:10px;background:var(--field);color:#8f8f94;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.m.on{background:var(--gold);color:#111}
+.btag{position:absolute;top:-9px;right:-7px;background:var(--tag);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px 6px 6px 0}
+.payee{margin-top:14px;height:56px;border-radius:10px;background:var(--pn);display:flex;align-items:center;padding:0 12px;gap:10px}
+.payee .pi{font-size:11px;font-weight:700;color:var(--gold);border:1px solid var(--gold);border-radius:5px;padding:1px 6px}
+.payee .pt{flex:1;font-size:13px;color:#ddd;line-height:1.3}
+.payee .pt small{display:block;color:var(--grey);font-size:11.5px}
+.payee .chg{font-size:12px;color:var(--grey)}
+.ngcard{margin-top:14px;border-radius:12px;background:var(--pn);padding:12px}
+.ngcard .r1{font-size:13px;font-weight:700;color:#ddd;display:flex;align-items:center;gap:8px}
+.ngcard .lg{background:#2f6bff;color:#fff;border-radius:6px;font-size:10px;padding:2px 5px}
+.ngcard .r2{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.ngcard .k{font-size:11.5px;color:var(--grey)}
+.ngcard .v{font-size:20px;font-weight:700;color:#fff}
+.ngcard .buy{background:var(--gold);color:#111;border-radius:8px;font-size:12.5px;font-weight:700;padding:7px 12px}
+.ngcard .r3{display:flex;gap:14px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);font-size:11px;color:var(--grey)}
+.field{margin-top:14px;height:48px;border-radius:10px;background:var(--field);display:flex;align-items:center;padding:0 12px;gap:8px;font-size:16px}
+.field.err{box-shadow:inset 0 0 0 1px #e5484d}
+.field .cur{color:var(--grey);font-size:14px}
+.field .v{flex:1;color:#fff;font-weight:600}
+.field .v.ph{color:#555;font-weight:400;font-size:14px}
+.field .x{width:18px;height:18px;border-radius:50%;background:#444;color:#bbb;font-size:11px;display:flex;align-items:center;justify-content:center}
+.field .all{color:var(--gold);font-size:13px;font-weight:700}
+.herr{min-height:18px;margin-top:4px;font-size:12px;color:#e5484d}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.grid.tagd{row-gap:14px;margin-top:12px}
+.c{position:relative;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--pn);font-size:12.5px;color:#d4d4d4;display:flex;align-items:center;justify-content:center}
+.c.on{border-color:var(--gold);color:var(--gold);background:rgba(255,230,0,.08)}
+.ctag{position:absolute;top:-8px;right:-4px;background:var(--tag);color:#fff;font-size:10px;font-weight:700;line-height:1;padding:3px 5px;border-radius:5px 5px 5px 0}
+.foot{position:absolute;left:0;right:0;bottom:0;padding:10px 14px 10px;background:var(--bg)}
+.recv{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:#cfcfcf;margin-bottom:10px}
+.recv b{font-size:20px;color:#fff}
+.recv.sub{margin-top:-7px;font-size:11.5px;color:var(--grey)}
+.recv.sub b{font-size:12.5px;color:var(--gold)}
+.qmk{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;border:1px solid var(--grey);font-size:9px;margin-left:4px;font-style:normal}
+.cta{height:46px;border-radius:23px;background:var(--gold);color:#111;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cta.dis{background:#4a4520;color:#2c2b10}
+.nav{height:58px;margin:10px -14px -10px;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;font-size:10.5px;color:#777}
+.nav span.on{color:var(--gold)}
+.bpop{position:absolute;left:14px;right:14px;bottom:100%;margin-bottom:6px;background:#2a2a2d;border:1px solid #3a3a3e;border-radius:10px;padding:9px 12px;font-size:12px;color:#cfcfcf}
+.bpop .r{display:flex;justify-content:space-between;gap:16px;padding:3px 0}
+.bpop .r b{color:#fff;font-weight:600;white-space:nowrap}
+.bpop .r.t{color:#b9b9b9}
+.recs{padding:0 14px}
+.rec{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:13px}
+.rec small{display:block;color:var(--grey);font-size:11.5px}
+.rec .a{text-align:right;font-weight:700;color:#3fd07a}
+.hl{outline:2px dashed #3fb37a;outline-offset:3px;border-radius:8px}
+@media print{body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>提款返现 · 页面与状态设计稿清单</h1>
+  <p class="sub">UI 设计排期用。按「页面 × 状态」逐帧拆分，一帧即一张需交付的设计稿。</p>
+  <div class="meta">
+    <span class="chip">需求 <b>提款返现</b></span>
+    <span class="chip">依据 <b>《提款返现 PRD》v1.3 · 《充值返现 PRD》v1.1</b></span>
+    <span class="chip">需出稿 <b id="nDesign">-</b></span>
+    <span class="chip">沿用不出稿 <b id="nRef">-</b></span>
+    <span class="chip">合计 <b id="nAll">-</b></span>
+    <span class="chip">作者 <b>Laura</b></span>
+    <span class="chip">日期 <b>2026-10-29</b></span>
+  </div>
+</div>
+<div class="legend">
+  <h3>看图说明</h3>
+  <table>
+    <tr><th>帧编号</th><td>A1、C1 等编号为设计稿交付与评审的唯一索引，设计稿文件名请沿用该编号。</td></tr>
+    <tr><th>文案语言</th><td>帧内文案<b>为葡语</b>（上线语言），每帧下方给出中文对照。标 [T] 的为新拟文案，取值见《提款返现 PRD》第七章中葡对照表，上线前需运营确认。</td></tr>
+    <tr><th>视觉规格</th><td>帧内仅表达元素构成、层级与状态差异，<b>不作为视觉稿</b>。字号、间距、圆角由设计定义。<b>唯一已定的视觉值</b>：存款 / 取款的渠道角标与档位角标底色为 <b>#E6961B</b>。帧内绿色虚线框标出本次新增或改动的元素。</td></tr>
+    <tr><th>示例数据</th><td>帧内以 BESTPAY 渠道（后台 pix 通道）提款返现 1%、每日最高 R$ 10,00、稽核 1 倍；NewGPay 渠道提款返现 2%、每日最高 R$ 50,00、稽核 1 倍为例。实际数值均读取后台配置。</td></tr>
+    <tr><th>需出稿 / 沿用</th><td>标 <b>需出稿</b> 的帧为本次需求真正需要设计输出的部分。标 <b>沿用 · 不出稿</b> 的帧（虚线框、画面置灰）为现网或既有设计已有的状态，本次无改动或仅文案替换，列出仅供理解前后状态关系，<b>不需重新设计</b>。</td></tr>
+  </table>
+  <p class="note">未列入清单：后台「充提返现设置」页面与弹窗（沿用 UAT 后台公共组件样式，无需出稿）；取款页收款信息面板、提交确认弹窗等与返现无关的区块（以《提款页改版优化 PRD》为准）。</p>
+</div>
+
+<div id="app"></div>
+
+<script>
+/* ---------- 画面拼装 ---------- */
+var CH_D = [20,50,100,300,500,1000,2000,5000,10000];
+function brl(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function tabs(tab){
+  return '<div class="tabs"><span class="bk">‹</span><span class="t'+(tab==='dep'?' on':'')+'">Depósito</span><span class="t'+(tab==='wd'?' on':'')+'">Saque</span><span class="rc">☰</span></div>';
+}
+function methods(cur, tags, hl){
+  return '<div class="methods'+(hl?'':'')+'">'+[['best','BESTPAY'],['ngc','NewGPay']].map(function(m){
+    var t = tags && tags[m[0]];
+    return '<div class="m'+(cur===m[0]?' on':'')+'">'+m[1]+(t?'<span class="btag'+(hl?' hl':'')+'">'+t+'</span>':'')+'</div>';
+  }).join('')+'</div>';
+}
+function grid(vals, sel, tag, fmt, hl){
+  return '<div class="grid'+(tag?' tagd':'')+'">'+vals.map(function(v){
+    return '<div class="c'+(v===sel?' on':'')+'">'+fmt(v)+(tag?'<span class="ctag'+(hl?' hl':'')+'">'+tag+'</span>':'')+'</div>';
+  }).join('')+'</div>';
+}
+function nav(){ return '<div class="nav"><span>Inicio</span><span>Promoção</span><span>Convidar</span><span class="on">Carteira</span><span>Perfil</span></div>'; }
+function foot(o){
+  var h = '<div class="foot">';
+  if (o.pop) h += '<div class="bpop'+(o.hlPop?' hl':'')+'">'+o.pop+'</div>';
+  h += '<div class="recv"><span>Você recebe</span><b>'+o.recv+' R$</b></div>';
+  if (o.sub) h += '<div class="recv sub'+(o.hlSub?' hl':'')+'"><span>'+o.sub[0]+'<i class="qmk">?</i></span><b>+'+o.sub[1]+' R$</b></div>';
+  h += '<div class="cta'+(o.dis?' dis':'')+'">'+o.cta+'</div>';
+  if (o.nav) h += nav();
+  return h + '</div>';
+}
+function wdPage(o){
+  var h = '<div class="phone">'+tabs('wd')+'<div class="pb">'
+    + '<div class="bal">Saldo da conta:<b>10.529,85 R$</b></div>'
+    + '<div class="flow">Apostas necessárias:<b>R$ 1.039,36</b><span class="lk">Ver detalhes ›</span></div>'
+    + methods(o.ch, o.mtags, o.hl);
+  if (o.ch === 'best') h += '<div class="payee"><span class="pi">CPF</span><div class="pt">Maria Oliveira<small>***.***.890-09</small></div><span class="chg">Alterar</span></div>';
+  else h += '<div class="ngcard"><div class="r1"><span class="lg">NewG</span>Carteira NewGPay</div><div class="r2"><div><div class="k">Saldo NGC</div><div class="v">280 NGC</div></div><span class="buy">Abrir carteira</span></div><div class="r3"><span>1 NGC = 1 R$</span><span>Recebe via PIX</span></div></div>';
+  h += '<div class="field'+(o.err?' err':'')+'"><span class="cur">R$</span>'
+    + (o.amt ? '<span class="v">'+o.amt+'</span><span class="x">✕</span>' : '<span class="v ph">20,00 - 50.000,00</span>')
+    + '<span class="all">Tudo</span></div><div class="herr">'+(o.err||'')+'</div>'
+    + grid(CH_D, o.sel, o.ctag, function(v){ return 'R$ '+brl(v); }, o.hl)
+    + '</div>' + foot(o.foot) + '</div>';
+  return h;
+}
+function depPage(o){
+  return '<div class="phone">'+tabs('dep')+'<div class="pb">'
+    + '<div class="bal">Saldo da conta:<b>10.529,85 R$</b></div>'
+    + methods(o.ch, o.mtags, false)
+    + '<div class="field"><span class="cur">R$</span>'+(o.amt?'<span class="v">'+o.amt+'</span><span class="x">✕</span>':'<span class="v ph">10,00 - 50.000,00</span>')+'</div><div class="herr"></div>'
+    + grid([10,50,100,300,500,1000,5000,10000,50000], o.sel, o.ctag, function(v){ return v.toLocaleString('pt-BR')+' R$'; }, o.hl)
+    + '</div>' + foot(o.foot) + '</div>';
+}
+function recPage(){
+  return '<div class="phone"><div class="tabs"><span class="bk">‹</span><span class="t on" style="border:none;background:none;color:#fff">Extrato</span><span class="rc"></span></div><div class="recs">'
+    + '<div class="rec hl"><div>Bônus de saque<small>2026-10-29 14:26</small></div><div class="a">+3,00 R$</div></div>'
+    + '<div class="rec"><div>Saque<small>2026-10-29 14:26</small></div><div class="a" style="color:#eee">-300,00 R$</div></div>'
+    + '<div class="rec"><div>Bônus de depósito<small>2026-10-28 09:12</small></div><div class="a">+2,50 R$</div></div>'
+    + '<div class="rec"><div>Depósito<small>2026-10-28 09:12</small></div><div class="a">+100,00 R$</div></div>'
+    + '</div></div>';
+}
+var POP_FULL = '<div class="r t">O bônus será creditado no saldo da conta após a conclusão do saque.</div>'
+  + '<div class="r"><span>Bônus máximo diário</span><b>10,00 R$</b></div>'
+  + '<div class="r"><span>Requisito de apostas para saque</span><b>1× o valor do bônus</b></div>';
+var POP_NOWAGER = '<div class="r t">O bônus será creditado no saldo da conta após a conclusão do saque.</div>'
+  + '<div class="r"><span>Bônus máximo diário</span><b>10,00 R$</b></div>';
+
+/* ---------- 帧数据 ---------- */
+var GROUPS = [
+ {id:'A', title:'取款页 · BESTPAY 渠道', desc:'本次在渠道区、快捷档位、底部结算栏三处新增返现呈现；页面其余区块以《提款页改版优化 PRD》为准。', frames:[
+  {code:'A1', name:'未选金额 · 返现生效', design:true,
+   html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', hl:true, foot:{recv:'0,00', cta:'Sacar agora', dis:true, nav:true}}),
+   trig:'进入取款 Tab，当前渠道已在后台添加提款返现且状态开启，未输入金额。',
+   pts:'渠道按钮右上角新增「+N%」角标（两个渠道各读各的配置）；<b>全部</b>快捷档位右上角新增「+N%」角标，档位栅格行距加大以容纳角标；结算栏<b>不显示</b>「额外赠送」副行；按钮置灰，底部导航常驻。',
+   cp:'渠道角标 / 档位角标：+{N}%（无需翻译）', prd:'PRD 6.1 / 6.2 / 6.3'},
+  {code:'A2', name:'已选金额 · 额外赠送副行', design:true,
+   html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','3,00'], hlSub:true, cta:'Sacar agora'}}),
+   trig:'点选档位或输入有效金额。',
+   pts:'「您将收到」主行<b>不含返现</b>（仍为出款金额）；其下新增「额外赠送 +R$ X,XX」副行，右侧带问号，金额随输入实时变化；按钮亮起，底部导航收起（沿用现网规则）。',
+   cp:'额外赠送 [T]｜您将收到｜立即取款', prd:'PRD 6.3'},
+  {code:'A3', name:'奖励规则气泡展开', design:true,
+   html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','3,00'], pop:POP_FULL, hlPop:true, cta:'Sacar agora'}}),
+   trig:'点击「额外赠送」旁的问号；再次点击或点页面其他区域收起。',
+   pts:'气泡结构对齐存款页奖励规则气泡，<b>第一行新增入账说明</b>（整句，葡语较长需折行）；其下为「每日最高奖励」「提现流水要求」两行键值。',
+   cp:'赠送金额将在取款成功后存入账户余额 [T]｜每日最高奖励｜提现流水要求　赠送金额 ×1', prd:'PRD 6.4'},
+  {code:'A4', name:'气泡 · 稽核倍数为 0', design:false,
+   html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','3,00'], pop:POP_NOWAGER, cta:'Sacar agora'}}),
+   trig:'该通道提现稽核倍数配置为 0。',
+   pts:'A3 去掉「提现流水要求」一行，气泡高度随之收缩。按 A3 设计稿推导即可，不单独出稿。', cp:'同 A3', prd:'PRD 6.4'},
+  {code:'A5', name:'金额不合法 · 副行隐藏', design:false,
+   html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', amt:'60.000,00', err:'Saldo disponível insuficiente. Disponível: R$ 10.529,85', foot:{recv:'0,00', cta:'Sacar agora', dis:true, nav:true}}),
+   trig:'输入金额低于下限、高于上限或超出可提余额。',
+   pts:'沿用现网金额错误态；结算栏不渲染「额外赠送」副行，与 A1 一致。', cp:'沿用现网错误文案', prd:'PRD 6.3'},
+  {code:'A6', name:'返现未生效', design:false,
+   html:wdPage({ch:'best', foot:{recv:'0,00', cta:'Sacar agora', dis:true, nav:true}}),
+   trig:'该渠道对应提款通道未在后台添加，或状态关闭。',
+   pts:'即现网取款页：无渠道角标、无档位角标、无副行。', cp:'—', prd:'PRD 6.5'}
+ ]},
+ {id:'B', title:'取款页 · NewGPay 渠道', desc:'NewGPay 渠道无收款信息区，钱包卡片在上，返现元素与 BESTPAY 渠道一致，仅版式位置不同。', frames:[
+  {code:'B1', name:'NewGPay · 已选金额', design:true,
+   html:wdPage({ch:'ngc', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+2%', hl:true, sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','6,00'], hlSub:true, cta:'Enviar para a carteira NewGPay'}}),
+   trig:'取款 Tab 切到 NewGPay 渠道并选择金额。',
+   pts:'确认渠道角标、档位角标、「额外赠送」副行在 NewGPay 版式（钱包卡片 + 无收款信息区）下的位置与间距；角标比例随渠道切换为该渠道的配置值。',
+   cp:'额外赠送 [T]｜转入 NewGPay 钱包（沿用现网按钮文案）', prd:'PRD 6.1 ~ 6.3'}
+ ]},
+ {id:'C', title:'存款页 · 档位比例角标', desc:'充值返现侧同步改动：快捷档位新增「+N%」角标，「含赠送」副行未选金额时不显示。', frames:[
+  {code:'C1', name:'未选金额 · 档位比例角标', design:true,
+   html:depPage({ch:'best', mtags:{best:'+1%',ngc:'+2,5%'}, ctag:'+1%', hl:true, foot:{recv:'0,00', cta:'Recarregar agora', dis:true, nav:true}}),
+   trig:'进入存款 Tab，当前存款方式充值返现生效，未输入金额。',
+   pts:'<b>全部</b>快捷档位右上角新增「+N%」角标（本次新增），栅格行距加大；渠道角标沿用现网位置，底色统一为 #E6961B；未选金额时结算栏<b>不显示</b>「含赠送」副行。',
+   cp:'档位角标：+{N}%', prd:'《充值返现 PRD》第六章'},
+  {code:'C2', name:'已选金额 · 含赠送副行', design:false,
+   html:depPage({ch:'best', mtags:{best:'+1%',ngc:'+2,5%'}, ctag:'+1%', sel:300, amt:'300', foot:{recv:'303,00', sub:['Bônus incluído','3,00'], cta:'Recarregar agora'}}),
+   trig:'选择档位或输入有效金额。',
+   pts:'「含赠送」副行与问号气泡沿用现网设计稿；档位角标同 C1。', cp:'含赠送（沿用）', prd:'《存款页优化说明（PIX / NewGPay）》'}
+ ]},
+ {id:'D', title:'会员账变记录', desc:'新增二类账变「提款返现」，列表样式沿用现网，仅新增一种条目名称。', frames:[
+  {code:'D1', name:'账变列表 · 提款返现条目', design:false,
+   html:recPage(),
+   trig:'取款出款成功、返现入账后，会员查看账变 / 交易记录。',
+   pts:'沿用现网账变列表样式；新增条目名称「提款返现」，加款金额样式与其他加款一致。', cp:'提款返现 [T]：Bônus de saque', prd:'PRD 5.4 / 第七章'}
+ ]}
+];
+
+/* ---------- 渲染 ---------- */
+var nd = 0, nr = 0;
+document.getElementById('app').innerHTML = GROUPS.map(function(g){
+  var d = g.frames.filter(function(f){ return f.design; }).length, r = g.frames.length - d;
+  nd += d; nr += r;
+  return '<div class="grp"><div class="grp-hd"><span class="gid">'+g.id+'</span><h2>'+g.title+'</h2><span class="cnt">'
+    + (d ? d+' 帧需出稿' : '') + (d && r ? ' · ' : '') + (r ? r+' 帧沿用' : '') + '</span><span class="gd">'+g.desc+'</span></div><div class="row">'
+    + g.frames.map(function(f){
+      return '<div class="card'+(f.design?'':' ref')+'"><div class="ct"><span class="code">'+f.code+'</span><span class="nm">'+f.name+'</span><span class="tg '
+        + (f.design?'design">需出稿':'ref">沿用 · 不出稿')+'</span></div><div class="shot"><div class="scale">'+f.html+'</div></div>'
+        + '<div class="ann"><dl><dt>触发</dt><dd>'+f.trig+'</dd><dt>要点</dt><dd>'+f.pts+'</dd></dl><div class="cp">中文对照：'+f.cp+'</div><div class="prd">依据：'+f.prd+'</div></div></div>';
+    }).join('') + '</div></div>';
+}).join('');
+document.getElementById('nDesign').textContent = nd + ' 帧';
+document.getElementById('nRef').textContent = nr + ' 帧';
+document.getElementById('nAll').textContent = (nd + nr) + ' 帧';
+</script>
+</body>
+</html>
