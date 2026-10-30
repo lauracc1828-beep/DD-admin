@@ -1118,10 +1118,10 @@ select.fs.ph{color:#bfbfbf}
         <div class="mh"><span class="mt">NewGPay 钱包</span><span class="mc" onclick="closeM('m-ng-wallet')">×</span></div>
         <div class="ngw-sum" id="ngw-sum"></div>
         <div class="ngw-wrap"><table class="ngw-table">
-          <thead><tr><th style="width:56px">序号</th><th>钱包地址</th><th>类型</th><th>当前存款钱包</th><th>当前取款钱包</th><th>绑定时间</th><th style="width:90px">操作</th></tr></thead>
+          <thead><tr><th style="width:56px">序号</th><th>钱包地址</th><th>类型</th><th>绑定时间</th><th style="width:90px">操作</th></tr></thead>
           <tbody id="ngw-tbody"></tbody>
         </table></div>
-        <div class="ngw-rule">默认钱包由系统开通，不可删除；用户绑定的钱包可删除（含正在使用的），删除后该会员的存款、取款恢复使用默认钱包。删除写入「会员信息变更记录」。</div>
+        <div class="ngw-rule">默认钱包由系统开通，不可删除；用户绑定的钱包可删除（含正在使用的），如会员正在使用被删除的钱包，删除后恢复使用默认钱包。<br>未达绑定上限时可新增钱包，新增的钱包标记为「用户绑定」，不改变会员当前使用的钱包。钱包列表与前台充值页、提款页同步（充值和提款共用，不区分充值钱包、提款钱包），新增、删除均写入「会员信息变更记录」。</div>
         <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-wallet')">关 闭</button></div>
       </div>
     </div>
@@ -1130,6 +1130,20 @@ select.fs.ph{color:#bfbfbf}
         <div class="mh"><span class="mt">删除钱包</span><span class="mc" onclick="closeM('m-ng-del')">×</span></div>
         <div class="confirm-body" id="ng-del-text"></div>
         <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-del')">取消</button><button class="btn btn-danger" onclick="ngDoDel()">确定删除</button></div>
+      </div>
+    </div>
+    <div class="overlay" id="m-ng-add">
+      <div class="modal modal-sm" style="width:520px">
+        <div class="mh"><span class="mt">新增钱包</span><span class="mc" onclick="closeM('m-ng-add')">×</span></div>
+        <div class="mb">
+          <div class="fi"><div class="fl" style="width:110px">会员ID：</div><div class="fc" style="line-height:32px" id="ng-add-mid"></div></div>
+          <div class="fi"><div class="fl req" style="width:110px">钱包地址：</div><div class="fc">
+            <input class="fin" id="ng-add-addr" style="width:100%" maxlength="16" placeholder="请输入 16 位 NewGPay 钱包地址" oninput="document.getElementById('ng-add-hint').style.display='none'">
+            <div class="hint" id="ng-add-hint" style="display:none"></div>
+          </div></div>
+          <div class="ngw-rule" style="margin:0 0 0 110px">新增后标记为「用户绑定」，同步到会员前台充值页、提款页的钱包列表，不改变会员当前使用的钱包。</div>
+        </div>
+        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-add')">取消</button><button class="btn btn-blue" onclick="ngDoAdd()">确定</button></div>
       </div>
     </div>
 
@@ -1955,7 +1969,7 @@ select.fs.ph{color:#bfbfbf}
               <td><span class="wbadge wb-ok">正常</span></td>
               <td>-</td>
             </tr>
-            <!-- 本期示例：NewGPay（转入会员当前取款钱包，记录钱包地址） -->
+            <!-- 本期示例：NewGPay（转入会员当前使用的钱包，记录钱包地址） -->
             <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a></td>
               <td>11900000001</td>
@@ -2126,7 +2140,7 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b id="ng-log-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">NewGPay 钱包记录三种变更：绑定、删除、切换存款 / 取款钱包。会员在前台操作时操作人为「会员本人」，后台操作时为后台账号。</div>
+      <div class="ng-note">NewGPay 钱包记录两种变更：绑定（新增）、删除。钱包列表在前台充值页、提款页和后台之间同步，充值和提款共用，记录中不区分充值钱包、提款钱包。会员在前台操作时操作人为「会员本人」，后台操作时为后台账号。</div>
     </div>
 
   </div>
@@ -5641,7 +5655,7 @@ function acctConfirmDel(){
 // ─── NewGPay 钱包（本期新增）：绑定规则 / 会员钱包查看与删除 / 变更记录 ───
 // 绑定上限取自「提现管理 → 其他提现配置」，保存后同步到这里
 var NG_CFG = { addr:1, mem:3 };
-// 演示数据（会员ID、手机号均为虚构）；wallets[0] 为系统开通的默认钱包；dep / wd 为当前存款 / 取款钱包地址
+// 演示数据（会员ID、手机号均为虚构）；wallets[0] 为系统开通的默认钱包；钱包列表与前台充值页、提款页同步，后台不区分充值 / 提款钱包；dep / wd 仅用于演示删除后恢复默认钱包，不在后台展示
 var NG_MEMBERS = [
   { id:'80000001', phone:'11900000001', vip:'VIP0', bal:'15.83', reg:'2026-09-12 10:21:33', wdAcct:'CPF · 323******23',
     wallets:[ {addr:'3fe693197d515711', sys:true,  t:'2026-09-12 10:30:02'},
@@ -5659,10 +5673,8 @@ var NG_MEMBERS = [
     wallets:[], dep:'', wd:'' }   /* 从未进入 NewGPay，系统尚未开通钱包 */
 ];
 var NG_LOGS = [
-  { id:'80000002', t:'2026-10-26 21:47:02', type:'NewGPay 钱包', before:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）', after:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）\ne19a7c3d55b20f61（用户绑定）', note:'绑定钱包 e19a7c3d55b20f61；存款、取款切换为该钱包', op:'会员本人' },
-  { id:'80000002', t:'2026-10-27 10:15:36', type:'NewGPay 钱包', before:'存款钱包：e19a7c3d55b20f61\n取款钱包：e19a7c3d55b20f61', after:'存款钱包：c7d2e9f0a1b4e88c\n取款钱包：c7d2e9f0a1b4e88c', note:'切换存款钱包、取款钱包', op:'会员本人' },
-  { id:'80000001', t:'2026-10-28 16:12:45', type:'NewGPay 钱包', before:'3fe693197d515711（默认钱包）', after:'3fe693197d515711（默认钱包）\n8a41c02e5b97d3f6（用户绑定）', note:'绑定钱包 8a41c02e5b97d3f6；存款、取款切换为该钱包', op:'会员本人' },
-  { id:'80000001', t:'2026-10-29 09:05:10', type:'NewGPay 钱包', before:'存款钱包：8a41c02e5b97d3f6', after:'存款钱包：3fe693197d515711', note:'切换存款钱包', op:'会员本人' },
+  { id:'80000002', t:'2026-10-26 21:47:02', type:'NewGPay 钱包', before:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）', after:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）\ne19a7c3d55b20f61（用户绑定）', note:'绑定钱包 e19a7c3d55b20f61', op:'会员本人' },
+  { id:'80000001', t:'2026-10-28 16:12:45', type:'NewGPay 钱包', before:'3fe693197d515711（默认钱包）', after:'3fe693197d515711（默认钱包）\n8a41c02e5b97d3f6（用户绑定）', note:'绑定钱包 8a41c02e5b97d3f6', op:'会员本人' },
   { id:'80000003', t:'2026-10-29 17:40:22', type:'登录密码', before:'******', after:'******', note:'重置登录密码', op:'admin001' }
 ];
 var ngCur = null, ngDelAddr = null;
@@ -5687,9 +5699,10 @@ function ngRenderProfile(){
   document.getElementById('ngp-head').innerHTML = '<span>会员账号：<b>'+m.phone+'</b></span><span>会员ID：<b>'+m.id+'</b></span><span>注册方式：手机号</span><span>所属地区：巴西(BRL)</span>';
   var ng;
   if (!m.wallets.length) ng = '<td>未开通<div class="ng-sub">会员首次进入 NewGPay 时系统自动开通默认钱包</div></td><td>-</td>';
-  else ng = '<td>已绑定 '+m.wallets.length+'/'+NG_CFG.mem
-      + '<div class="ng-sub">当前存款钱包：<span class="ng-addr">'+ngShort(m.dep)+'</span>　当前取款钱包：<span class="ng-addr">'+ngShort(m.wd)+'</span></div></td>'
-      + '<td><span class="lk" onclick="ngOpenWallet()">查看</span></td>';
+  else ng = '<td>已绑定 '+m.wallets.length+'/'+NG_CFG.mem+'</td>'
+      + '<td><span class="lk" onclick="ngOpenWallet()">查看</span>'
+      + (m.wallets.length < NG_CFG.mem ? '<span class="lk" onclick="ngOpenAdd()">新增</span>' : '<span class="ngw-dis" title="已达绑定上限">新增</span>')
+      + '</td>';
   var rows = [
     ['账号状态','正式 / 正常','<span class="lk">修改密码</span>'],
     ['VIP等级', m.vip, ''],
@@ -5705,39 +5718,61 @@ function ngRenderProfile(){
 function ngOpenWallet(){ ngRenderWallet(); openM('m-ng-wallet'); }
 function ngRenderWallet(){
   var m = ngCur;
-  document.getElementById('ngw-sum').innerHTML = '会员ID：<b>'+m.id+'</b>　　已绑定 <b>'+m.wallets.length+'/'+NG_CFG.mem+'</b>'
-    + '<span class="lim">上限取自「提现管理 → 其他提现配置 → 单个会员可绑定 NewGPay 钱包数量」</span>';
+  var full = m.wallets.length >= NG_CFG.mem;
+  document.getElementById('ngw-sum').innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between"><div>会员ID：<b>'+m.id+'</b>　　已绑定 <b>'+m.wallets.length+'/'+NG_CFG.mem+'</b>'
+    + '<span class="lim">上限取自「提现管理 → 其他提现配置 → 单个会员可绑定 NewGPay 钱包数量」</span></div>'
+    + '<button class="btn btn-blue btn-sm"'+(full ? ' disabled title="已达绑定上限，需先删除用户绑定的钱包" style="opacity:.45;cursor:not-allowed"' : ' onclick="ngOpenAdd()"')+'>+ 新增钱包</button></div>';
   document.getElementById('ngw-tbody').innerHTML = m.wallets.map(function(w, i){
     var op = w.sys ? '<span class="ngw-dis" title="默认钱包不可删除">删除</span>'
                    : '<span class="ngw-del" onclick="ngAskDel(\''+w.addr+'\')">删除</span>';
     return '<tr><td>'+(i+1)+'</td>'
       + '<td><span class="ng-addr">'+w.addr+'</span> <span class="copy-icon" onclick="ngCopy(\''+w.addr+'\')">⧉</span></td>'
       + '<td><span class="ngw-tag '+(w.sys?'sys':'usr')+'">'+(w.sys?'默认钱包':'用户绑定')+'</span></td>'
-      + '<td>'+(m.dep===w.addr?'<span class="ngw-use">● 使用中</span>':'-')+'</td>'
-      + '<td>'+(m.wd===w.addr?'<span class="ngw-use">● 使用中</span>':'-')+'</td>'
       + '<td>'+w.t+' (UTC-3)</td><td>'+op+'</td></tr>';
   }).join('');
 }
 function ngAskDel(addr){
-  var m = ngCur, use = [];
-  if (m.dep === addr) use.push('存款'); if (m.wd === addr) use.push('取款');
+  var m = ngCur;
   ngDelAddr = addr;
   document.getElementById('ng-del-text').innerHTML = '确认删除会员 <strong>'+m.id+'</strong> 的钱包 <strong class="ng-addr">'+addr+'</strong> 吗？'
-    + (use.length ? '<br><br>该钱包正在用于<strong>'+use.join('、')+'</strong>，删除后会员的'+use.join('、')+'将恢复使用默认钱包。' : '<br><br>删除后会员不能再用该钱包存款或取款。');
+    + '<br><br>删除后会员前台充值页、提款页同步移除该钱包；如会员正在使用该钱包，将恢复使用默认钱包。';
   openM('m-ng-del');
+}
+function ngOpenAdd(){
+  var m = ngCur;
+  if (m.wallets.length >= NG_CFG.mem){ toast('已达绑定上限'); return; }
+  document.getElementById('ng-add-mid').textContent = m.id;
+  document.getElementById('ng-add-addr').value = '';
+  document.getElementById('ng-add-hint').style.display = 'none';
+  openM('m-ng-add');
+}
+function ngDoAdd(){
+  var m = ngCur, inp = document.getElementById('ng-add-addr'), hint = document.getElementById('ng-add-hint');
+  var addr = inp.value.trim().toLowerCase(), err = '';
+  var used = NG_MEMBERS.filter(function(x){ return x.wallets.some(function(w){ return w.addr === addr; }); });
+  if (!addr) err = '请输入钱包地址';
+  else if (!/^[0-9a-f]{16}$/.test(addr)) err = '钱包地址格式不正确，应为 16 位字母或数字';
+  else if (used.indexOf(m) >= 0) err = '该会员已绑定此钱包';
+  else if (NG_CFG.addr > 0 && used.length >= NG_CFG.addr) err = '该钱包已被其他会员绑定，已达「同一钱包地址可绑定会员数量」上限';
+  else if (m.wallets.length >= NG_CFG.mem) err = '已达绑定上限';
+  if (err){ hint.textContent = err; hint.style.display = ''; return; }
+  var before = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
+  m.wallets.push({ addr:addr, sys:false, t:ngNow() });
+  var after = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
+  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'后台新增钱包 '+addr, op:'admin001' });
+  closeM('m-ng-add'); ngRenderWallet(); ngRenderProfile();
+  toast('新增成功');
 }
 function ngDoDel(){
   var m = ngCur, addr = ngDelAddr, def = m.wallets.filter(function(w){ return w.sys; })[0].addr;
   var before = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  var back = [];
   m.wallets = m.wallets.filter(function(w){ return w.addr !== addr; });
-  if (m.dep === addr){ m.dep = def; back.push('存款'); }
-  if (m.wd === addr){ m.wd = def; back.push('取款'); }
+  if (m.dep === addr) m.dep = def;
+  if (m.wd === addr) m.wd = def;
   var after = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after,
-    note:'后台删除钱包 '+addr+(back.length ? '；'+back.join('、')+'恢复为默认钱包 '+def : ''), op:'admin001' });
+  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'后台删除钱包 '+addr, op:'admin001' });
   closeM('m-ng-del'); ngRenderWallet(); ngRenderProfile();
-  toast(back.length ? '删除成功，'+back.join('、')+'已恢复为默认钱包' : '删除成功');
+  toast('删除成功');
 }
 function ngLogRender(){
   var type = document.getElementById('ng-log-type').value, mid = document.getElementById('ng-log-mid').value.trim();
