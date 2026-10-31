@@ -722,7 +722,10 @@ select.fs.ph{color:#bfbfbf}
     <div class="logo-box">P</div>
     <span class="logo-text">Panda</span>
   </div>
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🏠</span>平台概况</div><span class="arrow">›</span></div>
+  <div class="menu-item" id="menu-dash" onclick="toggleMenu(this,'sub-dash')"><div class="menu-item-left"><span class="menu-icon">🏠</span>平台概况</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-dash" style="display:none">
+    <div class="submenu-item disabled">全局报表</div>
+  </div>
   <div class="menu-item" id="menu-sys" onclick="toggleMenu(this,'sub-sys')"><div class="menu-item-left"><span class="menu-icon">⚙️</span>系统管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-sys" style="display:none">
     <div class="submenu-item disabled">角色管理</div>
@@ -732,10 +735,16 @@ select.fs.ph{color:#bfbfbf}
     <div class="submenu-item disabled">谷歌令牌</div>
     <div class="submenu-item disabled">域名管理(新)</div>
     <div class="submenu-item disabled">安全设置</div>
-    <div class="submenu-item disabled">子账号绑定(白名单日志)</div>
+    <div class="submenu-item disabled">子账号操作日志(新)</div>
     <div class="submenu-item" id="si-mafia" onclick="switchPage('mafia',this)">马甲包管理</div>
+    <div class="submenu-item disabled">IP白名单</div>
   </div>
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🎮</span>商户游戏管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" id="menu-game" onclick="toggleMenu(this,'sub-game')"><div class="menu-item-left"><span class="menu-icon">🎮</span>商户游戏管理</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-game" style="display:none">
+    <div class="submenu-item disabled">厂商管理</div>
+    <div class="submenu-item disabled">游戏管理</div>
+    <div class="submenu-item disabled">游戏排名</div>
+  </div>
   <div class="menu-item" id="menu-member" onclick="toggleMenu(this,'sub-member')"><div class="menu-item-left"><span class="menu-icon">👥</span>会员管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-member" style="display:none">
     <div class="submenu-item disabled">账变记录</div>
@@ -762,8 +771,31 @@ select.fs.ph{color:#bfbfbf}
     <div class="submenu-item disabled">提现渠道统计</div>
     <div class="submenu-item disabled">充值渠道统计</div>
   </div>
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">📊</span>报表查询</div><span class="arrow">›</span></div>
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🤝</span>代理中心(无限极差)</div><span class="arrow">›</span></div>
+  <div class="menu-item" id="menu-report" onclick="toggleMenu(this,'sub-report')"><div class="menu-item-left"><span class="menu-icon">📊</span>报表查询</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-report" style="display:none">
+    <div class="submenu-item disabled">平台报表</div>
+    <div class="submenu-item disabled">游戏对局记录</div>
+    <div class="submenu-item disabled">每日用户数据</div>
+    <div class="submenu-item disabled">多日用户数据</div>
+    <div class="submenu-item disabled">会员输赢报表</div>
+    <div class="submenu-item disabled">留存率报表</div>
+    <div class="submenu-item disabled">实时数据统计</div>
+    <div class="submenu-item disabled">视讯真人扣款记录</div>
+    <div class="submenu-item disabled">视讯真人扣款日报表</div>
+    <div class="submenu-item disabled">日汇总数据</div>
+    <div class="submenu-item disabled">充提汇总报表</div>
+    <div class="submenu-item disabled">公司盈亏汇总</div>
+    <div class="submenu-item disabled">导出页面</div>
+  </div>
+  <div class="menu-item" id="menu-agent" onclick="toggleMenu(this,'sub-agent')"><div class="menu-item-left"><span class="menu-icon">🤝</span>代理中心(无限极差)</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-agent" style="display:none">
+    <div class="submenu-item disabled">代理返佣比例配置</div>
+    <div class="submenu-item disabled">代理首页</div>
+    <div class="submenu-item disabled">直属查询</div>
+    <div class="submenu-item disabled">团队查询</div>
+    <div class="submenu-item disabled">每日数据</div>
+    <div class="submenu-item disabled">佣金来源</div>
+  </div>
   <!-- 商户财务配置 -->
   <div class="menu-item" id="menu-finance" onclick="toggleMenu(this,'sub-finance')"><div class="menu-item-left"><span class="menu-icon">🗂️</span>商户财务配置</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-finance" style="display:none">
@@ -777,35 +809,39 @@ select.fs.ph{color:#bfbfbf}
   <div class="menu-item" id="menu-msg" onclick="toggleMenu(this,'sub-msg')"><div class="menu-item-left"><span class="menu-icon">💬</span>消息管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-msg" style="display:none">
     <div class="submenu-item" id="si-inbox" onclick="switchPage('inbox',this)">站内信</div>
-    <div class="submenu-item disabled">手机验证码</div>
     <div class="submenu-item" id="si-announce" onclick="switchPage('announce',this)">公告消息</div>
-    <div class="submenu-item disabled">极光推送</div>
     <div class="submenu-item disabled">平台公告</div>
+    <div class="submenu-item disabled">极光推送</div>
   </div>
   <!-- 福利中心 -->
   <div class="menu-item" id="menu-welfare" onclick="toggleMenu(this,'sub-welfare')"><div class="menu-item-left"><span class="menu-icon">🎁</span>福利中心</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-welfare" style="display:none">
+    <div class="submenu-item disabled">推荐好友领彩金</div>
     <div class="submenu-item disabled">VIP管理</div>
-    <div class="submenu-item disabled">任务中心</div>
-    <div class="submenu-item disabled">兑换码</div>
-    <div class="submenu-item" id="si-activity-list" onclick="switchPage('activity-list',this)">活动列表</div>
-    <div class="submenu-item disabled">活动加倍记录</div>
+    <div class="submenu-item" id="si-activity-list" onclick="switchPage('activity-list',this)">活动列表(新)</div>
     <div class="submenu-item disabled">活动统计</div>
     <div class="submenu-item disabled">优惠统计</div>
+    <div class="submenu-item disabled">兑换码</div>
   </div>
   <!-- 运营相关 -->
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">📣</span>运营相关 <span class="menu-badge">6</span></div><span class="arrow">›</span></div>
+  <div class="menu-item" id="menu-ops" onclick="toggleMenu(this,'sub-ops')"><div class="menu-item-left"><span class="menu-icon">📣</span>运营相关</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-ops" style="display:none">
+    <div class="submenu-item disabled">稽核管理</div>
+  </div>
   <!-- 推广渠道管理 -->
   <div class="menu-item open" id="menu-promo" onclick="toggleMenu(this,'promo-sub')"><div class="menu-item-left"><span class="menu-icon">📡</span>推广渠道管理</div><span class="arrow">›</span></div>
   <div class="submenu" id="promo-sub" style="display:block">
     <div class="submenu-item active" id="si-channel" onclick="switchPage('channel',this)">推广渠道管理</div>
     <div class="submenu-item" onclick="switchPage('appstore',this)">仿应用商店</div>
     <div class="submenu-item disabled">推广渠道报表</div>
-    <div class="submenu-item disabled">推广渠道报表新</div>
-    <div class="submenu-item" id="si-effect" onclick="switchPage('effect',this)">推广效果报表</div>
     <div class="submenu-item" id="si-guide" onclick="switchPage('guide',this)">安装引导</div>
+    <div class="submenu-item" id="si-effect" onclick="switchPage('effect',this)">推广效果报表</div>
   </div>
-  <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🎯</span>子平台游戏管理</div><span class="arrow">›</span></div>
+  <div class="menu-item" id="menu-rebate" onclick="toggleMenu(this,'sub-rebate')"><div class="menu-item-left"><span class="menu-icon">💸</span>返水管理</div><span class="arrow">›</span></div>
+  <div class="submenu" id="sub-rebate" style="display:none">
+    <div class="submenu-item disabled">返水配置管理</div>
+    <div class="submenu-item disabled">会员返水记录</div>
+  </div>
   <div class="sidebar-version">V: 2026/06/18 14:29:18</div>
 </div>
 
@@ -1695,25 +1731,23 @@ select.fs.ph{color:#bfbfbf}
       <div class="table-wrap"><div class="table-scroll">
         <table>
           <thead><tr>
-            <th>锁单</th><th>操作</th><th>会员ID</th><th>手机号(会员账号)/姓名</th><th>订单号</th><th>提款方式</th><th class="ng-new">NewGPay 钱包地址</th><th style="min-width:210px">提款信息</th><th>提款金额</th><th>提款类型</th><th>申请时间</th><th>审核状态</th><th>审核人</th>
+            <th>锁单</th><th>操作</th><th>会员ID</th><th>手机号(会员账号)/姓名</th><th>订单号</th><th>提款方式</th><th style="min-width:210px">提款信息</th><th>提款金额</th><th>提款类型</th><th>申请时间</th><th>审核状态</th><th>审核人</th>
           </tr></thead>
           <tbody>
-            <!-- 本期示例：NewGPay 提款（转入会员提交时使用的钱包，记录钱包地址） -->
+            <!-- 示例：电子钱包（NewGPay）提款，「提款信息」照 UAT 现状（账户类型、提款卡号为 -），钱包地址在订单明细「提现账号信息」 -->
             <tr>
               <td><input type="checkbox"></td>
               <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('W1')">查 看</button></td>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000002')">80000002</a></td>
               <td>11900000002 / -</td>
               <td>5392790011200000003</td>
-              <td>NewGPay</td>
-              <td class="ng-new"><span class="ng-addr">c7d2e9f0a1b4e88c</span> <span class="copy-icon" onclick="ngCopy('c7d2e9f0a1b4e88c')">⧉</span></td>
+              <td>电子钱包</td>
               <td><div class="pinfo">
                 <div>提款类型：即时提款</div>
                 <div>提现金额：80 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：NewGPay <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：NewGPay</div>
-                <div class="pinfo-ng">NewGPay 钱包地址：c7d2e9f0a1b4e88c <span class="copy-icon" onclick="ngCopy('c7d2e9f0a1b4e88c')">⧉</span></div>
+                <div>提现方式：电子钱包</div>
+                <div>账户类型：-</div>
+                <div>提款卡号：- <span class="copy-icon">⧉</span></div>
                 <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
               </div></td>
               <td>80(BRL) <span class="copy-icon">⧉</span></td>
@@ -1729,7 +1763,6 @@ select.fs.ph{color:#bfbfbf}
               <td>55900000000 / -</td>
               <td>5392762640869367808</td>
               <td>PIX</td>
-              <td class="ng-new">-</td>
               <td><div class="pinfo">
                 <div>提款类型：即时提款</div>
                 <div>提现金额：16 <span class="copy-icon">⧉</span></div>
@@ -1755,7 +1788,6 @@ select.fs.ph{color:#bfbfbf}
               <td>55911112222 / -</td>
               <td>5392762640869399999</td>
               <td>PIX</td>
-              <td class="ng-new">-</td>
               <td><div class="pinfo">
                 <div>提款类型：即时提款</div>
                 <div>提现金额：20 <span class="copy-icon">⧉</span></div>
@@ -1779,7 +1811,7 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>3</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">本期：新增「NewGPay 钱包地址」列；「查看」打开订单明细，NewGPay 订单在「本次提款信息」中显示钱包地址。</div>
+      <div class="ng-note">电子钱包（NewGPay）订单不新增列，列表「提款信息」照现状（账户类型、提款卡号为 -）；钱包地址在「查看」→ 订单明细「提现账号信息」中显示（脱敏 + 虚拟币钱包）。</div>
     </div>
 
     <!-- PAGE: 已审核出款订单 -->
@@ -1801,10 +1833,10 @@ select.fs.ph{color:#bfbfbf}
       <div class="table-wrap"><div class="table-scroll">
         <table>
           <thead><tr>
-            <th>会员ID</th><th>手机号(会员账号)</th><th>订单号</th><th class="col-new">三方订单号</th><th>订单状态</th><th>大额提款</th><th>提款方式</th><th>提现金额</th><th class="ng-new">NewGPay 钱包地址</th><th>申请时间</th><th>审核人</th><th>审核时间</th><th>审核用时</th><th>备注</th><th>操作</th>
+            <th>会员ID</th><th>手机号(会员账号)</th><th>订单号</th><th class="col-new">三方订单号</th><th>订单状态</th><th>大额提款</th><th>提款方式</th><th>提现金额</th><th>申请时间</th><th>审核人</th><th>审核时间</th><th>审核用时</th><th>备注</th><th>操作</th>
           </tr></thead>
           <tbody>
-            <!-- 本期示例：NewGPay 提款订单，钱包地址为会员提交时使用的钱包 -->
+            <!-- 示例：电子钱包（NewGPay）提款订单 -->
             <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a> <span class="copy-icon">⧉</span></td>
               <td>11900000001</td>
@@ -1812,9 +1844,8 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">-</td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>否</td>
-              <td>NewGPay</td>
+              <td>电子钱包</td>
               <td>100(BRL)</td>
-              <td class="ng-new"><span class="ng-addr">8a41c02e5b97d3f6</span> <span class="copy-icon" onclick="ngCopy('8a41c02e5b97d3f6')">⧉</span></td>
               <td>2026-10-29 14:20:05 (UTC-3)</td>
               <td>一审：admin002</td>
               <td>一审：2026-10-29 14:20:08 (UTC-3)</td>
@@ -1830,9 +1861,8 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">-</td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>否</td>
-              <td>NewGPay</td>
+              <td>电子钱包</td>
               <td>30(BRL)</td>
-              <td class="ng-new"><span class="ng-addr">9d03b6e2c4a1f857</span> <span class="copy-icon" onclick="ngCopy('9d03b6e2c4a1f857')">⧉</span></td>
               <td>2026-10-20 09:12:33 (UTC-3)</td>
               <td>一审：admin002</td>
               <td>一审：2026-10-20 09:15:02 (UTC-3)</td>
@@ -1849,7 +1879,6 @@ select.fs.ph{color:#bfbfbf}
               <td>否</td>
               <td>PIX</td>
               <td>20(BRL)</td>
-              <td class="ng-new">-</td>
               <td>2026-09-07 11:43:27 (UTC-3)</td>
               <td>-</td><td>-</td><td>-</td><td>-</td>
               <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
@@ -1863,7 +1892,6 @@ select.fs.ph{color:#bfbfbf}
               <td>否</td>
               <td>PIX</td>
               <td>15(BRL)</td>
-              <td class="ng-new">-</td>
               <td>2026-09-07 11:38:26 (UTC-3)</td>
               <td>-</td><td>-</td><td>-</td><td>-</td>
               <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
@@ -1877,7 +1905,6 @@ select.fs.ph{color:#bfbfbf}
               <td>否</td>
               <td>PIX</td>
               <td>50(BRL)</td>
-              <td class="ng-new">-</td>
               <td>2026-09-07 09:28:31 (UTC-3)</td>
               <td>-</td><td>-</td><td>-</td><td>-</td>
               <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
@@ -1891,7 +1918,6 @@ select.fs.ph{color:#bfbfbf}
               <td>是</td>
               <td>PIX</td>
               <td>10(BRL)</td>
-              <td class="ng-new">-</td>
               <td>2026-09-07 05:55:12 (UTC-3)</td>
               <td>一审：bxspencer01</td>
               <td>一审：2026-09-07 05:55:39 (UTC-3)</td>
@@ -1908,7 +1934,6 @@ select.fs.ph{color:#bfbfbf}
               <td>是</td>
               <td>PIX</td>
               <td>500(BRL)</td>
-              <td class="ng-new">-</td>
               <td>2026-07-26 08:28:24 (UTC-3)</td>
               <td>一审：bxspencer01</td>
               <td>一审：2026-08-08 03:36:43 (UTC-3)</td>
@@ -1920,7 +1945,7 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>7</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">本期：新增「提款方式」「NewGPay 钱包地址」列和「明细」入口。钱包地址记录会员提交订单时使用的钱包，之后钱包被删除也不变。</div>
+      <div class="ng-note">电子钱包（NewGPay）订单不新增列，钱包地址在「明细」→ 订单明细「提现账号信息」中显示。「提款方式」「操作」两列与 UAT 已审核出款订单一致。</div>
     </div>
 
     <!-- PAGE: 总出款记录 -->
@@ -1941,7 +1966,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">提款IP：</span><input class="f-input" placeholder="提款IP" style="min-width:130px"></div>
-          <div class="filter-item"><span class="filter-label">提款方式：</span><select class="f-select" id="wo-method" onchange="woMethodChange()"><option value="all">全部</option><option value="pix">PIX</option><option value="ngc">NewGPay</option><option value="ngd">NewGPay 直提</option></select></div>
+          <div class="filter-item"><span class="filter-label">提款方式：</span><select class="f-select" id="wo-method" onchange="woMethodChange()"><option value="all">全部</option><option value="pix">PIX</option><option value="ngc">电子钱包</option><option value="ngd">NewGPay 直提</option></select></div>
           <div class="filter-item"><span class="filter-label">账户类型：</span>
             <div class="acct-dd" id="wo-acct-dd">
               <div class="acct-dd-field" onclick="woAcctToggle(event)">
@@ -1965,7 +1990,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="table-wrap"><div class="table-scroll">
         <table>
           <thead><tr>
-            <th>会员ID</th><th>手机号(会员账号)</th><th>提款订单号</th><th class="col-new">三方订单号</th><th>提款金额</th><th>手续费</th><th>出款金额</th><th>订单状态</th><th>客户端状态</th><th>后台备注</th><th>客户端备注</th><th>提款人姓名</th><th>提款方式</th><th class="col-new">账户类型</th><th class="col-new">CPF ID</th><th>提款账号</th><th class="ng-new">NewGPay 钱包地址</th><th>返现比例</th><th>返现金额</th><th style="min-width:200px">提款信息</th><th>提款IP</th><th>出款方式</th><th>三方平台/提现通道</th><th>订单来源</th><th>申请时间</th><th>出款时间</th><th>账号状态</th><th>出款管理员</th>
+            <th>会员ID</th><th>手机号(会员账号)</th><th>提款订单号</th><th class="col-new">三方订单号</th><th>提款金额</th><th>手续费</th><th>出款金额</th><th>订单状态</th><th>客户端状态</th><th>后台备注</th><th>客户端备注</th><th>提款人姓名</th><th>提款方式</th><th class="col-new">账户类型</th><th class="col-new">CPF ID</th><th>提款账号</th><th>返现比例</th><th>返现金额</th><th style="min-width:200px">提款信息</th><th>提款IP</th><th>出款方式</th><th>三方平台/提现通道</th><th>订单来源</th><th>申请时间</th><th>出款时间</th><th>账号状态</th><th>出款管理员</th>
           </tr></thead>
           <tbody>
             <tr>
@@ -1985,7 +2010,6 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">CPF</td>
               <td class="col-new">11122233344</td>
               <td>11122233344</td>
-              <td class="ng-new">-</td>
               <td>-</td>
               <td>-</td>
               <td><div class="pinfo">
@@ -2026,7 +2050,6 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">PHONE</td>
               <td class="col-new">22233344455</td>
               <td>11988880000</td>
-              <td class="ng-new">-</td>
               <td>-</td>
               <td>-</td>
               <td><div class="pinfo">
@@ -2051,7 +2074,7 @@ select.fs.ph{color:#bfbfbf}
               <td><span class="wbadge wb-ok">正常</span></td>
               <td>-</td>
             </tr>
-            <!-- 本期示例：NewGPay（转入会员当前使用的钱包，记录钱包地址） -->
+            <!-- 示例：电子钱包（NewGPay）提款，钱包地址显示在原有「提款账号」字段 -->
             <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a></td>
               <td>11900000001</td>
@@ -2065,25 +2088,23 @@ select.fs.ph{color:#bfbfbf}
               <td>-</td>
               <td>-</td>
               <td>-</td>
-              <td>NewGPay</td>
+              <td>电子钱包</td>
+              <td class="col-new">NewGPay</td>
               <td class="col-new">-</td>
-              <td class="col-new">-</td>
-              <td>-</td>
-              <td class="ng-new"><span class="ng-addr">8a41c02e5b97d3f6</span> <span class="copy-icon" onclick="ngCopy('8a41c02e5b97d3f6')">⧉</span></td>
+              <td class="ng-new">8a4*****3f6</td>
               <td>-</td>
               <td>-</td>
               <td><div class="pinfo">
                 <div>提款类型：即时提款</div>
                 <div>提现金额：100 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：NewGPay <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：NewGPay</div>
-                <div class="pinfo-ng">NewGPay 钱包地址：8a41c02e5b97d3f6 <span class="copy-icon" onclick="ngCopy('8a41c02e5b97d3f6')">⧉</span></div>
+                <div>提现方式：电子钱包</div>
+                <div>账户类型：-</div>
+                <div>提款卡号：- <span class="copy-icon">⧉</span></div>
                 <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
               </div></td>
               <td>10.0.0.150</td>
               <td>三方出款</td>
-              <td>NewGPay代付 / NewGPay</td>
+              <td>NewGPay / NewGPay代付</td>
               <td>Android_H5</td>
               <td>2026-10-29 14:20:05 (UTC-3)</td>
               <td>2026-10-29 14:20:09 (UTC-3)</td>
@@ -2108,7 +2129,6 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">CPF</td>
               <td class="col-new">32300000023</td>
               <td>32300000023</td>
-              <td class="ng-new">-</td>
               <td>-</td>
               <td>-</td>
               <td><div class="pinfo">
@@ -2136,9 +2156,10 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>4</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="ng-note">电子钱包（NewGPay）订单不新增列，沿用原有字段：账户类型显示 NewGPay，「提款账号」列显示脱敏钱包地址（如 8a4*****3f6）；「提款信息」中账户类型、提款卡号为 -。</div>
     </div>
 
-    <!-- PAGE: 充值订单记录（本期：NewGPay 渠道订单新增「NewGPay 钱包地址」列） -->
+    <!-- PAGE: 充值订单记录 -->
     <div id="pg-dorder" style="display:none">
       <div class="filter-area">
         <div class="filter-row">
@@ -2149,7 +2170,6 @@ select.fs.ph{color:#bfbfbf}
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">支付方式：</span><select class="f-select"><option>全部</option><option>bestpay</option><option>NewGPay</option><option>NewGPay 扫码</option></select></div>
           <div class="filter-item"><span class="filter-label">订单状态：</span><select class="f-select"><option>订单状态</option><option>待支付</option><option>已支付</option><option>已失效</option></select></div>
-          <div class="filter-item"><span class="filter-label ng-flabel">NewGPay 钱包地址：</span><input class="f-input" placeholder="NewGPay 钱包地址" style="min-width:160px"></div>
           <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button></div>
         </div>
       </div>
@@ -2157,32 +2177,28 @@ select.fs.ph{color:#bfbfbf}
       <div class="table-wrap"><div class="table-scroll">
         <table>
           <thead><tr>
-            <th>会员ID</th><th>手机号(会员账号)</th><th>充值订单号</th><th>充值金额</th><th>到账金额</th><th>订单状态</th><th>支付方式</th><th>三方平台/充值通道</th><th class="ng-new">NewGPay 钱包地址</th><th>订单来源</th><th>创建时间</th><th>到账时间</th>
+            <th>会员ID</th><th>手机号(会员账号)</th><th>充值订单号</th><th>充值金额</th><th>到账金额</th><th>订单状态</th><th>支付方式</th><th>三方平台/充值通道</th><th>订单来源</th><th>创建时间</th><th>到账时间</th>
           </tr></thead>
           <tbody>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a></td><td>11900000001</td><td>D2610291402000001</td><td>200(BRL)</td><td>200(BRL)</td>
               <td><span class="wbadge wb-ok">已支付</span></td><td>NewGPay</td><td>NewGPay / NewGPay代收</td>
-              <td class="ng-new"><span class="ng-addr">3fe693197d515711</span> <span class="copy-icon" onclick="ngCopy('3fe693197d515711')">⧉</span></td>
               <td>Android_H5</td><td>2026-10-29 14:02:11 (UTC-3)</td><td>2026-10-29 14:02:13 (UTC-3)</td>
             </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000003')">80000003</a></td><td>11900000003</td><td>D2610291430000002</td><td>100(BRL)</td><td>-</td>
               <td><span class="wbadge wb-wait">待支付</span></td><td>NewGPay 扫码</td><td>NewGPay / NewGPay扫码代收</td>
-              <td class="ng-new">-</td>
               <td>IOS_H5</td><td>2026-10-29 14:30:47 (UTC-3)</td><td>-</td>
             </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000004')">80000004</a></td><td>11900000004</td><td>D2610291501000003</td><td>50(BRL)</td><td>50(BRL)</td>
               <td><span class="wbadge wb-ok">已支付</span></td><td>bestpay</td><td>bestpay / bestpay支付</td>
-              <td class="ng-new">-</td>
               <td>IOS_H5</td><td>2026-10-29 15:01:02 (UTC-3)</td><td>2026-10-29 15:01:40 (UTC-3)</td>
             </tr>
           </tbody>
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>3</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">本期：仅「NewGPay」支付方式（扣钱包 NGC）的订单记录钱包地址；「NewGPay 扫码」用 PIX 付款、不经过钱包，该列为 -。</div>
     </div>
 
     <!-- PAGE: 会员列表（本期仅为进入「个人资料」演示，列表本身非本次范围） -->
@@ -2222,7 +2238,7 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b id="ng-log-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">NewGPay 钱包记录两种变更：绑定（新增）、删除。钱包列表在前台充值页、提款页和后台之间同步，充值和提款共用，记录中不区分充值钱包、提款钱包。会员在前台操作时操作人为「会员本人」，后台操作时为后台账号。</div>
+      <div class="ng-note">与现有记录一致，只记录后台操作：后台在会员「个人资料」→ NewGPay 钱包中新增、删除钱包时记一条，操作人为后台账号。会员在前台充值页、提款页绑定或删除钱包不记录。钱包列表充值和提款共用，记录中不区分充值钱包、提款钱包。</div>
     </div>
 
   </div>
@@ -2331,7 +2347,7 @@ th.ng-new,td.ng-new{background:#e6f4ff}
 .ngo-log{width:100%;border-collapse:collapse;font-size:13px}
 .ngo-log th{background:#fafafa;font-weight:600;padding:8px 10px;border:1px solid #f0f0f0;text-align:center}
 .ngo-log td{padding:8px 10px;border:1px solid #f0f0f0;text-align:center}
-.ngo-tip{font-size:12px;color:#8c8c8c;margin-top:4px}
+.ngo-note{border:1px solid #e8e8e8;border-radius:4px;padding:4px 8px;color:#bfbfbf;font-size:12px;line-height:1.6}
 #wm-p-other .wo-ng{margin:6px 0 22px;padding:16px 16px 2px;border:1px dashed #91caff;border-radius:6px;background:#f5faff}
 #wm-p-other .wo-ng-title{font-size:14px;font-weight:600;color:#1f1f1f;margin-bottom:16px}
 #wm-p-other .wo-ng-title:after{content:"本期新增";margin-left:8px;font-size:12px;font-weight:400;color:#0961BD;background:#e6f4ff;border-radius:4px;padding:1px 6px}
@@ -5165,10 +5181,10 @@ function switchPage(page, el){
   history.replaceState(null,'','#'+page);
   // breadcrumb
   const bcMap = {
-    'channel':'推广渠道管理 / 渠道列表',
-    'effect':'推广渠道管理 / 推广效果',
-    'guide':'推广渠道管理 / 安装引导页',
-    'activity-list':'福利中心 / 活动列表',
+    'channel':'推广渠道管理 / 推广渠道管理',
+    'effect':'推广渠道管理 / 推广效果报表',
+    'guide':'推广渠道管理 / 安装引导',
+    'activity-list':'福利中心 / 活动列表(新)',
     'appstore':'推广渠道管理 / 仿应用商店',
     'account':'系统管理 / 账号管理',
     'mafia':'系统管理 / 马甲包管理',
@@ -5769,8 +5785,8 @@ var NG_MEMBERS = [
     wallets:[], dep:'', wd:'' }   /* 从未进入 NewGPay，系统尚未开通钱包 */
 ];
 var NG_LOGS = [
-  { id:'80000002', t:'2026-10-26 21:47:02', type:'NewGPay 钱包', before:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）', after:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）\ne19a7c3d55b20f61（用户绑定）', note:'绑定钱包 e19a7c3d55b20f61', op:'会员本人' },
-  { id:'80000001', t:'2026-10-28 16:12:45', type:'NewGPay 钱包', before:'3fe693197d515711（默认钱包）', after:'3fe693197d515711（默认钱包）\n8a41c02e5b97d3f6（用户绑定）', note:'绑定钱包 8a41c02e5b97d3f6', op:'会员本人' },
+  { id:'80000002', t:'2026-10-26 21:47:02', type:'NewGPay 钱包', before:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）', after:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）\ne19a7c3d55b20f61（用户绑定）', note:'-', op:'admin002' },
+  { id:'80000001', t:'2026-10-28 16:12:45', type:'NewGPay 钱包', before:'3fe693197d515711（默认钱包）', after:'3fe693197d515711（默认钱包）\n8a41c02e5b97d3f6（用户绑定）', note:'-', op:'admin002' },
   { id:'80000003', t:'2026-10-29 17:40:22', type:'登录密码', before:'******', after:'******', note:'重置登录密码', op:'admin001' }
 ];
 var ngCur = null, ngDelAddr = null;
@@ -5855,7 +5871,7 @@ function ngDoAdd(){
   var before = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
   m.wallets.push({ addr:addr, sys:false, t:ngNow() });
   var after = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'后台新增钱包 '+addr, op:'admin001' });
+  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'-', op:'admin001' });
   closeM('m-ng-add'); ngRenderWallet(); ngRenderProfile();
   toast('新增成功');
 }
@@ -5866,25 +5882,21 @@ function ngDoDel(){
   if (m.dep === addr) m.dep = def;
   if (m.wd === addr) m.wd = def;
   var after = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'后台删除钱包 '+addr, op:'admin001' });
+  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'-', op:'admin001' });
   closeM('m-ng-del'); ngRenderWallet(); ngRenderProfile();
   toast('删除成功');
 }
-// 订单明细（待审核 / 已审核出款订单）：本期在「本次提款信息」增加 NewGPay 钱包地址
-// wallet 为会员提交订单时使用的钱包，之后被删除也保留；标签按钱包当前状态显示
+// 订单明细（待审核 / 已审核出款订单）：结构照 UAT，不新增字段
+// 电子钱包（NewGPay）订单的钱包地址沿用原有「提现账号信息」显示（脱敏 + 虚拟币钱包），wallet 为提交订单时使用的钱包
 var NG_ORDERS = {
-  W1:{ mid:'80000002', phone:'11900000002', no:'5392790011200000003', amt:80,  method:'NewGPay', wallet:'c7d2e9f0a1b4e88c', t:'2026-10-30 15:02:41',
+  W1:{ mid:'80000002', phone:'11900000002', no:'5392790011200000003', amt:80,  method:'电子钱包', wallet:'c7d2e9f0a1b4e88c', t:'2026-10-30 15:02:41',
        audit:['自动代付条件不符','超出自动代付金额范围'], logs:[] },
-  W4:{ mid:'80000001', phone:'11900000001', no:'5392790011200000001', amt:100, method:'NewGPay', wallet:'8a41c02e5b97d3f6', t:'2026-10-29 14:20:05',
+  W4:{ mid:'80000001', phone:'11900000001', no:'5392790011200000001', amt:100, method:'电子钱包', wallet:'8a41c02e5b97d3f6', t:'2026-10-29 14:20:05',
        audit:['人工审核','-'], logs:[['2026-10-29 14:20:08','admin002','通过','审核中','审核通过','-'],['2026-10-29 14:20:06','admin002','锁定','待审核','审核中','-']] },
-  W5:{ mid:'80000003', phone:'11900000003', no:'5392790011200000004', amt:30,  method:'NewGPay', wallet:'9d03b6e2c4a1f857', t:'2026-10-20 09:12:33',
+  W5:{ mid:'80000003', phone:'11900000003', no:'5392790011200000004', amt:30,  method:'电子钱包', wallet:'9d03b6e2c4a1f857', t:'2026-10-20 09:12:33',
        audit:['人工审核','-'], logs:[['2026-10-20 09:15:02','admin002','通过','审核中','审核通过','-'],['2026-10-20 09:13:40','admin002','锁定','待审核','审核中','-']] }
 };
-function ngWalletTag(mid, addr){
-  var m = ngMember(mid), w = m && m.wallets.filter(function(x){ return x.addr === addr; })[0];
-  if (!w) return '<span class="ngw-tag del" title="会员已删除该钱包，订单保留提交时的地址">已删除</span>';
-  return '<span class="ngw-tag '+(w.sys?'sys':'usr')+'">'+(w.sys?'默认钱包':'用户绑定')+'</span>';
-}
+function ngMask(a){ return a.slice(0, 3) + '*****' + a.slice(-3); }
 function ngOpenOrder(key, el){
   var o = NG_ORDERS[key];
   if (key === 'PIX'){   // 原有 PIX 订单：从所在行取会员ID、订单号、金额
@@ -5895,28 +5907,30 @@ function ngOpenOrder(key, el){
   }
   var kv = function(rows){ return '<table class="ngo-kv">'+rows.map(function(r){
     var out = '<tr>'; for (var i = 0; i < r.length; i += 2){
-      var ng = r[i].indexOf('NewGPay') === 0, span = (r.length === 2 ? ' colspan="5"' : '');
-      out += '<td class="k'+(ng?' ng-new':'')+'">'+r[i]+'</td><td'+(ng?' class="ng-new"':'')+span+'>'+r[i+1]+'</td>'; }
+      var last = i === r.length - 2, span = (last && r.length < 6 ? ' colspan="'+(7 - r.length)+'"' : '');
+      var ng = r[i] === '提现账号信息' && o.wallet;   // 电子钱包订单：地址在原有字段显示，仅原型标色
+      out += '<td class="k">'+r[i]+'</td><td'+(ng?' class="ng-new"':'')+span+'>'+r[i+1]+'</td>'; }
     return out + '</tr>'; }).join('')+'</table>'; };
-  var ng = o.method === 'NewGPay';
-  var addr = ng ? '<span class="ng-addr">'+o.wallet+'</span> <span class="copy-icon" onclick="ngCopy(\''+o.wallet+'\')">⧉</span> '+ngWalletTag(o.mid, o.wallet) : '-';
-  var html = '<div class="ngo-sec">会员信息</div>' + kv([
-      ['会员账号', o.phone, '会员ID', o.mid, '等级', 'VIP0'],
-      ['注册时间', '2026-09-12 10:21:33 (UTC-3)', '登录IP', '10.0.0.151', '登录设备', 'PC'] ])
+  // 照 UAT：待审核订单的明细没有审核类型/审核原因和处理记录；已审核订单有
+  var pending = key === 'W1' || !!(el && el.closest('#pg-maudit'));
+  var acc = o.wallet ? ngMask(o.wallet)+', 虚拟币钱包 <span class="copy-icon">⧉</span>' : 'CPF · 111******44';
+  var note = '<div class="ngo-note">1.备注内容最多60个字<br>2.备注内容最多60个字<br>3.备注内容最多60个字</div>';
+  var html = kv([
+      ['会员账号', o.phone, '会员姓名', '', '等级', 'VIP0'],
+      ['注册时间', '2026-09-12 10:21:33', '登录IP', '10.0.0.151', '登录设备', 'PC'],
+      ['上次提现信息', 'BRL <span class="copy-icon">⧉</span>', '账号备注', note] ])
     + '<div class="ngo-sec">资金记录</div>' + kv([
       ['会员总存款', '-', '上次充值', '-', '上次充值时间', '-'],
       ['会员总提款', '-', '上次提现', '-', '上次提现时间', '-'],
-      ['今日提现次数', '-', '提现类型', '即时提款', '上次是否手动清除稽核', '否'] ])
-    + '<div class="ngo-sec">本次提款信息</div>' + kv([
-      ['审核类型', o.audit[0], '审核原因', o.audit[1], '申请时间', o.t === '-' ? '-' : o.t+' (UTC-3)'],
-      ['提现金额', o.amt+' <span class="copy-icon">⧉</span>', '提款方式', o.method, '提现账号信息', ng ? '-' : 'CPF · 111******44'],
-      ['币种类型', 'BRL', '提现设备', '-', '关联订单号', o.no],
-      ['NewGPay 钱包地址', addr] ])
-    + (ng ? '<div class="ngo-tip">NewGPay 钱包地址为会员提交订单时使用的钱包，订单生成后不随会员增删钱包变化；标签显示该钱包当前状态。</div>' : '')
-    + '<div class="ngo-sec">处理记录</div><table class="ngo-log"><thead><tr><th>时间</th><th>操作人</th><th>操作</th><th>处理前状态</th><th>处理后状态</th><th>备注</th></tr></thead><tbody>'
+      ['会员末笔充值打码量信息', '-', '上次是否手动清除稽核', '<span style="color:#cf1322">否</span>', '上次清除稽核时间', '-'],
+      ['今日提现次数', '-', '提现类型', '即时提款'] ])
+    + '<div class="ngo-sec">本次提款信息</div>' + kv((pending ? [] : [['审核类型', o.audit[0], '审核原因', o.audit[1]]]).concat([
+      ['提现金额', o.amt+' <span class="copy-icon">⧉</span>', '提款方式', o.method, '提现账号信息', acc],
+      ['币种类型', 'BRL', '提现设备', '-', '关联订单号', o.no] ]))
+    + (pending ? '' : '<div class="ngo-sec">处理记录</div><table class="ngo-log"><thead><tr><th>时间</th><th>操作人</th><th>操作</th><th>处理前状态</th><th>处理后状态</th><th>备注</th></tr></thead><tbody>'
     + (o.logs.length ? o.logs.map(function(l){ return '<tr><td>'+l[0]+' (UTC-3)</td><td>'+l[1]+'</td><td>'+l[2]+'</td><td>'+l[3]+'</td><td>'+l[4]+'</td><td>'+l[5]+'</td></tr>'; }).join('')
                      : '<tr><td colspan="6" style="color:#8c8c8c">暂无数据</td></tr>')
-    + '</tbody></table>';
+    + '</tbody></table>');
   document.getElementById('ngo-body').innerHTML = html;
   openM('m-ng-order');
 }
