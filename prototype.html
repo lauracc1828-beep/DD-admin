@@ -754,17 +754,13 @@ select.fs.ph{color:#bfbfbf}
   <div class="submenu" id="sub-mfm" style="display:none">
     <div class="submenu-item disabled">人工提存</div>
     <div class="submenu-item disabled">人工提存记录</div>
-    <div class="submenu-item disabled">会员人工加减额</div>
-    <div class="submenu-item disabled">会员人工加额记录</div>
-    <div class="submenu-item disabled">会员人工加额审核</div>
-    <div class="submenu-item disabled">会员人工减额记录</div>
-    <div class="submenu-item" id="si-dorder" onclick="switchPage('dorder',this)">充值订单记录</div>
     <div class="submenu-item disabled">未上分三方充值订单</div>
-    <div class="submenu-item disabled">支付方式排序</div>
-    <div class="submenu-item" id="si-warec" onclick="switchPage('warec',this)">提现审核记录</div>
-    <div class="submenu-item disabled">人工加额审核记录</div>
-    <div class="submenu-item" id="si-worder" onclick="switchPage('worder',this)">提现订单记录</div>
-    <div class="submenu-item" id="si-maudit" onclick="switchPage('maudit',this)">会员提现审核</div>
+    <div class="submenu-item" id="si-dorder" onclick="switchPage('dorder',this)">充值订单记录</div>
+    <div class="submenu-item" id="si-maudit" onclick="switchPage('maudit',this)">待审核出款订单</div>
+    <div class="submenu-item" id="si-warec" onclick="switchPage('warec',this)">已审核出款订单</div>
+    <div class="submenu-item" id="si-worder" onclick="switchPage('worder',this)">总出款记录</div>
+    <div class="submenu-item disabled">提现渠道统计</div>
+    <div class="submenu-item disabled">充值渠道统计</div>
   </div>
   <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">📊</span>报表查询</div><span class="arrow">›</span></div>
   <div class="menu-item" onclick="toggleMenu(this,'')"><div class="menu-item-left"><span class="menu-icon">🤝</span>代理中心(无限极差)</div><span class="arrow">›</span></div>
@@ -1674,7 +1670,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="cb-panel hidden" id="cb-p-wd"></div>
     </div>
 
-    <!-- PAGE: 会员提现审核 -->
+    <!-- PAGE: 待审核出款订单 -->
     <div id="pg-maudit" style="display:none">
       <div class="sec-tabs-bar" style="border-radius:6px 6px 0 0;margin-bottom:12px">
         <div class="sec-tab active" onclick="mauditTab(this)">一审</div>
@@ -1786,7 +1782,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="ng-note">本期：新增「NewGPay 钱包地址」列；「查看」打开订单明细，NewGPay 订单在「本次提款信息」中显示钱包地址。</div>
     </div>
 
-    <!-- PAGE: 提现审核记录 -->
+    <!-- PAGE: 已审核出款订单 -->
     <div id="pg-warec" style="display:none">
       <div class="filter-area">
         <div class="filter-row">
@@ -1927,7 +1923,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="ng-note">本期：新增「提款方式」「NewGPay 钱包地址」列和「明细」入口。钱包地址记录会员提交订单时使用的钱包，之后钱包被删除也不变。</div>
     </div>
 
-    <!-- PAGE: 提现订单记录 -->
+    <!-- PAGE: 总出款记录 -->
     <div id="pg-worder" style="display:none">
       <div class="filter-area">
         <div class="filter-row">
@@ -5178,9 +5174,9 @@ function switchPage(page, el){
     'mafia':'系统管理 / 马甲包管理',
     'withdraw':'商户财务配置 / 提现管理',
     'cashback':'商户财务配置 / 充提返现设置',
-    'maudit':'商户财务管理 / 会员提现审核',
-    'worder':'商户财务管理 / 提现订单记录',
-    'warec':'商户财务管理 / 提现审核记录',
+    'maudit':'商户财务管理 / 待审核出款订单',
+    'worder':'商户财务管理 / 总出款记录',
+    'warec':'商户财务管理 / 已审核出款订单',
     'announce':'消息管理 / 公告消息',
     'inbox':'消息管理 / 站内信',
     'mlist':'会员管理 / 会员列表',
@@ -8204,7 +8200,7 @@ function asCommentSave(){
   asRenderTable();
 }
 
-// ─── 会员提现审核 / 提现订单记录 ───
+// ─── 待审核出款订单 / 总出款记录 ───
 function mauditTab(el){
   el.parentNode.querySelectorAll('.sec-tab').forEach(function(t){t.classList.remove('active');});
   el.classList.add('active');
