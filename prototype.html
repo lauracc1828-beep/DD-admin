@@ -1132,6 +1132,13 @@ select.fs.ph{color:#bfbfbf}
         <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-del')">取消</button><button class="btn btn-danger" onclick="ngDoDel()">确定删除</button></div>
       </div>
     </div>
+    <div class="overlay" id="m-ng-order">
+      <div class="modal modal-lg" style="width:960px">
+        <div class="mh"><span class="mt">订单明细</span><span class="mc" onclick="closeM('m-ng-order')">×</span></div>
+        <div class="ngo-body" id="ngo-body"></div>
+        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-order')">关 闭</button></div>
+      </div>
+    </div>
     <div class="overlay" id="m-ng-add">
       <div class="modal modal-sm" style="width:520px">
         <div class="mh"><span class="mt">新增钱包</span><span class="mc" onclick="closeM('m-ng-add')">×</span></div>
@@ -1692,16 +1699,41 @@ select.fs.ph{color:#bfbfbf}
       <div class="table-wrap"><div class="table-scroll">
         <table>
           <thead><tr>
-            <th>锁单</th><th>操作</th><th>会员ID</th><th>手机号(会员账号)/姓名</th><th>订单号</th><th>提款方式</th><th style="min-width:210px">提款信息</th><th>提款金额</th><th>提款类型</th><th>申请时间</th><th>审核状态</th><th>审核人</th>
+            <th>锁单</th><th>操作</th><th>会员ID</th><th>手机号(会员账号)/姓名</th><th>订单号</th><th>提款方式</th><th class="ng-new">NewGPay 钱包地址</th><th style="min-width:210px">提款信息</th><th>提款金额</th><th>提款类型</th><th>申请时间</th><th>审核状态</th><th>审核人</th>
           </tr></thead>
           <tbody>
+            <!-- 本期示例：NewGPay 提款（转入会员提交时使用的钱包，记录钱包地址） -->
             <tr>
               <td><input type="checkbox"></td>
-              <td><button class="btn btn-white btn-sm">查 看</button></td>
+              <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('W1')">查 看</button></td>
+              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000002')">80000002</a></td>
+              <td>11900000002 / -</td>
+              <td>5392790011200000003</td>
+              <td>NewGPay</td>
+              <td class="ng-new"><span class="ng-addr">c7d2e9f0a1b4e88c</span> <span class="copy-icon" onclick="ngCopy('c7d2e9f0a1b4e88c')">⧉</span></td>
+              <td><div class="pinfo">
+                <div>提款类型：即时提款</div>
+                <div>提现金额：80 <span class="copy-icon">⧉</span></div>
+                <div>提现通道：NewGPay <span class="copy-icon">⧉</span></div>
+                <div>提现币种：BRL</div>
+                <div>提现方式：NewGPay</div>
+                <div class="pinfo-ng">NewGPay 钱包地址：c7d2e9f0a1b4e88c <span class="copy-icon" onclick="ngCopy('c7d2e9f0a1b4e88c')">⧉</span></div>
+                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
+              </div></td>
+              <td>80(BRL) <span class="copy-icon">⧉</span></td>
+              <td>即时提款</td>
+              <td>2026-10-30 15:02:41 (UTC-3)</td>
+              <td><span class="wbadge wb-wait">待审核</span></td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('PIX',this)">查 看</button></td>
               <td><a style="color:#0961BD;cursor:pointer">83491174</a></td>
               <td>55900000000 / -</td>
               <td>5392762640869367808</td>
               <td>PIX</td>
+              <td class="ng-new">-</td>
               <td><div class="pinfo">
                 <div>提款类型：即时提款</div>
                 <div>提现金额：16 <span class="copy-icon">⧉</span></div>
@@ -1722,11 +1754,12 @@ select.fs.ph{color:#bfbfbf}
             </tr>
             <tr>
               <td><input type="checkbox"></td>
-              <td><button class="btn btn-white btn-sm">查 看</button></td>
+              <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('PIX',this)">查 看</button></td>
               <td><a style="color:#0961BD;cursor:pointer">83491180</a></td>
               <td>55911112222 / -</td>
               <td>5392762640869399999</td>
               <td>PIX</td>
+              <td class="ng-new">-</td>
               <td><div class="pinfo">
                 <div>提款类型：即时提款</div>
                 <div>提现金额：20 <span class="copy-icon">⧉</span></div>
@@ -1749,7 +1782,8 @@ select.fs.ph{color:#bfbfbf}
           </tbody>
         </table>
       </div></div>
-      <div class="pagination"><div class="pg-info">共 <b>2</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="pagination"><div class="pg-info">共 <b>3</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="ng-note">本期：新增「NewGPay 钱包地址」列；「查看」打开订单明细，NewGPay 订单在「本次提款信息」中显示钱包地址。</div>
     </div>
 
     <!-- PAGE: 提现审核记录 -->
@@ -1771,9 +1805,45 @@ select.fs.ph{color:#bfbfbf}
       <div class="table-wrap"><div class="table-scroll">
         <table>
           <thead><tr>
-            <th>会员ID</th><th>手机号(会员账号)</th><th>订单号</th><th class="col-new">三方订单号</th><th>订单状态</th><th>大额提款</th><th>提现金额</th><th>申请时间</th><th>审核人</th><th>审核时间</th><th>审核用时</th><th>备注</th>
+            <th>会员ID</th><th>手机号(会员账号)</th><th>订单号</th><th class="col-new">三方订单号</th><th>订单状态</th><th>大额提款</th><th>提款方式</th><th>提现金额</th><th class="ng-new">NewGPay 钱包地址</th><th>申请时间</th><th>审核人</th><th>审核时间</th><th>审核用时</th><th>备注</th><th>操作</th>
           </tr></thead>
           <tbody>
+            <!-- 本期示例：NewGPay 提款订单，钱包地址为会员提交时使用的钱包 -->
+            <tr>
+              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a> <span class="copy-icon">⧉</span></td>
+              <td>11900000001</td>
+              <td>5392790011200000001 <span class="copy-icon">⧉</span></td>
+              <td class="col-new">-</td>
+              <td><span class="wbadge wb-ok">审核完成</span></td>
+              <td>否</td>
+              <td>NewGPay</td>
+              <td>100(BRL)</td>
+              <td class="ng-new"><span class="ng-addr">8a41c02e5b97d3f6</span> <span class="copy-icon" onclick="ngCopy('8a41c02e5b97d3f6')">⧉</span></td>
+              <td>2026-10-29 14:20:05 (UTC-3)</td>
+              <td>一审：admin002</td>
+              <td>一审：2026-10-29 14:20:08 (UTC-3)</td>
+              <td>一审：0分钟</td>
+              <td>一审：-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('W4')">明细</span></td>
+            </tr>
+            <!-- 本期示例：提交时使用的钱包之后已被删除，订单仍保留当时的地址 -->
+            <tr>
+              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000003')">80000003</a> <span class="copy-icon">⧉</span></td>
+              <td>11900000003</td>
+              <td>5392790011200000004 <span class="copy-icon">⧉</span></td>
+              <td class="col-new">-</td>
+              <td><span class="wbadge wb-ok">审核完成</span></td>
+              <td>否</td>
+              <td>NewGPay</td>
+              <td>30(BRL)</td>
+              <td class="ng-new"><span class="ng-addr">9d03b6e2c4a1f857</span> <span class="copy-icon" onclick="ngCopy('9d03b6e2c4a1f857')">⧉</span></td>
+              <td>2026-10-20 09:12:33 (UTC-3)</td>
+              <td>一审：admin002</td>
+              <td>一审：2026-10-20 09:15:02 (UTC-3)</td>
+              <td>一审：2分钟</td>
+              <td>一审：-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('W5')">明细</span></td>
+            </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer">94042764</a> <span class="copy-icon">⧉</span></td>
               <td>11978967896</td>
@@ -1781,9 +1851,12 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">5402426417334624256 <span class="copy-icon">⧉</span></td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>否</td>
+              <td>PIX</td>
               <td>20(BRL)</td>
+              <td class="ng-new">-</td>
               <td>2026-09-07 11:43:27 (UTC-3)</td>
               <td>-</td><td>-</td><td>-</td><td>-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
             </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer">63098767</a> <span class="copy-icon">⧉</span></td>
@@ -1792,9 +1865,12 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">5402421280553738240 <span class="copy-icon">⧉</span></td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>否</td>
+              <td>PIX</td>
               <td>15(BRL)</td>
+              <td class="ng-new">-</td>
               <td>2026-09-07 11:38:26 (UTC-3)</td>
               <td>-</td><td>-</td><td>-</td><td>-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
             </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer">52657084</a> <span class="copy-icon">⧉</span></td>
@@ -1803,9 +1879,12 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">5402287363473449960 <span class="copy-icon">⧉</span></td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>否</td>
+              <td>PIX</td>
               <td>50(BRL)</td>
+              <td class="ng-new">-</td>
               <td>2026-09-07 09:28:31 (UTC-3)</td>
               <td>-</td><td>-</td><td>-</td><td>-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
             </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer">65563340</a> <span class="copy-icon">⧉</span></td>
@@ -1814,12 +1893,15 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">-</td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>是</td>
+              <td>PIX</td>
               <td>10(BRL)</td>
+              <td class="ng-new">-</td>
               <td>2026-09-07 05:55:12 (UTC-3)</td>
               <td>一审：bxspencer01</td>
               <td>一审：2026-09-07 05:55:39 (UTC-3)</td>
               <td>一审：0分钟</td>
               <td>一审：-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
             </tr>
             <tr>
               <td><a style="color:#0961BD;cursor:pointer">99828722</a> <span class="copy-icon">⧉</span></td>
@@ -1828,17 +1910,21 @@ select.fs.ph{color:#bfbfbf}
               <td class="col-new">-</td>
               <td><span class="wbadge wb-ok">审核完成</span></td>
               <td>是</td>
+              <td>PIX</td>
               <td>500(BRL)</td>
+              <td class="ng-new">-</td>
               <td>2026-07-26 08:28:24 (UTC-3)</td>
               <td>一审：bxspencer01</td>
               <td>一审：2026-08-08 03:36:43 (UTC-3)</td>
               <td>一审：2884分钟</td>
               <td>一审：-</td>
+              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
             </tr>
           </tbody>
         </table>
       </div></div>
-      <div class="pagination"><div class="pg-info">共 <b>5</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="pagination"><div class="pg-info">共 <b>7</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="ng-note">本期：新增「提款方式」「NewGPay 钱包地址」列和「明细」入口。钱包地址记录会员提交订单时使用的钱包，之后钱包被删除也不变。</div>
     </div>
 
     <!-- PAGE: 提现订单记录 -->
@@ -2236,6 +2322,20 @@ th.ng-new,td.ng-new{background:#e6f4ff}
 .ngw-del{color:#ff4d4f;cursor:pointer}
 .ngw-dis{color:#bfbfbf;cursor:not-allowed}
 .ngw-rule{margin:4px 20px 8px;font-size:12px;color:#8c8c8c;line-height:1.6}
+.ngw-tag.del{color:#8c8c8c;background:#f5f5f5;border:1px solid #d9d9d9;text-decoration:line-through}
+.ng-lk{color:#0961BD;cursor:pointer}
+.ngo-body{padding:12px 20px;max-height:66vh;overflow:auto}
+.ngo-sec{font-size:13px;font-weight:600;color:#333;margin:12px 0 6px}
+.ngo-sec:first-child{margin-top:0}
+.ngo-kv{width:100%;border-collapse:collapse;font-size:13px}
+.ngo-kv td{border:1px solid #f0f0f0;padding:8px 10px}
+.ngo-kv td.k{background:#fafafa;color:#595959;width:120px}
+.ngo-kv td.ng-new{background:#e6f4ff}
+.ngo-kv td.k.ng-new{background:#d6ebff;font-weight:600;color:#333}
+.ngo-log{width:100%;border-collapse:collapse;font-size:13px}
+.ngo-log th{background:#fafafa;font-weight:600;padding:8px 10px;border:1px solid #f0f0f0;text-align:center}
+.ngo-log td{padding:8px 10px;border:1px solid #f0f0f0;text-align:center}
+.ngo-tip{font-size:12px;color:#8c8c8c;margin-top:4px}
 #wm-p-other .wo-ng{margin:6px 0 22px;padding:16px 16px 2px;border:1px dashed #91caff;border-radius:6px;background:#f5faff}
 #wm-p-other .wo-ng-title{font-size:14px;font-weight:600;color:#1f1f1f;margin-bottom:16px}
 #wm-p-other .wo-ng-title:after{content:"本期新增";margin-left:8px;font-size:12px;font-weight:400;color:#0961BD;background:#e6f4ff;border-radius:4px;padding:1px 6px}
@@ -5773,6 +5873,56 @@ function ngDoDel(){
   NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'后台删除钱包 '+addr, op:'admin001' });
   closeM('m-ng-del'); ngRenderWallet(); ngRenderProfile();
   toast('删除成功');
+}
+// 订单明细（待审核 / 已审核出款订单）：本期在「本次提款信息」增加 NewGPay 钱包地址
+// wallet 为会员提交订单时使用的钱包，之后被删除也保留；标签按钱包当前状态显示
+var NG_ORDERS = {
+  W1:{ mid:'80000002', phone:'11900000002', no:'5392790011200000003', amt:80,  method:'NewGPay', wallet:'c7d2e9f0a1b4e88c', t:'2026-10-30 15:02:41',
+       audit:['自动代付条件不符','超出自动代付金额范围'], logs:[] },
+  W4:{ mid:'80000001', phone:'11900000001', no:'5392790011200000001', amt:100, method:'NewGPay', wallet:'8a41c02e5b97d3f6', t:'2026-10-29 14:20:05',
+       audit:['人工审核','-'], logs:[['2026-10-29 14:20:08','admin002','通过','审核中','审核通过','-'],['2026-10-29 14:20:06','admin002','锁定','待审核','审核中','-']] },
+  W5:{ mid:'80000003', phone:'11900000003', no:'5392790011200000004', amt:30,  method:'NewGPay', wallet:'9d03b6e2c4a1f857', t:'2026-10-20 09:12:33',
+       audit:['人工审核','-'], logs:[['2026-10-20 09:15:02','admin002','通过','审核中','审核通过','-'],['2026-10-20 09:13:40','admin002','锁定','待审核','审核中','-']] }
+};
+function ngWalletTag(mid, addr){
+  var m = ngMember(mid), w = m && m.wallets.filter(function(x){ return x.addr === addr; })[0];
+  if (!w) return '<span class="ngw-tag del" title="会员已删除该钱包，订单保留提交时的地址">已删除</span>';
+  return '<span class="ngw-tag '+(w.sys?'sys':'usr')+'">'+(w.sys?'默认钱包':'用户绑定')+'</span>';
+}
+function ngOpenOrder(key, el){
+  var o = NG_ORDERS[key];
+  if (key === 'PIX'){   // 原有 PIX 订单：从所在行取会员ID、订单号、金额
+    var tr = el.closest('tr'), txt = tr.innerText;
+    o = { mid:(tr.querySelector('a')||{}).textContent || '-', phone:(txt.match(/\b1\d{10}\b|\b55\d{9}\b/)||['-'])[0],
+          no:(txt.match(/\b\d{19}\b/)||['-'])[0], amt:(txt.match(/(\d+)\(BRL\)/)||[0,'-'])[1], method:'PIX', wallet:'',
+          t:'-', audit:['人工审核','-'], logs:[] };
+  }
+  var kv = function(rows){ return '<table class="ngo-kv">'+rows.map(function(r){
+    var out = '<tr>'; for (var i = 0; i < r.length; i += 2){
+      var ng = r[i].indexOf('NewGPay') === 0, span = (r.length === 2 ? ' colspan="5"' : '');
+      out += '<td class="k'+(ng?' ng-new':'')+'">'+r[i]+'</td><td'+(ng?' class="ng-new"':'')+span+'>'+r[i+1]+'</td>'; }
+    return out + '</tr>'; }).join('')+'</table>'; };
+  var ng = o.method === 'NewGPay';
+  var addr = ng ? '<span class="ng-addr">'+o.wallet+'</span> <span class="copy-icon" onclick="ngCopy(\''+o.wallet+'\')">⧉</span> '+ngWalletTag(o.mid, o.wallet) : '-';
+  var html = '<div class="ngo-sec">会员信息</div>' + kv([
+      ['会员账号', o.phone, '会员ID', o.mid, '等级', 'VIP0'],
+      ['注册时间', '2026-09-12 10:21:33 (UTC-3)', '登录IP', '10.0.0.151', '登录设备', 'PC'] ])
+    + '<div class="ngo-sec">资金记录</div>' + kv([
+      ['会员总存款', '-', '上次充值', '-', '上次充值时间', '-'],
+      ['会员总提款', '-', '上次提现', '-', '上次提现时间', '-'],
+      ['今日提现次数', '-', '提现类型', '即时提款', '上次是否手动清除稽核', '否'] ])
+    + '<div class="ngo-sec">本次提款信息</div>' + kv([
+      ['审核类型', o.audit[0], '审核原因', o.audit[1], '申请时间', o.t === '-' ? '-' : o.t+' (UTC-3)'],
+      ['提现金额', o.amt+' <span class="copy-icon">⧉</span>', '提款方式', o.method, '提现账号信息', ng ? '-' : 'CPF · 111******44'],
+      ['币种类型', 'BRL', '提现设备', '-', '关联订单号', o.no],
+      ['NewGPay 钱包地址', addr] ])
+    + (ng ? '<div class="ngo-tip">NewGPay 钱包地址为会员提交订单时使用的钱包，订单生成后不随会员增删钱包变化；标签显示该钱包当前状态。</div>' : '')
+    + '<div class="ngo-sec">处理记录</div><table class="ngo-log"><thead><tr><th>时间</th><th>操作人</th><th>操作</th><th>处理前状态</th><th>处理后状态</th><th>备注</th></tr></thead><tbody>'
+    + (o.logs.length ? o.logs.map(function(l){ return '<tr><td>'+l[0]+' (UTC-3)</td><td>'+l[1]+'</td><td>'+l[2]+'</td><td>'+l[3]+'</td><td>'+l[4]+'</td><td>'+l[5]+'</td></tr>'; }).join('')
+                     : '<tr><td colspan="6" style="color:#8c8c8c">暂无数据</td></tr>')
+    + '</tbody></table>';
+  document.getElementById('ngo-body').innerHTML = html;
+  openM('m-ng-order');
 }
 function ngLogRender(){
   var type = document.getElementById('ng-log-type').value, mid = document.getElementById('ng-log-mid').value.trim();
