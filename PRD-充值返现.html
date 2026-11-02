@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>充值返现 PRD v1.4</title>
+<title>充值返现 PRD v1.5</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -52,7 +52,7 @@ tr.sync td{background:#fff8d6}
 <div class="cover">
   <div class="cover-title">充值返现</div>
   <div class="cover-sub">PRD 产品需求文档 · 会员存款返现设置 / 返现发放与账变</div>
-  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
+  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
 </div>
 
 <div class="toc">
@@ -300,26 +300,25 @@ tr.sync td{background:#fff8d6}
     <tbody>
       <tr><td><span class="req">*</span> 返现百分比（%）</td><td>数字输入</td><td><b>是</b></td><td>该存款方式的返现比例。输入区间 <b>0.001 ~ 100.000</b>，<b>最多 3 位小数</b>，保存时统一补齐为 3 位小数存储（如输入 <code>1</code> 存为 <code>1.000</code>）。该值直接决定前台渠道角标的「+N%」与结算栏「含赠送」金额。</td></tr>
       <tr><td><span class="req">*</span> 每日最高优惠</td><td>数字输入</td><td><b>是</b></td><td>单个会员在<b>该存款方式</b>下单个自然日（UTC-3）可获得的返现金额上限。输入区间 <b>0.01 ~ 1000000.00</b>，<b>最多 2 位小数</b>，保存时统一补齐为 2 位小数存储。该值同时作为前台奖励规则气泡中「每日最高奖励」的取值来源。</td></tr>
-      <tr><td>提现稽核倍数</td><td>数字输入</td><td>否</td><td>返现金额需完成的有效投注倍数。<b>输入为大于等于 1 的整数</b>，<span class="sync">小数在失焦时四舍五入为整数</span>。<b>不填时默认为 0</b>，表示该笔赠送金额<b>不参与提现流水稽核计算</b>。该值同时作为前台奖励规则气泡中「提现流水要求」的倍数取值来源。</td></tr>
+      <tr class="sync"><td><span class="req">*</span> 提现稽核倍数</td><td>数字输入</td><td><b>是</b></td><td>返现金额需完成的有效投注倍数（v1.5 改为必填）。<b>默认填入 0</b>（从未配置过的存款方式打开弹窗时显示 0），<b>只能填写 0 或正整数</b>，不设上限；为 0 时表示该笔赠送金额<b>不参与提现流水稽核计算</b>。该值同时作为前台奖励规则气泡中「提现流水要求」的倍数取值来源。</td></tr>
       <tr><td>保 存</td><td>主按钮</td><td>—</td><td>通过校验后提交，弹窗关闭，轻提示「保存成功」，列表对应行的配置值、最近操作时间、操作人同步刷新。</td></tr>
       <tr><td>重 置</td><td>次按钮</td><td>—</td><td>将三项输入<b>还原为本次打开弹窗时的已保存值</b>（非清空），弹窗保持打开。</td></tr>
     </tbody>
   </table>
 
   <h2 id="s46">4.6 字段校验与温馨提示</h2>
-  <p>弹窗内「返现设置」下方以红色文案常驻展示以下 5 条温馨提示。<span class="sync">校验与纠正方式<b>与 UAT 现网弹窗一致</b>（v1.1 调整）：越界与超位数的输入在<b>失焦时自动修正为合法值</b>，不标红；仅必填项为空时在保存时拦截。</span></p>
+  <p>弹窗内「返现设置」下方以红色文案常驻展示以下 <span class="sync">4</span> 条温馨提示<span class="sync">（v1.5 将原第 4、5 条合并为一条）</span>。<span class="sync">校验与纠正方式<b>与 UAT 现网弹窗一致</b>（v1.1 调整）：越界与超位数的输入在<b>失焦时自动修正为合法值</b>，不标红；仅必填项为空时在保存时拦截。</span></p>
   <table>
     <thead><tr><th style="width:40px">序</th><th style="width:420px">提示文案</th><th>对应校验与纠正</th></tr></thead>
     <tbody>
       <tr><td>1</td><td>「返现百分比（%）」与「每日最高优惠」为必填项，必须同时填写</td><td>两项<b>不允许只填其一</b>。<span class="sync">任一为空时点击保存，该输入框标红，下方提示「请输入返现百分比(%)」或「请输入每日最高优惠」，不提交。</span></td></tr>
       <tr><td>2</td><td>「返现百分比（%）」的输入区间「0.001 ~ 100.000」</td><td><span class="sync">失焦时自动修正：超过 3 位小数时四舍五入保留 3 位（如 1.23456 → 1.235）；小于 0.001 修正为 0.001，大于 100 修正为 100.000（如 101 → 100.000）。</span>若需停用该存款方式的返现，使用列表状态开关关闭。</td></tr>
       <tr><td>3</td><td>「每日最高优惠」的输入区间「0.01 ~ 1000000.00」</td><td><span class="sync">失焦时自动修正：超过 2 位小数时四舍五入保留 2 位（如 5.678 → 5.68）；小于 0.01 修正为 0.01，大于 1000000 修正为 1000000.00（如 0 → 0.01）。</span></td></tr>
-      <tr><td>4</td><td>「提现稽核倍数」非必填，不填时默认显示为 0，加赠金额部分不参与提现流水稽核计算</td><td>留空或填 0 时<b>显示为 0</b>，发放时不追加有效投注要求。</td></tr>
-      <tr><td>5</td><td>「提现稽核倍数」的输入为大于等于 1 的整数</td><td><span class="sync">失焦时自动修正：小数四舍五入为整数（如 1.5 → 2、2.5 → 3）；小于 1 的值修正为 1（如 0.4 → 1）；不设上限。</span></td></tr>
+      <tr class="sync"><td>4</td><td>「提现稽核倍数」为必填项，默认为 0，只能填写 0 或正整数；为 0 时加赠金额部分不参与提现流水稽核计算</td><td>输入框<b>只能输入数字</b>，小数点、负号等字符无法输入，粘贴时自动过滤；失焦时去掉前导 0（如 05 → 5）；<b>不设上限</b>。清空后失焦或点击保存，输入框标红，下方提示「请输入提现稽核倍数」，不提交。填 0 时发放不追加有效投注要求。</td></tr>
     </tbody>
   </table>
   <div class="notice">
-    <p><b>输入态约束</b>：<span class="sync">三项输入框占位均为「请输入」，</span>只允许输入数字与小数点，粘贴含非法字符的内容时自动过滤。</p>
+    <p><b>输入态约束</b>：<span class="sync">三项输入框占位均为「请输入」；返现百分比、每日最高优惠只允许输入数字与小数点，提现稽核倍数只允许输入数字，</span>粘贴含非法字符的内容时自动过滤。</p>
   </div>
 
   <h2 id="s47">4.7 配置生效范围与操作留痕</h2>
@@ -495,6 +494,7 @@ tr.sync td{background:#fff8d6}
   <table>
     <thead><tr><th style="width:80px">版本</th><th style="width:120px">日期</th><th style="width:90px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.5</td><td>2026-11-02</td><td>Laura</td><td>随《提款返现 PRD》v1.7 同步：4.5「提现稽核倍数」改为必填（带星标），默认填入 0，只能填写 0 或正整数（只能输入数字）；4.6 温馨提示第 4、5 条合并为一条，输入态约束同步调整。</td></tr>
       <tr><td>v1.4</td><td>2026-11-02</td><td>Laura</td><td>随《提款返现 PRD》v1.8 同步：返现金额取整规则由「向下取 2 位小数」改为「四舍五入保留 2 位小数」，前台「含赠送」显示金额与后台发放金额口径一致；同步更新流程图与 5.1 公式、示例。</td></tr>
       <tr><td>v1.3</td><td>2026-11-02</td><td>Laura</td><td>4.2 筛选区「操作人」明确为模糊匹配并补充示例（输入 fly 可查到 fly220）；UAT 现网为精确匹配，需按本条调整。</td></tr>
       <tr><td>v1.2</td><td>2026-11-02</td><td>Laura</td><td>随《提款返现 PRD》v1.5 同步：4.2 筛选区「最后操作时间」开始与结束必须同时选择，只选一端时提示且不查询。</td></tr>
