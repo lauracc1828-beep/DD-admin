@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>提款返现 PRD v1.5</title>
+<title>提款返现 PRD v1.6</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -50,7 +50,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">提款返现</div>
   <div class="cover-sub">PRD 产品需求文档 · 充提返现设置 / 提款返现发放与取款页呈现</div>
-  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
+  <div class="cover-meta"><span>版本：v1.6</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
 </div>
 
 <div class="toc">
@@ -270,7 +270,7 @@ b,strong{color:#1a1a2e}
     <tbody>
       <tr><td>菜单名称</td><td>商户财务配置 →「充值返现设置」</td><td>商户财务配置 →<b>「充提返现设置」</b>，菜单位置不变（「支付方式排序」之下、「代付商户管理」之上）。面包屑与页签标题同步更名。</td></tr>
       <tr><td>页面结构</td><td>单页：筛选区 + 列表</td><td>页面顶部新增<b>标签页栏</b>，依次为「充值返现」「提款返现」，<b>默认选中当前账号有查看权限的第一个标签页</b>（两个都有权限时为「充值返现」；仅有「提款返现」查看权限时直接选中「提款返现」）。标签页栏之下为当前标签页的筛选区、时区提示、配置列表与分页条。</td></tr>
-      <tr><td>标签页切换</td><td>—</td><td>点击标签切换内容，不刷新整页。两个标签页的筛选条件与页码<b>相互独立</b>，在本次停留页面期间各自保留；离开页面后再次进入，回到默认标签页与空筛选。</td></tr>
+      <tr><td>标签页切换</td><td>—</td><td>点击标签切换内容，不刷新整页。两个标签页的筛选条件与页码<b>相互独立</b>，各自保留。<br><b>页面状态跟随平台页签缓存</b>，与后台其他页面一致：顶部页签未关闭时，从侧栏或页签切换到其他页面再切回，当前选中的标签页、两个标签页各自的筛选条件与页码均保留；<b>关闭本页页签后重新打开，或刷新浏览器</b>，回到默认标签页，筛选条件清空，页码回到第 1 页。</td></tr>
     </tbody>
   </table>
 
@@ -598,6 +598,7 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.6</td><td>2026-11-02</td><td>Laura</td><td>4.1「标签页切换」：页面状态改为跟随平台页签缓存，页签未关闭时切换页面保留标签页、筛选条件与页码；关闭页签或刷新浏览器后回到默认标签页与空筛选。</td></tr>
       <tr><td>v1.5</td><td>2026-11-02</td><td>Laura</td><td>根据测试反馈调整筛选区：「提款通道」筛选下拉改为列出全部提现通道，不与列表联动；「最后操作时间」开始与结束必须同时选择，只选一端时提示且不查询；「操作人」保持模糊匹配。</td></tr>
       <tr><td>v1.4</td><td>2026-11-02</td><td>Laura</td><td>根据测试评审意见补齐规则：前台渠道按钮即提现通道，按通道读取配置，删除映射待确认；默认选中有查看权限的第一个标签页；输入修正规则按 UAT 实测补齐（超位数小数四舍五入、稽核倍数小于 1 修正为 1、不设上限）；人工出款（账变类型「人工提出」）不返现，通道出款人工确认成功的照常返现；出款退回 / 冲正系统不做自动处理，「提款返现」账变只记加款；入账失败按平台通用方案；通道禁用 / 移除不影响已提交订单；前台配置读取时机；葡语文案定稿，档位角标文案改为「+{N}%」；删除「待确认事项」章节。</td></tr>
       <tr><td>v1.3</td><td>2026-10-29</td><td>Laura</td><td>6.3 「额外赠送」副行增加显示条件：未输入或未选中有效金额时不渲染，与存款页一致。</td></tr>
