@@ -125,7 +125,7 @@ body{background:var(--page);color:var(--ink);font-family:-apple-system,BlinkMacS
   <p class="sub">UI 设计排期用。按「页面 × 状态」逐帧拆分，一帧即一张需交付的设计稿。</p>
   <div class="meta">
     <span class="chip">需求 <b>提款返现</b></span>
-    <span class="chip">依据 <b>《提款返现 PRD》v1.3 · 《充值返现 PRD》v1.1</b></span>
+    <span class="chip">依据 <b>《提款返现 PRD》v1.4 · 《充值返现 PRD》v1.1</b></span>
     <span class="chip">需出稿 <b id="nDesign">-</b></span>
     <span class="chip">沿用不出稿 <b id="nRef">-</b></span>
     <span class="chip">合计 <b id="nAll">-</b></span>
@@ -137,7 +137,7 @@ body{background:var(--page);color:var(--ink);font-family:-apple-system,BlinkMacS
   <h3>看图说明</h3>
   <table>
     <tr><th>帧编号</th><td>A1、C1 等编号为设计稿交付与评审的唯一索引，设计稿文件名请沿用该编号。</td></tr>
-    <tr><th>文案语言</th><td>帧内文案<b>为葡语</b>（上线语言），每帧下方给出中文对照。标 [T] 的为新拟文案，取值见《提款返现 PRD》第七章中葡对照表，上线前需运营确认。</td></tr>
+    <tr><th>文案语言</th><td>帧内文案<b>为葡语</b>（上线语言），每帧下方给出中文对照。标「新增」的为本需求新增文案（已定稿），取值见《提款返现 PRD》第七章中葡对照表。取款页「额外赠送」葡语为 <b>Bônus extra</b>，不要沿用存款页的「Bônus incluído」。</td></tr>
     <tr><th>视觉规格</th><td>帧内仅表达元素构成、层级与状态差异，<b>不作为视觉稿</b>。字号、间距、圆角由设计定义。<b>唯一已定的视觉值</b>：存款 / 取款的渠道角标与档位角标底色为 <b>#E6961B</b>。帧内绿色虚线框标出本次新增或改动的元素。</td></tr>
     <tr><th>示例数据</th><td>帧内以 BESTPAY 渠道（后台 pix 通道）提款返现 1%、每日最高 R$ 10,00、稽核 1 倍；NewGPay 渠道提款返现 2%、每日最高 R$ 50,00、稽核 1 倍为例。实际数值均读取后台配置。</td></tr>
     <tr><th>需出稿 / 沿用</th><td>标 <b>需出稿</b> 的帧为本次需求真正需要设计输出的部分。标 <b>沿用 · 不出稿</b> 的帧（虚线框、画面置灰）为现网或既有设计已有的状态，本次无改动或仅文案替换，列出仅供理解前后状态关系，<b>不需重新设计</b>。</td></tr>
@@ -223,12 +223,12 @@ var GROUPS = [
    html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','3,00'], hlSub:true, cta:'Sacar agora'}}),
    trig:'点选档位或输入有效金额。',
    pts:'「您将收到」主行<b>不含返现</b>（仍为出款金额）；其下新增「额外赠送 +R$ X,XX」副行，右侧带问号，金额随输入实时变化；按钮亮起，底部导航收起（沿用现网规则）。',
-   cp:'额外赠送 [T]｜您将收到｜立即取款', prd:'PRD 6.3'},
+   cp:'额外赠送（新增）｜您将收到｜立即取款', prd:'PRD 6.3'},
   {code:'A3', name:'奖励规则气泡展开', design:true,
    html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','3,00'], pop:POP_FULL, hlPop:true, cta:'Sacar agora'}}),
    trig:'点击「额外赠送」旁的问号；再次点击或点页面其他区域收起。',
    pts:'气泡结构对齐存款页奖励规则气泡，<b>第一行新增入账说明</b>（整句，葡语较长需折行）；其下为「每日最高奖励」「提现流水要求」两行键值。',
-   cp:'赠送金额将在取款成功后存入账户余额 [T]｜每日最高奖励｜提现流水要求　赠送金额 ×1', prd:'PRD 6.4'},
+   cp:'赠送金额将在取款成功后存入账户余额（新增）｜每日最高奖励｜提现流水要求　赠送金额 ×1', prd:'PRD 6.4'},
   {code:'A4', name:'气泡 · 稽核倍数为 0', design:false,
    html:wdPage({ch:'best', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+1%', sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','3,00'], pop:POP_NOWAGER, cta:'Sacar agora'}}),
    trig:'该通道提现稽核倍数配置为 0。',
@@ -247,7 +247,7 @@ var GROUPS = [
    html:wdPage({ch:'ngc', mtags:{best:'+1%',ngc:'+2%'}, ctag:'+2%', hl:true, sel:300, amt:'300,00', foot:{recv:'300,00', sub:['Bônus extra','6,00'], hlSub:true, cta:'Enviar para a carteira NewGPay'}}),
    trig:'取款 Tab 切到 NewGPay 渠道并选择金额。',
    pts:'确认渠道角标、档位角标、「额外赠送」副行在 NewGPay 版式（钱包卡片 + 无收款信息区）下的位置与间距；角标比例随渠道切换为该渠道的配置值。',
-   cp:'额外赠送 [T]｜转入 NewGPay 钱包（沿用现网按钮文案）', prd:'PRD 6.1 ~ 6.3'}
+   cp:'额外赠送（新增）｜转入 NewGPay 钱包（沿用现网按钮文案）', prd:'PRD 6.1 ~ 6.3'}
  ]},
  {id:'C', title:'存款页 · 档位比例角标', desc:'充值返现侧同步改动：快捷档位新增「+N%」角标，「含赠送」副行未选金额时不显示。', frames:[
   {code:'C1', name:'未选金额 · 档位比例角标', design:true,
@@ -264,7 +264,7 @@ var GROUPS = [
   {code:'D1', name:'账变列表 · 提款返现条目', design:false,
    html:recPage(),
    trig:'取款出款成功、返现入账后，会员查看账变 / 交易记录。',
-   pts:'沿用现网账变列表样式；新增条目名称「提款返现」，加款金额样式与其他加款一致。', cp:'提款返现 [T]：Bônus de saque', prd:'PRD 5.4 / 第七章'}
+   pts:'沿用现网账变列表样式；新增条目名称「提款返现」，加款金额样式与其他加款一致。', cp:'提款返现（新增）：Bônus de saque', prd:'PRD 5.4 / 第七章'}
  ]}
 ];
 

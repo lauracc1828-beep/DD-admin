@@ -8793,7 +8793,7 @@ function rtLinkSave(){
     var el=document.getElementById('cb-'+f), v=el.value.trim();
     cbClr(f);
     if(f==='aud'){
-      // 留空或 0 视为未填（显示 0，不参与稽核）；其余取整且不小于 1
+      // 留空或 0 视为未填（显示 0，不参与稽核）；其余四舍五入取整且不小于 1，不设上限
       if(v==='' || +v===0){ el.value='0'; return true; }
       el.value=String(Math.max(1,Math.round(+v)||1)); return true;
     }
