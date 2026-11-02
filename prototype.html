@@ -8655,7 +8655,8 @@ function rtLinkSave(){
     return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate())+' '+p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds());
   }
   function shell(k){
-    var c=CB[k], opts=c.rows.map(function(r){return '<option>'+r.name+'</option>';}).join('');
+    // 提款返现：筛选下拉固定列出全部提现通道，不与列表联动
+    var c=CB[k], opts=(k==='wd'?WD_CHANNELS:c.rows.map(function(r){return r.name;})).map(function(n){return '<option>'+n+'</option>';}).join('');
     return '<div class="cb-filter">'+
       '<div><div class="cb-range"><input id="cb-'+k+'-s" type="text" placeholder="最后操作时间(开始)" onfocus="this.type=\'date\'"><span style="color:#bfbfbf">→</span><input id="cb-'+k+'-e" type="text" placeholder="最后操作时间(结束)" onfocus="this.type=\'date\'"></div><div class="cb-tz">当前时间为 UTC-3 时区</div></div>'+
       '<select class="f-select" id="cb-'+k+'-m" style="min-width:260px"><option value="">'+c.label+'</option>'+opts+'</select>'+
@@ -8691,10 +8692,7 @@ function rtLinkSave(){
         (k==='wd'?'<button class="btn btn-del btn-sm" onclick="cbDel('+o.i+')">删 除</button>':'')+'</span></td></tr>';
     }).join('') : '<tr><td colspan="8" class="cb-empty">暂无数据</td></tr>';
     if(k==='wd'){
-      // 筛选下拉只列已添加的通道；全部通道已添加时「新增」置灰
-      var sel=document.getElementById('cb-wd-m'), v=sel.value;
-      sel.innerHTML='<option value="">提款通道</option>'+c.rows.map(function(r){return '<option>'+r.name+'</option>';}).join('');
-      sel.value=wdAdded(v)?v:'';
+      // 全部通道已添加时「新增」置灰
       var full=WD_CHANNELS.every(wdAdded), btn=document.getElementById('cb-wd-add');
       btn.disabled=full; btn.title=full?'全部提现通道均已添加':'';
     }
@@ -8712,6 +8710,9 @@ function rtLinkSave(){
     ['dep','wd'].forEach(function(k){ document.getElementById('cb-p-'+k).classList.toggle('hidden', k!==el.dataset.k); });
   };
   window.cbQuery=function(k){
+    // 最后操作时间起止须同时选择，只填一端时不查询
+    var s=document.getElementById('cb-'+k+'-s').value, e=document.getElementById('cb-'+k+'-e').value;
+    if(!s!==!e){ toast('请同时选择开始时间和结束时间'); return; }
     flt[k]={s:document.getElementById('cb-'+k+'-s').value, e:document.getElementById('cb-'+k+'-e').value,
             m:document.getElementById('cb-'+k+'-m').value, o:document.getElementById('cb-'+k+'-o').value.trim()};
     renderTab(k);

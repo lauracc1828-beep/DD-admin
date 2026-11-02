@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>提款返现 PRD v1.4</title>
+<title>提款返现 PRD v1.5</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -50,7 +50,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">提款返现</div>
   <div class="cover-sub">PRD 产品需求文档 · 充提返现设置 / 提款返现发放与取款页呈现</div>
-  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
+  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
 </div>
 
 <div class="toc">
@@ -281,8 +281,8 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:120px">字段</th><th style="width:120px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
     <tbody>
-      <tr><td>最后操作时间</td><td>日期范围选择器</td><td>否</td><td>起止两个输入框，按<b>最近一次保存或开关切换</b>的时间筛选。时间口径为 <b>UTC-3</b>，筛选区下方以红色提示文案「当前时间为 UTC-3 时区」常驻说明。起止均为空时不参与筛选；仅填其一时，另一端视为不限。</td></tr>
-      <tr><td>提款通道</td><td>下拉单选</td><td>否</td><td>选项为<b>当前已添加</b>到列表中的提款通道，随新增 / 删除实时更新；默认空（全部）。</td></tr>
+      <tr><td>最后操作时间</td><td>日期范围选择器</td><td>否</td><td>起止两个输入框，按<b>最近一次保存或开关切换</b>的时间筛选。时间口径为 <b>UTC-3</b>，筛选区下方以红色提示文案「当前时间为 UTC-3 时区」常驻说明。起止均为空时不参与筛选；<b>开始时间与结束时间必须同时选择</b>，只选其一时点击「查询」不发起查询，提示「请同时选择开始时间和结束时间」，已选的时间保留不清空。</td></tr>
+      <tr><td>提款通道</td><td>下拉单选</td><td>否</td><td>选项为「提现管理 — 提现通道配置」中的<b>全部提现通道</b>（不区分状态，顺序与该页一致），<b>不与列表联动</b>：未添加到列表的通道同样列出，选中后查询结果为「暂无数据」；默认空（全部）。</td></tr>
       <tr><td>操作人</td><td>文本输入</td><td>否</td><td>按最近操作人账号<b>模糊匹配</b>。</td></tr>
       <tr><td>查 询</td><td>主按钮</td><td>—</td><td>按当前筛选条件重新拉取列表，结果回到第 1 页。</td></tr>
       <tr><td>重 置</td><td>次按钮</td><td>—</td><td>清空本标签页的全部筛选条件并重新拉取全量列表，不影响「充值返现」标签页。</td></tr>
@@ -598,6 +598,7 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.5</td><td>2026-11-02</td><td>Laura</td><td>根据测试反馈调整筛选区：「提款通道」筛选下拉改为列出全部提现通道，不与列表联动；「最后操作时间」开始与结束必须同时选择，只选一端时提示且不查询；「操作人」保持模糊匹配。</td></tr>
       <tr><td>v1.4</td><td>2026-11-02</td><td>Laura</td><td>根据测试评审意见补齐规则：前台渠道按钮即提现通道，按通道读取配置，删除映射待确认；默认选中有查看权限的第一个标签页；输入修正规则按 UAT 实测补齐（超位数小数四舍五入、稽核倍数小于 1 修正为 1、不设上限）；人工出款（账变类型「人工提出」）不返现，通道出款人工确认成功的照常返现；出款退回 / 冲正系统不做自动处理，「提款返现」账变只记加款；入账失败按平台通用方案；通道禁用 / 移除不影响已提交订单；前台配置读取时机；葡语文案定稿，档位角标文案改为「+{N}%」；删除「待确认事项」章节。</td></tr>
       <tr><td>v1.3</td><td>2026-10-29</td><td>Laura</td><td>6.3 「额外赠送」副行增加显示条件：未输入或未选中有效金额时不渲染，与存款页一致。</td></tr>
       <tr><td>v1.2</td><td>2026-10-29</td><td>Laura</td><td>4.7 校验改为与 UAT 现网弹窗一致（失焦自动修正越界值、必填提示「请输入{字段名}」）；6.2 快捷档位角标由预估金额改为全部显示「+N%」；第十一章待确认事项更新（《充值返现 PRD》已同步为 UAT 校验口径）。</td></tr>
