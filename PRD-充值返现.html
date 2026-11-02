@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>充值返现 PRD v1.3</title>
+<title>充值返现 PRD v1.4</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -52,7 +52,7 @@ tr.sync td{background:#fff8d6}
 <div class="cover">
   <div class="cover-title">充值返现</div>
   <div class="cover-sub">PRD 产品需求文档 · 会员存款返现设置 / 返现发放与账变</div>
-  <div class="cover-meta"><span>版本：v1.3</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
+  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-02</span></div>
 </div>
 
 <div class="toc">
@@ -159,7 +159,7 @@ tr.sync td{background:#fff8d6}
 
     <rect x="120" y="386" width="260" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
     <text x="250" y="405" text-anchor="middle" font-size="12.5" fill="#333">计算 返现金额 ＝ 实际到账金额</text>
-    <text x="250" y="422" text-anchor="middle" font-size="12.5" fill="#333">× 返现百分比，向下取 2 位小数</text>
+    <text x="250" y="422" text-anchor="middle" font-size="11.5" fill="#333">× 返现百分比，四舍五入保留 2 位小数</text>
 
     <rect x="120" y="466" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
     <text x="250" y="485" text-anchor="middle" font-size="12.5" fill="#333">取该会员当日（UTC-3）在该存款</text>
@@ -337,11 +337,11 @@ tr.sync td{background:#fff8d6}
 
   <h2 id="s51">5.1 计算基数与取整</h2>
   <div class="formula">
-    返现金额（计算值）＝ 向下取 2 位小数（ 实际到账充值金额 × 返现百分比 ÷ 100 ）
+    返现金额（计算值）＝ 四舍五入保留 2 位小数（ 实际到账充值金额 × 返现百分比 ÷ 100 ）
   </div>
   <ul>
     <li><b>计算基数</b>：取<b>实际到账的本金金额</b>，即三方支付成功回调后真正计入会员账户的金额，<b>不含三方手续费</b>。若实际到账金额与会员提交金额因三方扣费而不一致，<b>以实际到账金额为准</b>。</li>
-    <li><b>取整规则</b>：计算结果一律<b>向下取整至 2 位小数</b>（舍去第 3 位及以后，不四舍五入），平台不向上多给。例：到账 R$ 33,33、比例 1% → 0,3333 → 实发 <b>R$ 0,33</b>。</li>
+    <li><b>取整规则</b>：<span class="sync">计算结果一律<b>四舍五入保留 2 位小数</b>（不截断，v1.4 调整）。例：到账 R$ 33,50、比例 1% → 0,335 → 实发 <b>R$ 0,34</b>；到账 R$ 33,33、比例 1% → 0,3333 → 实发 <b>R$ 0,33</b>。前台「含赠送」的显示金额与后台发放金额采用同一取整规则。</span></li>
     <li><b>触发时点</b>：仅在<b>充值订单支付成功</b>时触发一次。订单失败、超时失效、关闭或被撤销的，均不触发返现；订单后续被人工冲正的，对应返现随之冲回并生成反向账变。</li>
     <li><b>零值处理</b>：计算值取整后为 <code>0.00</code> 时，<b>不入账、不产生账变</b>，前台亦不展示返现提示。</li>
   </ul>
@@ -495,6 +495,7 @@ tr.sync td{background:#fff8d6}
   <table>
     <thead><tr><th style="width:80px">版本</th><th style="width:120px">日期</th><th style="width:90px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.4</td><td>2026-11-02</td><td>Laura</td><td>随《提款返现 PRD》v1.8 同步：返现金额取整规则由「向下取 2 位小数」改为「四舍五入保留 2 位小数」，前台「含赠送」显示金额与后台发放金额口径一致；同步更新流程图与 5.1 公式、示例。</td></tr>
       <tr><td>v1.3</td><td>2026-11-02</td><td>Laura</td><td>4.2 筛选区「操作人」明确为模糊匹配并补充示例（输入 fly 可查到 fly220）；UAT 现网为精确匹配，需按本条调整。</td></tr>
       <tr><td>v1.2</td><td>2026-11-02</td><td>Laura</td><td>随《提款返现 PRD》v1.5 同步：4.2 筛选区「最后操作时间」开始与结束必须同时选择，只选一端时提示且不查询。</td></tr>
       <tr><td>v1.1</td><td>2026-10-29</td><td>Laura</td><td>随《提款返现 PRD》同步（正文黄色高亮处）：4.1 菜单更名为「充提返现设置」，本页改为其「充值返现」标签页；第六章渠道角标「取款页不展示」改为取款页读取提款返现配置，并新增存款页快捷档位「+N%」比例角标；结算栏「含赠送」副行在未选有效金额时不渲染；4.5 / 4.6 字段校验改为与 UAT 现网一致（越界值失焦自动修正、必填提示「请输入{字段名}」）；第九章菜单权限更名、标签页权限拆分；第十章新增与《提款返现 PRD》的关联说明。</td></tr>

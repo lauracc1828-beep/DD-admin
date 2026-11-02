@@ -864,9 +864,9 @@
   <p class="note">
     · <b>顶部 Tab</b>：胶囊容器内两段式，选中态金边金底并显出图标；右侧分隔线 + 记录入口。<br>
     · <b>渠道切换</b>：选中态金色实心；<b>两个渠道各自读取后台「充值返现设置」</b>，配置了比例即带 +N% 角标，NewGPay 进入页面时流光一次引导注意。<br>
-    · <b>充值返现</b>：结算栏「含赠送」副行随比例显隐，金额按<b>向下取 2 位小数</b>计算；点副行问号查看每日最高奖励与提现流水要求（稽核倍数为 0 时该行不展示）。<br>
+    · <b>充值返现</b>：结算栏「含赠送」副行随比例显隐，金额按<b>四舍五入保留 2 位小数</b>计算；点副行问号查看每日最高奖励与提现流水要求（稽核倍数为 0 时该行不展示）。<br>
     · <b>提款</b>：收款信息走底部弹窗，弹窗内选方式并填对应字段；提现成功后才保存并锁定。<br>
-    · <b>提款返现</b>：两个取款渠道各自读取后台「充提返现设置 — 提款返现」，配置了比例即带 +N% 角标；快捷档位右上角全部显示返现比例「+N%」（存款档位同理，读取充值返现）；角标色 #E6961B；结算栏「您将收到」不含返现，下方「额外赠送」副行随输入实时计算（向下取 2 位小数），点问号查看入账说明、每日最高奖励与提现流水要求。返现在出款成功后才存入账户余额。
+    · <b>提款返现</b>：两个取款渠道各自读取后台「充提返现设置 — 提款返现」，配置了比例即带 +N% 角标；快捷档位右上角全部显示返现比例「+N%」（存款档位同理，读取充值返现）；角标色 #E6961B；结算栏「您将收到」不含返现，下方「额外赠送」副行随输入实时计算（四舍五入保留 2 位小数），点问号查看入账说明、每日最高奖励与提现流水要求。返现在出款成功后才存入账户余额。
   </p>
 </div>
 
@@ -1123,8 +1123,8 @@ var WCASHBACK = {
   ngc:{ on:true, pct:1.5, dailyMax:50, wager:1 }              /* NewGPay 通道 1.5%，上限 R$50，稽核 1 倍 */
 };
 function wcbLive(k){ var c = WCASHBACK[k]; return !!(c && c.on && c.pct > 0); }
-/* 返现预估：向下取 2 位小数；基数为预计出款金额（原型无提款手续费，即取款金额） */
-function wcbCalc(k, amt){ return wcbLive(k) ? Math.floor(amt * WCASHBACK[k].pct) / 100 : 0; }
+/* 返现预估：四舍五入保留 2 位小数；基数为预计出款金额（原型无提款手续费，即取款金额） */
+function wcbCalc(k, amt){ return wcbLive(k) ? Math.round(amt * WCASHBACK[k].pct) / 100 : 0; }  // 四舍五入保留 2 位小数，与后台发放一致
 var BONUS = CASHBACK.ngc.pct;   /* = CASHBACK.ngc.pct，供 NGC 引导浮层文案取用 */
 var brl = function(n){ return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 var int = function(n){ return n.toLocaleString('pt-BR'); };
@@ -1229,10 +1229,10 @@ function renderDep(){
   document.getElementById('dField').classList.toggle('err', !!err);
   var ok = dAmt > 0 && !err;
   document.getElementById('dCta').textContent = t('depCta');
-  /* 充值返现：按当前存款方式各自的配置计算，向下取 2 位小数（1 NGC = 1 R$） */
+  /* 充值返现：按当前存款方式各自的配置计算，四舍五入保留 2 位小数（1 NGC = 1 R$） */
   var live  = cbLive(dM);
   var base  = ok ? dAmt : 0;
-  var bonus = live ? Math.floor(base * CASHBACK[dM].pct) / 100 : 0;
+  var bonus = live ? Math.round(base * CASHBACK[dM].pct) / 100 : 0;  // 四舍五入保留 2 位小数，与后台发放一致
   document.getElementById('dRecv').innerHTML = money(base + bonus);
   var sub = document.getElementById('dSub');
   if (sub){

@@ -2441,14 +2441,15 @@ th.ng-new,td.ng-new{background:#e6f4ff}
       <h4 class="ub-h4 pt">返现设置</h4>
       <div class="ub-item"><label class="ub-lb req">返现百分比(%)</label><div class="ub-ctl"><input class="ub-in" id="cb-pct" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('pct')"><div class="ub-err" id="cb-pct-h" style="display:none"></div></div></div>
       <div class="ub-item"><label class="ub-lb req">每日最高优惠</label><div class="ub-ctl"><input class="ub-in" id="cb-cap" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('cap')"><div class="ub-err" id="cb-cap-h" style="display:none"></div></div></div>
-      <div class="ub-item"><label class="ub-lb">提现稽核倍数</label><div class="ub-ctl"><input class="ub-in" id="cb-aud" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('aud')"><div class="ub-err" id="cb-aud-h" style="display:none"></div></div></div>
+      <div class="ub-item"><label class="ub-lb" id="cb-aud-l">提现稽核倍数</label><div class="ub-ctl"><input class="ub-in" id="cb-aud" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('aud')"><div class="ub-err" id="cb-aud-h" style="display:none"></div></div></div>
       <div class="ub-tips">
         <div class="ub-tips-k">温馨提示：</div>
         <p>1、“返现百分比（%）”与“每日最高优惠”为必填项，必须同时填写</p>
         <p>2、“返现百分比（%）”的输入区间“0.001~100.000”</p>
         <p>3、“每日最高优惠”的输入区间“0.01~1000000.00”</p>
-        <p>4、“提现稽核倍数”非必填，不填时默认显示为0，加赠金额部分不参与提现流水稽核计算</p>
-        <p>5、“提现稽核倍数”的输入为大于等于1的整数</p>
+        <p class="cb-tip-dep">4、“提现稽核倍数”非必填，不填时默认显示为0，加赠金额部分不参与提现流水稽核计算</p>
+        <p class="cb-tip-dep">5、“提现稽核倍数”的输入为大于等于1的整数</p>
+        <p class="cb-tip-wd" style="display:none">4、“提现稽核倍数”为必填项，默认为0，只能填写0或正整数；为0时加赠金额部分不参与提现流水稽核计算</p>
       </div>
     </div>
     <div class="ub-ft"><button class="ub-btn pri" onclick="cbSave()">保 存</button><button class="ub-btn" onclick="cbReset()">重 置</button></div>
@@ -8730,6 +8731,11 @@ function rtLinkSave(){
   function cbMode(add){   // 新增：提款通道为必填下拉；编辑：纯文本只读
     document.getElementById('cb-name-row').style.display=add?'none':'';
     document.getElementById('cb-ch-row').style.display=add?'':'none';
+    // 提款返现：提现稽核倍数为必填，温馨提示 4、5 合并为一条
+    var wd=cur.k==='wd';
+    document.getElementById('cb-aud-l').classList.toggle('req',wd);
+    document.querySelectorAll('#cb-edit .cb-tip-dep').forEach(function(p){ p.style.display=wd?'none':''; });
+    document.querySelector('#cb-edit .cb-tip-wd').style.display=wd?'':'none';
   }
   window.cbOpen=function(k,i){
     cur={k:k,i:i};
@@ -8779,7 +8785,7 @@ function rtLinkSave(){
     document.getElementById('cb-aud').value = r.aud ? String(r.aud) : '0';
     ['pct','cap','aud'].forEach(cbClr);
   };
-  window.cbFilter=function(el){ var v=el.value.replace(/[^\d.]/g,''); if(v!==el.value) el.value=v; };
+  window.cbFilter=function(el){ var v=el.value.replace(el.id==='cb-aud' && cur.k==='wd' ? /\D/g : /[^\d.]/g,''); if(v!==el.value) el.value=v; };
   function cbClr(f){
     var el=document.getElementById('cb-'+f); el.classList.remove('err');
     document.getElementById('cb-'+f+'-h').style.display='none'; el.closest('.ub-item').classList.remove('has-err');
@@ -8793,6 +8799,11 @@ function rtLinkSave(){
   window.cbCheck=function(f){
     var el=document.getElementById('cb-'+f), v=el.value.trim();
     cbClr(f);
+    if(f==='aud' && cur.k==='wd'){
+      // 提款返现：必填，只能为 0 或正整数（只能输入数字），失焦去掉前导 0
+      if(v==='') return cbErr(f,'请输入提现稽核倍数');
+      el.value=String(+v); return true;
+    }
     if(f==='aud'){
       // 留空或 0 视为未填（显示 0，不参与稽核）；其余四舍五入取整且不小于 1，不设上限
       if(v==='' || +v===0){ el.value='0'; return true; }
