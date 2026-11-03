@@ -1785,7 +1785,7 @@ select.fs.ph{color:#bfbfbf}
 
       <!-- 推广统计：本期增加下级达标字段，列出全部下级（含无效下级），按最新配置统计 -->
       <div class="sm-panel hidden" id="sm-p-stat">
-        <div class="sm-notice">活动配置修改后，已生效的有效下级不受影响；原本无效的下级如满足最新配置条件，将自动转为有效。数据按最新配置统计。</div>
+        <div class="sm-notice">活动配置修改后，已生效的有效下级不受影响；原本无效的下级如满足最新配置条件，将自动转为有效。有效会员的充值、投注统计至生效时间；无效会员按最新配置统计。</div>
         <div class="sm-filter">
           <input class="f-input" id="sm-s-acc" placeholder="推广者或受邀者账号" style="min-width:200px;cursor:text">
           <input class="f-input" id="sm-s-pid" placeholder="推广者ID" style="min-width:200px;cursor:text">
@@ -1795,7 +1795,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="sm-tools"><button class="btn btn-white" onclick="toast('导出中...')">导 出</button><span title="刷新" onclick="smStatRender();toast('已刷新')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>
         <div class="table-wrap"><div class="table-scroll"><table><thead><tr>
-          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>受邀者ID</th><th>受邀者账号</th><th>注册时间</th><th>注册IP</th><th>注册终端</th><th>累计充值金额</th><th>累计有效投注</th><th>是否同IP同设备</th><th>是否有效会员</th><th>有效会员生效时间</th><th>备注</th>
+          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>受邀者ID</th><th>受邀者账号</th><th>注册时间</th><th>累计充值金额</th><th>累计有效投注</th><th>是否有效会员</th><th>有效会员生效时间</th><th>注册IP</th><th>注册终端</th><th>备注</th>
         </tr></thead><tbody id="sm-s-tb"></tbody></table></div></div>
         <div class="pagination"><div class="pg-info">共 <b id="sm-s-n">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
       </div>
@@ -8965,22 +8965,23 @@ function rtLinkSave(){
     '80010005':{acc:'138****1005'}
   };
   // 下级：bets 为各平台有效投注，推广统计只统计配置「选取平台」内的投注；dev 为注册设备
+  // 有效下级的 vdep / vbet 为生效时间点的累计充值 / 累计有效投注，生效后不再更新
   var SUBS = [
-    {id:'80020001',acc:'138****2001',pid:'80010001',reg:'2026-11-03 01:39:40',ip:'192.0.2.21',dev:'D01',term:'电脑系统',dep:95, bets:{'PG电子':120},valid:true, vt:'2026-11-03 01:41:00'},
+    {id:'80020001',acc:'138****2001',pid:'80010001',reg:'2026-11-03 01:39:40',ip:'192.0.2.21',dev:'D01',term:'电脑系统',dep:95, bets:{'PG电子':120},valid:true, vdep:95, vbet:120, vt:'2026-11-03 01:41:00'},
     {id:'80020002',acc:'138****2002',pid:'80010001',reg:'2026-11-02 10:12:05',ip:'192.0.2.22',dev:'D02',term:'安卓H5', dep:60, bets:{'PP电子':300,'EVO真人':50},valid:false,vt:''},
     {id:'80020003',acc:'138****2003',pid:'80010001',reg:'2026-11-01 09:00:18',ip:'192.0.2.23',dev:'D03',term:'苹果H5', dep:0,  bets:{},valid:false,vt:''},
     // 同注册设备：设备上限 1，80020013 达标但超过上限
     {id:'80020013',acc:'138****2013',pid:'80010002',reg:'2026-10-29 16:05:12',ip:'192.0.2.30',dev:'D04',term:'电脑系统',dep:80, bets:{'PG电子':150},valid:false,vt:''},
-    {id:'80020004',acc:'138****2004',pid:'80010002',reg:'2026-10-28 09:57:52',ip:'192.0.2.24',dev:'D04',term:'电脑系统',dep:50, bets:{'PG电子':320,'FC电子':200},valid:true, vt:'2026-10-28 11:20:13'},
+    {id:'80020004',acc:'138****2004',pid:'80010002',reg:'2026-10-28 09:57:52',ip:'192.0.2.24',dev:'D04',term:'电脑系统',dep:50, bets:{'PG电子':320,'FC电子':200},valid:true, vdep:50, vbet:300, vt:'2026-10-28 11:20:13'},
     {id:'80020005',acc:'138****2005',pid:'80010002',reg:'2026-10-27 14:22:31',ip:'192.0.2.25',dev:'D05',term:'PWA',   dep:200,bets:{'FC电子':80,'PP电子':500},valid:false,vt:''},
     // 同注册IP：IP 上限 2，80020008 达标但超过上限
-    {id:'80020006',acc:'138****2006',pid:'80010003',reg:'2026-10-27 06:01:24',ip:'192.0.2.10',dev:'D06',term:'电脑系统',dep:100,bets:{'MyPG电子':180},valid:true, vt:'2026-10-27 06:40:02'},
-    {id:'80020007',acc:'138****2007',pid:'80010003',reg:'2026-10-27 06:00:59',ip:'192.0.2.10',dev:'D07',term:'电脑系统',dep:100,bets:{'PG电子':150},valid:true, vt:'2026-10-27 06:30:11'},
+    {id:'80020006',acc:'138****2006',pid:'80010003',reg:'2026-10-27 06:01:24',ip:'192.0.2.10',dev:'D06',term:'电脑系统',dep:100,bets:{'MyPG电子':180},valid:true, vdep:100, vbet:120, vt:'2026-10-27 06:40:02'},
+    {id:'80020007',acc:'138****2007',pid:'80010003',reg:'2026-10-27 06:00:59',ip:'192.0.2.10',dev:'D07',term:'电脑系统',dep:100,bets:{'PG电子':150},valid:true, vdep:100, vbet:110, vt:'2026-10-27 06:30:11'},
     {id:'80020008',acc:'138****2008',pid:'80010003',reg:'2026-10-26 08:15:47',ip:'192.0.2.10',dev:'D08',term:'安卓H5', dep:100,bets:{'PG电子':400},valid:false,vt:''},
     {id:'80020009',acc:'138****2009',pid:'80010004',reg:'2026-10-08 02:08:29',ip:'192.0.2.26',dev:'D09',term:'电脑系统',dep:20, bets:{'PP电子':60},valid:false,vt:''},
     {id:'80020010',acc:'138****2010',pid:'80010004',reg:'2026-10-05 07:59:16',ip:'192.0.2.27',dev:'D10',term:'电脑系统',dep:0,  bets:{},valid:false,vt:''},
-    // 旧配置下已生效：按最新配置统计的投注低于门槛，仍保持有效
-    {id:'80020011',acc:'138****2011',pid:'80010005',reg:'2026-09-18 01:52:47',ip:'192.0.2.28',dev:'D11',term:'电脑系统',dep:300,bets:{'PG电子':40,'JDB电子':900},valid:true, vt:'2026-09-18 03:10:26'},
+    // 旧配置下已生效：保持有效，充值/投注停留在生效时间点
+    {id:'80020011',acc:'138****2011',pid:'80010005',reg:'2026-09-18 01:52:47',ip:'192.0.2.28',dev:'D11',term:'电脑系统',dep:300,bets:{'PG电子':40,'JDB电子':900},valid:true, vdep:120, vbet:500, vt:'2026-09-18 03:10:26'},
     {id:'80020012',acc:'138****2012',pid:'80010005',reg:'2026-09-17 04:13:49',ip:'192.0.2.29',dev:'D12',term:'电脑系统',dep:80, bets:{'EVO真人':260},valid:false,vt:''}
   ];
   // 领奖记录（沿用现有）：一次领奖一条
@@ -9010,6 +9011,9 @@ function rtLinkSave(){
     var a=s.dep>=CFG.dep, b=vBet(s)>=CFG.bet;
     return CFG.cond==='and' ? (a&&b) : (a||b);
   }
+  // 推广统计展示：有效会员取生效时间点的数据，无效会员取最新数据（投注按最新配置的限定平台）
+  function showDep(s){ return s.valid ? s.vdep : s.dep; }
+  function showBet(s){ return s.valid ? s.vbet : vBet(s); }
   function sameIp(s){ return SUBS.filter(function(x){ return x.ip===s.ip; }); }
   function sameDev(s){ return SUBS.filter(function(x){ return x.dev===s.dev; }); }
   function sameFlag(s){ return (sameIp(s).length>1 || sameDev(s).length>1) ? '是' : '否'; }
@@ -9061,13 +9065,13 @@ function rtLinkSave(){
     CFG={dep:+d, bet:+b, pm:pm, plats:plats, cond:document.querySelector('input[name="sm-c-cond"]:checked').value, ipLimit:+ip, devLimit:+dv};
     var t=nowStr(), n=0;
     SUBS.slice().sort(function(a,b){ return a.reg.localeCompare(b.reg); }).forEach(function(s){
-      if(!s.valid && meets(s) && !overIp(s) && !overDev(s)){ s.valid=true; s.vt=t; n++; }
+      if(!s.valid && meets(s) && !overIp(s) && !overDev(s)){ s.valid=true; s.vt=t; s.vdep=s.dep; s.vbet=vBet(s); n++; }
     });
     smCfgFill(); smStatRender();
     toast(n ? '保存成功，'+n+' 名无效下级按新配置转为有效' : '保存成功');
   };
 
-  /* ── 推广统计：全部下级（含无效下级），充值取最新、有效投注按最新配置的限定平台统计 ── */
+  /* ── 推广统计：全部下级（含无效下级）；有效会员数据截至生效时间，无效会员取最新数据 ── */
   window.smStatRender=function(){
     var acc=val('sm-s-acc'), pid=val('sm-s-pid'), iid=val('sm-s-iid'), v=val('sm-s-v');
     var list=SUBS.filter(function(s){
@@ -9079,9 +9083,9 @@ function rtLinkSave(){
     }).sort(function(a,b){ return b.reg.localeCompare(a.reg); });
     document.getElementById('sm-s-n').textContent=list.length;
     document.getElementById('sm-s-tb').innerHTML=list.length ? list.map(function(s,i){
-      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[s.pid].acc+'</td><td>'+s.id+'</td><td>'+s.acc+'</td><td>'+s.reg+'</td><td>'+s.ip+'</td><td>'+s.term+'</td>'+
-        '<td>'+m2(s.dep)+'</td><td>'+m2(vBet(s))+'</td><td>'+sameFlag(s)+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td><td>'+remark(s)+'</td></tr>';
-    }).join('') : '<tr><td colspan="14" class="sm-empty">暂无数据</td></tr>';
+      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[s.pid].acc+'</td><td>'+s.id+'</td><td>'+s.acc+'</td><td>'+s.reg+'</td>'+
+        '<td>'+m2(showDep(s))+'</td><td>'+m2(showBet(s))+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td><td>'+s.ip+'</td><td>'+s.term+'</td><td>'+remark(s)+'</td></tr>';
+    }).join('') : '<tr><td colspan="13" class="sm-empty">暂无数据</td></tr>';
   };
   window.smStatReset=function(){ ['sm-s-acc','sm-s-pid','sm-s-iid','sm-s-v'].forEach(function(id){document.getElementById(id).value='';}); smStatRender(); };
 
