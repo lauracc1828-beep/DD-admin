@@ -1778,7 +1778,8 @@ select.fs.ph{color:#bfbfbf}
           </div>
         </div>
         <div class="sm-row"><label>满足有效条件：</label><div class="sm-rd"><label><input type="radio" name="sm-c-cond" value="and">同时满足</label><label><input type="radio" name="sm-c-cond" value="or">满足任意一种</label></div></div>
-        <div class="sm-other">直属限制、统计限制、推广奖励返佣规则、申领终端、申领限制、稽核限定平台、参与层级、推广赚钱说明、分享文案等配置项沿用现有，本期不改，原型略。</div>
+        <div class="sm-row"><label>统计限制：</label><span style="margin-right:8px">同注册IP上限</span><input class="f-input" id="sm-c-ip" placeholder="请输入（0表示不限制）" style="width:180px;margin-right:20px"><span style="margin-right:8px">同注册设备上限</span><input class="f-input" id="sm-c-dev" placeholder="请输入（0表示不限制）" style="width:180px"></div>
+        <div class="sm-other">直属限制、推广奖励返佣规则、申领终端、申领限制、稽核限定平台、参与层级、推广赚钱说明、分享文案等配置项沿用现有，本期不改，原型略。</div>
         <div class="sm-save"><button class="btn btn-white" onclick="smCfgFill();toast('已重置')">重 置</button><button class="btn btn-query" onclick="smCfgSave()">保 存</button></div>
       </div>
 
@@ -1794,7 +1795,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="sm-tools"><button class="btn btn-white" onclick="toast('导出中...')">导 出</button><span title="刷新" onclick="smStatRender();toast('已刷新')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>
         <div class="table-wrap"><div class="table-scroll"><table><thead><tr>
-          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>受邀者ID</th><th>受邀者账号</th><th>注册时间</th><th>注册IP</th><th>注册终端</th><th>累计充值金额</th><th>累计有效投注</th><th>是否同IP同设备</th><th>是否有效会员</th><th>有效会员生效时间</th>
+          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>受邀者ID</th><th>受邀者账号</th><th>注册时间</th><th>注册IP</th><th>注册终端</th><th>累计充值金额</th><th>累计有效投注</th><th>是否同IP同设备</th><th>是否有效会员</th><th>有效会员生效时间</th><th>备注</th>
         </tr></thead><tbody id="sm-s-tb"></tbody></table></div></div>
         <div class="pagination"><div class="pg-info">共 <b id="sm-s-n">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
       </div>
@@ -1814,7 +1815,7 @@ select.fs.ph{color:#bfbfbf}
       </div>
       </div>
 
-      <!-- 领奖记录详情弹窗：沿用现有，展示该次领奖计入的下级 -->
+      <!-- 领奖记录详情弹窗：沿用现有，按推广者查询其下级 -->
       <div class="overlay" id="m-sm-sub">
         <div class="modal sm-full">
           <div class="sm-full-h"><span class="mc" onclick="closeM('m-sm-sub')">×</span></div>
@@ -8951,11 +8952,11 @@ function rtLinkSave(){
   };
 })();
 
-/* ══ 福利中心/推荐好友领彩金：推广统计增加下级达标字段（含无效下级，按最新配置统计）；存款&流水奖励报表沿用现有 ══ */
+/* ══ 福利中心/推荐好友领彩金：推广统计增加下级达标字段与备注（含无效下级，按最新配置统计）；存款&流水奖励报表沿用现有 ══ */
 (function(){
   var PLATS = ['CQ9电子','JDB电子','MG电子','PG电子','PP电子','FC电子','MyPG电子','EVO真人'];
-  // 当前活动配置（推广有效人数规则，BRL）
-  var CFG = {dep:50, bet:100, pm:'pick', plats:['PG电子','FC电子','MyPG电子'], cond:'and'};
+  // 当前活动配置（推广有效人数规则，BRL）；统计限制为演示值，0 表示不限制
+  var CFG = {dep:50, bet:100, pm:'pick', plats:['PG电子','FC电子','MyPG电子'], cond:'and', ipLimit:2, devLimit:1};
   var PROMO = {
     '80010001':{acc:'138****1001'},
     '80010002':{acc:'138****1002'},
@@ -8963,47 +8964,64 @@ function rtLinkSave(){
     '80010004':{acc:'138****1004'},
     '80010005':{acc:'138****1005'}
   };
-  // 下级：bets 为各平台有效投注，推广统计只统计配置「选取平台」内的投注
+  // 下级：bets 为各平台有效投注，推广统计只统计配置「选取平台」内的投注；dev 为注册设备
   var SUBS = [
-    {id:'80020001',acc:'138****2001',pid:'80010001',reg:'2026-11-03 01:39:40',ip:'192.0.2.10',term:'电脑系统',dep:95, bets:{'PG电子':120},same:'是',valid:true, vt:'2026-11-03 01:41:00'},
-    {id:'80020002',acc:'138****2002',pid:'80010001',reg:'2026-11-02 10:12:05',ip:'192.0.2.11',term:'安卓H5', dep:60, bets:{'PP电子':300,'EVO真人':50},same:'否',valid:false,vt:''},
-    {id:'80020003',acc:'138****2003',pid:'80010001',reg:'2026-11-01 09:00:18',ip:'192.0.2.12',term:'苹果H5', dep:0,  bets:{},same:'否',valid:false,vt:''},
-    {id:'80020004',acc:'138****2004',pid:'80010002',reg:'2026-10-28 09:57:52',ip:'192.0.2.10',term:'电脑系统',dep:50, bets:{'PG电子':320,'FC电子':200},same:'是',valid:true, vt:'2026-10-28 11:20:13'},
-    {id:'80020005',acc:'138****2005',pid:'80010002',reg:'2026-10-27 14:22:31',ip:'192.0.2.13',term:'PWA',   dep:200,bets:{'FC电子':80,'PP电子':500},same:'否',valid:false,vt:''},
-    {id:'80020006',acc:'138****2006',pid:'80010003',reg:'2026-10-27 06:01:24',ip:'192.0.2.10',term:'电脑系统',dep:100,bets:{'MyPG电子':180},same:'是',valid:true, vt:'2026-10-27 06:40:02'},
-    {id:'80020007',acc:'138****2007',pid:'80010003',reg:'2026-10-27 06:00:59',ip:'192.0.2.10',term:'电脑系统',dep:100,bets:{'PG电子':150},same:'是',valid:true, vt:'2026-10-27 06:30:11'},
-    {id:'80020008',acc:'138****2008',pid:'80010003',reg:'2026-10-26 08:15:47',ip:'192.0.2.14', term:'安卓H5', dep:30, bets:{'PG电子':400},same:'否',valid:false,vt:''},
-    {id:'80020009',acc:'138****2009',pid:'80010004',reg:'2026-10-08 02:08:29',ip:'192.0.2.14', term:'电脑系统',dep:20, bets:{'PP电子':60},same:'否',valid:false,vt:''},
-    {id:'80020010',acc:'138****2010',pid:'80010004',reg:'2026-10-05 07:59:16',ip:'192.0.2.14', term:'电脑系统',dep:0,  bets:{},same:'否',valid:false,vt:''},
+    {id:'80020001',acc:'138****2001',pid:'80010001',reg:'2026-11-03 01:39:40',ip:'192.0.2.21',dev:'D01',term:'电脑系统',dep:95, bets:{'PG电子':120},valid:true, vt:'2026-11-03 01:41:00'},
+    {id:'80020002',acc:'138****2002',pid:'80010001',reg:'2026-11-02 10:12:05',ip:'192.0.2.22',dev:'D02',term:'安卓H5', dep:60, bets:{'PP电子':300,'EVO真人':50},valid:false,vt:''},
+    {id:'80020003',acc:'138****2003',pid:'80010001',reg:'2026-11-01 09:00:18',ip:'192.0.2.23',dev:'D03',term:'苹果H5', dep:0,  bets:{},valid:false,vt:''},
+    // 同注册设备：设备上限 1，80020013 达标但超过上限
+    {id:'80020013',acc:'138****2013',pid:'80010002',reg:'2026-10-29 16:05:12',ip:'192.0.2.30',dev:'D04',term:'电脑系统',dep:80, bets:{'PG电子':150},valid:false,vt:''},
+    {id:'80020004',acc:'138****2004',pid:'80010002',reg:'2026-10-28 09:57:52',ip:'192.0.2.24',dev:'D04',term:'电脑系统',dep:50, bets:{'PG电子':320,'FC电子':200},valid:true, vt:'2026-10-28 11:20:13'},
+    {id:'80020005',acc:'138****2005',pid:'80010002',reg:'2026-10-27 14:22:31',ip:'192.0.2.25',dev:'D05',term:'PWA',   dep:200,bets:{'FC电子':80,'PP电子':500},valid:false,vt:''},
+    // 同注册IP：IP 上限 2，80020008 达标但超过上限
+    {id:'80020006',acc:'138****2006',pid:'80010003',reg:'2026-10-27 06:01:24',ip:'192.0.2.10',dev:'D06',term:'电脑系统',dep:100,bets:{'MyPG电子':180},valid:true, vt:'2026-10-27 06:40:02'},
+    {id:'80020007',acc:'138****2007',pid:'80010003',reg:'2026-10-27 06:00:59',ip:'192.0.2.10',dev:'D07',term:'电脑系统',dep:100,bets:{'PG电子':150},valid:true, vt:'2026-10-27 06:30:11'},
+    {id:'80020008',acc:'138****2008',pid:'80010003',reg:'2026-10-26 08:15:47',ip:'192.0.2.10',dev:'D08',term:'安卓H5', dep:100,bets:{'PG电子':400},valid:false,vt:''},
+    {id:'80020009',acc:'138****2009',pid:'80010004',reg:'2026-10-08 02:08:29',ip:'192.0.2.26',dev:'D09',term:'电脑系统',dep:20, bets:{'PP电子':60},valid:false,vt:''},
+    {id:'80020010',acc:'138****2010',pid:'80010004',reg:'2026-10-05 07:59:16',ip:'192.0.2.27',dev:'D10',term:'电脑系统',dep:0,  bets:{},valid:false,vt:''},
     // 旧配置下已生效：按最新配置统计的投注低于门槛，仍保持有效
-    {id:'80020011',acc:'138****2011',pid:'80010005',reg:'2026-09-18 01:52:47',ip:'192.0.2.14', term:'电脑系统',dep:300,bets:{'PG电子':40,'JDB电子':900},same:'否',valid:true, vt:'2026-09-18 03:10:26'},
-    {id:'80020012',acc:'138****2012',pid:'80010005',reg:'2026-09-17 04:13:49',ip:'192.0.2.14', term:'电脑系统',dep:80, bets:{'EVO真人':260},same:'否',valid:false,vt:''}
+    {id:'80020011',acc:'138****2011',pid:'80010005',reg:'2026-09-18 01:52:47',ip:'192.0.2.28',dev:'D11',term:'电脑系统',dep:300,bets:{'PG电子':40,'JDB电子':900},valid:true, vt:'2026-09-18 03:10:26'},
+    {id:'80020012',acc:'138****2012',pid:'80010005',reg:'2026-09-17 04:13:49',ip:'192.0.2.29',dev:'D12',term:'电脑系统',dep:80, bets:{'EVO真人':260},valid:false,vt:''}
   ];
-  // 领奖记录（沿用现有）：一次领奖一条，subs 为该次计入的下级及领奖时的数据
+  // 领奖记录（沿用现有）：一次领奖一条
   var CLAIMS = [
-    {pid:'80010001',amt:65.88,t:'2026-11-03 01:42:15',subs:[{id:'80020001',dep:95,bet:120,v:true}]},
-    {pid:'80010002',amt:65.88,t:'2026-10-28 11:25:40',subs:[{id:'80020004',dep:50,bet:520,v:true},{id:'80020005',dep:200,bet:80,v:false}]},
-    {pid:'80010003',amt:88.88,t:'2026-10-27 06:41:30',subs:[{id:'80020006',dep:100,bet:180,v:true}]},
-    {pid:'80010003',amt:65.88,t:'2026-10-27 06:31:02',subs:[{id:'80020007',dep:100,bet:150,v:true}]},
-    {pid:'80010005',amt:65.88,t:'2026-09-18 03:12:09',subs:[{id:'80020011',dep:300,bet:940,v:true},{id:'80020012',dep:80,bet:0,v:false}]}
+    {pid:'80010001',amt:65.88,t:'2026-11-03 01:42:15',v:1,iv:0,dep:95, bet:120},
+    {pid:'80010002',amt:65.88,t:'2026-10-28 11:25:40',v:1,iv:1,dep:250,bet:600},
+    {pid:'80010003',amt:88.88,t:'2026-10-27 06:41:30',v:1,iv:0,dep:100,bet:180},
+    {pid:'80010003',amt:65.88,t:'2026-10-27 06:31:02',v:1,iv:0,dep:100,bet:150},
+    {pid:'80010005',amt:65.88,t:'2026-09-18 03:12:09',v:1,iv:1,dep:380,bet:940}
   ];
-  var curClaim = null;
+  var curPid = '';
   function m2(v){ return (+v).toFixed(2); }
   function nowStr(){ // UTC-3
     var d=new Date(Date.now()-3*3600*1000), p=function(n){return (n<10?'0':'')+n;};
     return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate())+' '+p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds());
   }
   function val(id){ return document.getElementById(id).value.trim(); }
-  function subById(id){ return SUBS.filter(function(s){ return s.id===id; })[0]; }
+  function subsOf(pid){ return SUBS.filter(function(s){ return s.pid===pid; }); }
   // 按最新配置的限定平台统计有效投注
   function vBet(s){
     var sum=0;
     Object.keys(s.bets).forEach(function(k){ if(CFG.pm==='all' || CFG.plats.indexOf(k)>=0) sum+=s.bets[k]; });
     return sum;
   }
+  // 充值/投注是否达标
   function meets(s){
     var a=s.dep>=CFG.dep, b=vBet(s)>=CFG.bet;
     return CFG.cond==='and' ? (a&&b) : (a||b);
+  }
+  function sameIp(s){ return SUBS.filter(function(x){ return x.ip===s.ip; }); }
+  function sameDev(s){ return SUBS.filter(function(x){ return x.dev===s.dev; }); }
+  function sameFlag(s){ return (sameIp(s).length>1 || sameDev(s).length>1) ? '是' : '否'; }
+  function overIp(s){ return CFG.ipLimit>0 && sameIp(s).filter(function(x){return x.valid;}).length>=CFG.ipLimit; }
+  function overDev(s){ return CFG.devLimit>0 && sameDev(s).filter(function(x){return x.valid;}).length>=CFG.devLimit; }
+  // 备注：仅对充值/投注已达标、但超过统计限制上限的无效下级说明原因
+  function remark(s){
+    if(s.valid || !meets(s)) return '-';
+    var r=[];
+    if(overIp(s)) r.push('超过同注册IP上限（'+CFG.ipLimit+'）');
+    if(overDev(s)) r.push('超过同注册设备上限（'+CFG.devLimit+'）');
+    return r.length ? r.join('；') : '-';
   }
 
   /* ── 标签页 ── */
@@ -9018,6 +9036,8 @@ function rtLinkSave(){
   window.smCfgFill=function(){
     document.getElementById('sm-c-dep').value=m2(CFG.dep);
     document.getElementById('sm-c-bet').value=m2(CFG.bet);
+    document.getElementById('sm-c-ip').value=CFG.ipLimit;
+    document.getElementById('sm-c-dev').value=CFG.devLimit;
     document.querySelector('input[name="sm-c-pm"][value="'+CFG.pm+'"]').checked=true;
     document.querySelector('input[name="sm-c-cond"][value="'+CFG.cond+'"]').checked=true;
     document.getElementById('sm-c-plat').innerHTML=PLATS.map(function(p){
@@ -9029,17 +9049,20 @@ function rtLinkSave(){
     var all=document.querySelector('input[name="sm-c-pm"]:checked').value==='all';
     document.getElementById('sm-c-plat').style.display=all?'none':'';
   };
-  // 保存：已生效下级不受影响；原本无效的下级立即按新配置重算，满足即转为有效
+  // 保存：已生效下级不受影响；原本无效的下级立即按新配置重算（达标且未超统计限制上限），满足即转为有效
   window.smCfgSave=function(){
-    var d=val('sm-c-dep'), b=val('sm-c-bet');
+    var d=val('sm-c-dep'), b=val('sm-c-bet'), ip=val('sm-c-ip'), dv=val('sm-c-dev');
     if(d===''||isNaN(+d)){ toast('请输入累计充值',true); return; }
     if(b===''||isNaN(+b)){ toast('请输入累计有效投注',true); return; }
+    if(!/^\d+$/.test(ip)||!/^\d+$/.test(dv)){ toast('请输入统计限制（0表示不限制）',true); return; }
     var pm=document.querySelector('input[name="sm-c-pm"]:checked').value;
     var plats=[].slice.call(document.querySelectorAll('#sm-c-plat input:checked')).map(function(i){return i.value;});
     if(pm==='pick' && !plats.length){ toast('请选择平台',true); return; }
-    CFG={dep:+d, bet:+b, pm:pm, plats:plats, cond:document.querySelector('input[name="sm-c-cond"]:checked').value};
+    CFG={dep:+d, bet:+b, pm:pm, plats:plats, cond:document.querySelector('input[name="sm-c-cond"]:checked').value, ipLimit:+ip, devLimit:+dv};
     var t=nowStr(), n=0;
-    SUBS.forEach(function(s){ if(!s.valid && meets(s)){ s.valid=true; s.vt=t; n++; } });
+    SUBS.slice().sort(function(a,b){ return a.reg.localeCompare(b.reg); }).forEach(function(s){
+      if(!s.valid && meets(s) && !overIp(s) && !overDev(s)){ s.valid=true; s.vt=t; n++; }
+    });
     smCfgFill(); smStatRender();
     toast(n ? '保存成功，'+n+' 名无效下级按新配置转为有效' : '保存成功');
   };
@@ -9057,8 +9080,8 @@ function rtLinkSave(){
     document.getElementById('sm-s-n').textContent=list.length;
     document.getElementById('sm-s-tb').innerHTML=list.length ? list.map(function(s,i){
       return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[s.pid].acc+'</td><td>'+s.id+'</td><td>'+s.acc+'</td><td>'+s.reg+'</td><td>'+s.ip+'</td><td>'+s.term+'</td>'+
-        '<td>'+m2(s.dep)+'</td><td>'+m2(vBet(s))+'</td><td>'+s.same+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td></tr>';
-    }).join('') : '<tr><td colspan="13" class="sm-empty">暂无数据</td></tr>';
+        '<td>'+m2(s.dep)+'</td><td>'+m2(vBet(s))+'</td><td>'+sameFlag(s)+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td><td>'+remark(s)+'</td></tr>';
+    }).join('') : '<tr><td colspan="14" class="sm-empty">暂无数据</td></tr>';
   };
   window.smStatReset=function(){ ['sm-s-acc','sm-s-pid','sm-s-iid','sm-s-v'].forEach(function(id){document.getElementById(id).value='';}); smStatRender(); };
 
@@ -9066,39 +9089,38 @@ function rtLinkSave(){
   window.smRptRender=function(){
     var acc=val('sm-r-acc'), pid=val('sm-r-pid');
     var list=CLAIMS.filter(function(c){
-      if(acc && PROMO[c.pid].acc!==acc && !c.subs.some(function(x){return subById(x.id).acc===acc;})) return false;
+      if(acc && PROMO[c.pid].acc!==acc && !subsOf(c.pid).some(function(s){return s.acc===acc;})) return false;
       if(pid && c.pid!==pid) return false;
       return true;
     }).sort(function(a,b){ return b.t.localeCompare(a.t); });
     document.getElementById('sm-r-n').textContent=list.length;
     document.getElementById('sm-r-tb').innerHTML=list.length ? list.map(function(c,i){
-      var v=c.subs.filter(function(x){return x.v;}).length;
-      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+c.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[c.pid].acc+'</td><td>'+m2(c.amt)+'</td><td>'+v+'</td><td>'+(c.subs.length-v)+'</td>'+
-        '<td>'+m2(c.subs.reduce(function(t,x){return t+x.dep;},0))+'</td><td>'+m2(c.subs.reduce(function(t,x){return t+x.bet;},0))+'</td><td>'+c.t+'</td>'+
-        '<td><span class="sm-link" onclick="smSubOpen('+CLAIMS.indexOf(c)+')">详情</span></td></tr>';
+      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+c.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[c.pid].acc+'</td><td>'+m2(c.amt)+'</td><td>'+c.v+'</td><td>'+c.iv+'</td>'+
+        '<td>'+m2(c.dep)+'</td><td>'+m2(c.bet)+'</td><td>'+c.t+'</td>'+
+        '<td><span class="sm-link" onclick="smSubOpen(\''+c.pid+'\')">详情</span></td></tr>';
     }).join('') : '<tr><td colspan="10" class="sm-empty">暂无数据</td></tr>';
   };
   window.smRptReset=function(){ document.getElementById('sm-r-acc').value=''; document.getElementById('sm-r-pid').value=''; smRptRender(); };
 
-  /* ── 领奖记录详情（沿用现有）：该次领奖计入的下级 ── */
-  window.smSubOpen=function(idx){
-    curClaim=CLAIMS[idx];
+  /* ── 领奖记录详情（沿用现有）：按推广者查询其下级 ── */
+  window.smSubOpen=function(pid){
+    curPid=pid;
     smSubReset();
     openM('m-sm-sub');
   };
   window.smSubRender=function(){
     var kt=val('sm-d-kt'), kw=val('sm-d-kw'), v=val('sm-d-v'), s0=val('sm-d-s'), e0=val('sm-d-e');
     if(!s0!==!e0){ toast('请同时选择开始时间和结束时间'); return; }
-    var list=curClaim.subs.map(function(x){ var s=subById(x.id); return {id:s.id,acc:s.acc,same:s.same,dep:x.dep,bet:x.bet,v:x.v,vt:x.v?s.vt:''}; }).filter(function(s){
+    var list=subsOf(curPid).filter(function(s){
       if(kw && (kt==='id'?s.id:s.acc).indexOf(kw)<0) return false;
-      if(v!=='' && s.v!==(v==='1')) return false;
+      if(v!=='' && s.valid!==(v==='1')) return false;
       if(s0 && (!s.vt || s.vt.slice(0,10)<s0 || s.vt.slice(0,10)>e0)) return false;
       return true;
-    });
+    }).sort(function(a,b){ return b.reg.localeCompare(a.reg); });
     document.getElementById('sm-d-n').textContent=list.length;
     document.getElementById('sm-d-tb').innerHTML=list.length ? list.map(function(s,i){
-      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.id+'</span> <span class="copy-icon">⧉</span></td><td>'+s.acc+'</td><td>'+m2(s.dep)+'</td><td>'+m2(s.bet)+'</td><td>'+s.same+'</td>'+
-        '<td>'+(s.v?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td></tr>';
+      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.id+'</span> <span class="copy-icon">⧉</span></td><td>'+s.acc+'</td><td>'+m2(s.dep)+'</td><td>'+m2(vBet(s))+'</td><td>'+sameFlag(s)+'</td>'+
+        '<td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td></tr>';
     }).join('') : '<tr><td colspan="8" class="sm-empty">暂无数据</td></tr>';
   };
   window.smSubReset=function(){

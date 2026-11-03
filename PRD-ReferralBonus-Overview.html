@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>推荐好友领彩金推广统计修改 PRD v1.2</title>
+<title>推荐好友领彩金推广统计修改 PRD v1.3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -50,7 +50,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">推荐好友领彩金 · 推广统计修改</div>
   <div class="cover-sub">PRD 产品需求文档 · 福利中心 — 推荐好友领彩金</div>
-  <div class="cover-meta"><span>版本：v1.2</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
+  <div class="cover-meta"><span>版本：v1.3</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
 </div>
 
 <div class="section" id="s1">
@@ -72,6 +72,7 @@ b,strong{color:#1a1a2e}
       <tr><td>3</td><td>是否同IP同设备</td><td>是 / 否。</td></tr>
       <tr><td>4</td><td>是否有效会员</td><td>是 / 否。</td></tr>
       <tr><td>5</td><td>有效会员生效时间</td><td>下级转为有效的时间；无效下级显示「-」。</td></tr>
+      <tr><td>6</td><td>备注</td><td>说明无效原因，规则见下方第 2 点。</td></tr>
     </tbody>
   </table>
   <ul>
@@ -80,13 +81,27 @@ b,strong{color:#1a1a2e}
   </ul>
   <div class="formula">活动配置修改后，已生效的有效下级不受影响；原本无效的下级如满足最新配置条件，将自动转为有效。数据按最新配置统计。</div>
 
-  <h2>2. 活动配置修改规则</h2>
+  <h2>2. 无效会员备注</h2>
+  <p>无效会员有两种情况：</p>
+  <table>
+    <thead><tr><th style="width:50px">序号</th><th style="width:240px">无效情况</th><th>备注列展示</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>累计充值 / 累计有效投注未达标</td><td>「-」。原因可直接从累计充值金额、累计有效投注两列看出。</td></tr>
+      <tr><td>2</td><td>充值、投注已达标，但超过统计限制上限</td><td>读取活动配置「统计限制」的配置值展示原因：<br>超过同注册IP上限：「超过同注册IP上限（N）」<br>超过同注册设备上限：「超过同注册设备上限（N）」<br>两项都超过时同时展示，用「；」分隔。N 为当前配置的上限值。</td></tr>
+    </tbody>
+  </table>
   <ul>
-    <li>活动配置修改，<b>不影响已生效下级</b>的状态。</li>
-    <li>原本未生效的下级，保存配置后立即按新配置重新判定，满足条件则<b>自动变为生效</b>；之后下级充值、投注变化时持续判定。生效时间记为转为生效的时间。</li>
+    <li>上限配置为 0 表示不限制，不会因此产生无效会员。</li>
+    <li>有效会员备注显示「-」。</li>
   </ul>
 
-  <h2>3. 存款&amp;流水奖励报表</h2>
+  <h2>3. 活动配置修改规则</h2>
+  <ul>
+    <li>活动配置修改，<b>不影响已生效下级</b>的状态。</li>
+    <li>原本未生效的下级，保存配置后立即按新配置重新判定，充值、投注达标且未超过统计限制上限，则<b>自动变为生效</b>；之后下级充值、投注变化时持续判定。生效时间记为转为生效的时间。</li>
+  </ul>
+
+  <h2>4. 存款&amp;流水奖励报表</h2>
   <p>不修改，沿用现有。</p>
 </div>
 
@@ -95,6 +110,7 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.3</td><td>2026-11-03</td><td>Laura</td><td>推广统计增加「备注」列，说明超过同注册IP / 同注册设备上限的无效原因。</td></tr>
       <tr><td>v1.2</td><td>2026-11-03</td><td>Laura</td><td>存款&amp;流水奖励报表恢复原样，下级达标数据改为在推广统计中增加字段展示。</td></tr>
       <tr><td>v1.1</td><td>2026-11-03</td><td>Laura</td><td>精简文档，只保留修改点描述。</td></tr>
       <tr><td>v1.0</td><td>2026-11-03</td><td>Laura</td><td>首版。</td></tr>
