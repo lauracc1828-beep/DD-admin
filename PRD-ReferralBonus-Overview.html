@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>推荐好友领彩金奖励报表修改 PRD v1.1</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#123a66;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.nw{white-space:nowrap}
+.req{color:#d93025;font-weight:700}
+.formula{background:#f6f8fb;border:1px solid #dde4ec;border-radius:6px;padding:12px 16px;margin:10px 0;font-family:'SF Mono',Consolas,monospace;font-size:13px;color:#123a66;line-height:2}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">推荐好友领彩金 · 存款&amp;流水奖励报表修改</div>
+  <div class="cover-sub">PRD 产品需求文档 · 福利中心 — 推荐好友领彩金</div>
+  <div class="cover-meta"><span>版本：v1.1</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
+</div>
+
+<div class="section" id="s1">
+  <h1>一、背景</h1>
+  <p>「存款&amp;流水奖励报表」目前是领奖记录，只有领过奖的推广者才有记录，详情里也看不到没达标的下级。而活动配置的累计有效投注可以限定平台，运营想查某个下级为什么没有计入有效下级，目前查不到。</p>
+  <p>本次把该报表改为<b>活动奖励概览</b>，下级详情列出全部下级，并按最新配置统计。</p>
+</div>
+
+<div class="section" id="s2">
+  <h1>二、修改点</h1>
+
+  <h2>1. 存款&amp;流水奖励报表</h2>
+  <table>
+    <thead><tr><th style="width:50px">序号</th><th style="width:200px">修改项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>一个推广者 ID 一条记录</td><td>有下级的推广者都列出（含未领过奖的），按最新邀请时间（最近一个下级的注册时间）倒序排列。</td></tr>
+      <tr><td>2</td><td>「获得奖励金额」改为「获得奖励总额」</td><td>统计该推广者已经领取的奖励总金额。</td></tr>
+      <tr><td>3</td><td>「失效人数」改为「无效人数」</td><td>该推广者当前的无效下级数。</td></tr>
+      <tr><td>4</td><td>去掉「领奖时间」</td><td>—</td></tr>
+      <tr><td>5</td><td>下级总累计充值金额 / 下级总累计投注金额</td><td>统计全部下级（含无效下级），口径与下级详情一致。</td></tr>
+      <tr><td>6</td><td>操作「详情」改为「下级详情」</td><td>见下方第 2 点。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. 下级详情</h2>
+  <ul>
+    <li>字段不变，列出该推广者的<b>所有下级，包括无效下级</b>。</li>
+    <li><b>累计充值金额</b>：统计最新充值金额。</li>
+    <li><b>累计有效投注</b>：按最新配置的限定平台，统计最新投注金额。</li>
+    <li>弹窗顶部增加备注：</li>
+  </ul>
+  <div class="formula">活动配置修改后，已生效的有效下级不受影响；原本无效的下级如满足最新配置条件，将自动转为有效。数据按最新配置统计。</div>
+
+  <h2>3. 活动配置修改规则</h2>
+  <ul>
+    <li>活动配置修改，<b>不影响已生效下级</b>的状态。</li>
+    <li>原本未生效的下级，保存配置后立即按新配置重新判定，满足条件则<b>自动变为生效</b>；之后下级充值、投注变化时持续判定。生效时间记为转为生效的时间。</li>
+  </ul>
+</div>
+
+<div class="section" id="s3">
+  <h1>三、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.1</td><td>2026-11-03</td><td>Laura</td><td>精简文档，只保留修改点描述。</td></tr>
+      <tr><td>v1.0</td><td>2026-11-03</td><td>Laura</td><td>首版。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
