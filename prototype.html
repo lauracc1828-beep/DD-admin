@@ -1706,7 +1706,7 @@ select.fs.ph{color:#bfbfbf}
       <div class="cb-panel hidden" id="cb-p-wd"></div>
     </div>
 
-    <!-- PAGE: 福利中心 / 推荐好友领彩金（本期修改：存款&流水奖励报表改为活动奖励概览 + 下级详情） -->
+    <!-- PAGE: 福利中心 / 推荐好友领彩金（本期修改：推广统计增加下级达标字段，含无效下级，按最新配置统计） -->
     <div id="pg-sharemoney" style="display:none">
       <style>
       /* 与 UAT 一致：站点页签 + 卡片式标签页、带边框居中表格（14px）、下级详情为全屏弹窗 */
@@ -1750,7 +1750,7 @@ select.fs.ph{color:#bfbfbf}
       #pg-sharemoney .sm-rd label{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
       #pg-sharemoney .sm-other{color:#8c8c8c;font-size:12px;margin:18px 0 0 130px}
       #pg-sharemoney .sm-save{display:flex;gap:10px;margin:24px 0 0 130px}
-      #m-sm-sub .sm-notice{background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:9px 14px;font-size:13px;color:#614700;line-height:1.7;margin-bottom:16px}
+      #pg-sharemoney .sm-notice{background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:9px 14px;font-size:13px;color:#614700;line-height:1.7;margin-bottom:16px}
       #m-sm-sub .sm-range{display:flex;align-items:center;gap:6px;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;background:#fff}
       #m-sm-sub .sm-range input{border:none;outline:none;font-size:13px;color:#333;width:120px;font-family:inherit}
       #m-sm-sub .sm-no{color:#8c8c8c}
@@ -1782,22 +1782,24 @@ select.fs.ph{color:#bfbfbf}
         <div class="sm-save"><button class="btn btn-white" onclick="smCfgFill();toast('已重置')">重 置</button><button class="btn btn-query" onclick="smCfgSave()">保 存</button></div>
       </div>
 
-      <!-- 推广统计：沿用现有 -->
+      <!-- 推广统计：本期增加下级达标字段，列出全部下级（含无效下级），按最新配置统计 -->
       <div class="sm-panel hidden" id="sm-p-stat">
+        <div class="sm-notice">活动配置修改后，已生效的有效下级不受影响；原本无效的下级如满足最新配置条件，将自动转为有效。数据按最新配置统计。</div>
         <div class="sm-filter">
           <input class="f-input" id="sm-s-acc" placeholder="推广者或受邀者账号" style="min-width:200px;cursor:text">
           <input class="f-input" id="sm-s-pid" placeholder="推广者ID" style="min-width:200px;cursor:text">
           <input class="f-input" id="sm-s-iid" placeholder="受邀者ID" style="min-width:200px;cursor:text">
+          <select class="f-select" id="sm-s-v" style="min-width:150px"><option value="">是否有效会员</option><option value="1">是</option><option value="0">否</option></select>
           <div class="sm-btns"><button class="btn btn-white" onclick="smStatReset()">重 置</button><button class="btn btn-query" onclick="smStatRender()">查 询</button></div>
         </div>
         <div class="sm-tools"><button class="btn btn-white" onclick="toast('导出中...')">导 出</button><span title="刷新" onclick="smStatRender();toast('已刷新')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>
         <div class="table-wrap"><div class="table-scroll"><table><thead><tr>
-          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>受邀者ID</th><th>受邀者账号</th><th>注册时间</th><th>注册IP</th><th>注册终端</th>
+          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>受邀者ID</th><th>受邀者账号</th><th>注册时间</th><th>注册IP</th><th>注册终端</th><th>累计充值金额</th><th>累计有效投注</th><th>是否同IP同设备</th><th>是否有效会员</th><th>有效会员生效时间</th>
         </tr></thead><tbody id="sm-s-tb"></tbody></table></div></div>
         <div class="pagination"><div class="pg-info">共 <b id="sm-s-n">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
       </div>
 
-      <!-- 存款&流水奖励报表：本期改为活动奖励概览，一个推广者 ID 一条 -->
+      <!-- 存款&流水奖励报表：沿用现有，一次领奖一条记录 -->
       <div class="sm-panel" id="sm-p-rpt">
         <div class="sm-filter">
           <input class="f-input" id="sm-r-acc" placeholder="推广者或受邀者账号" style="min-width:200px;cursor:text">
@@ -1806,18 +1808,17 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="sm-tools"><button class="btn btn-white" onclick="toast('导出中...')">导 出</button><span title="刷新" onclick="smRptRender();toast('已刷新')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>
         <div class="table-wrap"><div class="table-scroll"><table><thead><tr>
-          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>获得奖励总额</th><th>有效人数</th><th>无效人数</th><th>下级总累计充值金额</th><th>下级总累计投注金额</th><th>操作</th>
+          <th>序号</th><th>推广者ID</th><th>推广者账号</th><th>获得奖励金额</th><th>有效人数</th><th>失效人数</th><th>下级总累计充值金额</th><th>下级总累计投注金额</th><th>领奖时间</th><th>操作</th>
         </tr></thead><tbody id="sm-r-tb"></tbody></table></div></div>
         <div class="pagination"><div class="pg-info">共 <b id="sm-r-n">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
       </div>
       </div>
 
-      <!-- 下级详情弹窗：列出全部下级（含无效下级），按最新配置统计 -->
+      <!-- 领奖记录详情弹窗：沿用现有，展示该次领奖计入的下级 -->
       <div class="overlay" id="m-sm-sub">
         <div class="modal sm-full">
           <div class="sm-full-h"><span class="mc" onclick="closeM('m-sm-sub')">×</span></div>
           <div class="sm-full-b">
-            <div class="sm-notice">活动配置修改后，已生效的有效下级不受影响；原本无效的下级如满足最新配置条件，将自动转为有效。数据按最新配置统计。</div>
             <div class="sm-filter">
               <select class="f-select" id="sm-d-kt" style="min-width:150px"><option value="id">会员ID</option><option value="acc">手机号(会员账号)</option></select>
               <input class="f-input" id="sm-d-kw" placeholder="请输入内容" style="min-width:200px;cursor:text">
@@ -8950,20 +8951,19 @@ function rtLinkSave(){
   };
 })();
 
-/* ══ 福利中心/推荐好友领彩金：存款&流水奖励报表改为活动奖励概览 + 下级详情（含无效下级，按最新配置统计）══ */
+/* ══ 福利中心/推荐好友领彩金：推广统计增加下级达标字段（含无效下级，按最新配置统计）；存款&流水奖励报表沿用现有 ══ */
 (function(){
   var PLATS = ['CQ9电子','JDB电子','MG电子','PG电子','PP电子','FC电子','MyPG电子','EVO真人'];
   // 当前活动配置（推广有效人数规则，BRL）
   var CFG = {dep:50, bet:100, pm:'pick', plats:['PG电子','FC电子','MyPG电子'], cond:'and'};
-  // 推广者：claimed = 已领取的奖励总额
   var PROMO = {
-    '80010001':{acc:'138****1001', claimed:65.88},
-    '80010002':{acc:'138****1002', claimed:65.88},
-    '80010003':{acc:'138****1003', claimed:154.76},
-    '80010004':{acc:'138****1004', claimed:0},
-    '80010005':{acc:'138****1005', claimed:65.88}
+    '80010001':{acc:'138****1001'},
+    '80010002':{acc:'138****1002'},
+    '80010003':{acc:'138****1003'},
+    '80010004':{acc:'138****1004'},
+    '80010005':{acc:'138****1005'}
   };
-  // 下级：bets 为各平台有效投注，详情只统计配置「选取平台」内的投注
+  // 下级：bets 为各平台有效投注，推广统计只统计配置「选取平台」内的投注
   var SUBS = [
     {id:'80020001',acc:'138****2001',pid:'80010001',reg:'2026-11-03 01:39:40',ip:'192.0.2.10',term:'电脑系统',dep:95, bets:{'PG电子':120},same:'是',valid:true, vt:'2026-11-03 01:41:00'},
     {id:'80020002',acc:'138****2002',pid:'80010001',reg:'2026-11-02 10:12:05',ip:'192.0.2.11',term:'安卓H5', dep:60, bets:{'PP电子':300,'EVO真人':50},same:'否',valid:false,vt:''},
@@ -8979,13 +8979,22 @@ function rtLinkSave(){
     {id:'80020011',acc:'138****2011',pid:'80010005',reg:'2026-09-18 01:52:47',ip:'192.0.2.14', term:'电脑系统',dep:300,bets:{'PG电子':40,'JDB电子':900},same:'否',valid:true, vt:'2026-09-18 03:10:26'},
     {id:'80020012',acc:'138****2012',pid:'80010005',reg:'2026-09-17 04:13:49',ip:'192.0.2.14', term:'电脑系统',dep:80, bets:{'EVO真人':260},same:'否',valid:false,vt:''}
   ];
-  var curPid = '';
+  // 领奖记录（沿用现有）：一次领奖一条，subs 为该次计入的下级及领奖时的数据
+  var CLAIMS = [
+    {pid:'80010001',amt:65.88,t:'2026-11-03 01:42:15',subs:[{id:'80020001',dep:95,bet:120,v:true}]},
+    {pid:'80010002',amt:65.88,t:'2026-10-28 11:25:40',subs:[{id:'80020004',dep:50,bet:520,v:true},{id:'80020005',dep:200,bet:80,v:false}]},
+    {pid:'80010003',amt:88.88,t:'2026-10-27 06:41:30',subs:[{id:'80020006',dep:100,bet:180,v:true}]},
+    {pid:'80010003',amt:65.88,t:'2026-10-27 06:31:02',subs:[{id:'80020007',dep:100,bet:150,v:true}]},
+    {pid:'80010005',amt:65.88,t:'2026-09-18 03:12:09',subs:[{id:'80020011',dep:300,bet:940,v:true},{id:'80020012',dep:80,bet:0,v:false}]}
+  ];
+  var curClaim = null;
   function m2(v){ return (+v).toFixed(2); }
   function nowStr(){ // UTC-3
     var d=new Date(Date.now()-3*3600*1000), p=function(n){return (n<10?'0':'')+n;};
     return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate())+' '+p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds());
   }
   function val(id){ return document.getElementById(id).value.trim(); }
+  function subById(id){ return SUBS.filter(function(s){ return s.id===id; })[0]; }
   // 按最新配置的限定平台统计有效投注
   function vBet(s){
     var sum=0;
@@ -8996,7 +9005,6 @@ function rtLinkSave(){
     var a=s.dep>=CFG.dep, b=vBet(s)>=CFG.bet;
     return CFG.cond==='and' ? (a&&b) : (a||b);
   }
-  function subsOf(pid){ return SUBS.filter(function(s){ return s.pid===pid; }); }
 
   /* ── 标签页 ── */
   window.smTab=function(el){
@@ -9032,68 +9040,65 @@ function rtLinkSave(){
     CFG={dep:+d, bet:+b, pm:pm, plats:plats, cond:document.querySelector('input[name="sm-c-cond"]:checked').value};
     var t=nowStr(), n=0;
     SUBS.forEach(function(s){ if(!s.valid && meets(s)){ s.valid=true; s.vt=t; n++; } });
-    smCfgFill(); smRptRender();
+    smCfgFill(); smStatRender();
     toast(n ? '保存成功，'+n+' 名无效下级按新配置转为有效' : '保存成功');
   };
 
-  /* ── 推广统计（沿用现有）── */
+  /* ── 推广统计：全部下级（含无效下级），充值取最新、有效投注按最新配置的限定平台统计 ── */
   window.smStatRender=function(){
-    var acc=val('sm-s-acc'), pid=val('sm-s-pid'), iid=val('sm-s-iid');
+    var acc=val('sm-s-acc'), pid=val('sm-s-pid'), iid=val('sm-s-iid'), v=val('sm-s-v');
     var list=SUBS.filter(function(s){
       if(acc && PROMO[s.pid].acc!==acc && s.acc!==acc) return false;
       if(pid && s.pid!==pid) return false;
       if(iid && s.id!==iid) return false;
+      if(v!=='' && s.valid!==(v==='1')) return false;
       return true;
     }).sort(function(a,b){ return b.reg.localeCompare(a.reg); });
     document.getElementById('sm-s-n').textContent=list.length;
     document.getElementById('sm-s-tb').innerHTML=list.length ? list.map(function(s,i){
-      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[s.pid].acc+'</td><td>'+s.id+'</td><td>'+s.acc+'</td><td>'+s.reg+'</td><td>'+s.ip+'</td><td>'+s.term+'</td></tr>';
-    }).join('') : '<tr><td colspan="8" class="sm-empty">暂无数据</td></tr>';
+      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[s.pid].acc+'</td><td>'+s.id+'</td><td>'+s.acc+'</td><td>'+s.reg+'</td><td>'+s.ip+'</td><td>'+s.term+'</td>'+
+        '<td>'+m2(s.dep)+'</td><td>'+m2(vBet(s))+'</td><td>'+s.same+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td></tr>';
+    }).join('') : '<tr><td colspan="13" class="sm-empty">暂无数据</td></tr>';
   };
-  window.smStatReset=function(){ ['sm-s-acc','sm-s-pid','sm-s-iid'].forEach(function(id){document.getElementById(id).value='';}); smStatRender(); };
+  window.smStatReset=function(){ ['sm-s-acc','sm-s-pid','sm-s-iid','sm-s-v'].forEach(function(id){document.getElementById(id).value='';}); smStatRender(); };
 
-  /* ── 存款&流水奖励报表：一个推广者 ID 一条，按最新邀请时间倒序 ── */
+  /* ── 存款&流水奖励报表（沿用现有）：一次领奖一条 ── */
   window.smRptRender=function(){
     var acc=val('sm-r-acc'), pid=val('sm-r-pid');
-    var list=Object.keys(PROMO).map(function(p){
-      var subs=subsOf(p), v=subs.filter(function(s){return s.valid;}).length;
-      return {pid:p, acc:PROMO[p].acc, claimed:PROMO[p].claimed, v:v, iv:subs.length-v,
-        dep:subs.reduce(function(t,s){return t+s.dep;},0), bet:subs.reduce(function(t,s){return t+vBet(s);},0),
-        last:subs.reduce(function(t,s){return s.reg>t?s.reg:t;},''), subs:subs};
-    }).filter(function(r){
-      if(!r.subs.length) return false;
-      // 推广者或受邀者账号：输入受邀者账号时返回其所属推广者
-      if(acc && r.acc!==acc && !r.subs.some(function(s){return s.acc===acc;})) return false;
-      if(pid && r.pid!==pid) return false;
+    var list=CLAIMS.filter(function(c){
+      if(acc && PROMO[c.pid].acc!==acc && !c.subs.some(function(x){return subById(x.id).acc===acc;})) return false;
+      if(pid && c.pid!==pid) return false;
       return true;
-    }).sort(function(a,b){ return b.last.localeCompare(a.last); });
+    }).sort(function(a,b){ return b.t.localeCompare(a.t); });
     document.getElementById('sm-r-n').textContent=list.length;
-    document.getElementById('sm-r-tb').innerHTML=list.length ? list.map(function(r,i){
-      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+r.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+r.acc+'</td><td>'+m2(r.claimed)+'</td><td>'+r.v+'</td><td>'+r.iv+'</td><td>'+m2(r.dep)+'</td><td>'+m2(r.bet)+'</td>'+
-        '<td><span class="sm-link" onclick="smSubOpen(\''+r.pid+'\')">下级详情</span></td></tr>';
-    }).join('') : '<tr><td colspan="9" class="sm-empty">暂无数据</td></tr>';
+    document.getElementById('sm-r-tb').innerHTML=list.length ? list.map(function(c,i){
+      var v=c.subs.filter(function(x){return x.v;}).length;
+      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+c.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[c.pid].acc+'</td><td>'+m2(c.amt)+'</td><td>'+v+'</td><td>'+(c.subs.length-v)+'</td>'+
+        '<td>'+m2(c.subs.reduce(function(t,x){return t+x.dep;},0))+'</td><td>'+m2(c.subs.reduce(function(t,x){return t+x.bet;},0))+'</td><td>'+c.t+'</td>'+
+        '<td><span class="sm-link" onclick="smSubOpen('+CLAIMS.indexOf(c)+')">详情</span></td></tr>';
+    }).join('') : '<tr><td colspan="10" class="sm-empty">暂无数据</td></tr>';
   };
   window.smRptReset=function(){ document.getElementById('sm-r-acc').value=''; document.getElementById('sm-r-pid').value=''; smRptRender(); };
 
-  /* ── 下级详情：全部下级（含无效下级），充值取最新、有效投注按最新配置的限定平台统计 ── */
-  window.smSubOpen=function(pid){
-    curPid=pid;
+  /* ── 领奖记录详情（沿用现有）：该次领奖计入的下级 ── */
+  window.smSubOpen=function(idx){
+    curClaim=CLAIMS[idx];
     smSubReset();
     openM('m-sm-sub');
   };
   window.smSubRender=function(){
     var kt=val('sm-d-kt'), kw=val('sm-d-kw'), v=val('sm-d-v'), s0=val('sm-d-s'), e0=val('sm-d-e');
     if(!s0!==!e0){ toast('请同时选择开始时间和结束时间'); return; }
-    var list=subsOf(curPid).filter(function(s){
+    var list=curClaim.subs.map(function(x){ var s=subById(x.id); return {id:s.id,acc:s.acc,same:s.same,dep:x.dep,bet:x.bet,v:x.v,vt:x.v?s.vt:''}; }).filter(function(s){
       if(kw && (kt==='id'?s.id:s.acc).indexOf(kw)<0) return false;
-      if(v!=='' && s.valid!==(v==='1')) return false;
+      if(v!=='' && s.v!==(v==='1')) return false;
       if(s0 && (!s.vt || s.vt.slice(0,10)<s0 || s.vt.slice(0,10)>e0)) return false;
       return true;
-    }).sort(function(a,b){ return b.reg.localeCompare(a.reg); });
+    });
     document.getElementById('sm-d-n').textContent=list.length;
     document.getElementById('sm-d-tb').innerHTML=list.length ? list.map(function(s,i){
-      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.id+'</span> <span class="copy-icon">⧉</span></td><td>'+s.acc+'</td><td>'+m2(s.dep)+'</td><td>'+m2(vBet(s))+'</td><td>'+s.same+'</td>'+
-        '<td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td></tr>';
+      return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.id+'</span> <span class="copy-icon">⧉</span></td><td>'+s.acc+'</td><td>'+m2(s.dep)+'</td><td>'+m2(s.bet)+'</td><td>'+s.same+'</td>'+
+        '<td>'+(s.v?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td></tr>';
     }).join('') : '<tr><td colspan="8" class="sm-empty">暂无数据</td></tr>';
   };
   window.smSubReset=function(){
