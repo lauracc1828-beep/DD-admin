@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>推荐好友领彩金推广统计修改 PRD v1.4</title>
+<title>推荐好友领彩金推广统计修改 PRD v1.5</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -50,7 +50,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">推荐好友领彩金 · 推广统计修改</div>
   <div class="cover-sub">PRD 产品需求文档 · 福利中心 — 推荐好友领彩金</div>
-  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
+  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
 </div>
 
 <div class="section" id="s1">
@@ -86,11 +86,12 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:50px">序号</th><th style="width:240px">无效情况</th><th>备注列展示</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>累计充值 / 累计有效投注未达标</td><td>「-」。原因可直接从累计充值金额、累计有效投注两列看出。</td></tr>
-      <tr><td>2</td><td>充值、投注已达标，但超过统计限制上限</td><td>读取活动配置「统计限制」的配置值展示原因：<br>超过同注册IP上限：「超过同注册IP上限（N）」<br>超过同注册设备上限：「超过同注册设备上限（N）」<br>两项都超过时同时展示，用「；」分隔。N 为当前配置的上限值。</td></tr>
+      <tr><td>1</td><td>累计充值 / 累计有效投注未达标</td><td>「-」。原因可直接从累计充值金额、累计有效投注两列看出。满足最新配置条件后可自动转为有效。</td></tr>
+      <tr><td>2</td><td>触发同注册IP上限 / 同注册设备上限</td><td>读取活动配置「统计限制」的配置值展示原因：<br>超过同注册IP上限：「超过同注册IP上限（N）」<br>超过同注册设备上限：「超过同注册设备上限（N）」<br>两项都触发时同时展示，用「；」分隔。N 为触发时配置的上限值。</td></tr>
     </tbody>
   </table>
   <ul>
+    <li>触发同注册IP / 同注册设备上限的下级<b>永久无效</b>：无论充值、投注是否达标，之后修改活动配置（包括调高上限），都不会再转为有效。</li>
     <li>上限配置为 0 表示不限制，不会因此产生无效会员。</li>
     <li>有效会员备注显示「-」。</li>
   </ul>
@@ -98,7 +99,8 @@ b,strong{color:#1a1a2e}
   <h2>3. 活动配置修改规则</h2>
   <ul>
     <li>活动配置修改，<b>不影响已生效下级</b>的状态。</li>
-    <li>原本未生效的下级，保存配置后立即按新配置重新判定，充值、投注达标且未超过统计限制上限，则<b>自动变为生效</b>；之后下级充值、投注变化时持续判定。生效时间记为转为生效的时间。</li>
+    <li>原本未生效的下级，保存配置后立即按新配置重新判定，充值、投注达标，则<b>自动变为生效</b>；之后下级充值、投注变化时持续判定。生效时间记为转为生效的时间。</li>
+    <li>触发同注册IP / 同注册设备上限的下级不参与重新判定，永久无效。</li>
   </ul>
 
   <h2>4. 存款&amp;流水奖励报表</h2>
@@ -110,6 +112,7 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.5</td><td>2026-11-03</td><td>Laura</td><td>触发同注册IP / 同注册设备上限的下级永久无效，无论充值、投注是否达标，修改配置也不会转为有效。</td></tr>
       <tr><td>v1.4</td><td>2026-11-03</td><td>Laura</td><td>推广统计去掉「是否同IP同设备」，新增字段移到「注册IP」前（备注在最后）；有效会员的充值、投注统计至生效时间。</td></tr>
       <tr><td>v1.3</td><td>2026-11-03</td><td>Laura</td><td>推广统计增加「备注」列，说明超过同注册IP / 同注册设备上限的无效原因。</td></tr>
       <tr><td>v1.2</td><td>2026-11-03</td><td>Laura</td><td>存款&amp;流水奖励报表恢复原样，下级达标数据改为在推广统计中增加字段展示。</td></tr>
