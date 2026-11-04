@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>全站弹窗调度机制 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78;flex-wrap:wrap}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8;white-space:nowrap}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+td.grp{background:#f3f7fc !important;font-weight:600;color:#0b3f78}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.tag-chg{display:inline-block;background:#fff1e6;color:#b1500a;border-radius:3px;padding:0 6px;font-size:12px;margin-right:4px}
+.tag-keep{display:inline-block;background:#f0f0f0;color:#666;border-radius:3px;padding:0 6px;font-size:12px;margin-right:4px}
+.w-name{min-width:150px}
+.w-wide{min-width:320px;max-width:460px}
+.rev td:first-child,.rev td:nth-child(2){white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">全站弹窗调度机制</div>
+  <div class="cover-sub">PRD 产品需求文档 · 巴西 H5 全站弹窗的分类、排队、优先级与新增弹窗接入规范</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-10-31</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、概述</a></li>
+    <li><a href="#s2">二、名词定义</a></li>
+    <li><a href="#s3">三、弹窗分类与清单</a></li>
+    <li><a href="#s4">四、调度规则</a>
+      <ol>
+        <li><a href="#s41">4.1 总原则：同一时刻只显示一个弹窗</a></li>
+        <li><a href="#s42">4.2 系统异常</a></li>
+        <li><a href="#s43">4.3 门控弹窗</a></li>
+        <li><a href="#s44">4.4 用户操作弹窗</a></li>
+        <li><a href="#s45">4.5 首页排队</a></li>
+        <li><a href="#s46">4.6 队列保留</a></li>
+        <li><a href="#s47">4.7 底部安装浮层</a></li>
+        <li><a href="#s48">4.8 同一流程的后续弹窗</a></li>
+        <li><a href="#s49">4.9 不参与调度的组件</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">五、交互逻辑流程图</a></li>
+    <li><a href="#s6">六、各弹窗规则一览</a></li>
+    <li><a href="#s7">七、边界与异常</a></li>
+    <li><a href="#s8">八、开发改动范围</a></li>
+    <li><a href="#s9">九、新增弹窗接入规范</a></li>
+    <li><a href="#s10">十、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、概述</h1>
+  <h2>背景</h2>
+  <p>目前前端没有统一的弹窗调度：每个弹窗各自判断是否弹出，满足条件即直接显示。登录或注册成功后停留在首页的几秒内，首页公告、强制修改密码、限时充值返利、人工优惠、首充亏损返利可能同时满足条件，用户会连续看到多层叠在一起的弹窗。现有的避让规则只有三条，且注册彩金弹窗拥有关闭其他弹窗的特权。</p>
+  <h2>目标</h2>
+  <ol>
+    <li>任何时刻屏幕上只显示一个弹窗。</li>
+    <li>首页自动弹窗按统一的优先级和名额依次展示，避免一次进首页被弹窗连续打断。</li>
+    <li>为后续新增弹窗提供接入规范，新弹窗按规范登记即可纳入调度，不再单独约定。</li>
+  </ol>
+  <h2>本次需求范围</h2>
+  <ul>
+    <li>适用端：巴西 H5 全站（含从桌面图标打开的 PWA）。</li>
+    <li>新增：统一弹窗调度（不重叠、优先级、首页排队、营销组名额与顺序、弹窗间隔、队列保留）。</li>
+    <li>调整：底部安装浮层仅对未登录用户展示；注册彩金弹窗取消关闭其他弹窗的特权；网络已断开同时只显示一个；安装引导弹窗只在首页展示。</li>
+    <li>不变：各弹窗自身的触发条件、频率、文案、样式和关闭方式保持现状（第六章逐个列明）。</li>
+    <li>本需求不新增前台文案，不涉及后台配置改动。</li>
+  </ul>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、名词定义</h1>
+  <table>
+    <thead><tr><th>名词</th><th>定义</th></tr></thead>
+    <tbody>
+      <tr><td>弹窗</td><td class="w-wide">带遮罩、需要用户处理后才能继续操作页面的模态弹窗。底部安装浮层虽有遮罩，按 4.7 节单独处理。</td></tr>
+      <tr><td>一次进首页</td><td class="w-wide">从进入 H5 首页开始，到离开首页为止。每次从其他页面回到首页都算新的一次进首页；登录完成、强制修改密码完成也视为新的一次进首页。</td></tr>
+      <tr><td>收集窗口</td><td class="w-wide">进入首页后等待各弹窗查询结果的时间，最长 2 秒。所有查询提前返回则立即结束。</td></tr>
+      <tr><td>队列</td><td class="w-wide">首页待展示的排队类弹窗列表，按优先级和组内顺序排列。</td></tr>
+      <tr><td>名额</td><td class="w-wide">一次进首页内某一组最多可展示的弹窗数量。</td></tr>
+      <tr><td>调度通道</td><td class="w-wide">弹窗参与调度的方式，共六种：系统异常、门控、用户操作、首页排队、让位浮层、不参与调度。见第三章。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、弹窗分类与清单</h1>
+  <h2>3.1 分类维度</h2>
+  <table>
+    <thead><tr><th>维度</th><th>取值</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td>触发方式</td><td>自动触发 / 用户操作触发</td><td>决定弹窗走排队还是立即显示</td></tr>
+      <tr><td>业务类型</td><td>系统异常 / 账户安全 / 信息公告 / 营销权益 / 增长引导 / 操作反馈</td><td>决定优先级和所属组</td></tr>
+      <tr><td>展示形态</td><td>模态弹窗 / 浮层 / 横条</td><td>横条不挡操作，不参与调度</td></tr>
+      <tr><td>生效范围</td><td>任意页面 / 首页 / 特定页面</td><td>只有首页存在排队</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3.2 调度通道与优先级</h2>
+  <p>优先级从高到低：<b>系统异常 &gt; 门控弹窗 &gt; 用户操作弹窗 &gt; 首页排队弹窗 &gt; 底部安装浮层</b>。横条不参与调度。</p>
+  <table>
+    <thead><tr><th>调度通道</th><th>包含</th><th>核心规则</th></tr></thead>
+    <tbody>
+      <tr><td>系统异常</td><td>站点配置加载失败、网络已断开、登录已过期</td><td class="w-wide">随时出现，先关闭当前弹窗再显示自己。见 4.2 节。</td></tr>
+      <tr><td>门控</td><td>登录弹窗（自动拉起）、强制修改密码</td><td class="w-wide">显示期间其他弹窗不进入队列；完成后视为重新进入首页。见 4.3 节。</td></tr>
+      <tr><td>用户操作</td><td>用户点击或进入特定页面引起的弹窗</td><td class="w-wide">立即显示，不排队、不占名额、不限频；显示期间队列暂停。见 4.4 节。</td></tr>
+      <tr><td>首页排队</td><td>安装引导弹窗、首页公告、营销组弹窗</td><td class="w-wide">只在首页，按档位与名额依次展示。见 4.5 节。</td></tr>
+      <tr><td>让位浮层</td><td>底部安装浮层</td><td class="w-wide">有任何其他弹窗显示或排队就放弃。见 4.7 节。</td></tr>
+      <tr><td>不参与调度</td><td>顶部横幅、推送授权提示条、添加到主屏幕浮层</td><td class="w-wide">按各自现有规则展示。见 4.9 节。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3.3 全站弹窗清单</h2>
+  <table>
+    <thead><tr><th>调度通道</th><th>弹窗</th><th>业务类型</th><th>展示形态</th><th>生效范围</th><th>触发方式</th></tr></thead>
+    <tbody>
+      <tr><td class="grp" rowspan="3">系统异常</td><td>站点配置加载失败</td><td>系统异常</td><td>模态</td><td>任意页面</td><td>自动</td></tr>
+      <tr><td>网络已断开</td><td>系统异常</td><td>模态</td><td>任意页面</td><td>自动</td></tr>
+      <tr><td>登录已过期</td><td>系统异常</td><td>模态</td><td>任意页面</td><td>自动</td></tr>
+      <tr><td class="grp" rowspan="2">门控</td><td>登录弹窗（自动拉起）</td><td>账户安全</td><td>模态</td><td>任意页面</td><td>自动</td></tr>
+      <tr><td>强制修改密码</td><td>账户安全</td><td>模态</td><td>登录成功后</td><td>自动</td></tr>
+      <tr><td class="grp" rowspan="10">用户操作</td><td>注册彩金弹窗</td><td>营销权益</td><td>模态</td><td>点击进游戏</td><td>用户操作</td></tr>
+      <tr><td>其他进游戏确认（需先充值 / 未结算游戏 / 真人场馆扣费）</td><td>操作反馈</td><td>模态</td><td>点击进游戏</td><td>用户操作</td></tr>
+      <tr><td>离开游戏提示</td><td>操作反馈</td><td>模态</td><td>游戏页</td><td>用户操作</td></tr>
+      <tr><td>充值成功</td><td>操作反馈</td><td>模态</td><td>充值页</td><td>用户操作</td></tr>
+      <tr><td>神秘矿场挖矿结果</td><td>操作反馈</td><td>模态</td><td>神秘矿场详情页</td><td>用户操作</td></tr>
+      <tr><td>助力转盘满进度</td><td>营销权益</td><td>模态</td><td>助力转盘详情页</td><td>进入页面</td></tr>
+      <tr><td>设置资金密码提醒</td><td>账户安全</td><td>模态</td><td>提现页</td><td>进入页面</td></tr>
+      <tr><td>活动已关闭</td><td>操作反馈</td><td>模态</td><td>各活动详情页</td><td>进入页面</td></tr>
+      <tr><td>登录弹窗（用户点击登录 / 注册）</td><td>账户安全</td><td>模态</td><td>任意页面</td><td>用户操作</td></tr>
+      <tr><td>操作反馈类（领取成功、中奖、分享等，作为固定类别，不逐个列举）</td><td>操作反馈</td><td>模态</td><td>任意页面</td><td>用户操作</td></tr>
+      <tr><td class="grp" rowspan="6">首页排队</td><td>安装引导弹窗</td><td>增长引导</td><td>模态</td><td>首页</td><td>自动</td></tr>
+      <tr><td>首页公告</td><td>信息公告</td><td>模态</td><td>首页</td><td>自动</td></tr>
+      <tr><td>每日首登转盘</td><td>营销权益</td><td>模态</td><td>首页</td><td>自动</td></tr>
+      <tr><td>首充亏损返利</td><td>营销权益</td><td>模态</td><td>首页</td><td>自动</td></tr>
+      <tr><td>限时充值返利</td><td>营销权益</td><td>模态</td><td>首页</td><td>自动</td></tr>
+      <tr><td>人工优惠</td><td>营销权益</td><td>模态</td><td>首页</td><td>自动</td></tr>
+      <tr><td class="grp">让位浮层</td><td>底部安装浮层</td><td>增长引导</td><td>浮层</td><td>首页</td><td>自动</td></tr>
+      <tr><td class="grp" rowspan="3">不参与调度</td><td>顶部横幅</td><td>增长引导</td><td>横条</td><td>首页</td><td>自动</td></tr>
+      <tr><td>推送授权提示条</td><td>增长引导</td><td>横条</td><td>任意页面（PWA 打开时）</td><td>自动</td></tr>
+      <tr><td>添加到主屏幕浮层</td><td>增长引导</td><td>浮层</td><td>仿应用商店页</td><td>自动</td></tr>
+    </tbody>
+  </table>
+  <div class="notice notice-info"><p>登录弹窗按触发来源分两种：未登录访问需登录的页面、全站强制登录、推广链接带注册参数进站、退出登录或登录过期之后由系统自动拉起的，属于门控；用户自己点击登录 / 注册按钮打开的，属于用户操作。Google 浏览器引导遮罩、首充亏损返利的加倍引导、人工优惠的领取成功提示属于同一流程的后续弹窗，见 4.8 节，不单独列入清单。</p></div>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、调度规则</h1>
+
+  <h2 id="s41">4.1 总原则：同一时刻只显示一个弹窗</h2>
+  <ol>
+    <li>任何时刻屏幕上最多显示一个弹窗，唯一例外是 4.8 节的同一流程后续弹窗。</li>
+    <li>高优先级弹窗到达时，按 3.2 节的优先级处理：系统异常抢占当前弹窗；其余通道的弹窗不抢占正在显示的弹窗，按各自规则等待或放弃。</li>
+    <li>任意两个弹窗之间间隔 2 秒：上一个弹窗关闭后 2 秒，下一个弹窗才显示。同一流程的后续弹窗、系统异常不受此限。</li>
+    <li>横条（顶部横幅、推送授权提示条）不算弹窗，可与弹窗同时存在。</li>
+  </ol>
+
+  <h2 id="s42">4.2 系统异常</h2>
+  <ol>
+    <li>包括站点配置加载失败、网络已断开、登录已过期，任意页面都可能出现。</li>
+    <li>出现时，先关闭当前显示的弹窗，再显示系统异常弹窗：
+      <ul>
+        <li>被关闭的是首页排队弹窗：放回队列，按 4.6 节保留；</li>
+        <li>被关闭的是用户操作弹窗（如充值成功、进游戏确认）：直接作废，不再弹出；</li>
+        <li>被关闭的是门控弹窗：不恢复，系统异常确认后按其自身处理继续。</li>
+      </ul>
+    </li>
+    <li>同一种系统异常同时只显示一个：多个请求同时遇到断网，只显示一个「网络已断开」。</li>
+    <li>系统异常显示期间，排队弹窗、用户操作弹窗均不显示。</li>
+    <li>各系统异常确认后的处理保持现状：站点配置加载失败、网络已断开确认后刷新页面；登录已过期确认后清空登录状态并拉起登录弹窗（门控）。</li>
+  </ol>
+
+  <h2 id="s43">4.3 门控弹窗</h2>
+  <ol>
+    <li>包括自动拉起的登录弹窗和强制修改密码弹窗。</li>
+    <li>门控弹窗显示期间，自动触发的弹窗不进入队列，用户操作弹窗无法触发；系统异常除外。</li>
+    <li>登录完成或修改密码完成后，视为新的一次进首页：各组名额清零，队列清空，各弹窗按自身规则重新判断；首页公告按「登录成功」时机判断。</li>
+    <li>未登录用户进入首页时如触发登录弹窗（全站强制登录、推广链接带注册参数），先显示登录弹窗，首页公告等排队弹窗不显示。</li>
+  </ol>
+
+  <h2 id="s44">4.4 用户操作弹窗</h2>
+  <ol>
+    <li>用户点击或进入特定页面引起的弹窗，立即显示，不进入队列。</li>
+    <li>不占用任何组的名额，不设频率限制；各弹窗自身已有的频率规则（如注册彩金「去绑定」的今日不再提醒）保持现状。</li>
+    <li>用户操作弹窗显示期间，首页队列暂停，安装引导弹窗同样等待；用户操作弹窗关闭 2 秒后，队列继续。</li>
+    <li>注册彩金弹窗不再关闭首页公告和限时充值返利，按普通用户操作弹窗处理。</li>
+    <li>进入页面即弹出的弹窗（助力转盘满进度、设置资金密码提醒、活动已关闭）按用户操作弹窗处理。</li>
+  </ol>
+
+  <h2 id="s45">4.5 首页排队</h2>
+  <h3>4.5.1 档位与名额</h3>
+  <table>
+    <thead><tr><th>档位</th><th>弹窗</th><th>每次进首页名额</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td>第 1 档</td><td>安装引导弹窗</td><td>1</td><td class="w-wide">排他：在队列中时排在最前；显示期间除系统异常外的弹窗都等待，关闭后其他弹窗再显示。频率按后台「弹框间隔」配置，保持现状。</td></tr>
+      <tr><td>第 2 档</td><td>首页公告</td><td>1</td><td class="w-wide">首页公告为一个弹窗（多条公告在弹窗内轮播）。每条公告的弹出时机和频率按后台配置，保持现状。</td></tr>
+      <tr><td>第 3 档</td><td>营销组</td><td>2</td><td class="w-wide">组内顺序：每日首登转盘 &gt; 首充亏损返利 &gt; 限时充值返利 &gt; 人工优惠。超出名额的营销弹窗保留到下次回首页。</td></tr>
+    </tbody>
+  </table>
+  <p>不设总数上限：一次进首页最多显示 4 个排队弹窗（安装引导 1 + 首页公告 1 + 营销组 2）。</p>
+
+  <h3>4.5.2 排队流程</h3>
+  <ol>
+    <li>进入首页时开启收集窗口，最长等待 2 秒，收集本次触发的排队弹窗，并取出上次保留的弹窗（4.6 节）。</li>
+    <li>收集窗口结束后：去掉重复的弹窗，剔除已失效的弹窗，再按档位和组内顺序排序，依次显示。</li>
+    <li>收集窗口结束后才到达的弹窗（包括停留首页期间轮询查到的限时充值返利、首充亏损返利），排在已排好的弹窗之后；同时后到达的多个弹窗之间按档位和组内顺序排列。</li>
+    <li>停留首页期间后到达的弹窗同样占用本次进首页的名额；名额已用完的，保留到下次回首页。</li>
+    <li>每个弹窗显示前再次检查是否仍然有效；已失效的直接丢弃，不占名额。</li>
+  </ol>
+
+  <h3>4.5.3 回首页时是否再弹</h3>
+  <p>每次回首页都是新的一次进首页，名额重新计算。具体某个弹窗回首页时是否再弹，按该弹窗自身的机制判断，保持现状：</p>
+  <table>
+    <thead><tr><th>弹窗</th><th>回首页时的现有机制</th></tr></thead>
+    <tbody>
+      <tr><td>安装引导弹窗</td><td class="w-wide">按后台「弹框时间点」与「弹框间隔」判断。弹框时间点为「用户充值」「首次提现」时，等用户回到首页、且当前没有用户操作弹窗时进入队列。</td></tr>
+      <tr><td>首页公告</td><td class="w-wide">按每条公告配置的时机（进站 / 登录成功 / 从其他页面回到首页）和频率（每次回首页 / 每天一次 / 只弹一次 / 每次进站或登录）判断；用户勾选「今日不再提醒」的当天不再弹。</td></tr>
+      <tr><td>每日首登转盘</td><td class="w-wide">每天首次登录弹一次，抽奖次数增加时也弹。本需求只确定其调度位置（首页、营销组第一），是否上线另行安排。</td></tr>
+      <tr><td>首充亏损返利</td><td class="w-wide">停留首页期间同一笔奖励只弹一次，离开再回首页重新弹，直到用户领取。</td></tr>
+      <tr><td>限时充值返利</td><td class="w-wide">停留首页期间定时查询，有可用活动即弹；「今日不再弹出」由后端记录。</td></tr>
+      <tr><td>人工优惠</td><td class="w-wide">每次回到首页、在首页登录成功时查询，有待处理的优惠就弹，直到用户处理。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s46">4.6 队列保留</h2>
+  <ol>
+    <li>离开首页时，队列中尚未显示的弹窗（含因名额用完而未显示的营销弹窗）保留，下次回首页时显示。</li>
+    <li>下次回首页时，保留的弹窗与新触发的弹窗合并，按档位和组内顺序统一排序；同一个弹窗只显示一次；保留的弹窗同样占用该次进首页的名额。</li>
+    <li>保留只在本次打开站点期间有效。刷新页面、关闭后重新打开站点时队列清空，各弹窗按自身规则重新判断。</li>
+    <li>登录完成、修改密码完成后队列清空（4.3 节）。</li>
+    <li>保留的弹窗在显示前已失效的直接丢弃，例如限时充值返利倒计时已结束。</li>
+  </ol>
+
+  <h2 id="s47">4.7 底部安装浮层</h2>
+  <ol>
+    <li>展示条件：下载按钮开启时，<b>未登录用户</b>进入首页，且收集窗口结束时没有其他弹窗在显示或排队。已登录用户不展示。</li>
+    <li>收集窗口结束时有其他弹窗在显示或排队的，本次进首页直接放弃，不补弹。</li>
+    <li>浮层显示期间有排队弹窗、系统异常或门控弹窗到达时，浮层立即关闭，到达的弹窗按规则显示；浮层不补弹。</li>
+    <li>不占用任何组的名额。5 秒自动关闭、点击「取消」关闭等其他规则保持现状，详见《安装引导模块 PRD》3.3 节。</li>
+  </ol>
+
+  <h2 id="s48">4.8 同一流程的后续弹窗</h2>
+  <ol>
+    <li>用户在弹窗内点击按钮后打开的下一步弹窗，与原弹窗属于同一流程，可以叠在原弹窗之上或替换原弹窗，不算重叠。</li>
+    <li>后续弹窗不进入队列、不占名额、不受 2 秒间隔限制；叠加或替换的方式保持各弹窗现状。</li>
+    <li>当前包括：
+      <ul>
+        <li>Google 浏览器引导遮罩：在顶部横幅、底部安装浮层、安装引导弹窗中点击「安装」后判断浏览器时弹出，可叠在安装引导弹窗之上；</li>
+        <li>首充亏损返利：领取成功后的加倍引导；</li>
+        <li>人工优惠：领取后的领取成功提示。</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h2 id="s49">4.9 不参与调度的组件</h2>
+  <table>
+    <thead><tr><th>组件</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>顶部横幅</td><td class="w-wide">首页顶部横条，不挡操作，可与弹窗同时存在，规则保持现状。</td></tr>
+      <tr><td>推送授权提示条</td><td class="w-wide">PWA 打开且通知权限未选择时显示在页面顶部，无遮罩，不挡操作，规则保持现状。</td></tr>
+      <tr><td>添加到主屏幕浮层</td><td class="w-wide">只在仿应用商店页弹出，不在 H5 首页，不涉及首页调度，规则保持现状。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、交互逻辑流程图</h1>
+  <p>下图为一次进首页的排队流程。系统异常可在任意节点抢占，按 4.2 节处理，图中不再画出。</p>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 640 980" width="640" height="980" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Helvetica Neue',Arial,sans-serif">
+    <defs><marker id="arP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6a80"/></marker></defs>
+    <text x="210" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">首页弹窗排队流程</text>
+
+    <rect x="70" y="44" width="280" height="44" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="210" y="70" text-anchor="middle" font-size="12.5" fill="#123a66">进入首页（新的一次进首页，名额清零）</text>
+
+    <polygon points="210,102 340,136 210,170 80,136" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="210" y="141" text-anchor="middle" font-size="12.5" fill="#6a4a00">门控弹窗显示中？</text>
+    <rect x="390" y="110" width="230" height="52" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="505" y="132" text-anchor="middle" font-size="12" fill="#8a2b2b">等待登录 / 修改密码完成，</text>
+    <text x="505" y="149" text-anchor="middle" font-size="12" fill="#8a2b2b">完成后重新进入首页</text>
+
+    <rect x="70" y="200" width="280" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="210" y="221" text-anchor="middle" font-size="12.5" fill="#333">取出上次保留的弹窗，</text>
+    <text x="210" y="238" text-anchor="middle" font-size="12.5" fill="#333">收集新触发的弹窗（最长等待 2 秒）</text>
+
+    <rect x="70" y="280" width="280" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="210" y="301" text-anchor="middle" font-size="12.5" fill="#333">去重、剔除已失效弹窗，</text>
+    <text x="210" y="318" text-anchor="middle" font-size="12.5" fill="#333">按档位和组内顺序排序</text>
+
+    <polygon points="210,360 340,394 210,428 80,394" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="210" y="399" text-anchor="middle" font-size="12.5" fill="#6a4a00">队列为空且未登录？</text>
+    <rect x="390" y="368" width="230" height="52" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="505" y="390" text-anchor="middle" font-size="12" fill="#15542f">下载按钮开启时展示底部安装浮层，</text>
+    <text x="505" y="407" text-anchor="middle" font-size="12" fill="#15542f">本次排队结束</text>
+
+    <polygon points="210,458 340,492 210,526 80,492" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="210" y="497" text-anchor="middle" font-size="12.5" fill="#6a4a00">队列中还有弹窗？</text>
+    <rect x="390" y="466" width="230" height="52" rx="8" fill="#eef0f3" stroke="#b9c2cc"/>
+    <text x="505" y="488" text-anchor="middle" font-size="12" fill="#444">本次排队结束；停留期间新到达的</text>
+    <text x="505" y="505" text-anchor="middle" font-size="12" fill="#444">弹窗排入队尾，回到本判断</text>
+
+    <polygon points="210,556 340,590 210,624 80,590" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="210" y="595" text-anchor="middle" font-size="12.5" fill="#6a4a00">用户操作弹窗显示中？</text>
+    <rect x="390" y="564" width="230" height="52" rx="8" fill="#eef0f3" stroke="#b9c2cc"/>
+    <text x="505" y="586" text-anchor="middle" font-size="12" fill="#444">队列暂停，等其关闭 2 秒后</text>
+    <text x="505" y="603" text-anchor="middle" font-size="12" fill="#444">继续</text>
+
+    <polygon points="210,654 340,688 210,722 80,688" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="210" y="693" text-anchor="middle" font-size="12.5" fill="#6a4a00">所属档位名额已用完？</text>
+    <rect x="390" y="662" width="230" height="52" rx="8" fill="#eef0f3" stroke="#b9c2cc"/>
+    <text x="505" y="684" text-anchor="middle" font-size="12" fill="#444">保留到下次回首页，</text>
+    <text x="505" y="701" text-anchor="middle" font-size="12" fill="#444">继续判断下一个</text>
+
+    <polygon points="210,752 340,786 210,820 80,786" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="210" y="791" text-anchor="middle" font-size="12.5" fill="#6a4a00">弹窗仍然有效？</text>
+    <rect x="390" y="760" width="230" height="52" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="505" y="782" text-anchor="middle" font-size="12" fill="#8a2b2b">丢弃，不占名额，</text>
+    <text x="505" y="799" text-anchor="middle" font-size="12" fill="#8a2b2b">继续判断下一个</text>
+
+    <rect x="70" y="850" width="280" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="210" y="876" text-anchor="middle" font-size="12.5" fill="#15542f">显示弹窗，占用 1 个名额</text>
+
+    <rect x="70" y="918" width="280" height="44" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="210" y="944" text-anchor="middle" font-size="12.5" fill="#333">弹窗关闭，间隔 2 秒</text>
+
+    <line x1="210" y1="88" x2="210" y2="102" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="170" x2="210" y2="200" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="250" x2="210" y2="280" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="330" x2="210" y2="360" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="428" x2="210" y2="458" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="526" x2="210" y2="556" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="624" x2="210" y2="654" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="722" x2="210" y2="752" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="820" x2="210" y2="850" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="210" y1="894" x2="210" y2="918" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="340" y1="136" x2="390" y2="136" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="340" y1="394" x2="390" y2="394" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="340" y1="492" x2="390" y2="492" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="340" y1="590" x2="390" y2="590" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="340" y1="688" x2="390" y2="688" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <line x1="340" y1="786" x2="390" y2="786" stroke="#5a6a80" marker-end="url(#arP)"/>
+    <polyline points="70,940 40,940 40,492 80,492" fill="none" stroke="#5a6a80" marker-end="url(#arP)"/>
+
+    <text x="220" y="190" font-size="11.5" fill="#2f7a4a">否</text>
+    <text x="348" y="130" font-size="11.5" fill="#a33">是</text>
+    <text x="220" y="448" font-size="11.5" fill="#2f7a4a">否</text>
+    <text x="348" y="388" font-size="11.5" fill="#a33">是</text>
+    <text x="220" y="546" font-size="11.5" fill="#2f7a4a">是</text>
+    <text x="348" y="486" font-size="11.5" fill="#a33">否</text>
+    <text x="220" y="644" font-size="11.5" fill="#2f7a4a">否</text>
+    <text x="348" y="584" font-size="11.5" fill="#a33">是</text>
+    <text x="220" y="742" font-size="11.5" fill="#2f7a4a">否</text>
+    <text x="348" y="682" font-size="11.5" fill="#a33">是</text>
+    <text x="220" y="840" font-size="11.5" fill="#2f7a4a">是</text>
+    <text x="348" y="780" font-size="11.5" fill="#a33">否</text>
+  </svg>
+  </div>
+  <p class="legend" style="font-size:12px;color:#888">离开首页时流程中止，尚未显示的弹窗按 4.6 节保留。</p>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、各弹窗规则一览</h1>
+  <p><span class="tag-chg">调整</span>为本需求改动；<span class="tag-keep">保持</span>为维持现状。</p>
+  <table>
+    <thead><tr><th>弹窗</th><th>调度位置</th><th>本需求规则</th></tr></thead>
+    <tbody>
+      <tr><td class="w-name">站点配置加载失败</td><td>系统异常</td><td class="w-wide"><span class="tag-chg">调整</span>抢占当前弹窗。<br><span class="tag-keep">保持</span>确认后刷新页面。</td></tr>
+      <tr><td>网络已断开</td><td>系统异常</td><td class="w-wide"><span class="tag-chg">调整</span>抢占当前弹窗；同时只显示一个，不再叠出多层。<br><span class="tag-keep">保持</span>确认后刷新页面。</td></tr>
+      <tr><td>登录已过期</td><td>系统异常</td><td class="w-wide"><span class="tag-chg">调整</span>抢占当前弹窗（不再只关闭人工优惠和加载提示）。<br><span class="tag-keep">保持</span>同时只显示一个；确认后清空登录并拉起登录弹窗。</td></tr>
+      <tr><td>登录弹窗（自动拉起）</td><td>门控</td><td class="w-wide"><span class="tag-chg">调整</span>显示期间其他弹窗不进入队列，首页公告不再叠在登录弹窗上；登录完成后视为重新进入首页。<br><span class="tag-keep">保持</span>拉起条件。</td></tr>
+      <tr><td>强制修改密码</td><td>门控</td><td class="w-wide"><span class="tag-chg">调整</span>显示期间其他弹窗不进入队列，不再与登录时机的公告叠在一起；修改完成后视为重新进入首页。<br><span class="tag-keep">保持</span>每次登录判断。</td></tr>
+      <tr><td>安装引导弹窗</td><td>首页排队 · 第 1 档</td><td class="w-wide"><span class="tag-chg">调整</span>只在首页显示（现状为任意页面）；进入队列排在最前，显示期间其他弹窗等待；有用户操作弹窗时等待其关闭。<br><span class="tag-keep">保持</span>弹框时间点、弹框间隔；间隔配置为 0 时无关闭按钮（强制引导下载）。</td></tr>
+      <tr><td>首页公告</td><td>首页排队 · 第 2 档</td><td class="w-wide"><span class="tag-chg">调整</span>不再被注册彩金弹窗收起；与限时充值返利等不再同时显示。<br><span class="tag-keep">保持</span>每条公告的时机、频率、排序、今日不再提醒、图片加载成功才弹。</td></tr>
+      <tr><td>每日首登转盘</td><td>首页排队 · 营销组第 1</td><td class="w-wide"><span class="tag-chg">调整</span>确定调度位置。<br><span class="tag-keep">保持</span>是否上线另行安排，上线时按此位置接入。</td></tr>
+      <tr><td>首充亏损返利</td><td>首页排队 · 营销组第 2</td><td class="w-wide"><span class="tag-chg">调整</span>进入队列，占营销组名额。<br><span class="tag-keep">保持</span>查询频率；领取后的加倍引导；未领取前持续弹出。</td></tr>
+      <tr><td>限时充值返利</td><td>首页排队 · 营销组第 3</td><td class="w-wide"><span class="tag-chg">调整</span>进入队列，占营销组名额；不再被注册彩金关闭；排队期间倒计时结束则丢弃。<br><span class="tag-keep">保持</span>查询频率、倒计时到 0 自动关闭、今日不再弹出。</td></tr>
+      <tr><td>人工优惠</td><td>首页排队 · 营销组第 4</td><td class="w-wide"><span class="tag-chg">调整</span>进入队列，占营销组名额；有多条待处理优惠时，每条算一个弹窗，各占 1 个营销组名额，多条之间按现有顺序排列，超出名额的保留到下次回首页。<br><span class="tag-keep">保持</span>无关闭按钮；未处理前持续弹出。</td></tr>
+      <tr><td>底部安装浮层</td><td>让位浮层</td><td class="w-wide"><span class="tag-chg">调整</span>只对未登录用户展示；有任何其他弹窗显示或排队即放弃。<br><span class="tag-keep">保持</span>5 秒自动关闭、点「取消」关闭、遮罩。</td></tr>
+      <tr><td>注册彩金弹窗</td><td>用户操作</td><td class="w-wide"><span class="tag-chg">调整</span>取消关闭首页公告和限时充值返利的特权。<br><span class="tag-keep">保持</span>进游戏检查顺序、去绑定的今日不再提醒。</td></tr>
+      <tr><td>其他进游戏确认</td><td>用户操作</td><td class="w-wide"><span class="tag-keep">保持</span>按顺序检查，彼此不重叠。</td></tr>
+      <tr><td>离开游戏提示</td><td>用户操作</td><td class="w-wide"><span class="tag-keep">保持</span>确认后离开；回到首页后首页排队开始。</td></tr>
+      <tr><td>充值成功</td><td>用户操作</td><td class="w-wide"><span class="tag-keep">保持</span>3 秒后自动回首页；回首页后首页排队开始。</td></tr>
+      <tr><td>神秘矿场挖矿结果、助力转盘满进度、设置资金密码提醒、活动已关闭、操作反馈类</td><td>用户操作</td><td class="w-wide"><span class="tag-keep">保持</span>各自触发条件和频率。</td></tr>
+      <tr><td>顶部横幅、推送授权提示条、添加到主屏幕浮层</td><td>不参与调度</td><td class="w-wide"><span class="tag-keep">保持</span>现有规则。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、边界与异常</h1>
+  <table>
+    <thead><tr><th>场景</th><th>处理</th></tr></thead>
+    <tbody>
+      <tr><td>注册或登录成功后停在首页，公告、限时充值返利、人工优惠、首充亏损返利同时满足条件</td><td class="w-wide">若需强制修改密码，先显示强制修改密码；完成后按新的一次进首页排队：公告 → 首充亏损返利 → 限时充值返利，人工优惠因营销名额已满保留到下次回首页。</td></tr>
+      <tr><td>安装引导弹框间隔配置为 0</td><td class="w-wide">安装引导弹窗无关闭按钮，其后的排队弹窗一直等待，为强制引导下载的预期效果。</td></tr>
+      <tr><td>安装引导弹窗显示中，用户点击「安装」</td><td class="w-wide">浏览器判断不通过时，Google 浏览器引导遮罩叠在安装引导弹窗之上（4.8 节）。</td></tr>
+      <tr><td>限时充值返利在队列中等待时倒计时结束</td><td class="w-wide">丢弃，不显示，不占名额。</td></tr>
+      <tr><td>排队弹窗显示中遇到网络已断开</td><td class="w-wide">排队弹窗关闭并放回队列，显示网络已断开；确认后刷新页面，队列清空，各弹窗重新判断。</td></tr>
+      <tr><td>充值成功弹窗显示中遇到登录已过期</td><td class="w-wide">充值成功弹窗作废；显示登录已过期，确认后拉起登录弹窗。</td></tr>
+      <tr><td>有 3 条待处理的人工优惠，且没有其他营销弹窗</td><td class="w-wide">每条算一个弹窗：本次进首页显示前 2 条，第 3 条保留到下次回首页。</td></tr>
+      <tr><td>停留首页时轮询查到首充亏损返利，营销名额已用完</td><td class="w-wide">不显示，保留到下次回首页。</td></tr>
+      <tr><td>离开首页时还有未显示的弹窗</td><td class="w-wide">保留；下次回首页与新触发的弹窗合并排序，同一弹窗只显示一次。</td></tr>
+      <tr><td>刷新页面或关闭后重新打开站点</td><td class="w-wide">保留的弹窗清空，各弹窗按自身规则重新判断。</td></tr>
+      <tr><td>未登录用户进首页，有公告要弹</td><td class="w-wide">显示公告；底部安装浮层本次放弃。</td></tr>
+      <tr><td>未登录用户进首页，没有其他弹窗</td><td class="w-wide">下载按钮开启时显示底部安装浮层；浮层显示期间有弹窗到达则浮层关闭。</td></tr>
+      <tr><td>全站强制登录站点，未登录用户进首页</td><td class="w-wide">先显示登录弹窗（门控），公告等排队弹窗不显示；登录完成后按新的一次进首页排队。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、开发改动范围</h1>
+  <table>
+    <thead><tr><th>序号</th><th>改动</th><th>内容</th><th>对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>建立统一弹窗调度</td><td class="w-wide">
+        <ul style="margin:0">
+          <li>同一时刻只显示一个弹窗，按 系统异常 &gt; 门控 &gt; 用户操作 &gt; 首页排队 &gt; 底部安装浮层 的优先级处理；</li>
+          <li>系统异常抢占，门控显示期间不进队列，用户操作弹窗显示期间队列暂停；</li>
+          <li>首页收集窗口（最长 2 秒）、档位排序、营销组名额与组内顺序、弹窗间隔 2 秒；</li>
+          <li>离开首页时未显示的弹窗保留到下次回首页；</li>
+          <li>安装引导弹窗只在首页显示；</li>
+          <li>同一流程的后续弹窗可叠加。</li>
+        </ul></td><td>4.1 – 4.6、4.8</td></tr>
+      <tr><td>2</td><td>底部安装浮层</td><td class="w-wide">只对未登录用户展示；有任何其他弹窗显示或排队即放弃。</td><td>4.7</td></tr>
+      <tr><td>3</td><td>注册彩金弹窗</td><td class="w-wide">取消关闭首页公告和限时充值返利的逻辑。</td><td>4.4</td></tr>
+      <tr><td>4</td><td>网络已断开</td><td class="w-wide">同时只显示一个，不再叠出多层。</td><td>4.2</td></tr>
+    </tbody>
+  </table>
+  <p>除以上 4 项外，各弹窗自身的触发条件、频率、文案、样式和关闭方式均保持现状。</p>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、新增弹窗接入规范</h1>
+  <p>后续新增任何会自动弹出或由用户操作引起的弹窗，需求文档中必须按下表登记，开发按登记内容接入调度。所有字段必填，不适用的填「无」。</p>
+  <h2>9.1 登记字段</h2>
+  <table>
+    <thead><tr><th>字段</th><th>填写说明</th><th>可选值 / 示例</th></tr></thead>
+    <tbody>
+      <tr><td>弹窗名称</td><td class="w-wide">与前台及其他文档一致的名称</td><td>每日首登转盘</td></tr>
+      <tr><td>业务类型</td><td class="w-wide">按 3.1 节选一项</td><td>系统异常 / 账户安全 / 信息公告 / 营销权益 / 增长引导 / 操作反馈</td></tr>
+      <tr><td>展示形态</td><td class="w-wide">按 3.1 节选一项</td><td>模态弹窗 / 浮层 / 横条</td></tr>
+      <tr><td>调度通道</td><td class="w-wide">按 3.2 节选一项</td><td>系统异常 / 门控 / 用户操作 / 首页排队 / 让位浮层 / 不参与调度</td></tr>
+      <tr><td>档位与组内顺序</td><td class="w-wide">仅首页排队填写：所属档位，及在组内排在哪个弹窗之前 / 之后</td><td>第 3 档营销组，排在首充亏损返利之前</td></tr>
+      <tr><td>触发时机</td><td class="w-wide">什么条件下产生弹窗，含查询频率</td><td>每天首次登录；停留首页每 60 秒检查抽奖次数</td></tr>
+      <tr><td>生效场景</td><td class="w-wide">在哪些页面显示；是否限登录 / 未登录用户</td><td>首页，仅已登录用户</td></tr>
+      <tr><td>冲突策略</td><td class="w-wide">遇到正在显示的弹窗时如何处理；默认按调度通道规则，有特殊要求才另写</td><td>按首页排队规则等待</td></tr>
+      <tr><td>互斥组</td><td class="w-wide">与哪些弹窗共用名额，及每次进首页的名额</td><td>营销组，名额 2</td></tr>
+      <tr><td>频控</td><td class="w-wide">多久弹一次、何时不再弹；不能留空，不限频需写明「不限」</td><td>每天 1 次；领取后不再弹</td></tr>
+      <tr><td>过期策略</td><td class="w-wide">排队或保留期间弹窗失效时如何处理</td><td>当日抽奖次数用完则丢弃</td></tr>
+      <tr><td>关闭方式</td><td class="w-wide">是否有关闭按钮，是否自动关闭</td><td>有关闭按钮</td></tr>
+      <tr><td>后续弹窗</td><td class="w-wide">点击弹窗内按钮后打开的同一流程弹窗（4.8 节）</td><td>点击「去抽奖」进入助力转盘页，无后续弹窗</td></tr>
+    </tbody>
+  </table>
+  <h2>9.2 登记模板</h2>
+  <p>复制下表填写到对应需求文档的「弹窗调度」小节：</p>
+  <table>
+    <thead><tr><th>字段</th><th style="min-width:360px">内容</th></tr></thead>
+    <tbody>
+      <tr><td>弹窗名称</td><td></td></tr>
+      <tr><td>业务类型</td><td></td></tr>
+      <tr><td>展示形态</td><td></td></tr>
+      <tr><td>调度通道</td><td></td></tr>
+      <tr><td>档位与组内顺序</td><td></td></tr>
+      <tr><td>触发时机</td><td></td></tr>
+      <tr><td>生效场景</td><td></td></tr>
+      <tr><td>冲突策略</td><td></td></tr>
+      <tr><td>互斥组</td><td></td></tr>
+      <tr><td>频控</td><td></td></tr>
+      <tr><td>过期策略</td><td></td></tr>
+      <tr><td>关闭方式</td><td></td></tr>
+      <tr><td>后续弹窗</td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="notice"><p>新增弹窗若需要突破本文档规则（如抢占其他弹窗、不受名额限制），须在需求评审时单独说明理由，经确认后同步修订本文档。</p></div>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>十、修订记录</h1>
+  <table class="rev">
+    <thead><tr><th>版本</th><th>日期</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-10-31</td><td>首版：弹窗分类与清单、调度规则、首页排队流程图、各弹窗规则一览、边界与异常、开发改动范围、新增弹窗接入规范。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
