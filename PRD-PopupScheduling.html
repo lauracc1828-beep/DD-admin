@@ -6,41 +6,41 @@
 <title>全站弹窗调度机制 PRD v1.0</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:15px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
 .page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
 .cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
 .cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
 .cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
-.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78;flex-wrap:wrap}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:14px;opacity:.78;flex-wrap:wrap}
 .toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
-.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc-title{font-size:16px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
 .toc ol{padding-left:20px;list-style:none}
 .toc li{margin:4px 0}
-.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a{color:#0961BD;text-decoration:none;font-size:14px}
 .toc a:hover{text-decoration:underline}
 .toc ol ol{padding-left:16px}
 .toc ol ol li{margin:2px 0;opacity:.85}
 .section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
-h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
-h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
-h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 8px}
+h1{font-size:22px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:16px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:15px;font-weight:600;color:#0961BD;margin:16px 0 8px}
 p{margin-bottom:10px;color:#333}
 ul,ol{padding-left:20px;margin-bottom:10px}
 li{margin-bottom:5px}
-table{border-collapse:collapse;margin:12px 0;font-size:13px}
+table{border-collapse:collapse;margin:12px 0;font-size:14px}
 thead tr{background:#eaf2fb}
 th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8;white-space:nowrap}
 td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
 tr:nth-child(even) td{background:#fafbfc}
 td.grp{background:#f3f7fc !important;font-weight:600;color:#0b3f78}
-.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:14px;color:#6a4a00}
 .notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
 .notice p:last-child{margin-bottom:0}
-code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:13px;font-family:monospace}
 b,strong{color:#1a1a2e}
 .fc-wrap{padding:8px 0 2px}
-.tag-chg{display:inline-block;background:#fff1e6;color:#b1500a;border-radius:3px;padding:0 6px;font-size:12px;margin-right:4px}
-.tag-keep{display:inline-block;background:#f0f0f0;color:#666;border-radius:3px;padding:0 6px;font-size:12px;margin-right:4px}
+.tag-chg{display:inline-block;background:#fff1e6;color:#b1500a;border-radius:3px;padding:0 6px;font-size:13px;margin-right:4px}
+.tag-keep{display:inline-block;background:#f0f0f0;color:#666;border-radius:3px;padding:0 6px;font-size:13px;margin-right:4px}
 .w-name{min-width:150px}
 .w-wide{min-width:320px;max-width:460px}
 .rev td:first-child,.rev td:nth-child(2){white-space:nowrap}
@@ -309,60 +309,60 @@ b,strong{color:#1a1a2e}
   <div class="fc-wrap">
   <svg viewBox="0 0 640 980" width="640" height="980" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Helvetica Neue',Arial,sans-serif">
     <defs><marker id="arP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6a80"/></marker></defs>
-    <text x="210" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">首页弹窗排队流程</text>
+    <text x="210" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#08305c">首页弹窗排队流程</text>
 
     <rect x="70" y="44" width="280" height="44" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
-    <text x="210" y="70" text-anchor="middle" font-size="12.5" fill="#123a66">进入首页（新的一次进首页，名额清零）</text>
+    <text x="210" y="70" text-anchor="middle" font-size="13.5" fill="#123a66">进入首页（新的一次进首页，名额清零）</text>
 
     <polygon points="210,102 340,136 210,170 80,136" fill="#fff6e0" stroke="#e0b060"/>
-    <text x="210" y="141" text-anchor="middle" font-size="12.5" fill="#6a4a00">门控弹窗显示中？</text>
+    <text x="210" y="141" text-anchor="middle" font-size="13.5" fill="#6a4a00">门控弹窗显示中？</text>
     <rect x="390" y="110" width="230" height="52" rx="8" fill="#fdecec" stroke="#e09b9b"/>
-    <text x="505" y="132" text-anchor="middle" font-size="12" fill="#8a2b2b">等待登录 / 修改密码完成，</text>
-    <text x="505" y="149" text-anchor="middle" font-size="12" fill="#8a2b2b">完成后重新进入首页</text>
+    <text x="505" y="132" text-anchor="middle" font-size="13" fill="#8a2b2b">等待登录 / 修改密码完成，</text>
+    <text x="505" y="149" text-anchor="middle" font-size="13" fill="#8a2b2b">完成后重新进入首页</text>
 
     <rect x="70" y="200" width="280" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
-    <text x="210" y="221" text-anchor="middle" font-size="12.5" fill="#333">取出上次保留的弹窗，</text>
-    <text x="210" y="238" text-anchor="middle" font-size="12.5" fill="#333">收集新触发的弹窗（最长等待 2 秒）</text>
+    <text x="210" y="221" text-anchor="middle" font-size="13.5" fill="#333">取出上次保留的弹窗，</text>
+    <text x="210" y="238" text-anchor="middle" font-size="13.5" fill="#333">收集新触发的弹窗（最长等待 2 秒）</text>
 
     <rect x="70" y="280" width="280" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
-    <text x="210" y="301" text-anchor="middle" font-size="12.5" fill="#333">去重、剔除已失效弹窗，</text>
-    <text x="210" y="318" text-anchor="middle" font-size="12.5" fill="#333">按档位和组内顺序排序</text>
+    <text x="210" y="301" text-anchor="middle" font-size="13.5" fill="#333">去重、剔除已失效弹窗，</text>
+    <text x="210" y="318" text-anchor="middle" font-size="13.5" fill="#333">按档位和组内顺序排序</text>
 
     <polygon points="210,360 340,394 210,428 80,394" fill="#fff6e0" stroke="#e0b060"/>
-    <text x="210" y="399" text-anchor="middle" font-size="12.5" fill="#6a4a00">队列为空且未登录？</text>
+    <text x="210" y="399" text-anchor="middle" font-size="13.5" fill="#6a4a00">队列为空且未登录？</text>
     <rect x="390" y="368" width="230" height="52" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
-    <text x="505" y="390" text-anchor="middle" font-size="12" fill="#15542f">下载按钮开启时展示底部安装浮层，</text>
-    <text x="505" y="407" text-anchor="middle" font-size="12" fill="#15542f">本次排队结束</text>
+    <text x="505" y="390" text-anchor="middle" font-size="13" fill="#15542f">下载按钮开启时展示底部安装浮层，</text>
+    <text x="505" y="407" text-anchor="middle" font-size="13" fill="#15542f">本次排队结束</text>
 
     <polygon points="210,458 340,492 210,526 80,492" fill="#fff6e0" stroke="#e0b060"/>
-    <text x="210" y="497" text-anchor="middle" font-size="12.5" fill="#6a4a00">队列中还有弹窗？</text>
+    <text x="210" y="497" text-anchor="middle" font-size="13.5" fill="#6a4a00">队列中还有弹窗？</text>
     <rect x="390" y="466" width="230" height="52" rx="8" fill="#eef0f3" stroke="#b9c2cc"/>
-    <text x="505" y="488" text-anchor="middle" font-size="12" fill="#444">本次排队结束；停留期间新到达的</text>
-    <text x="505" y="505" text-anchor="middle" font-size="12" fill="#444">弹窗排入队尾，回到本判断</text>
+    <text x="505" y="488" text-anchor="middle" font-size="13" fill="#444">本次排队结束；停留期间新到达的</text>
+    <text x="505" y="505" text-anchor="middle" font-size="13" fill="#444">弹窗排入队尾，回到本判断</text>
 
     <polygon points="210,556 340,590 210,624 80,590" fill="#fff6e0" stroke="#e0b060"/>
-    <text x="210" y="595" text-anchor="middle" font-size="12.5" fill="#6a4a00">用户操作弹窗显示中？</text>
+    <text x="210" y="595" text-anchor="middle" font-size="13.5" fill="#6a4a00">用户操作弹窗显示中？</text>
     <rect x="390" y="564" width="230" height="52" rx="8" fill="#eef0f3" stroke="#b9c2cc"/>
-    <text x="505" y="586" text-anchor="middle" font-size="12" fill="#444">队列暂停，等其关闭 2 秒后</text>
-    <text x="505" y="603" text-anchor="middle" font-size="12" fill="#444">继续</text>
+    <text x="505" y="586" text-anchor="middle" font-size="13" fill="#444">队列暂停，等其关闭 2 秒后</text>
+    <text x="505" y="603" text-anchor="middle" font-size="13" fill="#444">继续</text>
 
     <polygon points="210,654 340,688 210,722 80,688" fill="#fff6e0" stroke="#e0b060"/>
-    <text x="210" y="693" text-anchor="middle" font-size="12.5" fill="#6a4a00">所属档位名额已用完？</text>
+    <text x="210" y="693" text-anchor="middle" font-size="13.5" fill="#6a4a00">所属档位名额已用完？</text>
     <rect x="390" y="662" width="230" height="52" rx="8" fill="#eef0f3" stroke="#b9c2cc"/>
-    <text x="505" y="684" text-anchor="middle" font-size="12" fill="#444">保留到下次回首页，</text>
-    <text x="505" y="701" text-anchor="middle" font-size="12" fill="#444">继续判断下一个</text>
+    <text x="505" y="684" text-anchor="middle" font-size="13" fill="#444">保留到下次回首页，</text>
+    <text x="505" y="701" text-anchor="middle" font-size="13" fill="#444">继续判断下一个</text>
 
     <polygon points="210,752 340,786 210,820 80,786" fill="#fff6e0" stroke="#e0b060"/>
-    <text x="210" y="791" text-anchor="middle" font-size="12.5" fill="#6a4a00">弹窗仍然有效？</text>
+    <text x="210" y="791" text-anchor="middle" font-size="13.5" fill="#6a4a00">弹窗仍然有效？</text>
     <rect x="390" y="760" width="230" height="52" rx="8" fill="#fdecec" stroke="#e09b9b"/>
-    <text x="505" y="782" text-anchor="middle" font-size="12" fill="#8a2b2b">丢弃，不占名额，</text>
-    <text x="505" y="799" text-anchor="middle" font-size="12" fill="#8a2b2b">继续判断下一个</text>
+    <text x="505" y="782" text-anchor="middle" font-size="13" fill="#8a2b2b">丢弃，不占名额，</text>
+    <text x="505" y="799" text-anchor="middle" font-size="13" fill="#8a2b2b">继续判断下一个</text>
 
     <rect x="70" y="850" width="280" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
-    <text x="210" y="876" text-anchor="middle" font-size="12.5" fill="#15542f">显示弹窗，占用 1 个名额</text>
+    <text x="210" y="876" text-anchor="middle" font-size="13.5" fill="#15542f">显示弹窗，占用 1 个名额</text>
 
     <rect x="70" y="918" width="280" height="44" rx="8" fill="#fff" stroke="#b9c7d8"/>
-    <text x="210" y="944" text-anchor="middle" font-size="12.5" fill="#333">弹窗关闭，间隔 2 秒</text>
+    <text x="210" y="944" text-anchor="middle" font-size="13.5" fill="#333">弹窗关闭，间隔 2 秒</text>
 
     <line x1="210" y1="88" x2="210" y2="102" stroke="#5a6a80" marker-end="url(#arP)"/>
     <line x1="210" y1="170" x2="210" y2="200" stroke="#5a6a80" marker-end="url(#arP)"/>
@@ -382,21 +382,21 @@ b,strong{color:#1a1a2e}
     <line x1="340" y1="786" x2="390" y2="786" stroke="#5a6a80" marker-end="url(#arP)"/>
     <polyline points="70,940 40,940 40,492 80,492" fill="none" stroke="#5a6a80" marker-end="url(#arP)"/>
 
-    <text x="220" y="190" font-size="11.5" fill="#2f7a4a">否</text>
-    <text x="348" y="130" font-size="11.5" fill="#a33">是</text>
-    <text x="220" y="448" font-size="11.5" fill="#2f7a4a">否</text>
-    <text x="348" y="388" font-size="11.5" fill="#a33">是</text>
-    <text x="220" y="546" font-size="11.5" fill="#2f7a4a">是</text>
-    <text x="348" y="486" font-size="11.5" fill="#a33">否</text>
-    <text x="220" y="644" font-size="11.5" fill="#2f7a4a">否</text>
-    <text x="348" y="584" font-size="11.5" fill="#a33">是</text>
-    <text x="220" y="742" font-size="11.5" fill="#2f7a4a">否</text>
-    <text x="348" y="682" font-size="11.5" fill="#a33">是</text>
-    <text x="220" y="840" font-size="11.5" fill="#2f7a4a">是</text>
-    <text x="348" y="780" font-size="11.5" fill="#a33">否</text>
+    <text x="220" y="190" font-size="12.5" fill="#2f7a4a">否</text>
+    <text x="348" y="130" font-size="12.5" fill="#a33">是</text>
+    <text x="220" y="448" font-size="12.5" fill="#2f7a4a">否</text>
+    <text x="348" y="388" font-size="12.5" fill="#a33">是</text>
+    <text x="220" y="546" font-size="12.5" fill="#2f7a4a">是</text>
+    <text x="348" y="486" font-size="12.5" fill="#a33">否</text>
+    <text x="220" y="644" font-size="12.5" fill="#2f7a4a">否</text>
+    <text x="348" y="584" font-size="12.5" fill="#a33">是</text>
+    <text x="220" y="742" font-size="12.5" fill="#2f7a4a">否</text>
+    <text x="348" y="682" font-size="12.5" fill="#a33">是</text>
+    <text x="220" y="840" font-size="12.5" fill="#2f7a4a">是</text>
+    <text x="348" y="780" font-size="12.5" fill="#a33">否</text>
   </svg>
   </div>
-  <p class="legend" style="font-size:12px;color:#888">离开首页时流程中止，尚未显示的弹窗按 4.6 节保留。</p>
+  <p class="legend" style="font-size:13px;color:#888">离开首页时流程中止，尚未显示的弹窗按 4.6 节保留。</p>
 </div>
 
 <!-- 六 -->
