@@ -1644,7 +1644,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="table-wrap"><div class="table-scroll">
           <table class="rb-table">
             <thead><tr>
-              <th>排序</th><th>提现方式</th><th>状态</th><th>提现文案</th><th>快捷金额</th><th>推荐<i class="rb-new">新增</i></th><th>角标文案<i class="rb-new">新增</i></th><th>最后操作时间</th><th>操作人</th><th>操作</th>
+              <th>排序</th><th>提现方式</th><th>状态</th><th>提现文案</th><th>快捷金额</th><th>推荐</th><th>角标文案</th><th>最后操作时间</th><th>操作人</th><th>操作</th>
             </tr></thead>
             <tbody id="rb-wc-tbody"></tbody>
           </table>
@@ -1726,7 +1726,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="table-wrap"><div class="table-scroll">
           <table class="rb-table">
             <thead><tr>
-              <th>序号</th><th>支付方式/存款方式</th><th>状态</th><th>推荐<i class="rb-new">新增</i></th><th>角标文案<i class="rb-new">新增</i></th><th>备注说明</th><th>创建/更新时间</th><th>操作</th>
+              <th>序号</th><th>支付方式/存款方式</th><th>状态</th><th>推荐</th><th>角标文案</th><th>备注说明</th><th>创建/更新时间</th><th>操作</th>
             </tr></thead>
             <tbody id="rb-pm-tbody"></tbody>
           </table>
@@ -1821,7 +1821,6 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="sm-row"><label>满足有效条件：</label><div class="sm-rd"><label><input type="radio" name="sm-c-cond" value="and">同时满足</label><label><input type="radio" name="sm-c-cond" value="or">满足任意一种</label></div></div>
         <div class="sm-row"><label>统计限制：</label><span style="margin-right:8px">同注册IP上限</span><input class="f-input" id="sm-c-ip" placeholder="请输入（0表示不限制）" style="width:180px;margin-right:20px"><span style="margin-right:8px">同注册设备上限</span><input class="f-input" id="sm-c-dev" placeholder="请输入（0表示不限制）" style="width:180px"></div>
-        <div class="sm-other">直属限制、推广奖励返佣规则、申领终端、申领限制、稽核限定平台、参与层级、推广赚钱说明、分享文案等配置项沿用现有，本期不改，原型略。</div>
         <div class="sm-save"><button class="btn btn-white" onclick="smCfgFill();toast('已重置')">重 置</button><button class="btn btn-query" onclick="smCfgSave()">保 存</button></div>
       </div>
 
@@ -1985,7 +1984,6 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>3</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">电子钱包（NewGPay）订单不新增列，列表「提款信息」照现状（账户类型、提款卡号为 -）；钱包地址在「查看」→ 订单明细「提现账号信息」中显示（脱敏 + 虚拟币钱包）。</div>
     </div>
 
     <!-- PAGE: 已审核出款订单 -->
@@ -2119,7 +2117,6 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>7</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">电子钱包（NewGPay）订单不新增列，钱包地址在「明细」→ 订单明细「提现账号信息」中显示。「提款方式」「操作」两列与 UAT 已审核出款订单一致。</div>
     </div>
 
     <!-- PAGE: 总出款记录 -->
@@ -2330,7 +2327,6 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b>4</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">电子钱包（NewGPay）订单不新增列，沿用原有字段：账户类型显示 NewGPay，「提款账号」列显示脱敏钱包地址（如 8a4*****3f6）；「提款信息」中账户类型、提款卡号为 -。</div>
     </div>
 
     <!-- PAGE: 充值订单记录 -->
@@ -2389,7 +2385,6 @@ select.fs.ph{color:#bfbfbf}
           <tbody id="ng-ml-tbody"></tbody>
         </table>
       </div></div>
-      <div class="ng-note">点击会员ID打开「个人资料」，本期在「提现账号」下新增「NewGPay 钱包」一行。</div>
     </div>
 
     <!-- PAGE: 会员信息变更记录（本期：变更类型新增「NewGPay 钱包」） -->
@@ -2412,7 +2407,6 @@ select.fs.ph{color:#bfbfbf}
         </table>
       </div></div>
       <div class="pagination"><div class="pg-info">共 <b id="ng-log-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
-      <div class="ng-note">与现有记录一致，只记录后台操作：后台在会员「个人资料」→ NewGPay 钱包中新增、删除钱包时记一条，操作人为后台账号。会员在前台充值页、提款页绑定或删除钱包不记录。钱包列表充值和提款共用，记录中不区分充值钱包、提款钱包。</div>
     </div>
 
     <!-- ===== 消息管理 / 用户反馈（本期新增） ===== -->
@@ -2468,14 +2462,14 @@ select.fs.ph{color:#bfbfbf}
 <style>
 #pg-maudit td,#pg-maudit th{vertical-align:top}
 #pg-maudit .pinfo,#pg-worder .pinfo{font-size:12px;line-height:1.75;text-align:left;min-width:190px;white-space:normal}
-.pinfo-new{color:#0961BD;font-weight:600}
+
 .wbadge{display:inline-block;padding:1px 8px;border-radius:3px;font-size:12px;white-space:nowrap;font-weight:500}
 .wb-wait{background:#e6f4ff;color:#0961BD;border:1px solid #91caff}
 .wb-proc{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
 .wb-ok{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
 #pg-worder th,#pg-worder td{white-space:nowrap;vertical-align:top}
 #pg-worder .pinfo{white-space:normal}
-#pg-worder th.col-new,#pg-worder td.col-new{background:#fffbe6}
+
 #pg-worder .acct-dd{position:relative;display:inline-block}
 #pg-worder .acct-dd-field{height:32px;min-width:150px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fff;cursor:pointer;font-size:13px}
 #pg-worder .acct-dd-field:hover{border-color:#0961BD}
@@ -2526,7 +2520,7 @@ select.fs.ph{color:#bfbfbf}
 #wm-p-other .hint{font-size:12px;color:#ff4d4f;margin-top:6px}
 #wm-p-other .wo-hint{font-size:12px;color:#8c8c8c;margin:-8px 0 20px}
 /* ===== NewGPay 钱包（本期新增） ===== */
-th.ng-new,td.ng-new{background:#e6f4ff}
+
 .ng-addr{font-family:Consolas,Menlo,monospace}
 .pinfo-ng{color:#0961BD;font-weight:600}
 .ng-flabel{color:#0961BD}
@@ -2562,15 +2556,15 @@ th.ng-new,td.ng-new{background:#e6f4ff}
 .ngo-kv{width:100%;border-collapse:collapse;font-size:13px}
 .ngo-kv td{border:1px solid #f0f0f0;padding:8px 10px}
 .ngo-kv td.k{background:#fafafa;color:#595959;width:120px}
-.ngo-kv td.ng-new{background:#e6f4ff}
-.ngo-kv td.k.ng-new{background:#d6ebff;font-weight:600;color:#333}
+
+
 .ngo-log{width:100%;border-collapse:collapse;font-size:13px}
 .ngo-log th{background:#fafafa;font-weight:600;padding:8px 10px;border:1px solid #f0f0f0;text-align:center}
 .ngo-log td{padding:8px 10px;border:1px solid #f0f0f0;text-align:center}
 .ngo-note{border:1px solid #e8e8e8;border-radius:4px;padding:4px 8px;color:#bfbfbf;font-size:12px;line-height:1.6}
 #wm-p-other .wo-ng{margin:6px 0 22px;padding:16px 16px 2px;border:1px dashed #91caff;border-radius:6px;background:#f5faff}
 #wm-p-other .wo-ng-title{font-size:14px;font-weight:600;color:#1f1f1f;margin-bottom:16px}
-#wm-p-other .wo-ng-title:after{content:"本期新增";margin-left:8px;font-size:12px;font-weight:400;color:#0961BD;background:#e6f4ff;border-radius:4px;padding:1px 6px}
+
 #wm-p-other .wo-ng .wo-label{min-width:280px}
 #wm-p-other .wo-req{color:#ff4d4f;font-style:normal;margin-right:4px}
 #wm-p-other .wo-actions{display:flex;gap:12px;justify-content:center;margin-top:6px}
@@ -2726,7 +2720,6 @@ th.ng-new,td.ng-new{background:#e6f4ff}
 .rb-table td{padding:12px 10px;border-bottom:1px solid #f5f5f5;text-align:center;vertical-align:middle;color:#333}
 .rb-table tbody tr:hover td{background:#fafcff}
 .rb-table .rb-ellip{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:middle}
-.rb-new{font-style:normal;font-weight:400;font-size:11px;line-height:16px;padding:0 4px;margin-left:4px;border-radius:3px;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;vertical-align:1px}
 .rb-st{display:inline-block;font-size:12px;line-height:18px;padding:0 6px;border-radius:2px;border:1px solid}
 .rb-st.on{color:#52c41a;background:#f6ffed;border-color:#b7eb8f}
 .rb-st.off{color:#ff4d4f;background:#fff1f0;border-color:#ffa39e}
@@ -2743,7 +2736,6 @@ th.ng-new,td.ng-new{background:#e6f4ff}
 .ub-ov .rb-red{color:#ff4d4f;font-size:13px;line-height:22px;margin-top:2px}
 .ub-ov .rb-ft{text-align:right}
 .ub-ov textarea.ub-in{height:78px;padding:5px 11px;resize:vertical}
-.ub-ov .ub-lb .rb-new{margin-left:0;margin-right:4px}
 </style>
 
 <!-- MODAL: 支付方式管理 · 添加 / 修改（UAT 公共弹窗样式；本期新增「是否推荐」「角标文案」） -->
@@ -2758,7 +2750,7 @@ th.ng-new,td.ng-new{background:#e6f4ff}
       <div class="ub-item"><label class="ub-lb" style="width:88px">是否启用</label>
         <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-pm-en"><span class="sw-track" onclick="rbSw('rb-pm-en')"></span><span class="sw-knob"></span></span></div></div></div>
       <div class="ub-item"><label class="ub-lb" style="width:88px">是否推荐</label>
-        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-pm-rec"><span class="sw-track" onclick="rbRecToggle('pm')"></span><span class="sw-knob"></span></span><span class="rb-yn" id="rb-pm-rec-yn">否</span><i class="rb-new">新增</i></div></div></div>
+        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-pm-rec"><span class="sw-track" onclick="rbRecToggle('pm')"></span><span class="sw-knob"></span></span><span class="rb-yn" id="rb-pm-rec-yn">否</span></div></div></div>
       <div class="ub-item" id="rb-pm-badge-row"><label class="ub-lb" id="rb-pm-badge-l" style="width:88px">角标文案</label>
         <div class="ub-ctl"><div class="rb-cnt-wrap"><input class="ub-in" id="rb-pm-badge" oninput="rbBadgeInput('pm')"><span class="rb-cnt" id="rb-pm-badge-c">0/8</span></div><div class="ub-err" id="rb-pm-badge-h" style="display:none"></div></div></div>
       <div class="ub-item"><label class="ub-lb" style="width:88px">备注</label>
@@ -2778,7 +2770,7 @@ th.ng-new,td.ng-new{background:#e6f4ff}
       <div class="ub-item"><label class="ub-lb" style="width:88px">编辑文案</label>
         <div class="ub-ctl"><textarea class="ub-in" id="rb-wc-text" maxlength="50" placeholder="请输入文案"></textarea></div></div>
       <div class="ub-item"><label class="ub-lb" style="width:88px">是否推荐</label>
-        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-wc-rec"><span class="sw-track" onclick="rbRecToggle('wc')"></span><span class="sw-knob"></span></span><span class="rb-yn" id="rb-wc-rec-yn">否</span><i class="rb-new">新增</i></div></div></div>
+        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-wc-rec"><span class="sw-track" onclick="rbRecToggle('wc')"></span><span class="sw-knob"></span></span><span class="rb-yn" id="rb-wc-rec-yn">否</span></div></div></div>
       <div class="ub-item" id="rb-wc-badge-row"><label class="ub-lb" id="rb-wc-badge-l" style="width:88px">角标文案</label>
         <div class="ub-ctl"><div class="rb-cnt-wrap"><input class="ub-in" id="rb-wc-badge" oninput="rbBadgeInput('wc')"><span class="rb-cnt" id="rb-wc-badge-c">0/8</span></div><div class="ub-err" id="rb-wc-badge-h" style="display:none"></div></div></div>
     </div>
@@ -6303,10 +6295,21 @@ function ngLogRender(){
 // ─── HASH ROUTING — deep-link support ───
 // Usage: prototype.html#channel / #effect / #guide / #activity-list / #appstore / #account / #mafia / #withdraw / #maudit / #worder / #warec / #announce / #inbox
 (function(){
-  var validPages = ['channel','effect','guide','activity-list','appstore','account','mafia','withdraw','cashback','maudit','worder','warec','announce','inbox','mlist','mlog','dorder','sharemoney'];
+  // 只要存在对应的 pg-<页面名> 区块即可直达，新增页面无需再维护白名单
   function hashRoute(){
-    var hash = location.hash.replace('#','');
-    if(validPages.indexOf(hash) !== -1){
+    // 支持「页面/Tab」两级定位，如 #withdraw/channel = 提现管理 → 提现通道配置
+    var parts = decodeURIComponent(location.hash.replace('#','')).split('/');
+    var hash = parts[0], tabKey = parts[1];
+    if(hash && document.getElementById('pg-'+hash)){
+      if(tabKey){
+        var pickTab = function(){
+          var tab = document.querySelector('#pg-'+hash+' [data-p$="-'+tabKey+'"][onclick]');
+          if(tab) tab.click();
+        };
+        // 等页面脚本全部就绪（Tab 切换函数在后面定义）再切 Tab
+        if(document.readyState === 'complete') pickTab();
+        else window.addEventListener('load', pickTab, {once:true});
+      }
       var navEl = document.getElementById('si-'+hash);
       switchPage(hash, navEl);
       // 展开命中项所在的父级二级菜单（如系统管理默认折叠）
@@ -6321,6 +6324,7 @@ function ngLogRender(){
     }
   }
   window.addEventListener('DOMContentLoaded', hashRoute);
+  window.addEventListener('hashchange', hashRoute);
 })();
 
 // ─── ACTIVITY LIST secondary tabs ───
