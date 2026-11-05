@@ -800,7 +800,7 @@ select.fs.ph{color:#bfbfbf}
   <div class="menu-item" id="menu-finance" onclick="toggleMenu(this,'sub-finance')"><div class="menu-item-left"><span class="menu-icon">🗂️</span>商户财务配置</div><span class="arrow">›</span></div>
   <div class="submenu" id="sub-finance" style="display:none">
     <div class="submenu-item disabled">支付管理</div>
-    <div class="submenu-item disabled">支付方式管理</div>
+    <div class="submenu-item" id="si-paymethod" onclick="switchPage('paymethod',this)">支付方式管理</div>
     <div class="submenu-item disabled">支付方式排序</div>
     <div class="submenu-item" id="si-cashback" onclick="switchPage('cashback',this)">充提返现设置</div>
     <div class="submenu-item disabled">代付商户管理</div>
@@ -810,6 +810,7 @@ select.fs.ph{color:#bfbfbf}
   <div class="submenu" id="sub-msg" style="display:none">
     <div class="submenu-item" id="si-inbox" onclick="switchPage('inbox',this)">站内信</div>
     <div class="submenu-item" id="si-announce" onclick="switchPage('announce',this)">公告消息</div>
+    <div class="submenu-item" id="si-ufb" onclick="switchPage('ufb',this)">用户反馈</div>
     <div class="submenu-item disabled">平台公告</div>
     <div class="submenu-item disabled">极光推送</div>
   </div>
@@ -1637,7 +1638,22 @@ select.fs.ph{color:#bfbfbf}
         <div class="wm-tab" data-p="wm-p-level" onclick="wmTab(this)">提现等级配置</div>
         <div class="wm-tab" data-p="wm-p-other" onclick="wmTab(this)">其他提现配置</div>
       </div>
-      <div class="wm-panel hidden" id="wm-p-channel"><div class="wm-ph">提现通道配置（现有功能，非本次范围）</div></div>
+      <!-- 提现通道配置：结构照 UAT；本期新增「推荐」「角标文案」两列及编辑弹窗字段（见《充提方式推荐角标 PRD》4.3 / 4.4） -->
+      <div class="wm-panel hidden" id="wm-p-channel">
+        <div class="rb-tools"><span title="刷新">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>
+        <div class="table-wrap"><div class="table-scroll">
+          <table class="rb-table">
+            <thead><tr>
+              <th>排序</th><th>提现方式</th><th>状态</th><th>提现文案</th><th>快捷金额</th><th>推荐<i class="rb-new">新增</i></th><th>角标文案<i class="rb-new">新增</i></th><th>最后操作时间</th><th>操作人</th><th>操作</th>
+            </tr></thead>
+            <tbody id="rb-wc-tbody"></tbody>
+          </table>
+        </div></div>
+        <div class="pagination">
+          <div class="pg-info">共 <b id="rb-wc-total">10</b> 条数据</div>
+          <div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select></div>
+        </div>
+      </div>
       <div class="wm-panel" id="wm-p-method">
         <div class="table-wrap"><div class="table-scroll">
           <table>
@@ -1692,6 +1708,32 @@ select.fs.ph{color:#bfbfbf}
             <button class="btn btn-blue" onclick="woBindSave()">保 存</button>
             <button class="btn btn-white" onclick="woBindReset()">重 置</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: 商户财务配置 / 支付方式管理（结构照 UAT；本期新增「推荐」「角标文案」，见《充提方式推荐角标 PRD》4.1 / 4.2） -->
+    <div id="pg-paymethod" style="display:none">
+      <div class="rb-card">
+        <div class="rb-filter">
+          <input class="f-input rb-f-in" id="rb-pm-q" placeholder="支付方式" style="cursor:text">
+          <select class="f-select rb-f-in" id="rb-pm-st"><option value="">状态</option><option value="1">启用</option><option value="0">禁用</option></select>
+          <div class="rb-btns"><button class="btn btn-white" onclick="rbPmReset()">重 置</button><button class="btn btn-blue" onclick="rbPmRender()">查 询</button></div>
+        </div>
+      </div>
+      <div class="rb-card">
+        <div class="rb-tools"><button class="btn btn-blue" onclick="rbPmOpen(-1)">添 加</button><span title="刷新">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>
+        <div class="table-wrap"><div class="table-scroll">
+          <table class="rb-table">
+            <thead><tr>
+              <th>序号</th><th>支付方式/存款方式</th><th>状态</th><th>推荐<i class="rb-new">新增</i></th><th>角标文案<i class="rb-new">新增</i></th><th>备注说明</th><th>创建/更新时间</th><th>操作</th>
+            </tr></thead>
+            <tbody id="rb-pm-tbody"></tbody>
+          </table>
+        </div></div>
+        <div class="pagination">
+          <div class="pg-info">共 <b id="rb-pm-total">11</b> 条数据</div>
+          <div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select></div>
         </div>
       </div>
     </div>
@@ -2373,6 +2415,52 @@ select.fs.ph{color:#bfbfbf}
       <div class="ng-note">与现有记录一致，只记录后台操作：后台在会员「个人资料」→ NewGPay 钱包中新增、删除钱包时记一条，操作人为后台账号。会员在前台充值页、提款页绑定或删除钱包不记录。钱包列表充值和提款共用，记录中不区分充值钱包、提款钱包。</div>
     </div>
 
+    <!-- ===== 消息管理 / 用户反馈（本期新增） ===== -->
+    <div id="pg-ufb" style="display:none">
+      <div class="an-tabs">
+        <div class="an-tab active" id="ufb-tab-list" onclick="ufbSwitchTab('list')">反馈列表</div>
+        <div class="an-tab" id="ufb-tab-set" onclick="ufbSwitchTab('set')">功能设置</div>
+      </div>
+
+      <!-- PANE 1：反馈列表 -->
+      <div class="an-pane active" id="ufb-pane-list">
+        <div class="filter-area">
+          <div class="filter-row">
+            <div class="filter-item"><span class="filter-label">提交时间：</span><input class="f-input" id="ufb-f-s" type="date" style="min-width:130px"><span style="margin:0 4px">→</span><input class="f-input" id="ufb-f-e" type="date" style="min-width:130px"></div>
+            <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" id="ufb-f-kt" style="min-width:96px"><option value="mid">会员ID</option><option value="acc">会员账号</option></select><input class="f-input" id="ufb-f-kw" placeholder="请输入" style="min-width:140px"></div>
+            <div class="filter-item"><span class="filter-label">反馈类型：</span><select class="f-select" id="ufb-f-type"></select></div>
+            <div class="filter-item"><span class="filter-label">来源入口：</span><select class="f-select" id="ufb-f-src"><option value="">全部</option><option>游戏加载页</option><option>「我的」页</option></select></div>
+            <div class="filter-item"><span class="filter-label">游戏名称：</span><input class="f-input" id="ufb-f-game" placeholder="请输入游戏名称" style="min-width:140px"></div>
+            <div class="filter-item"><span class="filter-label">联系方式：</span><select class="f-select" id="ufb-f-ct" style="min-width:96px"><option value="">全部</option><option value="1">有</option><option value="0">无</option></select></div>
+            <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="ufbReset()">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="ufbRender()">查 询</button></div>
+          </div>
+        </div>
+        <div class="quick-filter"><span class="qf-label">处理状态：</span><span id="ufb-qtags"></span></div>
+        <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出任务已创建，请到「报表查询 / 导出页面」下载')">导 出</button></div>
+        <div class="table-wrap"><div class="table-scroll">
+          <table>
+            <thead><tr><th>反馈ID</th><th>提交时间</th><th>会员ID</th><th>会员账号</th><th>VIP等级</th><th style="min-width:150px">反馈类型</th><th style="min-width:220px">补充说明</th><th>联系方式</th><th>来源入口</th><th>游戏</th><th>处理状态</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead>
+            <tbody id="ufb-tbody"></tbody>
+          </table>
+        </div></div>
+        <div class="pagination"><div class="pg-info">共 <b id="ufb-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      </div>
+
+      <!-- PANE 2：功能设置 -->
+      <div class="an-pane" id="ufb-pane-set">
+        <div class="ib-form">
+          <div class="fi"><div class="fl">意见反馈功能：</div><div class="fc" style="line-height:32px">
+            <label class="sw"><input type="checkbox" class="sw-input" id="ufb-sw" checked><span class="sw-track"></span><span class="sw-knob"></span></label>
+            <div class="ufb-help">开启后，本商户前台已登录会员可在「游戏加载页」和「我的」页看到反馈入口；关闭后两个入口均不显示，已提交的反馈记录不受影响。</div>
+          </div></div>
+          <div class="fi"><div class="fl">每日提交上限：</div><div class="fc" style="line-height:32px">每个会员每天 3 条（系统统一，不可修改）</div></div>
+          <div class="fi"><div class="fl">反馈类型：</div><div class="fc"><div class="ufb-tlist" id="ufb-tlist"></div>
+            <div class="ufb-help">由总控后台统一配置，前台按排序显示已启用的类型；标注「提示联系客服」的类型被选中时，前台显示联系客服提示。</div></div></div>
+          <div class="fi"><div class="fl"></div><div class="fc"><button class="btn btn-save" onclick="ufbSaveSet()">保 存</button></div></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2622,6 +2710,79 @@ th.ng-new,td.ng-new{background:#e6f4ff}
       </div></div>
     </div>
     <div class="mf"><button class="btn btn-blue" onclick="wmSave()">确定</button></div>
+  </div>
+</div>
+
+<!-- 充提方式推荐角标 · scoped styles（前缀 rb-） -->
+<style>
+#pg-paymethod .rb-card{background:#fff;border-radius:6px;padding:16px 20px;margin-bottom:12px}
+#pg-paymethod .rb-filter{display:flex;align-items:center;gap:10px}
+#pg-paymethod .rb-f-in{width:160px}
+#pg-paymethod .rb-btns{margin-left:auto;display:flex;gap:10px}
+.rb-tools{display:flex;justify-content:flex-end;align-items:center;gap:14px;color:#595959;font-size:15px;margin-bottom:10px}
+.rb-tools span{cursor:pointer}
+.rb-table{width:100%;border-collapse:collapse;font-size:13px}
+.rb-table th{background:#fafafa;padding:12px 10px;text-align:center;font-weight:600;color:#595959;border-bottom:1px solid #f0f0f0;white-space:nowrap}
+.rb-table td{padding:12px 10px;border-bottom:1px solid #f5f5f5;text-align:center;vertical-align:middle;color:#333}
+.rb-table tbody tr:hover td{background:#fafcff}
+.rb-table .rb-ellip{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:middle}
+.rb-new{font-style:normal;font-weight:400;font-size:11px;line-height:16px;padding:0 4px;margin-left:4px;border-radius:3px;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;vertical-align:1px}
+.rb-st{display:inline-block;font-size:12px;line-height:18px;padding:0 6px;border-radius:2px;border:1px solid}
+.rb-st.on{color:#52c41a;background:#f6ffed;border-color:#b7eb8f}
+.rb-st.off{color:#ff4d4f;background:#fff1f0;border-color:#ffa39e}
+.rb-ops{display:inline-flex;gap:6px}
+.rb-ops .btn-sm{height:24px;padding:0 8px}
+.rb-ops .rb-dis{background:#ff4d4f;border-color:#ff4d4f;color:#fff}
+.ub-ov .rb-sw-row{display:flex;align-items:center;gap:8px;height:32px}
+.ub-ov .rb-yn{font-size:13px;color:rgba(0,0,0,.65)}
+.ub-ov .rb-cnt-wrap{position:relative}
+.ub-ov .rb-cnt-wrap .ub-in{padding-right:46px}
+.ub-ov .rb-cnt{position:absolute;right:10px;top:5px;font-size:12px;color:rgba(0,0,0,.45);pointer-events:none}
+.ub-ov .ub-in:disabled{background:#f5f5f5;color:rgba(0,0,0,.25);cursor:not-allowed}
+.ub-ov .ub-in:disabled:hover{border-color:#d9d9d9}
+.ub-ov .rb-red{color:#ff4d4f;font-size:13px;line-height:22px;margin-top:2px}
+.ub-ov .rb-ft{text-align:right}
+.ub-ov textarea.ub-in{height:78px;padding:5px 11px;resize:vertical}
+.ub-ov .ub-lb .rb-new{margin-left:0;margin-right:4px}
+</style>
+
+<!-- MODAL: 支付方式管理 · 添加 / 修改（UAT 公共弹窗样式；本期新增「是否推荐」「角标文案」） -->
+<div class="overlay ub-ov" id="rb-pm-edit">
+  <div class="ub-modal" style="width:416px">
+    <div class="ub-hd"><span class="ub-title" id="rb-pm-title">修改</span><span class="ub-ico" title="全屏">⛶</span><span class="ub-ico" title="关闭" onclick="rbPmClose()">✕</span></div>
+    <div class="ub-bd" style="padding:20px 14px 12px">
+      <div class="ub-item"><label class="ub-lb req" style="width:88px">支付方式</label>
+        <div class="ub-ctl"><select class="ub-in" id="rb-pm-pay" onchange="rbClrErr('rb-pm-pay')"></select><div class="ub-err" id="rb-pm-pay-h" style="display:none"></div></div></div>
+      <div class="ub-item"><label class="ub-lb req" style="width:88px">存款方式</label>
+        <div class="ub-ctl"><input class="ub-in" id="rb-pm-dep" placeholder="请输入" oninput="rbClrErr('rb-pm-dep')"><div class="rb-red">作为客户端用户存款方式显示，请谨填写！</div><div class="ub-err" id="rb-pm-dep-h" style="display:none"></div></div></div>
+      <div class="ub-item"><label class="ub-lb" style="width:88px">是否启用</label>
+        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-pm-en"><span class="sw-track" onclick="rbSw('rb-pm-en')"></span><span class="sw-knob"></span></span></div></div></div>
+      <div class="ub-item"><label class="ub-lb" style="width:88px">是否推荐</label>
+        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-pm-rec"><span class="sw-track" onclick="rbRecToggle('pm')"></span><span class="sw-knob"></span></span><span class="rb-yn" id="rb-pm-rec-yn">否</span><i class="rb-new">新增</i></div></div></div>
+      <div class="ub-item" id="rb-pm-badge-row"><label class="ub-lb" id="rb-pm-badge-l" style="width:88px">角标文案</label>
+        <div class="ub-ctl"><div class="rb-cnt-wrap"><input class="ub-in" id="rb-pm-badge" oninput="rbBadgeInput('pm')"><span class="rb-cnt" id="rb-pm-badge-c">0/8</span></div><div class="ub-err" id="rb-pm-badge-h" style="display:none"></div></div></div>
+      <div class="ub-item"><label class="ub-lb" style="width:88px">备注</label>
+        <div class="ub-ctl"><textarea class="ub-in" id="rb-pm-memo" maxlength="115" placeholder="请输入"></textarea></div></div>
+    </div>
+    <div class="ub-ft rb-ft"><button class="ub-btn" onclick="rbPmClose()">取 消</button><button class="ub-btn pri" onclick="rbPmSave()">确 认</button></div>
+  </div>
+</div>
+
+<!-- MODAL: 提现通道配置 · 编辑（UAT 公共弹窗样式；本期新增「是否推荐」「角标文案」） -->
+<div class="overlay ub-ov" id="rb-wc-edit">
+  <div class="ub-modal" style="width:416px">
+    <div class="ub-hd"><span class="ub-title">编辑</span><span class="ub-ico" title="全屏">⛶</span><span class="ub-ico" title="关闭" onclick="rbWcClose()">✕</span></div>
+    <div class="ub-bd" style="padding:20px 14px 12px">
+      <div class="ub-item"><label class="ub-lb" style="width:88px">快捷金额</label>
+        <div class="ub-ctl"><input class="ub-in" id="rb-wc-quick" placeholder="使用逗号隔开，最多可以设置999个"></div></div>
+      <div class="ub-item"><label class="ub-lb" style="width:88px">编辑文案</label>
+        <div class="ub-ctl"><textarea class="ub-in" id="rb-wc-text" maxlength="50" placeholder="请输入文案"></textarea></div></div>
+      <div class="ub-item"><label class="ub-lb" style="width:88px">是否推荐</label>
+        <div class="ub-ctl"><div class="rb-sw-row"><span class="sw"><input type="checkbox" class="sw-input" id="rb-wc-rec"><span class="sw-track" onclick="rbRecToggle('wc')"></span><span class="sw-knob"></span></span><span class="rb-yn" id="rb-wc-rec-yn">否</span><i class="rb-new">新增</i></div></div></div>
+      <div class="ub-item" id="rb-wc-badge-row"><label class="ub-lb" id="rb-wc-badge-l" style="width:88px">角标文案</label>
+        <div class="ub-ctl"><div class="rb-cnt-wrap"><input class="ub-in" id="rb-wc-badge" oninput="rbBadgeInput('wc')"><span class="rb-cnt" id="rb-wc-badge-c">0/8</span></div><div class="ub-err" id="rb-wc-badge-h" style="display:none"></div></div></div>
+    </div>
+    <div class="ub-ft rb-ft"><button class="ub-btn" onclick="rbWcClose()">取 消</button><button class="ub-btn pri" onclick="rbWcSave()">确 认</button></div>
   </div>
 </div>
 
@@ -4720,6 +4881,58 @@ th.ng-new,td.ng-new{background:#e6f4ff}
   </div>
 </div>
 
+<!-- ══════ 用户反馈（本期新增）· 样式 + 详情/处理弹窗 ══════ -->
+<style>
+#pg-ufb .quick-filter .tag{margin-right:8px}
+#pg-ufb th,#pg-ufb td{white-space:nowrap}
+#pg-ufb td.ufb-txt{white-space:normal;max-width:260px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.5}
+.ufb-tp{display:inline-block;font-size:12px;line-height:20px;padding:0 7px;border-radius:4px;color:#0961BD;background:#e6f4ff;border:1px solid #91caff;margin:1px 4px 1px 0}
+.ufb-tp.off{color:#8c8c8c;background:#f5f5f5;border-color:#d9d9d9}
+.ufb-st{display:inline-block;padding:1px 8px;border-radius:3px;font-size:12px;white-space:nowrap}
+.ufb-st.s0{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
+.ufb-st.s1{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.ufb-st.s2{background:#f5f5f5;color:#8c8c8c;border:1px solid #d9d9d9}
+.ufb-lk{color:#0961BD;cursor:pointer;margin-right:10px}
+.ufb-help{font-size:12px;color:#8c8c8c;line-height:1.7;margin-top:4px}
+.ufb-tlist{display:flex;flex-wrap:wrap;gap:6px;padding-top:5px}
+.ufb-tlist .cs{color:#d46b08;font-size:11px;margin-left:3px}
+.ufb-sec{font-size:13px;font-weight:600;color:#262626;margin:4px 0 8px;padding-left:8px;border-left:3px solid #0961BD}
+.ufb-kv{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+.ufb-kv td{border:1px solid #f0f0f0;padding:8px 12px;vertical-align:top;white-space:normal}
+.ufb-kv td.k{width:110px;background:#fafafa;color:#595959;text-align:right}
+.ufb-kv tr:hover td{background:inherit}
+.ufb-kv tr:hover td.k{background:#fafafa}
+.ufb-log{width:100%;border-collapse:collapse;font-size:12px}
+.ufb-log th{background:#fafafa;padding:8px 10px;border-bottom:1px solid #f0f0f0}
+.ufb-log td{padding:8px 10px;border-bottom:1px solid #f5f5f5;white-space:normal}
+.ufb-err{color:#ff4d4f;font-size:12px;margin-top:4px;display:none}
+</style>
+<div class="overlay" id="m-ufb-detail">
+  <div class="modal modal-lg modal-flex" style="width:820px">
+    <div class="mh"><span class="mt">反馈详情</span><span class="mc" onclick="closeM('m-ufb-detail')">×</span></div>
+    <div class="modal-scroll"><div class="mb" style="padding:18px 28px">
+      <div class="ufb-sec">反馈内容</div>
+      <table class="ufb-kv"><tbody id="ufb-d-fb"></tbody></table>
+      <div class="ufb-sec">会员与提交环境</div>
+      <table class="ufb-kv"><tbody id="ufb-d-env"></tbody></table>
+      <div class="ufb-sec">处理</div>
+      <div class="fi"><div class="fl req">处理状态：</div><div class="fc"><div class="radio-g" id="ufb-d-st">
+        <label class="radio-item"><input type="radio" name="ufb-st" value="0"> 待处理</label>
+        <label class="radio-item"><input type="radio" name="ufb-st" value="1"> 已处理</label>
+        <label class="radio-item"><input type="radio" name="ufb-st" value="2"> 无需处理</label>
+      </div></div></div>
+      <div class="fi"><div class="fl">处理备注：</div><div class="fc">
+        <textarea class="f-textarea" id="ufb-d-rm" maxlength="200" style="width:100%;height:76px" placeholder="选填，仅后台可见，最多 200 字" oninput="document.getElementById('ufb-d-rmn').textContent=this.value.length"></textarea>
+        <div class="ufb-help" style="text-align:right"><span id="ufb-d-rmn">0</span>/200</div>
+        <div class="ufb-err" id="ufb-d-err">处理状态和备注均未修改</div>
+      </div></div>
+      <div class="ufb-sec">处理记录</div>
+      <table class="ufb-log"><thead><tr><th style="width:150px">操作时间</th><th style="width:100px">操作人</th><th style="width:150px">处理状态</th><th>处理备注</th></tr></thead><tbody id="ufb-d-log"></tbody></table>
+    </div></div>
+    <div class="mf"><button class="btn btn-white" onclick="closeM('m-ufb-detail')">取 消</button><button class="btn btn-blue" onclick="ufbSave()">保 存</button></div>
+  </div>
+</div>
+
 <!-- ══════ 图片预览灯箱 ══════ -->
 <div class="an-lb" id="an-lightbox" onclick="closeAnLb()">
   <span class="an-lb-close">×</span>
@@ -5299,7 +5512,7 @@ function apkMethod(radioEl, actId, addrId, nameId){
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox','pg-mlist','pg-mlog','pg-dorder','pg-sharemoney'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox','pg-mlist','pg-mlog','pg-dorder','pg-sharemoney','pg-ufb','pg-paymethod'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -5329,9 +5542,11 @@ function switchPage(page, el){
     'mlist':'会员管理 / 会员列表',
     'mlog':'会员管理 / 会员信息变更记录',
     'dorder':'商户财务管理 / 充值订单记录',
-    'sharemoney':'福利中心 / 推荐好友领彩金'
+    'sharemoney':'福利中心 / 推荐好友领彩金',
+    'ufb':'消息管理 / 用户反馈',
+    'paymethod':'商户财务配置 / 支付方式管理'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理','mlist':'DD后台管理','mlog':'DD后台管理','dorder':'DD后台管理','sharemoney':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理','mlist':'DD后台管理','mlog':'DD后台管理','dorder':'DD后台管理','sharemoney':'DD后台管理','ufb':'DD后台管理','paymethod':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -5346,6 +5561,9 @@ function switchPage(page, el){
   if(page==='mlog') ngLogRender();
   if(page==='cashback') cbRender();
   if(page==='sharemoney') smRender();
+  if(page==='ufb') ufbRender();
+  if(page==='paymethod') rbPmRender();
+  if(page==='withdraw') rbWcRender();
 }
 
 // ─── 马甲包管理：本地上传（一期）───
@@ -9130,6 +9348,254 @@ function rtLinkSave(){
     ['sm-d-s','sm-d-e'].forEach(function(id){var i=document.getElementById(id); i.value=''; i.type='text';});
     smSubRender();
   };
+})();
+
+// ─── 消息管理 / 用户反馈（本期新增）───
+(function(){
+  // 反馈类型：总控后台统一配置；停用的类型前台不显示，历史反馈保留原名称
+  var UFB_TYPES=[
+    {id:1,name:'游戏太少',on:true,cs:false},{id:2,name:'游戏卡顿或加载慢',on:true,cs:false},
+    {id:3,name:'很难找到游戏',on:true,cs:false},{id:4,name:'活动与彩金',on:true,cs:false},
+    {id:5,name:'充值或提款',on:true,cs:true},{id:6,name:'客服',on:true,cs:false},
+    {id:7,name:'其他',on:true,cs:false},{id:8,name:'页面显示异常',on:false,cs:false}
+  ];
+  var ST=['待处理','已处理','无需处理'];
+  var U_ME='admin001';
+  var UFB=[
+    {id:'FB10093',t:'2026-11-04 14:22:18',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[2],txt:'Fortune Tiger 每次进去都要转好久，转完还经常卡住。',ct:'11987654321',src:'游戏加载页',game:'Fortune Tiger',vd:'PG',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
+    {id:'FB10092',t:'2026-11-04 13:05:41',mid:'26890317',acc:'21988120034',vip:'VIP3',tp:[5,6],txt:'提款两个小时还没到账，客服一直没回复。',ct:'',src:'「我的」页',game:'',vd:'',term:'App',os:'iOS 17.5',br:'WebView',ip:'189.4.77.102',st:1,log:[{t:'2026-11-04 13:40:02',op:'admin001',st:1,rm:'已转财务核实，订单已出款'}]},
+    {id:'FB10091',t:'2026-11-04 11:47:09',mid:'26881552',acc:'31977004512',vip:'VIP8',tp:[1,3],txt:'',ct:'joao.silva@gmail.com',src:'游戏加载页',game:'Aviator',vd:'Spribe',term:'H5',os:'Android 13',br:'Samsung Internet 24',ip:'200.150.9.31',st:0,log:[]},
+    {id:'FB10090',t:'2026-11-03 22:16:55',mid:'26870021',acc:'11955550198',vip:'VIP1',tp:[4],txt:'希望多一些每日签到类活动，彩金门槛太高了。',ct:'',src:'「我的」页',game:'',vd:'',term:'H5',os:'Android 12',br:'Chrome 129',ip:'177.89.2.140',st:2,log:[{t:'2026-11-04 10:02:11',op:'admin002',st:2,rm:'运营类建议，已汇总至周报'}]},
+    {id:'FB10089',t:'2026-11-03 20:31:07',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[8],txt:'游戏图标有的显示不出来。',ct:'',src:'游戏加载页',game:'Gates of Olympus',vd:'PP',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
+    {id:'FB10088',t:'2026-11-03 18:09:44',mid:'26855430',acc:'41966002233',vip:'VIP5',tp:[7],txt:'界面字有点小，老人看不清楚。',ct:'41966002233',src:'「我的」页',game:'',vd:'',term:'App',os:'Android 11',br:'WebView',ip:'187.21.60.8',st:0,log:[]}
+  ];
+  var cur=null, qst='';
+  function tname(id){var t=UFB_TYPES.filter(function(x){return x.id===id})[0];return t?t:{name:'-',on:false}}
+  function tpHtml(ids){return ids.map(function(id){var t=tname(id);return '<span class="ufb-tp'+(t.on?'':' off')+'">'+t.name+(t.on?'':'（已停用）')+'</span>'}).join('')}
+  function stHtml(s){return '<span class="ufb-st s'+s+'">'+ST[s]+'</span>'}
+  function e(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function last(r){return r.log.length?r.log[r.log.length-1]:null}
+  function v(id){return document.getElementById(id).value}
+
+  function initFilters(){
+    var sel=document.getElementById('ufb-f-type');
+    if(sel.options.length) return;
+    sel.innerHTML='<option value="">全部</option>'+UFB_TYPES.map(function(t){return '<option value="'+t.id+'">'+t.name+(t.on?'':'（已停用）')+'</option>'}).join('');
+    document.getElementById('ufb-tlist').innerHTML=UFB_TYPES.filter(function(t){return t.on}).map(function(t){return '<span class="ufb-tp">'+t.name+(t.cs?'<span class="cs">· 提示联系客服</span>':'')+'</span>'}).join('');
+  }
+  function renderQtags(){
+    var c=[0,0,0]; UFB.forEach(function(r){c[r.st]++});
+    var items=[['','全部（'+UFB.length+'）']].concat(ST.map(function(s,i){return [String(i),s+'（'+c[i]+'）']}));
+    document.getElementById('ufb-qtags').innerHTML=items.map(function(it){return '<span class="tag'+(qst===it[0]?' active':'')+'" onclick="ufbQ(\''+it[0]+'\')">'+it[1]+'</span>'}).join('');
+  }
+  window.ufbQ=function(s){qst=s;ufbRender()};
+  window.ufbRender=function(){
+    initFilters(); renderQtags();
+    var kt=v('ufb-f-kt'),kw=v('ufb-f-kw').trim(),tp=v('ufb-f-type'),src=v('ufb-f-src'),gm=v('ufb-f-game').trim().toLowerCase(),ct=v('ufb-f-ct'),fs=v('ufb-f-s'),fe=v('ufb-f-e');
+    var rows=UFB.filter(function(r){
+      if(qst!==''&&String(r.st)!==qst) return false;
+      if(kw&&(kt==='mid'?r.mid:r.acc)!==kw) return false;
+      if(tp&&r.tp.indexOf(parseInt(tp,10))<0) return false;
+      if(src&&r.src!==src) return false;
+      if(gm&&r.game.toLowerCase().indexOf(gm)<0) return false;
+      if(ct==='1'&&!r.ct) return false; if(ct==='0'&&r.ct) return false;
+      var d=r.t.slice(0,10); if(fs&&d<fs) return false; if(fe&&d>fe) return false;
+      return true;
+    });
+    document.getElementById('ufb-cnt').textContent=rows.length;
+    document.getElementById('ufb-tbody').innerHTML=rows.length?rows.map(function(r){
+      var l=last(r);
+      return '<tr><td>'+r.id+'</td><td>'+r.t+'</td><td>'+r.mid+'</td><td>'+r.acc+'</td><td>'+r.vip+'</td><td>'+tpHtml(r.tp)+'</td>'
+        +'<td class="ufb-txt" title="'+e(r.txt)+'">'+(r.txt?e(r.txt):'-')+'</td><td>'+(r.ct?e(r.ct):'-')+'</td><td>'+r.src+'</td>'
+        +'<td>'+(r.game?e(r.game)+'<br><span style="color:#8c8c8c">'+e(r.vd)+'</span>':'-')+'</td><td>'+stHtml(r.st)+'</td>'
+        +'<td>'+(l?l.op:'-')+'</td><td>'+(l?l.t:'-')+'</td><td><span class="ufb-lk" onclick="ufbOpen(\''+r.id+'\')">详情/处理</span></td></tr>';
+    }).join(''):'<tr><td colspan="14" style="text-align:center;color:#bfbfbf;padding:40px">暂无数据</td></tr>';
+  };
+  window.ufbReset=function(){
+    ['ufb-f-kw','ufb-f-game','ufb-f-s','ufb-f-e'].forEach(function(id){document.getElementById(id).value=''});
+    ['ufb-f-type','ufb-f-src','ufb-f-ct'].forEach(function(id){document.getElementById(id).value=''});
+    document.getElementById('ufb-f-kt').value='mid'; qst=''; ufbRender();
+  };
+  window.ufbSwitchTab=function(n){
+    ['list','set'].forEach(function(k){
+      document.getElementById('ufb-tab-'+k).classList.toggle('active',k===n);
+      document.getElementById('ufb-pane-'+k).classList.toggle('active',k===n);
+    });
+  };
+  window.ufbOpen=function(id){
+    cur=UFB.filter(function(r){return r.id===id})[0]; if(!cur) return;
+    var kv=function(rows){return rows.map(function(x){return '<tr><td class="k">'+x[0]+'</td><td>'+x[1]+'</td></tr>'}).join('')};
+    document.getElementById('ufb-d-fb').innerHTML=kv([
+      ['反馈ID',cur.id],['提交时间',cur.t],['反馈类型',tpHtml(cur.tp)],
+      ['补充说明',cur.txt?e(cur.txt):'-'],['联系方式',cur.ct?e(cur.ct):'-']]);
+    document.getElementById('ufb-d-env').innerHTML=kv([
+      ['会员ID',cur.mid],['会员账号',cur.acc],['VIP等级',cur.vip],['来源入口',cur.src],
+      ['游戏',cur.game?e(cur.game)+'（'+e(cur.vd)+'）':'-'],['终端',cur.term],['设备系统',cur.os],['浏览器',e(cur.br)],['IP',cur.ip]]);
+    document.querySelectorAll('input[name="ufb-st"]').forEach(function(i){i.checked=(i.value===String(cur.st))});
+    document.getElementById('ufb-d-rm').value=''; document.getElementById('ufb-d-rmn').textContent='0';
+    document.getElementById('ufb-d-err').style.display='none';
+    document.getElementById('ufb-d-log').innerHTML=cur.log.length?cur.log.slice().reverse().map(function(l,i,a){
+      var prev=i+1<a.length?a[i+1].st:0;
+      return '<tr><td>'+l.t+'</td><td>'+l.op+'</td><td>'+(prev!==l.st?ST[prev]+' → '+ST[l.st]:ST[l.st])+'</td><td>'+(l.rm?e(l.rm):'-')+'</td></tr>';
+    }).join(''):'<tr><td colspan="4" style="text-align:center;color:#bfbfbf;padding:16px">暂无处理记录</td></tr>';
+    openM('m-ufb-detail');
+  };
+  window.ufbSave=function(){
+    if(!cur) return;
+    var st=parseInt((document.querySelector('input[name="ufb-st"]:checked')||{}).value,10);
+    var rm=document.getElementById('ufb-d-rm').value.trim();
+    if(st===cur.st&&!rm){document.getElementById('ufb-d-err').style.display='block';return}
+    var d=new Date(),p=function(n){return n<10?'0'+n:n};
+    cur.log.push({t:d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()),op:U_ME,st:st,rm:rm});
+    cur.st=st; closeM('m-ufb-detail'); ufbRender(); toast('保存成功');
+  };
+  window.ufbSaveSet=function(){
+    toast(document.getElementById('ufb-sw').checked?'保存成功，前台反馈入口已开启':'保存成功，前台反馈入口已关闭');
+  };
+})();
+
+/* ══ 充提方式推荐角标（支付方式管理 / 提现通道配置）══ */
+(function(){
+  const PAYS=['YDPay','加密货币','OKPay','bestpay','支付宝','U2CPAY','WINWINPAY','银联','PAY4Z','数字人民币','NewGPay','网银','GDPay','GDPayFast','微信支付'];
+  const pm=[
+    {pay:'YDPay',dep:'RMB',en:false,memo:'2',ct:'2025-08-22 10:43:24',ut:'2026-10-12 06:28:48',rec:false,badge:''},
+    {pay:'加密货币',dep:'USDT',en:false,memo:'1',ct:'2024-04-05 23:22:58',ut:'2026-10-12 06:28:56',rec:false,badge:''},
+    {pay:'OKPay',dep:'USD',en:false,memo:'11',ct:'2025-12-17 06:35:46',ut:'2026-10-12 06:29:11',rec:false,badge:''},
+    {pay:'bestpay',dep:'pix_bestpay',en:true,memo:'',ct:'2026-03-17 04:08:40',ut:'2026-10-28 01:38:25',rec:true,badge:'Rápido'},
+    {pay:'支付宝',dep:'测试',en:false,memo:'12121',ct:'2025-10-13 05:29:05',ut:'2026-08-25 22:20:48',rec:false,badge:''},
+    {pay:'U2CPAY',dep:'pixⅡ',en:true,memo:'巴西pix',ct:'2026-10-11 00:29:08',ut:'2026-10-20 05:44:38',rec:false,badge:''},
+    {pay:'WINWINPAY',dep:'WINWINPAY',en:true,memo:'',ct:'2026-11-04 02:34:22',ut:'2026-11-04 02:34:22',rec:false,badge:''},
+    {pay:'银联',dep:'UnionPay',en:false,memo:'UnionPay',ct:'2024-04-02 02:04:59',ut:'2026-08-25 02:30:34',rec:false,badge:''},
+    {pay:'PAY4Z',dep:'PAY4Z',en:true,memo:'',ct:'2026-11-04 02:28:57',ut:'2026-11-04 02:28:57',rec:false,badge:''},
+    {pay:'数字人民币',dep:'test日志',en:false,memo:'test日志1',ct:'2026-08-25 22:27:47',ut:'2026-08-25 22:28:08',rec:false,badge:''},
+    {pay:'NewGPay',dep:'NewGPay',en:true,memo:'9',ct:'2026-10-05 22:35:15',ut:'2026-10-27 02:17:17',rec:true,badge:'Indicado'}
+  ];
+  const wc=[
+    {name:'银联',en:false,text:'110000',quick:'1,2,3,4,5,6',t:'2026-08-30 23:35:45',op:'bxduoduo01',rec:false,badge:''},
+    {name:'虚拟币',en:false,text:'',quick:'',t:'2026-08-30 23:35:48',op:'bxduoduo01',rec:false,badge:''},
+    {name:'ydpay',en:false,text:'',quick:'',t:'2026-04-02 04:59:52',op:'bxchole02',rec:false,badge:''},
+    {name:'OKPay',en:false,text:'',quick:'',t:'2026-08-24 02:22:45',op:'bxaj001',rec:false,badge:''},
+    {name:'pix',en:true,text:'test11111',quick:'20,30,40,50,60,70,80,90,100',t:'2026-10-31 09:04:08',op:'bxduoduo01',rec:true,badge:'Rápido'},
+    {name:'NewGPay',en:true,text:'',quick:'',t:'2026-10-27 02:30:41',op:'',rec:false,badge:''},
+    {name:'u2cpay',en:true,text:'肚子饿了肚子饿了肚子饿了',quick:'10,30,50,1000',t:'2026-11-03 10:18:12',op:'bxduoduo01',rec:false,badge:''},
+    {name:'pix_winwinpay',en:true,text:'',quick:'10,30,50,1000',t:'2026-11-04 02:36:08',op:'',rec:false,badge:''},
+    {name:'ECNY',en:false,text:'',quick:'',t:'2026-08-30 23:35:29',op:'bxduoduo01',rec:false,badge:''},
+    {name:'pix_pay4z',en:true,text:'',quick:'',t:'2026-11-04 02:36:26',op:'',rec:false,badge:''}
+  ];
+  const MAX=8;
+  let pmIdx=-1, wcIdx=-1;
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const chars=s=>Array.from(s||'');           // 按字符计数（汉字 / 字母 / 符号 / emoji 均计 1）
+  const now=()=>{const d=new Date(Date.now()-3*3600e3);return d.toISOString().slice(0,19).replace('T',' ');}; // UTC-3
+  const badgeCell=r=>r.rec?esc(r.badge):'-';
+
+  window.rbClrErr=function(id){const i=$(id),h=$(id+'-h');if(i)i.classList.remove('err');if(h)h.style.display='none';};
+  function rbErr(id,msg){$(id).classList.add('err');const h=$(id+'-h');h.textContent=msg;h.style.display='block';}
+  window.rbSw=function(id){const c=$(id);c.checked=!c.checked;};
+
+  /* 「是否推荐」联动：开启→角标文案可填且必填；关闭→清空、置灰、去掉必填与错误 */
+  function rbRecSync(k){
+    const on=$('rb-'+k+'-rec').checked, inp=$('rb-'+k+'-badge');
+    $('rb-'+k+'-rec-yn').textContent=on?'是':'否';
+    $('rb-'+k+'-badge-l').classList.toggle('req',on);
+    inp.disabled=!on;
+    inp.placeholder=on?'请输入角标文案':'开启推荐后填写';
+    if(!on){inp.value='';}
+    rbClrErr('rb-'+k+'-badge');
+    rbCount(k);
+  }
+  window.rbRecToggle=function(k){const c=$('rb-'+k+'-rec');c.checked=!c.checked;rbRecSync(k);};
+  function rbCount(k){$('rb-'+k+'-badge-c').textContent=chars($('rb-'+k+'-badge').value).length+'/'+MAX;}
+  window.rbBadgeInput=function(k){
+    const inp=$('rb-'+k+'-badge'),a=chars(inp.value);
+    if(a.length>MAX){inp.value=a.slice(0,MAX).join('');}   // 超出 8 个字符截取（含粘贴）
+    if(inp.value.trim()!=='')rbClrErr('rb-'+k+'-badge');
+    rbCount(k);
+  };
+  function rbBadgeValid(k){
+    if(!$('rb-'+k+'-rec').checked)return '';
+    const v=$('rb-'+k+'-badge').value.trim();
+    if(v===''){rbErr('rb-'+k+'-badge','请输入角标文案');return null;}
+    return v;
+  }
+  function rbFillBadge(k,r){
+    $('rb-'+k+'-rec').checked=!!r.rec;
+    $('rb-'+k+'-badge').value=r.rec?(r.badge||''):'';
+    rbRecSync(k);
+    if(r.rec)$('rb-'+k+'-badge').value=r.badge||'';
+    rbCount(k);
+  }
+
+  /* —— 支付方式管理 —— */
+  window.rbPmRender=function(){
+    const q=($('rb-pm-q').value||'').trim().toLowerCase(), st=$('rb-pm-st').value;
+    const rows=pm.map((r,i)=>({r,i})).filter(o=>(!q||o.r.pay.toLowerCase().includes(q))&&(st===''||String(+o.r.en)===st));
+    $('rb-pm-tbody').innerHTML=rows.map((o,n)=>{const r=o.r;return '<tr>'+
+      '<td>'+(n+1)+'</td>'+
+      '<td>'+esc(r.pay)+' / '+esc(r.dep)+'</td>'+
+      '<td><span class="rb-st '+(r.en?'on':'off')+'">'+(r.en?'启用':'禁用')+'</span></td>'+
+      '<td>'+(r.rec?'是':'否')+'</td>'+
+      '<td>'+badgeCell(r)+'</td>'+
+      '<td>'+(r.memo?esc(r.memo):'-')+'</td>'+
+      '<td>'+r.ct+'<br>'+r.ut+'</td>'+
+      '<td><button class="btn btn-blue btn-sm" onclick="rbPmOpen('+o.i+')">修 改</button></td></tr>';}).join('');
+    $('rb-pm-total').textContent=rows.length;
+  };
+  window.rbPmReset=function(){$('rb-pm-q').value='';$('rb-pm-st').value='';rbPmRender();};
+  window.rbPmOpen=function(i){
+    pmIdx=i;const add=i<0,r=add?{pay:'',dep:'',en:true,memo:'',rec:false,badge:''}:pm[i];
+    $('rb-pm-title').textContent=add?'添加':'修改';
+    $('rb-pm-pay').innerHTML='<option value="">请选择</option>'+PAYS.map(p=>'<option'+(p===r.pay?' selected':'')+'>'+esc(p)+'</option>').join('');
+    $('rb-pm-pay').disabled=!add;
+    $('rb-pm-dep').value=r.dep;$('rb-pm-en').checked=r.en;$('rb-pm-memo').value=r.memo;
+    ['rb-pm-pay','rb-pm-dep','rb-pm-badge'].forEach(rbClrErr);
+    rbFillBadge('pm',r);
+    $('rb-pm-edit').classList.add('show');
+  };
+  window.rbPmClose=function(){$('rb-pm-edit').classList.remove('show');};
+  window.rbPmSave=function(){
+    let ok=true;
+    const pay=$('rb-pm-pay').value, dep=$('rb-pm-dep').value.trim();
+    if(!pay){rbErr('rb-pm-pay','请选择支付方式');ok=false;}
+    if(!dep){rbErr('rb-pm-dep','请输入存款方式');ok=false;}
+    const b=rbBadgeValid('pm'); if(b===null)ok=false;
+    if(!ok)return;
+    const t=now();
+    const r=pmIdx<0?{ct:t}:pm[pmIdx];
+    Object.assign(r,{pay,dep,en:$('rb-pm-en').checked,memo:$('rb-pm-memo').value.trim(),rec:$('rb-pm-rec').checked,badge:b,ut:t});
+    if(pmIdx<0)pm.push(r);
+    rbPmRender();rbPmClose();toast('保存成功');
+  };
+
+  /* —— 提现管理 · 提现通道配置 —— */
+  window.rbWcRender=function(){
+    $('rb-wc-tbody').innerHTML=wc.map((r,i)=>'<tr>'+
+      '<td>1</td><td>'+esc(r.name)+'</td><td>'+(r.en?'启用':'禁用')+'</td>'+
+      '<td><span class="rb-ellip" title="'+esc(r.text)+'">'+esc(r.text)+'</span></td>'+
+      '<td><span class="rb-ellip" title="'+esc(r.quick)+'">'+esc(r.quick)+'</span></td>'+
+      '<td>'+(r.rec?'是':'否')+'</td><td>'+badgeCell(r)+'</td>'+
+      '<td>'+r.t+'</td><td>'+esc(r.op)+'</td>'+
+      '<td><span class="rb-ops"><button class="btn btn-blue btn-sm" onclick="rbWcOpen('+i+')">编 辑</button>'+
+        (r.en?'<button class="btn btn-sm rb-dis" onclick="rbWcEn('+i+')">禁 用</button>':'<button class="btn btn-white btn-sm" onclick="rbWcEn('+i+')">启 用</button>')+
+        '<button class="btn btn-blue btn-sm" onclick="toast(\'排序为现有功能，本期不改\')">排 序</button></span></td></tr>').join('');
+    $('rb-wc-total').textContent=wc.length;
+  };
+  window.rbWcEn=function(i){wc[i].en=!wc[i].en;wc[i].t=now();wc[i].op='bxlaura001';rbWcRender();};
+  window.rbWcOpen=function(i){
+    wcIdx=i;const r=wc[i];
+    $('rb-wc-quick').value=r.quick;$('rb-wc-text').value=r.text;
+    rbFillBadge('wc',r);
+    $('rb-wc-edit').classList.add('show');
+  };
+  window.rbWcClose=function(){$('rb-wc-edit').classList.remove('show');};
+  window.rbWcSave=function(){
+    const b=rbBadgeValid('wc'); if(b===null)return;
+    Object.assign(wc[wcIdx],{quick:$('rb-wc-quick').value.trim(),text:$('rb-wc-text').value.trim(),rec:$('rb-wc-rec').checked,badge:b,t:now(),op:'bxlaura001'});
+    rbWcRender();rbWcClose();toast('保存成功');
+  };
+
+  rbWcRender();
 })();
 
 </script>

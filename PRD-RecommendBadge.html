@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>充提方式推荐角标 PRD v1.1</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#123a66;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.nw{white-space:nowrap}
+.req{color:#d93025;font-weight:700}
+.new{display:inline-block;font-size:11px;line-height:16px;padding:0 5px;border-radius:3px;background:#e6f4ff;color:#0961BD;border:1px solid #91caff;margin-left:6px;vertical-align:1px;font-weight:400}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">充提方式推荐角标</div>
+  <div class="cover-sub">功能 PRD · 存款方式 / 提现通道推荐配置与前台渠道角标互斥规则</div>
+  <div class="cover-meta"><span>版本：v1.1</span><span>作者：Laura</span><span>更新日期：2026-11-04</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、名词定义</a></li>
+    <li><a href="#s3">三、交互逻辑流程图</a></li>
+    <li><a href="#s4">四、后台配置</a>
+      <ol>
+        <li><a href="#s41">4.1 支付方式管理：列表字段</a></li>
+        <li><a href="#s42">4.2 支付方式管理：添加 / 修改弹窗</a></li>
+        <li><a href="#s43">4.3 提现管理 — 提现通道配置：列表字段</a></li>
+        <li><a href="#s44">4.4 提现管理 — 提现通道配置：编辑弹窗</a></li>
+        <li><a href="#s45">4.5 「是否推荐」与「角标文案」字段规格</a></li>
+        <li><a href="#s46">4.6 配置生效与操作留痕</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">五、前台显示逻辑</a>
+      <ol>
+        <li><a href="#s51">5.1 角标位置与形态</a></li>
+        <li><a href="#s52">5.2 存款页：角标优先级</a></li>
+        <li><a href="#s53">5.3 取款页：角标优先级</a></li>
+        <li><a href="#s54">5.4 快捷档位角标</a></li>
+        <li><a href="#s55">5.5 配置读取时机</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">六、中文 / 葡语文案对照表</a></li>
+    <li><a href="#s7">七、边界与异常处理</a></li>
+    <li><a href="#s8">八、权限</a></li>
+    <li><a href="#s9">九、关联需求同步说明</a></li>
+    <li><a href="#s10">十、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与范围</h1>
+  <p>前台存款页、取款页的渠道按钮右上角目前有两类角标：<b>限时充值返利</b>活动按「生效存款方式」配置的自定义角标文案，以及<b>充提返现</b>按返现百分比生成的「+N%」角标。两者都依附于营销活动或返现配置，运营无法在没有优惠的情况下单独突出某个渠道（如成功率高、到账快、成本低的渠道）。</p>
+  <p>本需求在<b>「商户财务配置 — 支付方式管理」</b>（存款方式）与<b>「商户财务配置 — 提现管理 — 提现通道配置」</b>（提现通道）中新增<b>「是否推荐」</b>开关与<b>「角标文案」</b>，字段规则对齐限时充值返利的「推荐 / 角标文案」。前台同一渠道按钮的角标位只显示一个角标，三类角标互斥，优先级为：<b>限时充值返利角标 ＞ 充提返现角标 ＞ 推荐角标</b>。</p>
+
+  <h2>本次需求范围</h2>
+  <table>
+    <thead><tr><th style="width:170px">模块</th><th>范围</th><th style="width:110px">对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>支付方式管理</td><td>列表新增「推荐」「角标文案」两列；添加 / 修改弹窗新增「是否推荐」开关与「角标文案」输入框。</td><td>4.1、4.2、4.5</td></tr>
+      <tr><td>提现管理 — 提现通道配置</td><td>列表新增「推荐」「角标文案」两列；编辑弹窗新增「是否推荐」开关与「角标文案」输入框。</td><td>4.3、4.4、4.5</td></tr>
+      <tr><td>前台渠道角标</td><td>存款页、取款页渠道按钮右上角新增推荐角标，并定义与限时充值返利角标、充提返现角标的互斥与顺延规则；快捷档位角标跟随渠道角标类型显示，推荐角标不出现在快捷档位上。</td><td>第五章</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice notice-info">
+    <p><b>不在本需求范围</b>：限时充值返利活动的「生效存款方式」配置及其角标展示条件，沿用活动现有逻辑，本需求不改动；充值返现、提款返现的配置与计算规则见《充值返现 PRD》《提款返现 PRD》，本需求只调整其渠道角标与快捷档位角标在互斥时的显示（见 5.2 ~ 5.4）；渠道按钮的排序不受「是否推荐」影响，仍按「支付方式排序」「通道排序」及提现通道「排序」现有规则；「提现管理 — 提款方式配置」（CPF / PHONE 收款键类型）不涉及推荐角标。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、名词定义</h1>
+  <table>
+    <thead><tr><th style="width:170px">名词</th><th>定义</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式</td><td>「支付方式管理」中的一行配置（支付方式 / 存款方式，如 bestpay / pix_bestpay），对应前台存款页的一个渠道按钮。本需求的充值侧推荐配置以存款方式为维度。</td></tr>
+      <tr><td>提现通道</td><td>「提现管理 — 提现通道配置」中的一行配置（如 pix、NewGPay、u2cpay），对应前台取款页的一个渠道按钮。本需求的提款侧推荐配置以提现通道为维度。</td></tr>
+      <tr><td>渠道角标位</td><td>存款页、取款页渠道按钮右上角的角标位置。同一渠道按钮同一时刻<b>最多显示 1 个角标</b>。</td></tr>
+      <tr><td>限时充值返利角标</td><td>限时充值返利活动「生效存款方式」中「推荐」为是的存款方式，按活动配置的「角标文案」显示的角标。仅出现在存款页。</td></tr>
+      <tr><td>充提返现角标</td><td>存款页的充值返现角标与取款页的提款返现角标的统称，内容为「+N%」，N 取对应存款方式 / 提现通道的返现百分比，规则见《充值返现 PRD》第六章与《提款返现 PRD》6.1 节。</td></tr>
+      <tr><td>推荐角标</td><td>本需求新增。存款方式或提现通道「是否推荐」开启后，按其「角标文案」显示的角标。</td></tr>
+      <tr><td>提现文案（区分）</td><td>「提现通道配置」现有字段，前台取款页的渠道提示文案，最多 50 字，<b>与推荐角标无关</b>。本需求的「角标文案」为独立的新字段。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、交互逻辑流程图</h1>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 1010 540" width="1010" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC',Arial,sans-serif">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#7c8da3"/>
+      </marker>
+    </defs>
+    <text x="250" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">存款页：渠道角标判定</text>
+    <text x="770" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">取款页：渠道角标判定</text>
+
+    <!-- 存款页 -->
+    <rect x="30" y="50" width="240" height="46" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="150" y="69" text-anchor="middle" font-size="12.5" fill="#123a66">渲染存款页渠道按钮</text>
+    <text x="150" y="86" text-anchor="middle" font-size="12.5" fill="#123a66">（逐个存款方式判定）</text>
+
+    <polygon points="150,126 270,166 150,206 30,166" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="150" y="162" text-anchor="middle" font-size="12" fill="#6a4a00">满足限时充值返利</text>
+    <text x="150" y="178" text-anchor="middle" font-size="12" fill="#6a4a00">角标展示条件？</text>
+
+    <polygon points="150,236 270,276 150,316 30,276" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="150" y="272" text-anchor="middle" font-size="12" fill="#6a4a00">该存款方式</text>
+    <text x="150" y="288" text-anchor="middle" font-size="12" fill="#6a4a00">充值返现生效？</text>
+
+    <polygon points="150,346 270,386 150,426 30,386" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="150" y="382" text-anchor="middle" font-size="12" fill="#6a4a00">该存款方式</text>
+    <text x="150" y="398" text-anchor="middle" font-size="12" fill="#6a4a00">推荐开启？</text>
+
+    <rect x="30" y="456" width="240" height="44" rx="8" fill="#f2f4f7" stroke="#b9c7d8"/>
+    <text x="150" y="483" text-anchor="middle" font-size="12.5" fill="#555">不显示角标</text>
+
+    <rect x="300" y="144" width="190" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="395" y="163" text-anchor="middle" font-size="12" fill="#15542f">显示限时充值返利角标</text>
+    <text x="395" y="179" text-anchor="middle" font-size="12" fill="#15542f">（活动配置的角标文案）</text>
+
+    <rect x="300" y="254" width="190" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="395" y="273" text-anchor="middle" font-size="12" fill="#15542f">显示充值返现角标</text>
+    <text x="395" y="289" text-anchor="middle" font-size="12" fill="#15542f">「+N%」</text>
+
+    <rect x="300" y="364" width="190" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="395" y="383" text-anchor="middle" font-size="12" fill="#15542f">显示推荐角标</text>
+    <text x="395" y="399" text-anchor="middle" font-size="12" fill="#15542f">（该存款方式的角标文案）</text>
+
+    <line x1="150" y1="96" x2="150" y2="122" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="150" y1="206" x2="150" y2="232" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="150" y1="316" x2="150" y2="342" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="150" y1="426" x2="150" y2="452" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="270" y1="166" x2="296" y2="166" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="270" y1="276" x2="296" y2="276" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="270" y1="386" x2="296" y2="386" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text x="274" y="159" font-size="11.5" fill="#15542f">是</text>
+    <text x="274" y="269" font-size="11.5" fill="#15542f">是</text>
+    <text x="274" y="379" font-size="11.5" fill="#15542f">是</text>
+    <text x="160" y="224" font-size="11.5" fill="#8a2b2b">否</text>
+    <text x="160" y="334" font-size="11.5" fill="#8a2b2b">否</text>
+    <text x="160" y="444" font-size="11.5" fill="#8a2b2b">否</text>
+
+    <!-- 取款页 -->
+    <rect x="550" y="50" width="240" height="46" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="670" y="69" text-anchor="middle" font-size="12.5" fill="#123a66">渲染取款页渠道按钮</text>
+    <text x="670" y="86" text-anchor="middle" font-size="12.5" fill="#123a66">（逐个提现通道判定）</text>
+
+    <polygon points="670,126 790,166 670,206 550,166" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="670" y="162" text-anchor="middle" font-size="12" fill="#6a4a00">该提现通道</text>
+    <text x="670" y="178" text-anchor="middle" font-size="12" fill="#6a4a00">提款返现生效？</text>
+
+    <polygon points="670,236 790,276 670,316 550,276" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="670" y="272" text-anchor="middle" font-size="12" fill="#6a4a00">该提现通道</text>
+    <text x="670" y="288" text-anchor="middle" font-size="12" fill="#6a4a00">推荐开启？</text>
+
+    <rect x="550" y="346" width="240" height="44" rx="8" fill="#f2f4f7" stroke="#b9c7d8"/>
+    <text x="670" y="373" text-anchor="middle" font-size="12.5" fill="#555">不显示角标</text>
+
+    <rect x="820" y="144" width="180" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="910" y="163" text-anchor="middle" font-size="12" fill="#15542f">显示提款返现角标</text>
+    <text x="910" y="179" text-anchor="middle" font-size="12" fill="#15542f">「+N%」</text>
+
+    <rect x="820" y="254" width="180" height="44" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="910" y="273" text-anchor="middle" font-size="12" fill="#15542f">显示推荐角标</text>
+    <text x="910" y="289" text-anchor="middle" font-size="12" fill="#15542f">（该提现通道的角标文案）</text>
+
+    <line x1="670" y1="96" x2="670" y2="122" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="670" y1="206" x2="670" y2="232" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="670" y1="316" x2="670" y2="342" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="790" y1="166" x2="816" y2="166" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="790" y1="276" x2="816" y2="276" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text x="794" y="159" font-size="11.5" fill="#15542f">是</text>
+    <text x="794" y="269" font-size="11.5" fill="#15542f">是</text>
+    <text x="680" y="224" font-size="11.5" fill="#8a2b2b">否</text>
+    <text x="680" y="334" font-size="11.5" fill="#8a2b2b">否</text>
+  </svg>
+  </div>
+  <p class="legend">说明：每个渠道按钮独立判定，自上而下取第一个成立的角标，命中后不再判断后续条件。「限时充值返利角标展示条件」沿用该活动现有逻辑；「充值返现 / 提款返现生效」指对应存款方式 / 提现通道已在「充提返现设置」中添加且状态开启；「推荐开启」指「是否推荐」为开启（开启时角标文案必填，见 4.5）。取款页不涉及限时充值返利。</p>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、后台配置</h1>
+
+  <h2 id="s41">4.1 支付方式管理：列表字段</h2>
+  <p>菜单：商户财务配置 → 支付方式管理。筛选区、「添加」按钮、分页与现有列不变，在「状态」列之后新增两列：</p>
+  <table>
+    <thead><tr><th style="width:140px">列</th><th>显示规则</th></tr></thead>
+    <tbody>
+      <tr><td>序号 / 支付方式/存款方式 / 状态</td><td>现有，不变。</td></tr>
+      <tr><td>推荐<span class="new">新增</span></td><td>「是否推荐」开启显示「是」，关闭显示「否」。</td></tr>
+      <tr><td>角标文案<span class="new">新增</span></td><td>「是否推荐」开启时显示该存款方式的角标文案原文；关闭时显示「-」。</td></tr>
+      <tr><td>备注说明 / 创建/更新时间 / 操作</td><td>现有，不变。保存推荐配置同样刷新「更新时间」。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s42">4.2 支付方式管理：添加 / 修改弹窗</h2>
+  <p>添加与修改共用同一弹窗。在「是否启用」之下、「备注」之上新增两行，其余字段与「取消 / 确认」按钮不变：</p>
+  <table>
+    <thead><tr><th style="width:40px">序</th><th style="width:150px">字段</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><span class="req">*</span> 支付方式</td><td>现有，不变（修改时置灰不可改）。</td></tr>
+      <tr><td>2</td><td><span class="req">*</span> 存款方式</td><td>现有，不变（红字提示「作为客户端用户存款方式显示，请谨填写！」）。</td></tr>
+      <tr><td>3</td><td>是否启用</td><td>现有，不变。</td></tr>
+      <tr><td>4</td><td>是否推荐<span class="new">新增</span></td><td>见 4.5。</td></tr>
+      <tr><td>5</td><td>角标文案<span class="new">新增</span></td><td>见 4.5。</td></tr>
+      <tr><td>6</td><td>备注</td><td>现有，不变（最多 115 字）。</td></tr>
+    </tbody>
+  </table>
+  <p>「是否启用」与「是否推荐」相互独立：存款方式禁用时可保留推荐配置，前台因该存款方式不展示而不显示角标；重新启用后按保留的配置显示。</p>
+
+  <h2 id="s43">4.3 提现管理 — 提现通道配置：列表字段</h2>
+  <p>菜单：商户财务配置 → 提现管理 → 「提现通道配置」标签页。在「快捷金额」列之后新增两列，其余列与操作按钮（编辑 / 启用或禁用 / 排序）不变：</p>
+  <table>
+    <thead><tr><th style="width:140px">列</th><th>显示规则</th></tr></thead>
+    <tbody>
+      <tr><td>排序 / 提现方式 / 状态 / 提现文案 / 快捷金额</td><td>现有，不变。</td></tr>
+      <tr><td>推荐<span class="new">新增</span></td><td>「是否推荐」开启显示「是」，关闭显示「否」。</td></tr>
+      <tr><td>角标文案<span class="new">新增</span></td><td>「是否推荐」开启时显示该提现通道的角标文案原文；关闭时显示「-」。</td></tr>
+      <tr><td>最后操作时间 / 操作人 / 操作</td><td>现有，不变。保存推荐配置同样刷新「最后操作时间」与「操作人」。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s44">4.4 提现管理 — 提现通道配置：编辑弹窗</h2>
+  <p>点击行内「编辑」打开。在现有「快捷金额」「编辑文案」之下新增两行，「取消 / 确认」按钮不变：</p>
+  <table>
+    <thead><tr><th style="width:40px">序</th><th style="width:150px">字段</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>快捷金额</td><td>现有，不变（逗号分隔，最多 999 个）。</td></tr>
+      <tr><td>2</td><td>编辑文案</td><td>现有，不变（最多 50 字，对应列表「提现文案」）。</td></tr>
+      <tr><td>3</td><td>是否推荐<span class="new">新增</span></td><td>见 4.5。</td></tr>
+      <tr><td>4</td><td>角标文案<span class="new">新增</span></td><td>见 4.5。</td></tr>
+    </tbody>
+  </table>
+  <p>提现通道的启用 / 禁用仍通过列表操作列切换，与「是否推荐」相互独立，规则同 4.2 末段。</p>
+
+  <h2 id="s45">4.5 「是否推荐」与「角标文案」字段规格</h2>
+  <p>两个弹窗中的新增字段规格一致，均对齐限时充值返利「生效存款方式」中的「推荐 / 角标文案」：</p>
+  <table>
+    <thead><tr><th style="width:110px">字段</th><th style="width:160px">含义</th><th style="width:110px">控件</th><th style="width:110px">必填</th><th>输入要求与联动</th><th style="width:220px">前台效果</th></tr></thead>
+    <tbody>
+      <tr><td>是否推荐</td><td>是否在前台为该存款方式 / 提现通道显示推荐角标。</td><td>开关（是 / 否）</td><td>否（始终有值）</td><td>默认「否」。<br>由「否」切到「是」：「角标文案」变为可输入，标签前出现必填星标，占位提示变为「请输入角标文案」。<br>由「是」切到「否」：「角标文案」清空并置灰（不可输入），占位提示变为「开启推荐后填写」，必填星标消失，已显示的校验错误同时清除。</td><td>开启且未被更高优先级角标占用时，渠道按钮右上角显示推荐角标，见第五章。</td></tr>
+      <tr><td>角标文案</td><td>推荐角标的显示内容。</td><td>单行文本框，右侧显示字数计数「已输入/8」</td><td>「是否推荐」开启时<b>必填</b>；关闭时不可填</td><td>最多 <b>8 个字符</b>，达到 8 个后不可继续输入（粘贴超长内容时截取前 8 个）；汉字、字母、数字、符号、空格均按 1 个字符计。<br>不限制字符类型，不做多语言区分，前台原样展示。<br>保存时自动去除首尾空格；去除后为空视为未填写。<br>弹窗打开时回填已保存的文案。</td><td>推荐角标显示该文案原文。</td></tr>
+    </tbody>
+  </table>
+  <h3>校验与错误提示</h3>
+  <table>
+    <thead><tr><th style="width:260px">场景</th><th>处理</th></tr></thead>
+    <tbody>
+      <tr><td>「是否推荐」开启，角标文案为空或仅含空格，点击「确认」</td><td>拦截保存，文本框标红，下方显示「请输入角标文案」，弹窗保持打开；其他字段校验照常执行，错误同时展示。</td></tr>
+      <tr><td>标红后重新输入</td><td>输入非空内容时立即清除标红与错误提示。</td></tr>
+      <tr><td>「是否推荐」关闭，点击「确认」</td><td>角标文案不参与校验，按空值保存。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s46">4.6 配置生效与操作留痕</h2>
+  <ul>
+    <li><b>生效时点</b>：保存成功后立即生效，前台在 5.5 所列读取时机按新配置显示。</li>
+    <li><b>上线初始值</b>：全部存款方式与提现通道的「是否推荐」初始为「否」、角标文案为空，前台不出现推荐角标，直至运营手动开启。</li>
+    <li><b>数量不限</b>：不限制同时开启推荐的存款方式或提现通道数量。</li>
+    <li><b>配置隔离</b>：以商户为单位隔离，与所属页面现有配置一致。</li>
+    <li><b>操作日志</b>：「是否推荐」「角标文案」的变更计入后台操作日志，记录操作账号、时间（UTC-3）、所属页面、存款方式 / 提现通道名称及变更前后取值。</li>
+  </ul>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、前台显示逻辑</h1>
+
+  <h2 id="s51">5.1 角标位置与形态</h2>
+  <table>
+    <thead><tr><th style="width:130px">项</th><th>要求</th></tr></thead>
+    <tbody>
+      <tr><td>位置</td><td>存款页、取款页渠道区每个渠道按钮的右上角，即现有限时充值返利角标与充提返现角标的同一位置。</td></tr>
+      <tr><td>内容</td><td>该存款方式 / 提现通道的「角标文案」原文，单行展示，不换行、不截断（已由 8 字符上限保证）。</td></tr>
+      <tr><td>样式</td><td>以 UI 设计稿为准。三类角标共用同一角标位，可按类型区分样式。</td></tr>
+      <tr><td>语言</td><td>角标文案不随客户端语言切换，各语言下均显示同一文案；运营应按目标市场语言填写。</td></tr>
+      <tr><td>交互</td><td>角标仅作展示，不可点击；点击区域与渠道按钮一致，不改变渠道选中逻辑。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s52">5.2 存款页：角标优先级</h2>
+  <p>每个存款方式的渠道按钮按下表自上而下判定，取<b>第一个成立</b>的角标显示，最多显示 1 个；高优先级角标实际不显示时，顺延判定下一级。</p>
+  <table>
+    <thead><tr><th style="width:70px">优先级</th><th style="width:170px">角标</th><th>显示条件</th><th style="width:200px">内容</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>限时充值返利角标</td><td>当前会员满足限时充值返利的角标展示条件，且该存款方式在活动「生效存款方式」中「推荐」为是。展示条件与撤下时点沿用该活动现有逻辑。</td><td>活动配置的角标文案</td></tr>
+      <tr><td>2</td><td>充值返现角标</td><td>该存款方式的充值返现生效（已在「充提返现设置 — 充值返现」中添加且状态开启），见《充值返现 PRD》第六章。</td><td>「+N%」</td></tr>
+      <tr><td>3</td><td>推荐角标</td><td>该存款方式「是否推荐」开启。</td><td>该存款方式的角标文案</td></tr>
+      <tr><td>—</td><td>无角标</td><td>以上均不成立。</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p><b>示例</b>：pix_bestpay 同时开启推荐（角标文案「Rápido」）与充值返现 2%，且在进行中的限时充值返利中「推荐」为是。会员满足活动角标展示条件时显示活动角标；活动角标撤下后显示「+2%」；充值返现关闭后显示「Rápido」。</p>
+
+  <h2 id="s53">5.3 取款页：角标优先级</h2>
+  <p>限时充值返利不作用于取款页。每个提现通道的渠道按钮按下表判定，规则同 5.2：</p>
+  <table>
+    <thead><tr><th style="width:70px">优先级</th><th style="width:170px">角标</th><th>显示条件</th><th style="width:200px">内容</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>提款返现角标</td><td>该提现通道的提款返现生效（已在「充提返现设置 — 提款返现」中添加且状态开启），见《提款返现 PRD》6.1 节。</td><td>「+N%」</td></tr>
+      <tr><td>2</td><td>推荐角标</td><td>该提现通道「是否推荐」开启。</td><td>该提现通道的角标文案</td></tr>
+      <tr><td>—</td><td>无角标</td><td>以上均不成立。</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s54">5.4 快捷档位角标</h2>
+  <p>快捷档位右上角是否显示角标、显示哪一类，<b>跟随当前选中渠道的渠道角标类型</b>：渠道按钮按 5.2 / 5.3 判定出哪一类角标，快捷档位就显示该类对应的档位角标；渠道显示推荐角标或无角标时，快捷档位<b>不显示角标</b>。推荐角标只出现在渠道按钮上，不出现在快捷档位上。</p>
+  <table>
+    <thead><tr><th style="width:110px">页面</th><th style="width:220px">当前渠道的渠道角标</th><th>快捷档位角标</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3">存款页</td><td>限时充值返利角标</td><td>显示限时充值返利的档位角标，内容与显示规则沿用该活动现有逻辑；不显示充值返现的「+N%」。</td></tr>
+      <tr><td>充值返现角标</td><td>全部档位显示「+N%」，规则见《充值返现 PRD》第六章。</td></tr>
+      <tr><td>推荐角标 / 无角标</td><td>不显示。</td></tr>
+      <tr><td rowspan="2">取款页</td><td>提款返现角标</td><td>全部档位显示「+N%」，规则见《提款返现 PRD》6.2 节。</td></tr>
+      <tr><td>推荐角标 / 无角标</td><td>不显示。</td></tr>
+    </tbody>
+  </table>
+  <p>切换渠道后，快捷档位角标按新渠道的渠道角标类型重新判定与显隐；限时充值返利角标撤下、渠道角标顺延为充值返现角标时，快捷档位同步改为显示「+N%」，顺延为推荐角标时快捷档位角标随之隐藏。</p>
+
+  <h2 id="s55">5.5 配置读取时机</h2>
+  <p>与充提返现角标一致，前台不做实时推送，在<b>进入钱包页、切换存款 / 取款 Tab、切换渠道、刷新页面</b>时重新读取推荐配置并重新判定角标。会员停留在页面期间后台修改推荐配置的，页面不自动更新。限时充值返利角标按该活动现有逻辑撤下后，该渠道按钮立即按本章优先级顺延显示下一级角标。</p>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、中文 / 葡语文案对照表</h1>
+  <p>本需求<b>不新增前台固定文案</b>：推荐角标内容由运营在后台录入，前台原样展示，不做翻译。后台界面为中文单语，下列新增后台文案不涉及葡语。</p>
+  <table>
+    <thead><tr><th style="width:220px">位置</th><th>中文</th><th style="width:110px">Português</th><th style="width:60px">来源</th></tr></thead>
+    <tbody>
+      <tr><td>列表列名</td><td>推荐</td><td>—</td><td>新增</td></tr>
+      <tr><td>列表列名 / 弹窗字段名</td><td>角标文案</td><td>—</td><td>新增</td></tr>
+      <tr><td>弹窗字段名</td><td>是否推荐</td><td>—</td><td>新增</td></tr>
+      <tr><td>开关取值 / 列表取值</td><td>是 / 否</td><td>—</td><td>沿用</td></tr>
+      <tr><td>角标文案占位提示（推荐关闭）</td><td>开启推荐后填写</td><td>—</td><td>沿用</td></tr>
+      <tr><td>角标文案占位提示（推荐开启）</td><td>请输入角标文案</td><td>—</td><td>沿用</td></tr>
+      <tr><td>校验错误提示</td><td>请输入角标文案</td><td>—</td><td>新增</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">「沿用」指与限时充值返利「生效存款方式」配置中的现有文案一致。</p>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:300px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式 / 提现通道被禁用</td><td>推荐配置保留；前台不展示该渠道，角标随之不显示。重新启用后按保留配置显示。</td></tr>
+      <tr><td>存款方式 / 提现通道因会员等级、会员标签、解锁条件等规则对当前会员不展示</td><td>渠道不展示，角标随之不显示；推荐配置不影响渠道的展示范围。</td></tr>
+      <tr><td>推荐开启，同时充提返现生效</td><td>渠道按钮与快捷档位均显示「+N%」，推荐角标不显示；返现关闭或删除后渠道按钮顺延显示推荐角标，快捷档位角标随之隐藏。</td></tr>
+      <tr><td>仅开启推荐（无限时充值返利、无充提返现）</td><td>渠道按钮显示推荐角标，快捷档位不显示角标。</td></tr>
+      <tr><td>推荐开启，同时被限时充值返利角标占用（存款页）</td><td>显示限时充值返利角标；活动角标撤下后按 5.2 顺延。</td></tr>
+      <tr><td>限时充值返利中该存款方式「推荐」为否</td><td>不满足优先级 1，顺延判定充值返现角标与推荐角标。</td></tr>
+      <tr><td>同一会员同时存在多个进行中的限时充值返利</td><td>是否显示及显示哪个活动的角标文案，沿用该活动现有逻辑；本需求只判断限时充值返利角标是否显示。</td></tr>
+      <tr><td>充值返现 / 提款返现当日额度已用尽</td><td>沿用《充值返现 PRD》《提款返现 PRD》：角标仍按比例展示（不做额度预检），因此仍占用角标位，推荐角标不显示。</td></tr>
+      <tr><td>多个渠道同时开启推荐</td><td>各自显示推荐角标，不限数量，不互相影响。</td></tr>
+      <tr><td>历史数据</td><td>上线时全部默认「否」、文案为空，前台无变化。</td></tr>
+      <tr><td>角标文案含表情符号或特殊字符</td><td>不做限制，按 1 个字符计数，前台原样展示；显示效果由运营自行确认。</td></tr>
+      <tr><td>会员停留页面期间后台修改推荐配置</td><td>页面不自动更新，按 5.5 的读取时机刷新。</td></tr>
+      <tr><td>保存并发冲突</td><td>两名管理员同时编辑同一行时后提交者覆盖，操作日志各记一条，与所属页面现有规则一致。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、权限</h1>
+  <ul>
+    <li><b>不新增权限点</b>。支付方式管理的推荐配置归属该页现有「添加 / 修改」权限；提现通道配置的推荐配置归属「提现管理」现有编辑权限。</li>
+    <li>仅有查看权限的账号可在列表中看到「推荐」「角标文案」两列，无法打开编辑弹窗，与所属页面现有规则一致。</li>
+  </ul>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、关联需求同步说明</h1>
+  <table>
+    <thead><tr><th style="width:250px">关联文档 / 功能</th><th>同步点</th></tr></thead>
+    <tbody>
+      <tr><td>《充值返现 PRD》第六章</td><td>渠道按钮赠送角标与快捷档位比例角标的显示条件需补充：该存款方式满足限时充值返利角标展示条件时，渠道按钮显示限时充值返利角标、快捷档位显示限时充值返利的档位角标，充值返现的两处「+N%」均不显示。</td></tr>
+      <tr><td>《提款返现 PRD》6.1 节</td><td>取款页渠道角标与快捷档位角标规则不变（提款返现为取款页最高优先级）；需补充说明提款返现不生效时，渠道按钮顺延显示本需求的推荐角标，快捷档位仍不显示角标。</td></tr>
+      <tr><td>《存款页优化说明（PIX / NewGPay）》</td><td>渠道按钮角标位置与形态沿用该文档；角标类型由一类扩展为三类，以本需求第五章的优先级为准。</td></tr>
+      <tr><td>《提款页改版优化 PRD》4.1 节</td><td>渠道区「+N%」赠送角标一行需补充推荐角标及顺延规则，引用本需求 5.3 节；快捷档位一行补充「渠道显示推荐角标时档位不显示角标」，引用本需求 5.4 节。</td></tr>
+      <tr><td>限时充值返利活动</td><td>活动配置、渠道角标与档位角标的展示条件不变；其角标在存款页渠道按钮与快捷档位上均为最高优先级。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 十 -->
+<div class="section" id="s10">
+  <h1>十、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.1</td><td>2026-11-04</td><td>Laura</td><td>5.4 快捷档位角标改为跟随当前渠道的渠道角标类型：渠道显示限时充值返利角标时档位显示该活动的档位角标，显示充提返现角标时档位显示「+N%」，显示推荐角标或无角标时档位不显示角标；同步更新需求范围、边界与关联需求同步点。</td></tr>
+      <tr><td>v1.0</td><td>2026-11-04</td><td>Laura</td><td>首版。支付方式管理、提现管理 — 提现通道配置新增「是否推荐」与「角标文案」（规则对齐限时充值返利，最多 8 个字符）；定义存款页「限时充值返利角标 ＞ 充值返现角标 ＞ 推荐角标」、取款页「提款返现角标 ＞ 推荐角标」的互斥与顺延规则；明确互斥仅作用于渠道按钮角标位、不影响快捷档位角标；补充权限、边界与关联需求同步点。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
