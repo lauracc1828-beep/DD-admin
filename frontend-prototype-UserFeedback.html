@@ -39,11 +39,14 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .ld-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
 .ld-text{color:#ddd;font-size:15px;letter-spacing:.5px}
 .ld-bar{width:150px;height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden}
-.ld-bar i{display:block;height:100%;width:40%;background:var(--y);animation:ld 1.6s infinite ease-in-out}
-@keyframes ld{0%{margin-left:-40%}100%{margin-left:100%}}
+.ld-bar i{display:block;height:100%;width:0;background:var(--y);transition:width .2s linear}
 .ld-foot{padding:0 20px 34px;text-align:center}
 .ld-foot .s{color:#a8a39b;font-size:12px;margin-bottom:10px}
-.ld-foot .rw{display:inline-block;color:var(--y);font-size:12px;background:rgba(245,197,66,.12);border:1px solid rgba(245,197,66,.35);border-radius:10px;padding:2px 10px;margin:-2px 0 10px}
+.ld-foot .lk b{font-weight:800}
+.ld-st{font-size:11.5px;color:#a8a39b;text-align:center;margin:-6px 0 12px;display:none}
+.ld-st.on{display:block}
+.ld-st.ok{color:#6fcf7f}
+.reload{margin-top:10px;width:100%;background:#2a2a2a;border:1px solid #444;color:#ddd;border-radius:6px;padding:6px;font-size:12px;cursor:pointer}
 .ld-foot .lk{color:var(--y);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
 .ld-done{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#777;font-size:13px}
 .ld-done b{color:#bbb;font-size:17px}
@@ -149,7 +152,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
   <div class="panel">
     <h3>演示条件</h3>
     <div class="grp"><div class="lb">入口页面</div>
-      <div class="seg" id="seg-page"><button class="on" data-v="loading">游戏加载页</button><button data-v="mine">「我的」页</button></div></div>
+      <div class="seg" id="seg-page"><button class="on" data-v="loading">游戏加载页</button><button data-v="mine">「我的」页</button></div>
+      <button class="reload" onclick="startLoad()">重新模拟游戏加载（约 20 秒）</button></div>
     <div class="grp"><div class="lb">登录状态</div>
       <div class="seg" id="seg-login"><button class="on" data-v="1">已登录</button><button data-v="0">未登录（游客）</button></div></div>
     <div class="grp"><div class="lb">商户后台「意见反馈功能」开关</div>
@@ -163,7 +167,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
       <b>提交按钮</b>：至少选 1 个类型才可点击。<br>
       <b>每日上限</b>：入口不隐藏；达到 3 条后点「提交」提示已达上限，浮层保持打开，已填内容保留。<br>
       <b>联系客服提示</b>：选中的类型中有开启「提示联系客服」的（默认仅「充值或提款」），在类型下方显示提示条。<br>
-      <b>反馈类型</b>：由总控后台统一配置，按排序显示已启用的类型。
+      <b>反馈类型</b>：由总控后台统一配置，按排序显示已启用的类型。<br>
+      <b>不影响游戏加载</b>：从加载页打开浮层后，游戏在后台继续加载，浮层顶部显示加载进度；加载完成时浮层不自动关闭，关闭浮层或点「返回游戏」即进入游戏。
     </div>
   </div>
 
@@ -173,14 +178,14 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
     <div class="screen on" id="sc-loading">
       <div class="menu-btn"><i>▦</i>菜单</div>
       <div class="ld-center" id="ld-center">
-        <div class="ld-text">加载中……</div>
-        <div class="ld-bar"><i></i></div>
+        <div class="ld-text" id="ld-text">加载中…… 0%</div>
+        <div class="ld-bar"><i id="ld-bar"></i></div>
       </div>
       <div class="ld-foot" id="ld-foot">
         <div class="s">我们想打造世界上最好的游戏。</div>
-        <div class="rw">🎁 建议被采纳最高奖励 R$ 88</div>
-        <div class="lk" onclick="openSheet('loading')">有什么可以改进的？告诉我们 →</div>
+        <div class="lk" onclick="openSheet('loading')">🎁 反馈问题赢奖励，被采纳最高 <b>R$ 88</b> →</div>
       </div>
+      <div class="ld-done" id="ld-done"><b>游戏画面</b>（加载完成，加载页与反馈入口消失）</div>
       <div class="noentry" id="noentry-loading">（当前条件下不显示反馈入口）</div>
     </div>
 
@@ -205,6 +210,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
     <div class="mask" id="mask" onclick="closeSheet()"></div>
     <div class="sheet" id="sheet">
       <div class="grab"></div>
+      <div class="ld-st" id="ld-st"></div>
       <div id="form-wrap">
         <div class="sh-hd"><h2>帮助我们改进</h2><span class="sh-x" onclick="closeSheet()">✕</span></div>
         <div class="reward"><span class="rw-ic">🎁</span><span>您的反馈或建议如被平台采纳，最高可获得 <b>R$ 88</b> 奖励，诚挚欢迎您的反馈！</span></div>
@@ -281,9 +287,38 @@ function render(){
   document.getElementById('sc-loading').classList.toggle('on',S.page==='loading');
   document.getElementById('sc-mine').classList.toggle('on',S.page==='mine');
   var v=entryVisible();
-  document.getElementById('ld-foot').style.display=v?'block':'none';
-  document.getElementById('noentry-loading').style.display=v?'none':'block';
+  document.getElementById('ld-foot').style.display=v&&!LD.done?'block':'none';
+  document.getElementById('noentry-loading').style.display=v||LD.done?'none':'block';
   document.getElementById('mine-fb').style.display=v?'flex':'none';
+}
+
+// 游戏加载模拟：浮层打开期间继续加载，互不影响
+var LD={p:0,done:false,t:null};
+function startLoad(){
+  clearInterval(LD.t); LD.p=0; LD.done=false;
+  document.getElementById('ld-center').style.display='flex';
+  document.getElementById('ld-done').style.display='none';
+  render(); paintLoad();
+  LD.t=setInterval(function(){
+    LD.p=Math.min(100,LD.p+1); paintLoad();
+    if(LD.p>=100){clearInterval(LD.t);LD.done=true;loadDone()}
+  },200);
+}
+function paintLoad(){
+  document.getElementById('ld-text').textContent='加载中…… '+LD.p+'%';
+  document.getElementById('ld-bar').style.width=LD.p+'%';
+  var st=document.getElementById('ld-st');
+  st.classList.toggle('on',S.src==='loading'&&document.getElementById('sheet').classList.contains('on'));
+  st.classList.toggle('ok',LD.done);
+  st.textContent=LD.done?'✓ 游戏已加载完成，可随时返回游戏':'游戏正在后台加载 '+LD.p+'%，填写不影响游戏加载';
+}
+function loadDone(){
+  // 加载页与入口消失，显示游戏；已打开的浮层保持打开
+  document.getElementById('ld-center').style.display='none';
+  document.getElementById('ld-foot').style.display='none';
+  document.getElementById('noentry-loading').style.display='none';
+  document.getElementById('ld-done').style.display='flex';
+  paintLoad();
 }
 
 function renderChips(){
@@ -310,6 +345,7 @@ function openSheet(src){
   renderChips();
   document.getElementById('mask').classList.add('on');
   document.getElementById('sheet').classList.add('on');
+  paintLoad();
 }
 function closeSheet(){
   document.getElementById('mask').classList.remove('on');
@@ -379,7 +415,7 @@ function showData(ip){
     return r[0]==='grp'?'<tr class="grp"><td colspan="2">'+r[1]+'</td></tr>':'<tr><td>'+r[0]+'</td><td>'+esc(r[1])+'</td></tr>';
   }).join('')+'</table>';
 }
-render();
+startLoad();
 </script>
 </body>
 </html>
