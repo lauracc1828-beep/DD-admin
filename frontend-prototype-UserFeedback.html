@@ -43,7 +43,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .ld-foot{padding:0 20px 34px;text-align:center}
 .ld-foot .s{color:#a8a39b;font-size:12px;margin-bottom:10px}
 .ld-foot .s b{color:var(--y);font-weight:700}
-.ld-st{font-size:11.5px;color:#a8a39b;text-align:center;margin:-6px 0 12px;display:none}
+.ld-st{font-size:11.5px;color:#a8a39b;text-align:center;margin:-4px 0 8px;display:none;white-space:nowrap}
 .ld-st.on{display:block}
 .ld-st.ok{color:#6fcf7f}
 .reload{margin-top:10px;width:100%;background:#2a2a2a;border:1px solid #444;color:#ddd;border-radius:6px;padding:6px;font-size:12px;cursor:pointer}
@@ -81,14 +81,14 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--sheet);border-radius:20px 20px 0 0;padding:10px 16px 22px;z-index:11;transform:translateY(105%);transition:transform .25s ease;max-height:92%;overflow-y:auto}
 .sheet::-webkit-scrollbar{width:0}
 .sheet.on{transform:translateY(0)}
-.grab{width:40px;height:4px;border-radius:2px;background:#5a5650;margin:0 auto 14px}
-.sh-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.grab{width:40px;height:4px;border-radius:2px;background:#5a5650;margin:0 auto 10px}
+.sh-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .sh-hd h2{margin:0;font-size:20px;color:#fff;font-weight:700}
 .sh-x{font-size:24px;color:#bbb;cursor:pointer;line-height:1;padding:2px 4px}
-.q{font-size:15px;color:#fff;font-weight:600}
-.q-sub{font-size:12px;color:var(--t3);margin:3px 0 12px}
+.q{font-size:15px;color:#fff;font-weight:600;margin-bottom:10px}
+.q span{font-size:12px;color:var(--t3);font-weight:400;margin-left:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{background:var(--chip);border:1px solid var(--chipline);color:#fff;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;user-select:none}
+.chip{background:var(--chip);border:1px solid var(--chipline);color:#fff;border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;user-select:none}
 .chip.on{background:var(--y);border-color:var(--y);color:#1a1a1a}
 .chip .ck{display:none;font-size:12px}
 .chip.on .ck{display:inline}
@@ -96,28 +96,28 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .cs.on{display:flex}
 .cs .t{font-size:12.5px;color:#e6e1d6;line-height:1.5}
 .cs .b{flex-shrink:0;border:1px solid var(--y);color:var(--y);border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
-.fld{margin-top:16px}
-.fld-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.fld{margin-top:12px}
+.fld-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;white-space:nowrap}
+.fld-hd .tip{font-size:11.5px;color:var(--t3);font-weight:400;margin-left:6px}
 .fld-hd .n{font-size:13.5px;color:#fff;font-weight:600}
 .fld-hd .c{font-size:12px;color:var(--t3)}
-.ta,.ip{width:100%;background:#211f1c;border:1px solid var(--line);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;padding:11px 12px;outline:none}
-.ta{height:84px;resize:none}
+.ta,.ip{width:100%;background:#211f1c;border:1px solid var(--line);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;padding:9px 12px;outline:none}
+.ta{height:64px;resize:none}
 .ta::placeholder,.ip::placeholder{color:#7d786f}
 .ta:focus,.ip:focus{border-color:#77705f}
 .ip.err{border-color:#e5484d}
-.reward{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(90deg,#4a3d12,#3a3424);border:1px solid #6b5a1c;border-radius:10px;padding:9px 12px;margin:-4px 0 16px;font-size:12.5px;color:#f1e6c2;line-height:1.55}
+.reward{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(90deg,#4a3d12,#3a3424);border:1px solid #6b5a1c;border-radius:10px;padding:7px 12px;margin:0 0 12px;font-size:12.5px;color:#f1e6c2;line-height:1.5;white-space:nowrap;align-items:center}
 .reward b{color:var(--y)}
-.rw-ic{flex-shrink:0;font-size:15px;line-height:1.3}
+.rw-ic{flex-shrink:0;font-size:14px;line-height:1}
 .imgs{display:flex;gap:8px;flex-wrap:wrap}
-.img-it,.img-add{width:72px;height:72px;border-radius:10px;position:relative;flex-shrink:0}
+.img-it,.img-add{width:60px;height:60px;border-radius:10px;position:relative;flex-shrink:0}
 .img-it img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
 .img-it .del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#000;border:1px solid #666;color:#fff;font-size:12px;line-height:18px;text-align:center;cursor:pointer}
 .img-add{border:1px dashed #6b665d;background:#211f1c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9a958c;font-size:11px;cursor:pointer;gap:2px}
 .img-add i{font-style:normal;font-size:24px;line-height:1;color:#bdb8b0}
-.img-tip{font-size:11.5px;color:var(--t3);margin-top:6px}
 .err-t{display:none;color:#ff6b6b;font-size:12px;margin-top:6px}
 .err-t.on{display:block}
-.sub{margin-top:18px;width:100%;height:46px;border:none;border-radius:12px;background:var(--y);color:#1a1a1a;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.sub{margin-top:14px;width:100%;height:44px;border:none;border-radius:12px;background:var(--y);color:#1a1a1a;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
 .sub:disabled{background:#5a5546;color:#8f8a7c;cursor:not-allowed}
 /* 成功 */
 .ok-wrap{display:none;text-align:center;padding:8px 6px 4px}
@@ -213,9 +213,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
       <div class="ld-st" id="ld-st"></div>
       <div id="form-wrap">
         <div class="sh-hd"><h2>帮助我们改进</h2><span class="sh-x" onclick="closeSheet()">✕</span></div>
-        <div class="reward"><span class="rw-ic">🎁</span><span>您的反馈或建议如被平台采纳，最高可获得 <b>R$ 88</b> 奖励，诚挚欢迎您的反馈！</span></div>
-        <div class="q">我们可以改进什么？</div>
-        <div class="q-sub">可多选</div>
+        <div class="reward"><span class="rw-ic">🎁</span><span>反馈或建议被采纳，最高奖励 <b>R$ 88</b>，诚挚欢迎！</span></div>
+        <div class="q">我们可以改进什么？<span>可多选</span></div>
         <div class="chips" id="chips"></div>
         <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')">联系客服</div></div>
         <div class="fld">
@@ -223,9 +222,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
           <textarea class="ta" id="ta" maxlength="300" placeholder="想说的话，可以写在这里……" oninput="document.getElementById('ta-n').textContent=this.value.length"></textarea>
         </div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">上传图片（选填）</span><span class="c"><span id="img-n">0</span>/3</span></div>
+          <div class="fld-hd"><span class="n">上传图片（选填）<span class="tip">JPG / PNG，单张 ≤ 5MB</span></span><span class="c"><span id="img-n">0</span>/3</span></div>
           <div class="imgs" id="imgs"></div>
-          <div class="img-tip">支持 JPG、PNG，单张不超过 5MB</div>
           <input type="file" id="img-in" accept="image/jpeg,image/png" multiple style="display:none" onchange="pickImgs(this)">
         </div>
         <div class="fld">
