@@ -26,6 +26,9 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .seg button.on{background:var(--y);color:#1a1a1a;border-color:var(--y);font-weight:600}
 .panel .tip{font-size:12px;color:#8d8d8d;line-height:1.75;border-top:1px dashed #3a3a3d;padding-top:12px}
 .panel .tip b{color:#e6e6e6;font-weight:600}
+.tbd{outline:1px dashed #ff9f43;outline-offset:1px;border-radius:2px}
+.tbd-ph{outline:1px dashed #ff9f43;outline-offset:1px}
+.tbd-note{font-size:11.5px;color:#8d8d8d;margin-top:8px;line-height:1.6}
 
 /* 手机 */
 .phone{width:390px;height:844px;border-radius:38px;background:var(--bg);border:9px solid #000;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;position:relative;display:flex;flex-direction:column}
@@ -53,26 +56,27 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .ld-done{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#777;font-size:13px}
 .ld-done b{color:#bbb;font-size:17px}
 
-/* 我的页 */
-#sc-mine{background:#0d0d0d;overflow-y:auto}
-#sc-mine::-webkit-scrollbar{width:0}
-.mine-top{padding:46px 16px 14px;display:flex;gap:12px;align-items:center}
-.ava{width:56px;height:56px;border-radius:12px;background:linear-gradient(150deg,#6b5a46,#3a3029)}
-.mine-id{font-size:13px;color:#ddd;line-height:1.7}
-.mine-id small{color:#8a8a8a;font-size:12px}
-.bal{margin:0 16px 12px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,#3b3416,#1c1a10);border:1px solid #3d3820}
-.bal .k{font-size:12px;color:#a8a28a}
-.bal .v{font-size:22px;color:var(--gold);font-weight:700;margin-top:2px}
-.mlist{margin:0 16px;background:#1a1a1a;border-radius:12px;overflow:hidden}
-.mrow{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid #262626;font-size:14px;color:#e2e2e2;cursor:default}
-.mrow:last-child{border-bottom:none}
-.mrow .r{color:#666;font-size:14px}
-.mrow .ic{width:22px;display:inline-block;color:#9a9a9a;margin-right:10px;text-align:center}
-.mrow.fb{cursor:pointer;background:#22201a;outline:1px dashed #6b5a1c;outline-offset:-1px}
-.mrow.fb .ic{color:var(--y)}
-.newtag{font-size:10px;color:#1a1a1a;background:var(--y);border-radius:8px;padding:1px 6px;margin-left:6px;font-weight:700;vertical-align:1px}
-.tabbar{position:sticky;bottom:0;margin-top:18px;height:62px;background:#262626;border-top:1px solid #333;display:flex;justify-content:space-around;align-items:center;font-size:12px;color:#aaa}
-.tabbar .on{color:var(--gold);font-weight:600}
+/* 我的页：复用《NewGPay 扫码直充与钱包绑定》原型的现网个人中心结构与底部导航 */
+#sc-mine{background:#141415}
+.me-scroll{flex:1;overflow-y:auto;padding:46px 14px 12px;scrollbar-width:none}
+.me-scroll::-webkit-scrollbar{display:none}
+.me-head{display:flex;align-items:center;gap:12px;padding:6px 2px 16px;border-bottom:1px solid #2e2e31}
+.me-av{width:52px;height:52px;border-radius:50%;background:#2f2f2f}
+.me-head .mi{font-size:12.5px;color:#cfcfcf;line-height:1.7}
+.me-head .mi b{color:#fff;font-weight:600}
+.mlist{margin-top:8px}
+.mitem{width:100%;display:flex;align-items:center;gap:10px;padding:14px 4px;border:none;border-bottom:1px solid #2e2e31;background:none;font:inherit;font-size:13.5px;color:#cfcfcf;text-align:left;cursor:default}
+.mitem .mv{margin-left:auto;color:#8a8a8f;display:flex;align-items:center}
+.mitem .mv svg{width:13px;height:13px}
+.mitem.fb{color:#eee;cursor:pointer;background:rgba(255,230,0,.06);outline:1px dashed #6e6520;outline-offset:-1px}
+.newtag{font-size:10px;font-weight:700;color:#111;background:#ffe600;border-radius:6px;padding:0 6px;line-height:1.6}
+.nav{flex:0 0 auto;display:flex;justify-content:space-around;padding:8px 0 10px;background:#1a1a1c;border-top:1px solid #2e2e31}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:#8a8a8f;text-decoration:none;width:60px;position:relative}
+.nav a.on{color:#ffe600}
+.nav .ic{width:24px;height:24px}
+.nav .ic svg{width:100%;height:100%;display:block}
+.nav .mid .ic{width:46px;height:46px;border-radius:50%;margin-top:-26px;border:3px solid #1a1a1c;background:#2f2f2f;padding:5px;box-shadow:0 3px 12px rgba(0,0,0,.5)}
+.nav .bdg{position:absolute;top:-2px;right:12px;width:8px;height:8px;border-radius:50%;background:#EE2B2B;border:1.5px solid #1a1a1c}
 
 /* 未显示入口说明 */
 .noentry{display:none;margin:0 20px 34px;text-align:center;color:#666;font-size:12px;border:1px dashed #333;border-radius:8px;padding:10px}
@@ -154,6 +158,9 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
   <!-- 演示控制面板（仅原型演示用） -->
   <div class="panel">
     <h3>演示条件</h3>
+    <div class="grp"><div class="lb">界面语言</div>
+      <div class="seg" id="seg-lang"><button class="on" data-v="zh">中文</button><button data-v="pt">Português</button></div>
+      <div class="tbd-note">葡语模式下，<span class="tbd">橙色虚线框</span>为「葡语待提供」的文案，暂显示中文。</div></div>
     <div class="grp"><div class="lb">入口页面</div>
       <div class="seg" id="seg-page"><button class="on" data-v="loading">游戏加载页</button><button data-v="mine">「我的」页</button></div>
       <button class="reload" onclick="startLoad()">重新模拟游戏加载（约 20 秒）</button></div>
@@ -179,14 +186,14 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
   <div class="phone" id="phone">
     <!-- 游戏加载页 -->
     <div class="screen on" id="sc-loading">
-      <div class="menu-btn"><i>▦</i>菜单</div>
+      <div class="menu-btn"><i>▦</i><span data-i="menu"></span></div>
       <div class="ld-center" id="ld-center">
-        <div class="ld-text" id="ld-text">加载中…… 0%</div>
+        <div class="ld-text" id="ld-text"></div>
         <div class="ld-bar"><i id="ld-bar"></i></div>
       </div>
       <div class="ld-foot" id="ld-foot">
-        <div class="s">一起打造更好玩的游戏，建议被采纳最高奖 <b>R$ 88</b></div>
-        <div class="lk" onclick="openSheet('loading')">我要反馈 →</div>
+        <div class="s" data-i="ldDesc"></div>
+        <div class="lk" onclick="openSheet('loading')" data-i="ldLink"></div>
       </div>
       <div class="ld-done" id="ld-done"><b>游戏画面</b>（加载完成，加载页与反馈入口消失）</div>
       <div class="noentry" id="noentry-loading">（当前条件下不显示反馈入口）</div>
@@ -194,19 +201,23 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 
     <!-- 我的页 -->
     <div class="screen" id="sc-mine">
-      <div class="mine-top"><div class="ava"></div><div class="mine-id">ID: 26894081<br><small>账号: 11912311111</small></div></div>
-      <div class="bal"><div class="k">账户余额</div><div class="v">13.036,24 R$</div></div>
-      <div class="mlist">
-        <div class="mrow"><span><span class="ic">▤</span>报表</span><span class="r">›</span></div>
-        <div class="mrow"><span><span class="ic">✉</span>邀请</span><span class="r">›</span></div>
-        <div class="mrow"><span><span class="ic">$</span>兑换码</span><span class="r">›</span></div>
-        <div class="mrow"><span><span class="ic">☏</span>客服</span><span class="r">›</span></div>
-        <div class="mrow fb" id="mine-fb" onclick="openSheet('mine')"><span><span class="ic">✎</span>意见反馈<span class="newtag">新增</span></span><span class="r">›</span></div>
-        <div class="mrow"><span><span class="ic">⛨</span>安全中心</span><span class="r">›</span></div>
-        <div class="mrow"><span><span class="ic">文</span>语言变更</span><span class="r">›</span></div>
-        <div class="mrow"><span><span class="ic">⏻</span>退出</span><span class="r">›</span></div>
+      <div class="me-scroll">
+        <div class="me-head">
+          <div class="me-av"></div>
+          <div class="mi">ID: <b>26894081</b><br><span data-i="acct"></span><b>11912311111</b></div>
+        </div>
+        <div class="mlist">
+          <button class="mitem"><span data-i="report"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="invite"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="redeem"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="support"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem fb" id="mine-fb" onclick="openSheet('mine')"><span data-i="mineFb"></span><span class="newtag">新增</span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="security"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="language"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="logout"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+        </div>
       </div>
-      <div class="tabbar"><span>首页</span><span>活动</span><span>充值</span><span>VIP</span><span class="on">我的</span></div>
+      <nav class="nav" id="mine-nav"></nav>
     </div>
 
     <!-- 浮层 -->
@@ -214,32 +225,32 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
     <div class="sheet" id="sheet">
       <div class="grab"></div>
       <div id="form-wrap">
-        <div class="sh-hd"><div><h2>帮助我们改进</h2><div class="ld-st" id="ld-st"></div></div><span class="sh-x" onclick="closeSheet()">✕</span></div>
-        <div class="reward"><span class="rw-ic">🎁</span><span>反馈或建议被采纳，最高奖励 <b>R$ 88</b>，诚挚欢迎！</span></div>
-        <div class="q"><span class="n">我们可以改进什么？<span class="tip">可多选</span></span></div>
+        <div class="sh-hd"><div><h2 data-i="title"></h2><div class="ld-st" id="ld-st"></div></div><span class="sh-x" onclick="closeSheet()">✕</span></div>
+        <div class="reward"><span class="rw-ic">🎁</span><span data-i="reward"></span></div>
+        <div class="q"><span class="n"><span data-i="q"></span><span class="tip" data-i="multi"></span></span></div>
         <div class="chips" id="chips"></div>
-        <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')">联系客服</div></div>
+        <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')" data-i="cs"></div></div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">补充说明<i>（选填）</i></span><span class="c"><span id="ta-n">0</span>/300</span></div>
-          <textarea class="ta" id="ta" maxlength="300" placeholder="想说的话，可以写在这里……" oninput="document.getElementById('ta-n').textContent=this.value.length"></textarea>
+          <div class="fld-hd"><span class="n"><span data-i="txtLb"></span><i data-i="opt"></i></span><span class="c"><span id="ta-n">0</span>/300</span></div>
+          <textarea class="ta" id="ta" maxlength="300" data-ph="txtPh" oninput="document.getElementById('ta-n').textContent=this.value.length"></textarea>
         </div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">上传图片<i>（选填）</i><span class="tip">JPG / PNG，单张 ≤ 5MB</span></span><span class="c"><span id="img-n">0</span>/3</span></div>
+          <div class="fld-hd"><span class="n"><span data-i="imgLb"></span><i data-i="opt"></i><span class="tip" data-i="imgTip"></span></span><span class="c"><span id="img-n">0</span>/3</span></div>
           <div class="imgs" id="imgs"></div>
           <input type="file" id="img-in" accept="image/jpeg,image/png" multiple style="display:none" onchange="pickImgs(this)">
         </div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">联系方式<i>（选填）</i></span></div>
-          <input class="ip" id="ip" placeholder="WhatsApp 或邮箱" maxlength="64" oninput="clearErr()">
-          <div class="err-t" id="ip-err">请输入正确的 WhatsApp 号码或邮箱</div>
+          <div class="fld-hd"><span class="n"><span data-i="ctLb"></span><i data-i="opt"></i></span></div>
+          <input class="ip" id="ip" data-ph="ctPh" maxlength="64" oninput="clearErr()">
+          <div class="err-t" id="ip-err" data-i="ctErr"></div>
         </div>
-        <button class="sub" id="sub" disabled onclick="submitFb()">提交</button>
+        <button class="sub" id="sub" disabled onclick="submitFb()" data-i="submit"></button>
       </div>
       <div class="ok-wrap" id="ok-wrap">
         <div class="ok-ic">✓</div>
-        <div class="ok-t">谢谢！</div>
-        <div class="ok-s">你的意见能帮助我们做得更好。</div>
-        <button class="sub" style="margin-top:0" id="ok-btn" onclick="closeSheet()">返回游戏</button>
+        <div class="ok-t" data-i="okT"></div>
+        <div class="ok-s" data-i="okS"></div>
+        <button class="sub" style="margin-top:0" id="ok-btn" onclick="closeSheet()"></button>
       </div>
     </div>
     <div class="ftoast" id="ftoast"></div>
@@ -267,6 +278,64 @@ var TYPES=[
 var S={page:'loading',login:'1',sw:'1',cnt:0,net:'ok',src:'loading',sel:[],imgs:[]};
 var seq=10086;
 
+// ── 界面文案：[中文, 葡语]；葡语为 null 表示「葡语待提供」，葡语模式下显示中文并加橙色虚线框 ──
+// 葡语来源：老板原型原文、竞品客户端语言包（我的页菜单、加载中、图片大小提示等），未自行翻译
+var LANG='zh';
+var I18N={
+  menu:['菜单','Menu'],
+  loading:['加载中…… {n}%','Carregando... {n}%'],
+  ldDesc:['一起打造更好玩的游戏，建议被采纳最高奖 <b>R$ 88</b>',null],
+  ldLink:['我要反馈 →',null],
+  acct:['账号：','Conta:'],
+  report:['报表','Relatórios'], invite:['邀请','Convidar'], redeem:['兑换码','Código de Resgate'], support:['客服','Suporte'],
+  mineFb:['意见反馈',null], security:['安全中心','Centro de Segurança'], language:['切换语言','Alterar idioma'], logout:['退出','Sair'],
+  navHome:['首页','Inicio'], navPromo:['优惠','Promoção'], navInvite:['邀请','Convidar'], navWallet:['钱包','Carteira'], navMine:['我的','Perfil'],
+  title:['帮助我们改进','Ajude a gente a melhorar'],
+  ldIng:['游戏正在后台加载 {n}%，填写不影响游戏加载',null],
+  ldOk:['✓ 游戏已加载完成，可随时返回游戏',null],
+  reward:['反馈或建议被采纳，最高奖励 <b>R$ 88</b>，诚挚欢迎！',null],
+  q:['我们可以改进什么？',null], multi:['可多选',null],
+  csTip:['现在需要{t}方面的帮助吗？',null], cs:['联系客服','Atendimento'],
+  txtLb:['补充说明','Conte mais'], opt:['（选填）',' (opcional)'], txtPh:['想说的话，可以写在这里……',null],
+  imgLb:['上传图片',null], imgTip:['JPG / PNG，单张 ≤ 5MB',null], imgAdd:['添加图片',null],
+  ctLb:['联系方式','Contato'], ctPh:['WhatsApp 或邮箱','WhatsApp ou e-mail'], ctErr:['请输入正确的 WhatsApp 号码或邮箱',null],
+  submit:['提交','Enviar'], okT:['谢谢！','Obrigado!'], okS:['你的意见能帮助我们做得更好。','Sua opinião nos ajuda a melhorar.'],
+  back:['返回游戏','Voltar ao jogo'], done:['完成','Finalizar'],
+  eMax:['最多上传 3 张图片',null], eFmt:['仅支持 JPG、PNG 格式图片',null], eSize:['图片大小不得超过 5MB','O tamanho da imagem não deve exceder 5MB'],
+  eDay:['今天的反馈次数已达上限，请明天再来',null], eNet:['提交失败，请稍后重试',null]
+};
+// 反馈类型葡语：老板原型原文（总控配置的名称）
+var TYPE_PT={1:'Poucos jogos',2:'Jogo trava ou demora',3:'Difícil encontrar jogos',4:'Promoções e bônus',5:'Depósito ou saque',6:'Atendimento',7:'Outro'};
+function fill(s,v){return v?s.replace(/\{(\w+)\}/g,function(m,k){return v[k]}):s}
+// 返回 HTML：葡语缺失时用中文 + 橙色虚线框标记
+function tr(k,v){
+  var e=I18N[k]; if(LANG==='pt'&&e[1]!=null) return fill(e[1],v);
+  return LANG==='pt'?'<span class="tbd" title="葡语待提供">'+fill(e[0],v)+'</span>':fill(e[0],v);
+}
+function trTxt(k,v){var e=I18N[k];return fill(LANG==='pt'&&e[1]!=null?e[1]:e[0],v)}
+function typeName(t){return LANG==='pt'?TYPE_PT[t.id]:t.name}
+// 底部导航：复用《NewGPay 扫码直充与钱包绑定》原型（现网结构），「我的」高亮
+var NAV = function(){ return [
+  {id:'home', label:trTxt('navHome'), svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 10.2 12 3.6l8.5 6.6V20a.8.8 0 0 1-.8.8h-4.4v-6h-6.6v6H4.3A.8.8 0 0 1 3.5 20z"/></svg>'},
+  {id:'promo', label:trTxt('navPromo'), dot:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="8.5" width="18" height="12" rx="2"/><path d="M3 12.5h18M12 8.5v12"/><path d="M8.6 8.5a2.3 2.3 0 1 1 1.7-3.9c1 1 1.7 3.9 1.7 3.9m3.4 0a2.3 2.3 0 1 0-1.7-3.9c-1 1-1.7 3.9-1.7 3.9"/></svg>'},
+  {id:'invite', label:trTxt('navInvite'), mid:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="#ffe600" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.3"/><path d="M2.8 20c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6"/><path d="M17.6 6.6v5.2M15 9.2h5.2"/></svg>'},
+  {id:'wallet', label:trTxt('navWallet'), svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2.8" y="5.6" width="18.4" height="13.4" rx="2.6"/><path d="M2.8 10.2h18.4"/><circle cx="16.8" cy="14.8" r="1.5"/><path d="M6.4 5.6 14.2 2.9a1.1 1.1 0 0 1 1.5.9v1.8"/></svg>'},
+  {id:'mine', label:trTxt('navMine'), dot:true, svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c0-3.8 3.2-6.2 7.2-6.2s7.2 2.4 7.2 6.2"/></svg>'}
+]};
+function renderNav(){
+  document.getElementById('mine-nav').innerHTML=NAV().map(function(n){
+    return '<a href="javascript:void(0)" class="'+(n.id==='mine'?'on ':'')+(n.mid?'mid':'')+'"><span class="ic">'+n.svg+'</span>'+(n.dot?'<span class="bdg"></span>':'')+'<span>'+n.label+'</span></a>';
+  }).join('');
+}
+function applyLang(){
+  document.querySelectorAll('[data-i]').forEach(function(el){el.innerHTML=tr(el.dataset.i)});
+  document.querySelectorAll('[data-ph]').forEach(function(el){
+    var k=el.dataset.ph; el.placeholder=trTxt(k); el.classList.toggle('tbd-ph',LANG==='pt'&&I18N[k][1]==null);
+  });
+  document.getElementById('ok-btn').innerHTML=tr(S.src==='loading'?'back':'done');
+  renderChips(); renderImgs(); paintLoad(); renderNav();
+}
+
 function bindSeg(id,key,cb){
   document.querySelectorAll('#'+id+' button').forEach(function(b){
     b.onclick=function(){
@@ -280,6 +349,7 @@ bindSeg('seg-login','login',render);
 bindSeg('seg-sw','sw',render);
 bindSeg('seg-cnt','cnt');
 bindSeg('seg-net','net');
+bindSeg('seg-lang','lang',function(){LANG=S.lang;applyLang()});
 
 function entryVisible(){return S.login==='1'&&S.sw==='1'}
 function render(){
@@ -305,12 +375,12 @@ function startLoad(){
   },200);
 }
 function paintLoad(){
-  document.getElementById('ld-text').textContent='加载中…… '+LD.p+'%';
+  document.getElementById('ld-text').textContent=trTxt('loading',{n:LD.p});
   document.getElementById('ld-bar').style.width=LD.p+'%';
   var st=document.getElementById('ld-st');
   st.classList.toggle('on',S.src==='loading'&&document.getElementById('sheet').classList.contains('on'));
   st.classList.toggle('ok',LD.done);
-  st.textContent=LD.done?'✓ 游戏已加载完成，可随时返回游戏':'游戏正在后台加载 '+LD.p+'%，填写不影响游戏加载';
+  st.innerHTML=LD.done?tr('ldOk'):tr('ldIng',{n:LD.p});
 }
 function loadDone(){
   // 加载页与入口消失，显示游戏；已打开的浮层保持打开
@@ -324,11 +394,11 @@ function loadDone(){
 function renderChips(){
   document.getElementById('chips').innerHTML=TYPES.map(function(t){
     var on=S.sel.indexOf(t.id)>-1;
-    return '<span class="chip'+(on?' on':'')+'" onclick="toggleChip('+t.id+')"><span class="ck">✓</span>'+t.name+'</span>';
+    return '<span class="chip'+(on?' on':'')+'" onclick="toggleChip('+t.id+')"><span class="ck">✓</span>'+typeName(t)+'</span>';
   }).join('');
   var csNames=TYPES.filter(function(t){return t.cs&&S.sel.indexOf(t.id)>-1}).map(function(t){return '「'+t.name+'」'});
   var cs=document.getElementById('cs');
-  if(csNames.length){document.getElementById('cs-t').textContent='现在需要'+csNames.join('、')+'方面的帮助吗？';cs.classList.add('on')}
+  if(csNames.length){document.getElementById('cs-t').innerHTML=tr('csTip',{t:csNames.join('、')});cs.classList.add('on')}
   else cs.classList.remove('on');
   document.getElementById('sub').disabled=S.sel.length===0;
 }
@@ -341,7 +411,7 @@ function openSheet(src){
   document.getElementById('ip').value=''; clearErr(); S.imgs=[]; renderImgs();
   document.getElementById('form-wrap').style.display='block';
   document.getElementById('ok-wrap').style.display='none';
-  document.getElementById('ok-btn').textContent=src==='loading'?'返回游戏':'完成';
+  document.getElementById('ok-btn').innerHTML=tr(src==='loading'?'back':'done');
   renderChips();
   document.getElementById('mask').classList.add('on');
   document.getElementById('sheet').classList.add('on');
@@ -355,17 +425,17 @@ function closeSheet(){
 var IMG_MAX=3, IMG_SIZE=5*1024*1024;
 function renderImgs(){
   var h=S.imgs.map(function(src,i){return '<div class="img-it"><img src="'+src+'"><span class="del" onclick="delImg('+i+')">✕</span></div>'}).join('');
-  if(S.imgs.length<IMG_MAX) h+='<div class="img-add" onclick="document.getElementById(\'img-in\').click()"><i>+</i>添加图片</div>';
+  if(S.imgs.length<IMG_MAX) h+='<div class="img-add" onclick="document.getElementById(\'img-in\').click()"><i>+</i>'+tr('imgAdd')+'</div>';
   document.getElementById('imgs').innerHTML=h;
   document.getElementById('img-n').textContent=S.imgs.length;
 }
 function delImg(i){S.imgs.splice(i,1);renderImgs()}
 function pickImgs(inp){
   var files=[].slice.call(inp.files), left=IMG_MAX-S.imgs.length, msg='';
-  if(files.length>left){msg='最多上传 3 张图片';files=files.slice(0,left)}
+  if(files.length>left){msg=tr('eMax');files=files.slice(0,left)}
   files.forEach(function(f){
-    if(!/^image\/(jpeg|png)$/.test(f.type)){msg='仅支持 JPG、PNG 格式图片';return}
-    if(f.size>IMG_SIZE){msg='图片大小不得超过 5MB';return}
+    if(!/^image\/(jpeg|png)$/.test(f.type)){msg=tr('eFmt');return}
+    if(f.size>IMG_SIZE){msg=tr('eSize');return}
     var r=new FileReader(); r.onload=function(){S.imgs.push(r.result);renderImgs()}; r.readAsDataURL(f);
   });
   if(msg) ftoast(msg);
@@ -378,7 +448,7 @@ function validContact(v){
   var d=v.replace(/[\s\-()+]/g,'');
   return /^\d{10,13}$/.test(d);
 }
-function ftoast(m){var t=document.getElementById('ftoast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},2200)}
+function ftoast(m){var t=document.getElementById('ftoast');t.innerHTML=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},2200)}
 function pad(n){return n<10?'0'+n:n}
 function now(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
 
@@ -386,8 +456,8 @@ function submitFb(){
   if(!S.sel.length) return;
   var ip=document.getElementById('ip').value.trim();
   if(!validContact(ip)){document.getElementById('ip').classList.add('err');document.getElementById('ip-err').classList.add('on');return}
-  if(S.cnt>=3){ftoast('今天的反馈次数已达上限，请明天再来');return}
-  if(S.net==='fail'){ftoast('提交失败，请稍后重试');return}
+  if(S.cnt>=3){ftoast(tr('eDay'));return}
+  if(S.net==='fail'){ftoast(tr('eNet'));return}
   S.cnt++;
   document.querySelectorAll('#seg-cnt button').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.v,10)===S.cnt)});
   showData(ip);
@@ -415,6 +485,7 @@ function showData(ip){
     return r[0]==='grp'?'<tr class="grp"><td colspan="2">'+r[1]+'</td></tr>':'<tr><td>'+r[0]+'</td><td>'+esc(r[1])+'</td></tr>';
   }).join('')+'</table>';
 }
+applyLang();
 startLoad();
 </script>
 </body>
