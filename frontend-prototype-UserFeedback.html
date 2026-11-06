@@ -115,7 +115,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .ip.err{border-color:#e5484d}
 .reward{display:flex;gap:8px;align-items:center;background:rgba(245,197,66,.10);border:1px solid rgba(245,197,66,.28);border-radius:10px;padding:8px 12px;margin:0 0 18px;font-size:13px;line-height:18px;color:#efe3c0;white-space:nowrap}
 .reward b{color:var(--y);font-weight:700}
-.rw-ic{flex-shrink:0;font-size:14px;line-height:1}
+.rw-tag{flex-shrink:0;font-size:11px;line-height:16px;font-weight:700;color:#1a1a1a;background:var(--y);border-radius:4px;padding:1px 6px}
 .imgs{display:flex;gap:8px;flex-wrap:wrap}
 .img-it,.img-add{width:60px;height:60px;border-radius:10px;position:relative;flex-shrink:0}
 .img-it img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
@@ -226,7 +226,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
       <div class="grab"></div>
       <div id="form-wrap">
         <div class="sh-hd"><div><h2 data-i="title"></h2><div class="ld-st" id="ld-st"></div></div><span class="sh-x" onclick="closeSheet()">✕</span></div>
-        <div class="reward"><span class="rw-ic">🎁</span><span data-i="reward"></span></div>
+        <div class="reward"><span class="rw-tag" data-i="rwTag"></span><span data-i="reward"></span></div>
         <div class="q"><span class="n"><span data-i="q"></span><span class="tip" data-i="multi"></span></span></div>
         <div class="chips" id="chips"></div>
         <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')" data-i="cs"></div></div>
@@ -293,11 +293,12 @@ var I18N={
   title:['帮助我们改进','Ajude a gente a melhorar'],
   ldIng:['游戏正在后台加载 {n}%，填写不影响游戏加载',null],
   ldOk:['✓ 游戏已加载完成，可随时返回游戏',null],
-  reward:['反馈或建议被采纳，最高奖励 <b>R$ 88</b>，诚挚欢迎！',null],
+  rwTag:['反馈有奖','Sugestão premiada'],
+  reward:['建议被采纳，最高可得 <b>R$ 88</b>','Se for aceita, ganhe até <b>R$ 88</b>'],
   q:['我们可以改进什么？',null], multi:['可多选',null],
   csTip:['现在需要{t}方面的帮助吗？',null], cs:['联系客服','Atendimento'],
   txtLb:['补充说明','Conte mais'], opt:['（选填）',' (opcional)'], txtPh:['想说的话，可以写在这里……',null],
-  imgLb:['上传图片',null], imgTip:['JPG / PNG，单张 ≤ 5MB',null], imgAdd:['添加图片',null],
+  imgLb:['上传图片',null], imgTip:['JPG、PNG，单张不超过 5MB','JPG ou PNG, até 5MB cada'], imgAdd:['添加图片',null],
   ctLb:['联系方式','Contato'], ctPh:['WhatsApp 或邮箱','WhatsApp ou e-mail'], ctErr:['请输入正确的 WhatsApp 号码或邮箱',null],
   submit:['提交','Enviar'], okT:['谢谢！','Obrigado!'], okS:['你的意见能帮助我们做得更好。','Sua opinião nos ajuda a melhorar.'],
   back:['返回游戏','Voltar ao jogo'], done:['完成','Finalizar'],
