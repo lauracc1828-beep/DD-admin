@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用户反馈收集 · H5 前台原型</title>
+<style>
+:root{
+  --y:#F5C542; --bg:#0f0f0f; --sheet:#2c2a27; --chip:#201f1d; --chipline:#4a4744;
+  --t1:#fff; --t2:#bdb8b0; --t3:#8a857d; --line:#3a3733; --gold:#F4E500;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;padding:26px 20px 60px}
+.hd{text-align:center;margin-bottom:20px}
+.hd h1{font-size:19px;color:#fff;margin:0 0 6px;font-weight:600}
+.hd p{font-size:12.5px;color:#8d8d8d;margin:0;line-height:1.8}
+.rail{display:flex;gap:26px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+
+/* 演示控制面板 */
+.panel{width:300px;background:#242426;border:1px solid #333;border-radius:12px;padding:16px 18px;font-size:13px}
+.panel h3{margin:0 0 12px;font-size:14px;color:#fff;font-weight:600}
+.panel .grp{margin-bottom:16px}
+.panel .lb{color:#9a9a9a;font-size:12px;margin-bottom:7px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:#1b1b1d;color:#cfcfcf;border:1px solid #3d3d40;border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.seg button.on{background:var(--y);color:#1a1a1a;border-color:var(--y);font-weight:600}
+.panel .tip{font-size:12px;color:#8d8d8d;line-height:1.75;border-top:1px dashed #3a3a3d;padding-top:12px}
+.panel .tip b{color:#e6e6e6;font-weight:600}
+
+/* 手机 */
+.phone{width:390px;height:844px;border-radius:38px;background:var(--bg);border:9px solid #000;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;position:relative;display:flex;flex-direction:column}
+.screen{position:absolute;inset:0;display:none;flex-direction:column}
+.screen.on{display:flex}
+
+/* 游戏加载页 */
+#sc-loading{background:#0d0d0d}
+.menu-btn{position:absolute;top:44px;left:12px;width:46px;height:46px;border-radius:50%;border:1px solid #333;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#888;font-size:10px;font-weight:700;gap:2px;z-index:2}
+.menu-btn i{font-style:normal;font-size:15px;line-height:1}
+.ld-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.ld-text{color:#ddd;font-size:15px;letter-spacing:.5px}
+.ld-bar{width:150px;height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden}
+.ld-bar i{display:block;height:100%;width:40%;background:var(--y);animation:ld 1.6s infinite ease-in-out}
+@keyframes ld{0%{margin-left:-40%}100%{margin-left:100%}}
+.ld-foot{padding:0 20px 34px;text-align:center}
+.ld-foot .s{color:#a8a39b;font-size:12px;margin-bottom:10px}
+.ld-foot .rw{display:inline-block;color:var(--y);font-size:12px;background:rgba(245,197,66,.12);border:1px solid rgba(245,197,66,.35);border-radius:10px;padding:2px 10px;margin:-2px 0 10px}
+.ld-foot .lk{color:var(--y);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.ld-done{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#777;font-size:13px}
+.ld-done b{color:#bbb;font-size:17px}
+
+/* 我的页 */
+#sc-mine{background:#0d0d0d;overflow-y:auto}
+#sc-mine::-webkit-scrollbar{width:0}
+.mine-top{padding:46px 16px 14px;display:flex;gap:12px;align-items:center}
+.ava{width:56px;height:56px;border-radius:12px;background:linear-gradient(150deg,#6b5a46,#3a3029)}
+.mine-id{font-size:13px;color:#ddd;line-height:1.7}
+.mine-id small{color:#8a8a8a;font-size:12px}
+.bal{margin:0 16px 12px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,#3b3416,#1c1a10);border:1px solid #3d3820}
+.bal .k{font-size:12px;color:#a8a28a}
+.bal .v{font-size:22px;color:var(--gold);font-weight:700;margin-top:2px}
+.mlist{margin:0 16px;background:#1a1a1a;border-radius:12px;overflow:hidden}
+.mrow{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid #262626;font-size:14px;color:#e2e2e2;cursor:default}
+.mrow:last-child{border-bottom:none}
+.mrow .r{color:#666;font-size:14px}
+.mrow .ic{width:22px;display:inline-block;color:#9a9a9a;margin-right:10px;text-align:center}
+.mrow.fb{cursor:pointer;background:#22201a;outline:1px dashed #6b5a1c;outline-offset:-1px}
+.mrow.fb .ic{color:var(--y)}
+.newtag{font-size:10px;color:#1a1a1a;background:var(--y);border-radius:8px;padding:1px 6px;margin-left:6px;font-weight:700;vertical-align:1px}
+.tabbar{position:sticky;bottom:0;margin-top:18px;height:62px;background:#262626;border-top:1px solid #333;display:flex;justify-content:space-around;align-items:center;font-size:12px;color:#aaa}
+.tabbar .on{color:var(--gold);font-weight:600}
+
+/* 未显示入口说明 */
+.noentry{display:none;margin:0 20px 34px;text-align:center;color:#666;font-size:12px;border:1px dashed #333;border-radius:8px;padding:10px}
+
+/* 遮罩 + 底部浮层 */
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.55);display:none;z-index:10}
+.mask.on{display:block}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--sheet);border-radius:20px 20px 0 0;padding:10px 16px 22px;z-index:11;transform:translateY(105%);transition:transform .25s ease;max-height:92%;overflow-y:auto}
+.sheet::-webkit-scrollbar{width:0}
+.sheet.on{transform:translateY(0)}
+.grab{width:40px;height:4px;border-radius:2px;background:#5a5650;margin:0 auto 14px}
+.sh-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sh-hd h2{margin:0;font-size:20px;color:#fff;font-weight:700}
+.sh-x{font-size:24px;color:#bbb;cursor:pointer;line-height:1;padding:2px 4px}
+.q{font-size:15px;color:#fff;font-weight:600}
+.q-sub{font-size:12px;color:var(--t3);margin:3px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--chip);border:1px solid var(--chipline);color:#fff;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;user-select:none}
+.chip.on{background:var(--y);border-color:var(--y);color:#1a1a1a}
+.chip .ck{display:none;font-size:12px}
+.chip.on .ck{display:inline}
+.cs{display:none;margin-top:12px;background:#3a372f;border-radius:10px;padding:10px 12px;align-items:center;justify-content:space-between;gap:10px}
+.cs.on{display:flex}
+.cs .t{font-size:12.5px;color:#e6e1d6;line-height:1.5}
+.cs .b{flex-shrink:0;border:1px solid var(--y);color:var(--y);border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+.fld{margin-top:16px}
+.fld-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.fld-hd .n{font-size:13.5px;color:#fff;font-weight:600}
+.fld-hd .c{font-size:12px;color:var(--t3)}
+.ta,.ip{width:100%;background:#211f1c;border:1px solid var(--line);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;padding:11px 12px;outline:none}
+.ta{height:84px;resize:none}
+.ta::placeholder,.ip::placeholder{color:#7d786f}
+.ta:focus,.ip:focus{border-color:#77705f}
+.ip.err{border-color:#e5484d}
+.reward{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(90deg,#4a3d12,#3a3424);border:1px solid #6b5a1c;border-radius:10px;padding:9px 12px;margin:-4px 0 16px;font-size:12.5px;color:#f1e6c2;line-height:1.55}
+.reward b{color:var(--y)}
+.rw-ic{flex-shrink:0;font-size:15px;line-height:1.3}
+.imgs{display:flex;gap:8px;flex-wrap:wrap}
+.img-it,.img-add{width:72px;height:72px;border-radius:10px;position:relative;flex-shrink:0}
+.img-it img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
+.img-it .del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#000;border:1px solid #666;color:#fff;font-size:12px;line-height:18px;text-align:center;cursor:pointer}
+.img-add{border:1px dashed #6b665d;background:#211f1c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9a958c;font-size:11px;cursor:pointer;gap:2px}
+.img-add i{font-style:normal;font-size:24px;line-height:1;color:#bdb8b0}
+.img-tip{font-size:11.5px;color:var(--t3);margin-top:6px}
+.err-t{display:none;color:#ff6b6b;font-size:12px;margin-top:6px}
+.err-t.on{display:block}
+.sub{margin-top:18px;width:100%;height:46px;border:none;border-radius:12px;background:var(--y);color:#1a1a1a;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+.sub:disabled{background:#5a5546;color:#8f8a7c;cursor:not-allowed}
+/* 成功 */
+.ok-wrap{display:none;text-align:center;padding:8px 6px 4px}
+.ok-ic{width:56px;height:56px;border-radius:50%;background:var(--y);margin:6px auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#1a1a1a;font-weight:700}
+.ok-t{font-size:19px;color:#fff;font-weight:700;margin-bottom:6px}
+.ok-s{font-size:13px;color:var(--t2);margin-bottom:20px}
+
+/* toast */
+.ftoast{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;z-index:30;display:none;max-width:78%;text-align:center;line-height:1.5}
+.ftoast.on{display:block}
+
+/* 右侧：提交数据 */
+.data{width:340px;background:#242426;border:1px solid #333;border-radius:12px;padding:16px 18px;font-size:12.5px}
+.data h3{margin:0 0 4px;font-size:14px;color:#fff;font-weight:600}
+.data .d{color:#8d8d8d;font-size:12px;margin-bottom:12px;line-height:1.7}
+.data table{width:100%;border-collapse:collapse}
+.data td{border-bottom:1px solid #333;padding:7px 4px;vertical-align:top;color:#ddd;line-height:1.5;word-break:break-all}
+.data td:first-child{color:#9a9a9a;width:96px;white-space:nowrap}
+.data .grp td{color:var(--y);font-weight:600;padding-top:12px;border-bottom:1px solid #444}
+.data .empty{color:#666;text-align:center;padding:30px 0}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <h1>用户反馈收集 · H5 前台原型</h1>
+  <p>两个入口：<b style="color:#F5C542">游戏加载页</b>底部文字链、<b style="color:#F5C542">「我的」页</b>「意见反馈」菜单，打开同一个反馈浮层。左侧切换演示条件，右侧显示本次提交后后台可见的数据。</p>
+</div>
+
+<div class="rail">
+  <!-- 演示控制面板（仅原型演示用） -->
+  <div class="panel">
+    <h3>演示条件</h3>
+    <div class="grp"><div class="lb">入口页面</div>
+      <div class="seg" id="seg-page"><button class="on" data-v="loading">游戏加载页</button><button data-v="mine">「我的」页</button></div></div>
+    <div class="grp"><div class="lb">登录状态</div>
+      <div class="seg" id="seg-login"><button class="on" data-v="1">已登录</button><button data-v="0">未登录（游客）</button></div></div>
+    <div class="grp"><div class="lb">商户后台「意见反馈功能」开关</div>
+      <div class="seg" id="seg-sw"><button class="on" data-v="1">开启</button><button data-v="0">关闭</button></div></div>
+    <div class="grp"><div class="lb">该会员今日已提交条数（上限 3）</div>
+      <div class="seg" id="seg-cnt"><button class="on" data-v="0">0</button><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="grp"><div class="lb">接口返回</div>
+      <div class="seg" id="seg-net"><button class="on" data-v="ok">正常</button><button data-v="fail">提交失败</button></div></div>
+    <div class="tip">
+      <b>入口显示条件</b>：已登录 且 商户开关开启，两个入口同时显示或同时隐藏。<br>
+      <b>提交按钮</b>：至少选 1 个类型才可点击。<br>
+      <b>每日上限</b>：入口不隐藏；达到 3 条后点「提交」提示已达上限，浮层保持打开，已填内容保留。<br>
+      <b>联系客服提示</b>：选中的类型中有开启「提示联系客服」的（默认仅「充值或提款」），在类型下方显示提示条。<br>
+      <b>反馈类型</b>：由总控后台统一配置，按排序显示已启用的类型。
+    </div>
+  </div>
+
+  <!-- 手机 -->
+  <div class="phone" id="phone">
+    <!-- 游戏加载页 -->
+    <div class="screen on" id="sc-loading">
+      <div class="menu-btn"><i>▦</i>菜单</div>
+      <div class="ld-center" id="ld-center">
+        <div class="ld-text">加载中……</div>
+        <div class="ld-bar"><i></i></div>
+      </div>
+      <div class="ld-foot" id="ld-foot">
+        <div class="s">我们想打造世界上最好的游戏。</div>
+        <div class="rw">🎁 建议被采纳最高奖励 R$ 88</div>
+        <div class="lk" onclick="openSheet('loading')">有什么可以改进的？告诉我们 →</div>
+      </div>
+      <div class="noentry" id="noentry-loading">（当前条件下不显示反馈入口）</div>
+    </div>
+
+    <!-- 我的页 -->
+    <div class="screen" id="sc-mine">
+      <div class="mine-top"><div class="ava"></div><div class="mine-id">ID: 26894081<br><small>账号: 11912311111</small></div></div>
+      <div class="bal"><div class="k">账户余额</div><div class="v">13.036,24 R$</div></div>
+      <div class="mlist">
+        <div class="mrow"><span><span class="ic">▤</span>报表</span><span class="r">›</span></div>
+        <div class="mrow"><span><span class="ic">✉</span>邀请</span><span class="r">›</span></div>
+        <div class="mrow"><span><span class="ic">$</span>兑换码</span><span class="r">›</span></div>
+        <div class="mrow"><span><span class="ic">☏</span>客服</span><span class="r">›</span></div>
+        <div class="mrow fb" id="mine-fb" onclick="openSheet('mine')"><span><span class="ic">✎</span>意见反馈<span class="newtag">新增</span></span><span class="r">›</span></div>
+        <div class="mrow"><span><span class="ic">⛨</span>安全中心</span><span class="r">›</span></div>
+        <div class="mrow"><span><span class="ic">文</span>语言变更</span><span class="r">›</span></div>
+        <div class="mrow"><span><span class="ic">⏻</span>退出</span><span class="r">›</span></div>
+      </div>
+      <div class="tabbar"><span>首页</span><span>活动</span><span>充值</span><span>VIP</span><span class="on">我的</span></div>
+    </div>
+
+    <!-- 浮层 -->
+    <div class="mask" id="mask" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet">
+      <div class="grab"></div>
+      <div id="form-wrap">
+        <div class="sh-hd"><h2>帮助我们改进</h2><span class="sh-x" onclick="closeSheet()">✕</span></div>
+        <div class="reward"><span class="rw-ic">🎁</span><span>您的反馈或建议如被平台采纳，最高可获得 <b>R$ 88</b> 奖励，诚挚欢迎您的反馈！</span></div>
+        <div class="q">我们可以改进什么？</div>
+        <div class="q-sub">可多选</div>
+        <div class="chips" id="chips"></div>
+        <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')">联系客服</div></div>
+        <div class="fld">
+          <div class="fld-hd"><span class="n">补充说明（选填）</span><span class="c"><span id="ta-n">0</span>/300</span></div>
+          <textarea class="ta" id="ta" maxlength="300" placeholder="想说的话，可以写在这里……" oninput="document.getElementById('ta-n').textContent=this.value.length"></textarea>
+        </div>
+        <div class="fld">
+          <div class="fld-hd"><span class="n">上传图片（选填）</span><span class="c"><span id="img-n">0</span>/3</span></div>
+          <div class="imgs" id="imgs"></div>
+          <div class="img-tip">支持 JPG、PNG，单张不超过 5MB</div>
+          <input type="file" id="img-in" accept="image/jpeg,image/png" multiple style="display:none" onchange="pickImgs(this)">
+        </div>
+        <div class="fld">
+          <div class="fld-hd"><span class="n">联系方式（选填）</span></div>
+          <input class="ip" id="ip" placeholder="WhatsApp 或邮箱" maxlength="64" oninput="clearErr()">
+          <div class="err-t" id="ip-err">请输入正确的 WhatsApp 号码或邮箱</div>
+        </div>
+        <button class="sub" id="sub" disabled onclick="submitFb()">提交</button>
+      </div>
+      <div class="ok-wrap" id="ok-wrap">
+        <div class="ok-ic">✓</div>
+        <div class="ok-t">谢谢！</div>
+        <div class="ok-s">你的意见能帮助我们做得更好。</div>
+        <button class="sub" style="margin-top:0" id="ok-btn" onclick="closeSheet()">返回游戏</button>
+      </div>
+    </div>
+    <div class="ftoast" id="ftoast"></div>
+  </div>
+
+  <!-- 提交数据 -->
+  <div class="data">
+    <h3>本次提交数据（后台可见）</h3>
+    <div class="d">提交成功后生成一条反馈记录，进入本商户「用户反馈」列表，总控「会员反馈管理」同步可见。自动附带信息由系统采集，用户不可见、不可改。</div>
+    <div id="data-body"><div class="empty">尚未提交</div></div>
+  </div>
+</div>
+
+<script>
+// 反馈类型：来自总控后台「反馈类型配置」（已启用，按排序）
+var TYPES=[
+  {id:1,name:'游戏太少',cs:false},
+  {id:2,name:'游戏卡顿或加载慢',cs:false},
+  {id:3,name:'很难找到游戏',cs:false},
+  {id:4,name:'活动与彩金',cs:false},
+  {id:5,name:'充值或提款',cs:true},
+  {id:6,name:'客服',cs:false},
+  {id:7,name:'其他',cs:false}
+];
+var S={page:'loading',login:'1',sw:'1',cnt:0,net:'ok',src:'loading',sel:[],imgs:[]};
+var seq=10086;
+
+function bindSeg(id,key,cb){
+  document.querySelectorAll('#'+id+' button').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('#'+id+' button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on'); S[key]=key==='cnt'?parseInt(b.dataset.v,10):b.dataset.v; cb&&cb();
+    };
+  });
+}
+bindSeg('seg-page','page',render);
+bindSeg('seg-login','login',render);
+bindSeg('seg-sw','sw',render);
+bindSeg('seg-cnt','cnt');
+bindSeg('seg-net','net');
+
+function entryVisible(){return S.login==='1'&&S.sw==='1'}
+function render(){
+  closeSheet(true);
+  document.getElementById('sc-loading').classList.toggle('on',S.page==='loading');
+  document.getElementById('sc-mine').classList.toggle('on',S.page==='mine');
+  var v=entryVisible();
+  document.getElementById('ld-foot').style.display=v?'block':'none';
+  document.getElementById('noentry-loading').style.display=v?'none':'block';
+  document.getElementById('mine-fb').style.display=v?'flex':'none';
+}
+
+function renderChips(){
+  document.getElementById('chips').innerHTML=TYPES.map(function(t){
+    var on=S.sel.indexOf(t.id)>-1;
+    return '<span class="chip'+(on?' on':'')+'" onclick="toggleChip('+t.id+')"><span class="ck">✓</span>'+t.name+'</span>';
+  }).join('');
+  var csNames=TYPES.filter(function(t){return t.cs&&S.sel.indexOf(t.id)>-1}).map(function(t){return '「'+t.name+'」'});
+  var cs=document.getElementById('cs');
+  if(csNames.length){document.getElementById('cs-t').textContent='现在需要'+csNames.join('、')+'方面的帮助吗？';cs.classList.add('on')}
+  else cs.classList.remove('on');
+  document.getElementById('sub').disabled=S.sel.length===0;
+}
+function toggleChip(id){
+  var i=S.sel.indexOf(id); if(i>-1)S.sel.splice(i,1); else S.sel.push(id); renderChips();
+}
+function openSheet(src){
+  S.src=src; S.sel=[];
+  document.getElementById('ta').value=''; document.getElementById('ta-n').textContent='0';
+  document.getElementById('ip').value=''; clearErr(); S.imgs=[]; renderImgs();
+  document.getElementById('form-wrap').style.display='block';
+  document.getElementById('ok-wrap').style.display='none';
+  document.getElementById('ok-btn').textContent=src==='loading'?'返回游戏':'完成';
+  renderChips();
+  document.getElementById('mask').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+}
+function closeSheet(){
+  document.getElementById('mask').classList.remove('on');
+  document.getElementById('sheet').classList.remove('on');
+}
+// 上传图片：点击「+」调起系统相册（input type=file），最多 3 张，JPG/PNG，单张 ≤ 5MB
+var IMG_MAX=3, IMG_SIZE=5*1024*1024;
+function renderImgs(){
+  var h=S.imgs.map(function(src,i){return '<div class="img-it"><img src="'+src+'"><span class="del" onclick="delImg('+i+')">✕</span></div>'}).join('');
+  if(S.imgs.length<IMG_MAX) h+='<div class="img-add" onclick="document.getElementById(\'img-in\').click()"><i>+</i>添加图片</div>';
+  document.getElementById('imgs').innerHTML=h;
+  document.getElementById('img-n').textContent=S.imgs.length;
+}
+function delImg(i){S.imgs.splice(i,1);renderImgs()}
+function pickImgs(inp){
+  var files=[].slice.call(inp.files), left=IMG_MAX-S.imgs.length, msg='';
+  if(files.length>left){msg='最多上传 3 张图片';files=files.slice(0,left)}
+  files.forEach(function(f){
+    if(!/^image\/(jpeg|png)$/.test(f.type)){msg='仅支持 JPG、PNG 格式图片';return}
+    if(f.size>IMG_SIZE){msg='图片大小不得超过 5MB';return}
+    var r=new FileReader(); r.onload=function(){S.imgs.push(r.result);renderImgs()}; r.readAsDataURL(f);
+  });
+  if(msg) ftoast(msg);
+  inp.value='';
+}
+function clearErr(){document.getElementById('ip').classList.remove('err');document.getElementById('ip-err').classList.remove('on')}
+function validContact(v){
+  if(!v) return true;
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return true;
+  var d=v.replace(/[\s\-()+]/g,'');
+  return /^\d{10,13}$/.test(d);
+}
+function ftoast(m){var t=document.getElementById('ftoast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},2200)}
+function pad(n){return n<10?'0'+n:n}
+function now(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
+
+function submitFb(){
+  if(!S.sel.length) return;
+  var ip=document.getElementById('ip').value.trim();
+  if(!validContact(ip)){document.getElementById('ip').classList.add('err');document.getElementById('ip-err').classList.add('on');return}
+  if(S.cnt>=3){ftoast('今天的反馈次数已达上限，请明天再来');return}
+  if(S.net==='fail'){ftoast('提交失败，请稍后重试');return}
+  S.cnt++;
+  document.querySelectorAll('#seg-cnt button').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.v,10)===S.cnt)});
+  showData(ip);
+  document.getElementById('form-wrap').style.display='none';
+  document.getElementById('ok-wrap').style.display='block';
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function showData(ip){
+  var names=TYPES.filter(function(t){return S.sel.indexOf(t.id)>-1}).map(function(t){return t.name}).join('、');
+  var txt=document.getElementById('ta').value.trim();
+  var rows=[
+    ['grp','用户填写'],
+    ['反馈类型',names],['补充说明',txt||'-'],['图片',S.imgs.length?S.imgs.length+' 张':'-'],['联系方式',ip||'-'],
+    ['grp','系统记录'],
+    ['反馈ID','FB'+(++seq)],['提交时间',now()],['商户','888'],['会员ID','26894081'],['会员账号','11912311111'],['VIP 等级','VIP24'],
+    ['grp','自动附带信息'],
+    ['来源入口',S.src==='loading'?'游戏加载页':'「我的」页'],
+    ['游戏名称',S.src==='loading'?'Fortune Tiger':'-'],
+    ['游戏厂商',S.src==='loading'?'PG':'-'],
+    ['终端','H5'],['设备系统','Android 14'],['浏览器','Chrome 130'],['IP','177.xx.xx.24'],
+    ['grp','处理信息（初始）'],
+    ['处理状态','待处理'],['处理人','-'],['处理时间','-'],['处理备注','-']
+  ];
+  document.getElementById('data-body').innerHTML='<table>'+rows.map(function(r){
+    return r[0]==='grp'?'<tr class="grp"><td colspan="2">'+r[1]+'</td></tr>':'<tr><td>'+r[0]+'</td><td>'+esc(r[1])+'</td></tr>';
+  }).join('')+'</table>';
+}
+render();
+</script>
+</body>
+</html>

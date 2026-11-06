@@ -2433,7 +2433,7 @@ select.fs.ph{color:#bfbfbf}
         <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出任务已创建，请到「报表查询 / 导出页面」下载')">导 出</button></div>
         <div class="table-wrap"><div class="table-scroll">
           <table>
-            <thead><tr><th>反馈ID</th><th>提交时间</th><th>会员ID</th><th>会员账号</th><th>VIP等级</th><th style="min-width:150px">反馈类型</th><th style="min-width:220px">补充说明</th><th>联系方式</th><th>来源入口</th><th>游戏</th><th>处理状态</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead>
+            <thead><tr><th>反馈ID</th><th>提交时间</th><th>会员ID</th><th>会员账号</th><th>VIP等级</th><th style="min-width:150px">反馈类型</th><th style="min-width:220px">补充说明</th><th>图片</th><th>联系方式</th><th>来源入口</th><th>游戏</th><th>处理状态</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead>
             <tbody id="ufb-tbody"></tbody>
           </table>
         </div></div>
@@ -4885,6 +4885,12 @@ select.fs.ph{color:#bfbfbf}
 .ufb-st.s1{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
 .ufb-st.s2{background:#f5f5f5;color:#8c8c8c;border:1px solid #d9d9d9}
 .ufb-lk{color:#0961BD;cursor:pointer;margin-right:10px}
+.ufb-th{display:inline-block;width:32px;height:32px;border-radius:4px;border:1px solid #e8e8e8;object-fit:cover;cursor:zoom-in;margin-right:4px;vertical-align:middle}
+.ufb-th.lg{width:72px;height:72px;margin-right:8px}
+.ufb-lb{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:2100;display:none;align-items:center;justify-content:center}
+.ufb-lb.show{display:flex}
+.ufb-lb img{max-width:80vw;max-height:84vh;border-radius:6px;box-shadow:0 12px 44px rgba(0,0,0,.55)}
+.ufb-lb-x{position:absolute;top:22px;right:28px;color:#fff;font-size:30px;cursor:pointer;line-height:1}
 .ufb-help{font-size:12px;color:#8c8c8c;line-height:1.7;margin-top:4px}
 .ufb-tlist{display:flex;flex-wrap:wrap;gap:6px;padding-top:5px}
 .ufb-tlist .cs{color:#d46b08;font-size:11px;margin-left:3px}
@@ -4924,6 +4930,9 @@ select.fs.ph{color:#bfbfbf}
     <div class="mf"><button class="btn btn-white" onclick="closeM('m-ufb-detail')">取 消</button><button class="btn btn-blue" onclick="ufbSave()">保 存</button></div>
   </div>
 </div>
+
+<!-- 用户反馈：图片放大查看 -->
+<div class="ufb-lb" id="ufb-lb" onclick="this.classList.remove('show')"><span class="ufb-lb-x">×</span><img id="ufb-lb-img" alt=""></div>
 
 <!-- ══════ 图片预览灯箱 ══════ -->
 <div class="an-lb" id="an-lightbox" onclick="closeAnLb()">
@@ -9366,13 +9375,19 @@ function rtLinkSave(){
   var ST=['待处理','已处理','无需处理'];
   var U_ME='admin001';
   var UFB=[
-    {id:'FB10093',t:'2026-11-04 14:22:18',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[2],txt:'Fortune Tiger 每次进去都要转好久，转完还经常卡住。',ct:'11987654321',src:'游戏加载页',game:'Fortune Tiger',vd:'PG',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
-    {id:'FB10092',t:'2026-11-04 13:05:41',mid:'26890317',acc:'21988120034',vip:'VIP3',tp:[5,6],txt:'提款两个小时还没到账，客服一直没回复。',ct:'',src:'「我的」页',game:'',vd:'',term:'App',os:'iOS 17.5',br:'WebView',ip:'189.4.77.102',st:1,log:[{t:'2026-11-04 13:40:02',op:'admin001',st:1,rm:'已转财务核实，订单已出款'}]},
+    {im:2,id:'FB10093',t:'2026-11-04 14:22:18',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[2],txt:'Fortune Tiger 每次进去都要转好久，转完还经常卡住。',ct:'11987654321',src:'游戏加载页',game:'Fortune Tiger',vd:'PG',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
+    {im:1,id:'FB10092',t:'2026-11-04 13:05:41',mid:'26890317',acc:'21988120034',vip:'VIP3',tp:[5,6],txt:'提款两个小时还没到账，客服一直没回复。',ct:'',src:'「我的」页',game:'',vd:'',term:'App',os:'iOS 17.5',br:'WebView',ip:'189.4.77.102',st:1,log:[{t:'2026-11-04 13:40:02',op:'admin001',st:1,rm:'已转财务核实，订单已出款'}]},
     {id:'FB10091',t:'2026-11-04 11:47:09',mid:'26881552',acc:'31977004512',vip:'VIP8',tp:[1,3],txt:'',ct:'joao.silva@gmail.com',src:'游戏加载页',game:'Aviator',vd:'Spribe',term:'H5',os:'Android 13',br:'Samsung Internet 24',ip:'200.150.9.31',st:0,log:[]},
     {id:'FB10090',t:'2026-11-03 22:16:55',mid:'26870021',acc:'11955550198',vip:'VIP1',tp:[4],txt:'希望多一些每日签到类活动，彩金门槛太高了。',ct:'',src:'「我的」页',game:'',vd:'',term:'H5',os:'Android 12',br:'Chrome 129',ip:'177.89.2.140',st:2,log:[{t:'2026-11-04 10:02:11',op:'admin002',st:2,rm:'运营类建议，已汇总至周报'}]},
-    {id:'FB10089',t:'2026-11-03 20:31:07',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[8],txt:'游戏图标有的显示不出来。',ct:'',src:'游戏加载页',game:'Gates of Olympus',vd:'PP',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
+    {im:3,id:'FB10089',t:'2026-11-03 20:31:07',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[8],txt:'游戏图标有的显示不出来。',ct:'',src:'游戏加载页',game:'Gates of Olympus',vd:'PP',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
     {id:'FB10088',t:'2026-11-03 18:09:44',mid:'26855430',acc:'41966002233',vip:'VIP5',tp:[7],txt:'界面字有点小，老人看不清楚。',ct:'41966002233',src:'「我的」页',game:'',vd:'',term:'App',os:'Android 11',br:'WebView',ip:'187.21.60.8',st:0,log:[]}
   ];
+  // 示例图片（占位截图），im = 图片张数
+  function ph(n,c){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640"><rect width="360" height="640" fill="'+c+'"/><rect x="24" y="60" width="312" height="180" rx="12" fill="rgba(255,255,255,.25)"/><rect x="24" y="270" width="200" height="18" rx="9" fill="rgba(255,255,255,.35)"/><rect x="24" y="304" width="260" height="18" rx="9" fill="rgba(255,255,255,.25)"/><text x="180" y="560" font-size="28" text-anchor="middle" fill="#fff" font-family="sans-serif">用户截图 '+n+'</text></svg>')}
+  var PH_C=['#3b5b8c','#7a4b2a','#2f6b4f'];
+  UFB.forEach(function(r){r.imgs=[];for(var i=0;i<(r.im||0);i++) r.imgs.push(ph(i+1,PH_C[i%3]))});
+  function imgHtml(r,lg){return r.imgs.length?r.imgs.map(function(s,i){return '<img class="ufb-th'+(lg?' lg':'')+'" src="'+s+'" onclick="ufbLb(\''+r.id+'\','+i+')">'}).join(''):'-'}
+  window.ufbLb=function(id,i){var r=UFB.filter(function(x){return x.id===id})[0];document.getElementById('ufb-lb-img').src=r.imgs[i];document.getElementById('ufb-lb').classList.add('show')};
   var cur=null, qst='';
   function tname(id){var t=UFB_TYPES.filter(function(x){return x.id===id})[0];return t?t:{name:'-',on:false}}
   function tpHtml(ids){return ids.map(function(id){var t=tname(id);return '<span class="ufb-tp'+(t.on?'':' off')+'">'+t.name+(t.on?'':'（已停用）')+'</span>'}).join('')}
@@ -9387,17 +9402,17 @@ function rtLinkSave(){
     sel.innerHTML='<option value="">全部</option>'+UFB_TYPES.map(function(t){return '<option value="'+t.id+'">'+t.name+(t.on?'':'（已停用）')+'</option>'}).join('');
     document.getElementById('ufb-tlist').innerHTML=UFB_TYPES.filter(function(t){return t.on}).map(function(t){return '<span class="ufb-tp">'+t.name+(t.cs?'<span class="cs">· 提示联系客服</span>':'')+'</span>'}).join('');
   }
-  function renderQtags(){
-    var c=[0,0,0]; UFB.forEach(function(r){c[r.st]++});
-    var items=[['','全部（'+UFB.length+'）']].concat(ST.map(function(s,i){return [String(i),s+'（'+c[i]+'）']}));
+  function renderQtags(base){
+    var c=[0,0,0]; base.forEach(function(r){c[r.st]++});
+    var items=[['','全部（'+base.length+'）']].concat(ST.map(function(s,i){return [String(i),s+'（'+c[i]+'）']}));
     document.getElementById('ufb-qtags').innerHTML=items.map(function(it){return '<span class="tag'+(qst===it[0]?' active':'')+'" onclick="ufbQ(\''+it[0]+'\')">'+it[1]+'</span>'}).join('');
   }
   window.ufbQ=function(s){qst=s;ufbRender()};
   window.ufbRender=function(){
-    initFilters(); renderQtags();
+    initFilters();
     var kt=v('ufb-f-kt'),kw=v('ufb-f-kw').trim(),tp=v('ufb-f-type'),src=v('ufb-f-src'),gm=v('ufb-f-game').trim().toLowerCase(),ct=v('ufb-f-ct'),fs=v('ufb-f-s'),fe=v('ufb-f-e');
-    var rows=UFB.filter(function(r){
-      if(qst!==''&&String(r.st)!==qst) return false;
+    // 处理状态标签上的条数 = 其他筛选条件下各状态的条数
+    var base=UFB.filter(function(r){
       if(kw&&(kt==='mid'?r.mid:r.acc)!==kw) return false;
       if(tp&&r.tp.indexOf(parseInt(tp,10))<0) return false;
       if(src&&r.src!==src) return false;
@@ -9406,14 +9421,16 @@ function rtLinkSave(){
       var d=r.t.slice(0,10); if(fs&&d<fs) return false; if(fe&&d>fe) return false;
       return true;
     });
+    renderQtags(base);
+    var rows=base.filter(function(r){return qst===''||String(r.st)===qst});
     document.getElementById('ufb-cnt').textContent=rows.length;
     document.getElementById('ufb-tbody').innerHTML=rows.length?rows.map(function(r){
       var l=last(r);
       return '<tr><td>'+r.id+'</td><td>'+r.t+'</td><td>'+r.mid+'</td><td>'+r.acc+'</td><td>'+r.vip+'</td><td>'+tpHtml(r.tp)+'</td>'
-        +'<td class="ufb-txt" title="'+e(r.txt)+'">'+(r.txt?e(r.txt):'-')+'</td><td>'+(r.ct?e(r.ct):'-')+'</td><td>'+r.src+'</td>'
+        +'<td class="ufb-txt" title="'+e(r.txt)+'">'+(r.txt?e(r.txt):'-')+'</td><td>'+imgHtml(r)+'</td><td>'+(r.ct?e(r.ct):'-')+'</td><td>'+r.src+'</td>'
         +'<td>'+(r.game?e(r.game)+'<br><span style="color:#8c8c8c">'+e(r.vd)+'</span>':'-')+'</td><td>'+stHtml(r.st)+'</td>'
         +'<td>'+(l?l.op:'-')+'</td><td>'+(l?l.t:'-')+'</td><td><span class="ufb-lk" onclick="ufbOpen(\''+r.id+'\')">详情/处理</span></td></tr>';
-    }).join(''):'<tr><td colspan="14" style="text-align:center;color:#bfbfbf;padding:40px">暂无数据</td></tr>';
+    }).join(''):'<tr><td colspan="15" style="text-align:center;color:#bfbfbf;padding:40px">暂无数据</td></tr>';
   };
   window.ufbReset=function(){
     ['ufb-f-kw','ufb-f-game','ufb-f-s','ufb-f-e'].forEach(function(id){document.getElementById(id).value=''});
@@ -9431,7 +9448,7 @@ function rtLinkSave(){
     var kv=function(rows){return rows.map(function(x){return '<tr><td class="k">'+x[0]+'</td><td>'+x[1]+'</td></tr>'}).join('')};
     document.getElementById('ufb-d-fb').innerHTML=kv([
       ['反馈ID',cur.id],['提交时间',cur.t],['反馈类型',tpHtml(cur.tp)],
-      ['补充说明',cur.txt?e(cur.txt):'-'],['联系方式',cur.ct?e(cur.ct):'-']]);
+      ['补充说明',cur.txt?e(cur.txt):'-'],['图片',imgHtml(cur,1)],['联系方式',cur.ct?e(cur.ct):'-']]);
     document.getElementById('ufb-d-env').innerHTML=kv([
       ['会员ID',cur.mid],['会员账号',cur.acc],['VIP等级',cur.vip],['来源入口',cur.src],
       ['游戏',cur.game?e(cur.game)+'（'+e(cur.vd)+'）':'-'],['终端',cur.term],['设备系统',cur.os],['浏览器',e(cur.br)],['IP',cur.ip]]);

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DD.GG Admin - 用户反馈（总控）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f0f2f5;color:#333;font-size:13px;display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:210px;background:#0b1f33;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-logo{padding:16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-box{width:30px;height:30px;background:#e8a33d;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:12px;flex-shrink:0}
+.logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:.5px}
+.menu-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;color:rgba(255,255,255,.7);font-size:13px;transition:all .2s;user-select:none}
+.menu-item:hover{color:#fff;background:rgba(255,255,255,.06)}
+.menu-item.open{color:#fff}
+.menu-item-left{display:flex;align-items:center;gap:9px}
+.menu-icon{font-size:14px;width:16px;text-align:center}
+.arrow{font-size:10px;color:rgba(255,255,255,.35);transition:transform .2s}
+.menu-item.open .arrow{transform:rotate(90deg)}
+.submenu{background:#071626}
+.submenu-item{padding:10px 16px 10px 41px;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;transition:all .2s}
+.submenu-item:hover{color:#fff;background:rgba(255,255,255,.04)}
+.submenu-item.active{color:#fff;background:#2f80ed;border-left:3px solid #4d94ff}
+.submenu-item.disabled{color:rgba(255,255,255,.28);cursor:not-allowed}
+.submenu-item.disabled:hover{background:none;color:rgba(255,255,255,.28)}
+.submenu-item .nw{font-size:10px;background:#e8a33d;color:#fff;border-radius:8px;padding:0 5px;margin-left:5px}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{height:48px;background:#fff;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}
+.breadcrumb{font-size:13px;color:#8c8c8c;display:flex;align-items:center;gap:6px}
+.breadcrumb .cur{color:#262626;font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:14px;font-size:15px;color:#8c8c8c}
+.tab-bar{display:flex;gap:2px;background:#fff;padding:8px 16px 0 16px;border-bottom:1px solid #e8e8e8}
+.tab{padding:7px 16px;font-size:13px;color:#595959;cursor:pointer;background:#fafafa;border:1px solid #e8e8e8;border-bottom:none;border-radius:4px 4px 0 0;display:flex;align-items:center;gap:8px}
+.tab.active{color:#2f80ed;background:#fff;font-weight:500;position:relative;top:1px}
+.content{flex:1;overflow-y:auto;padding:20px}
+.ptabs{display:flex;gap:28px;background:#fff;padding:0 24px;border-radius:6px;border:1px solid #f0f0f0;margin-bottom:14px}
+.ptab{padding:12px 0;cursor:pointer;color:#595959;font-size:14px;border-bottom:2px solid transparent;user-select:none}
+.ptab:hover{color:#2f80ed}
+.ptab.active{color:#2f80ed;border-bottom-color:#2f80ed;font-weight:500}
+.page{display:none}
+.page.on{display:block}
+
+/* ── FILTER ── */
+.filter-area{background:#fff;padding:20px 26px;border-radius:6px;margin-bottom:14px;border:1px solid #f0f0f0}
+.filter-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.filter-item{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.filter-label{color:#595959;font-size:13px}
+.f-select,.f-input{height:34px;border:1px solid #d9d9d9;border-radius:4px;padding:0 12px;font-size:13px;color:#333;background:#fff;min-width:150px;outline:none}
+.f-select{cursor:pointer}
+.f-select:focus,.f-input:focus{border-color:#2f80ed;box-shadow:0 0 0 2px rgba(31,95,214,.1)}
+.f-input.err{border-color:#f5484a}
+
+/* ── BUTTONS ── */
+.btn{height:34px;padding:0 18px;border-radius:4px;font-size:13px;cursor:pointer;border:1px solid transparent;transition:all .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-family:inherit}
+.btn-blue{background:#2f80ed;color:#fff;border-color:#2f80ed}
+.btn-blue:hover{background:#5296ff}
+.btn-white{background:#fff;color:#595959;border-color:#d9d9d9}
+.btn-white:hover{border-color:#2f80ed;color:#2f80ed}
+.action-bar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:14px;align-items:center}
+.action-bar .note{margin-right:auto;color:#8c8c8c;font-size:12px}
+.icon-btn{width:34px;height:34px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;color:#8c8c8c;cursor:pointer}
+
+/* ── TABLE ── */
+.table-wrap{background:#fff;border-radius:6px;border:1px solid #f0f0f0;overflow:hidden}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#fafafa;padding:14px 20px;text-align:center;font-weight:500;color:#595959;border-bottom:1px solid #f0f0f0;white-space:nowrap}
+td{padding:14px 20px;border-bottom:1px solid #f5f5f5;vertical-align:middle;color:#333;text-align:center}
+th:first-child,td:first-child{padding-left:28px}
+th:last-child,td:last-child{padding-right:28px}
+tr:hover td{background:#fafcff}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;background:#fff;border-top:1px solid #f0f0f0;font-size:12px;color:#8c8c8c}
+.st-tag{display:inline-block;padding:2px 10px;border-radius:3px;font-size:12px;font-weight:500}
+.st-tag.on{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.st-tag.off{background:#fff1f0;color:#cf1322;border:1px solid #ffa39e}
+.tgl{display:inline-block;width:50px;height:24px;border-radius:24px;background:#2f80ed;position:relative;cursor:pointer;vertical-align:middle;transition:background .2s;font-size:12px;color:#fff;line-height:24px;box-sizing:border-box;text-align:left;padding-left:9px}
+.tgl.off{background:#bfbfbf;text-align:right;padding-left:0;padding-right:9px}
+.tgl .k{position:absolute;top:2px;left:28px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.tgl.off .k{left:2px}
+.op-btn{display:inline-block;height:32px;line-height:30px;padding:0 18px;border-radius:5px;font-size:13px;cursor:pointer;border:1px solid;margin:0 5px;letter-spacing:1px;transition:all .15s}
+.op-btn.edit{background:#2f80ed;color:#fff;border-color:#2f80ed}
+.op-btn.edit:hover{background:#5296ff;border-color:#5296ff}
+.op-link{color:#2f80ed;cursor:pointer;font-size:13px;user-select:none}
+.op-link:hover{text-decoration:underline}
+
+/* 反馈列表 */
+.tp{display:inline-block;font-size:12px;line-height:20px;padding:0 7px;border-radius:4px;color:#2f80ed;background:#e6f4ff;border:1px solid #91caff;margin:1px 4px 1px 0;white-space:nowrap}
+.tp.off{color:#8c8c8c;background:#f5f5f5;border-color:#d9d9d9}
+.ps{display:inline-block;padding:1px 8px;border-radius:3px;font-size:12px;white-space:nowrap}
+.ps.s0{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
+.ps.s1{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
+.ps.s2{background:#f5f5f5;color:#8c8c8c;border:1px solid #d9d9d9}
+#pg-list th,#pg-list td{white-space:nowrap;padding:12px 14px}
+#pg-list td.txt{white-space:normal;min-width:200px;max-width:240px;text-align:left;line-height:1.5}
+
+/* 统计 */
+.cards{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:14px;margin-bottom:14px}
+.card{background:#fff;border:1px solid #f0f0f0;border-radius:6px;padding:16px 20px}
+.card .k{color:#8c8c8c;font-size:12px}
+.card .v{font-size:24px;font-weight:600;color:#262626;margin-top:6px}
+.card .h{font-size:12px;color:#8c8c8c;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.box{background:#fff;border:1px solid #f0f0f0;border-radius:6px;overflow:hidden}
+.box-h{padding:12px 20px;font-weight:600;color:#262626;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+.box-h small{font-weight:400;color:#8c8c8c;font-size:12px}
+.box td,.box th{padding:10px 16px}
+.bar{display:flex;align-items:center;gap:8px;justify-content:flex-start}
+.bar i{display:block;height:8px;border-radius:4px;background:#2f80ed;min-width:2px}
+.bar span{font-size:12px;color:#595959;white-space:nowrap}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.18);width:520px;max-height:90vh;display:flex;flex-direction:column}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #f0f0f0;flex-shrink:0}
+.mt{font-size:15px;font-weight:600;color:#262626}
+.mc{cursor:pointer;color:#8c8c8c;font-size:20px;line-height:1}
+.mb{padding:22px 28px 6px;overflow-y:auto}
+.mf{padding:16px 24px;border-top:1px solid #f0f0f0;display:flex;justify-content:center;gap:12px;flex-shrink:0}
+.fi{display:flex;align-items:flex-start;margin-bottom:18px}
+.fl{width:130px;flex-shrink:0;text-align:right;padding-right:12px;line-height:34px;color:#595959}
+.fl.req::before{content:'* ';color:#ff4d4f}
+.fc{flex:1;min-width:0}
+.fc .f-input{width:100%}
+.help{font-size:12px;color:#8c8c8c;margin-top:4px;line-height:1.6}
+.ferr{font-size:12px;color:#f5484a;margin-top:4px;display:none}
+.radio-g{display:flex;gap:18px;height:34px;align-items:center}
+.radio-g label{display:flex;align-items:center;gap:4px;cursor:pointer}
+.kv{width:100%;border-collapse:collapse;margin-bottom:16px}
+.kv td{border:1px solid #f0f0f0;padding:8px 12px;text-align:left;vertical-align:top}
+.kv td.k{width:110px;background:#fafafa;color:#595959;text-align:right}
+.kv tr:hover td{background:inherit}.kv tr:hover td.k{background:#fafafa}
+.sec{font-size:13px;font-weight:600;color:#262626;margin:4px 0 8px;padding-left:8px;border-left:3px solid #2f80ed}
+/* 站点多选 */
+.ms{position:relative;display:inline-block}
+.ms-btn{height:34px;border:1px solid #d9d9d9;border-radius:4px;padding:0 28px 0 12px;font-size:13px;color:#333;background:#fff;min-width:180px;line-height:32px;cursor:pointer;position:relative;user-select:none}
+.ms-btn::after{content:'▾';position:absolute;right:10px;color:#bfbfbf}
+.ms.open .ms-btn{border-color:#2f80ed}
+.ms-pop{display:none;position:absolute;top:38px;left:0;z-index:50;background:#fff;border:1px solid #e8e8e8;border-radius:4px;box-shadow:0 6px 16px rgba(0,0,0,.08);padding:6px 0;min-width:200px}
+.ms.open .ms-pop{display:block}
+.ms-pop label{display:flex;align-items:center;gap:6px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.ms-pop label:hover{background:#f5f8ff}
+.ms-pop label.all{border-bottom:1px solid #f0f0f0;margin-bottom:4px}
+.ro-note{font-size:12px;color:#8c8c8c;background:#fafafa;border:1px dashed #d9d9d9;border-radius:4px;padding:8px 12px;margin-bottom:12px}
+
+/* 图片 */
+.th{display:inline-block;width:32px;height:32px;border-radius:4px;border:1px solid #e8e8e8;object-fit:cover;cursor:zoom-in;margin-right:4px;vertical-align:middle}
+.th.lg{width:72px;height:72px;margin-right:8px}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:2100;display:none;align-items:center;justify-content:center}
+.lb.show{display:flex}
+.lb img{max-width:80vw;max-height:84vh;border-radius:6px;box-shadow:0 12px 44px rgba(0,0,0,.55)}
+.lb-x{position:absolute;top:22px;right:28px;color:#fff;font-size:30px;cursor:pointer;line-height:1}
+
+/* ── TOAST ── */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.15);border-radius:6px;padding:12px 20px;font-size:14px;z-index:2000;display:none;align-items:center;gap:8px}
+.toast.show{display:flex}
+.toast .ok{color:#52c41a;font-weight:700}
+.toast .no{color:#f5484a;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo"><div class="logo-box">DD</div><div class="logo-text">DD.GG Admin</div></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">🏠</span>站点厅主管理</div><span class="arrow">›</span></div>
+  <div class="menu-item open"><div class="menu-item-left"><span class="menu-icon">👥</span>站点会员管理</div><span class="arrow">›</span></div>
+  <div class="submenu">
+    <div class="submenu-item disabled">会员限红管理</div>
+    <div class="submenu-item disabled">会员水位管理</div>
+    <div class="submenu-item" id="si-fb" onclick="go('stat')">会员反馈管理<span class="nw">新</span></div>
+  </div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">✅</span>系统功能管理</div><span class="arrow">›</span></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">☰</span>站点功能管理</div><span class="arrow">›</span></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">🌐</span>站点域名管理</div><span class="arrow">›</span></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">🏟️</span>站点场馆管理</div><span class="arrow">›</span></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">💠</span>站点金流管理</div><span class="arrow">›</span></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">⚙️</span>总控系统管理</div><span class="arrow">›</span></div>
+  <div class="menu-item"><div class="menu-item-left"><span class="menu-icon">📊</span>总控报表管理</div><span class="arrow">›</span></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb"><span id="bc-p">站点会员管理</span> / <span class="cur" id="bc">会员反馈管理</span></div>
+    <div class="topbar-right"><span>🔍</span><span>🔔</span><span>🌐</span><span>👤</span></div>
+  </div>
+  <div class="tab-bar"><div class="tab active" id="tabname">会员反馈管理</div></div>
+  <div class="content">
+
+    <!-- 会员反馈管理：页内标签页 -->
+    <div class="ptabs" id="fb-tabs"><span class="ptab" id="pt-stat" onclick="go('stat')">反馈统计</span><span class="ptab" id="pt-list" onclick="go('list')">反馈列表</span><span class="ptab" id="pt-type" onclick="go('type')">反馈类型配置</span></div>
+
+    <!-- ===== 反馈类型配置 ===== -->
+    <div class="page" id="pg-type">
+      <div class="action-bar">
+        <span class="note">全部站点统一生效；前台按排序显示「启用」的类型，最多启用 10 个，至少启用 1 个。类型不可删除，停用后前台不再显示，历史反馈保留原名称。</span>
+        <button class="btn btn-blue" onclick="typeOpen(-1)">新增类型</button>
+        <span class="icon-btn" onclick="typeRender()">⟲</span>
+      </div>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead><tr><th>排序</th><th>类型名称（中文）</th><th>类型名称（葡语）</th><th>提示联系客服</th><th>状态</th><th>累计反馈数</th><th>更新人</th><th>更新时间</th><th>操作</th></tr></thead>
+          <tbody id="type-tbody"></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- ===== 全部用户反馈 ===== -->
+    <div class="page" id="pg-list">
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">站点：</span><div class="ms" id="l-m"></div></div>
+          <div class="filter-item"><span class="filter-label">厅主账号：</span><input class="f-input" id="l-own" placeholder="请输入厅主账号"></div>
+          <div class="filter-item"><span class="filter-label">提交时间：</span><input class="f-input" type="date" id="l-s" style="min-width:140px"><span>→</span><input class="f-input" type="date" id="l-e" style="min-width:140px"></div>
+          <div class="filter-item"><span class="filter-label">会员ID：</span><input class="f-input" id="l-mid" placeholder="请输入会员ID"></div>
+          <div class="filter-item"><span class="filter-label">反馈类型：</span><select class="f-select" id="l-tp"></select></div>
+          <div class="filter-item"><span class="filter-label">来源入口：</span><select class="f-select" id="l-src"><option value="">全部</option><option>游戏加载页</option><option>「我的」页</option></select></div>
+          <div class="filter-item"><span class="filter-label">处理状态：</span><select class="f-select" id="l-st"><option value="">全部</option><option value="0">待处理</option><option value="1">已处理</option><option value="2">无需处理</option></select></div>
+          <div class="filter-item"><span class="filter-label">游戏名称：</span><input class="f-input" id="l-game" placeholder="请输入游戏名称"></div>
+          <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="listReset()">重 置</button><button class="btn btn-blue" style="margin-left:10px" onclick="listRender()">查 询</button></div>
+        </div>
+      </div>
+      <div class="action-bar"><span class="note">总控只读：可查看各站点的反馈及处理情况，不可修改处理状态和备注。</span><button class="btn btn-blue" onclick="toast('导出任务已创建')">导 出</button></div>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead><tr><th>站点名称</th><th>厅主账号</th><th>反馈ID</th><th>提交时间</th><th>会员ID</th><th>会员账号</th><th>VIP等级</th><th>反馈类型</th><th>补充说明</th><th>图片</th><th>联系方式</th><th>来源入口</th><th>游戏</th><th>处理状态</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead>
+          <tbody id="list-tbody"></tbody>
+        </table>
+      </div></div>
+      <div class="pagination"><span>共 <b id="list-cnt">0</b> 条数据</span><span>1 / 1 页 · 50 条/页</span></div>
+    </div>
+
+    <!-- ===== 用户反馈统计 ===== -->
+    <div class="page" id="pg-stat">
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">站点：</span><div class="ms" id="s-m"></div></div>
+          <div class="filter-item"><span class="filter-label">统计日期：</span><select class="f-select" id="s-d"><option value="1">今天</option><option value="7">近 7 天</option><option value="30" selected>近 30 天</option><option value="60">近 60 天</option><option value="90">近 90 天</option></select></div>
+          <div class="filter-item"><span class="filter-label">来源入口：</span><select class="f-select" id="s-src"><option value="">全部</option><option>游戏加载页</option><option>「我的」页</option></select></div>
+          <div class="filter-item" style="margin-left:auto"><button class="btn btn-blue" onclick="statQuery()">查 询</button></div>
+        </div>
+      </div>
+      <div class="cards" id="s-cards"></div>
+      <div class="grid2">
+        <div class="box"><div class="box-h">按反馈类型<small>一条反馈可多选，各类型次数之和可大于反馈总数；占比 = 选择次数 ÷ 反馈总数</small></div>
+          <table><thead><tr><th style="text-align:left">反馈类型</th><th>选择次数</th><th style="text-align:left;width:45%">占比</th></tr></thead><tbody id="s-type"></tbody></table></div>
+        <div class="box"><div class="box-h">游戏 TOP 10<small>仅统计来源为「游戏加载页」的反馈</small></div>
+          <table><thead><tr><th>排名</th><th style="text-align:left">游戏</th><th>厂商</th><th>反馈数</th><th style="text-align:left">最多的反馈类型</th></tr></thead><tbody id="s-game"></tbody></table></div>
+      </div>
+      <div class="box"><div class="box-h">按站点<small>处理率 =（已处理 + 无需处理）÷ 反馈总数</small></div>
+        <table><thead><tr><th>站点名称</th><th>厅主账号</th><th>反馈总数</th><th>反馈会员数</th><th>待处理</th><th>已处理</th><th>无需处理</th><th>处理率</th></tr></thead><tbody id="s-merch"></tbody></table></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 新增 / 编辑类型 -->
+<div class="overlay" id="m-type">
+  <div class="modal">
+    <div class="mh"><span class="mt" id="m-type-t">新增类型</span><span class="mc" onclick="closeM('m-type')">×</span></div>
+    <div class="mb">
+      <div class="fi"><div class="fl req">类型名称（中文）：</div><div class="fc"><input class="f-input" id="t-zh" maxlength="20" placeholder="后台显示，最多 20 字"><div class="ferr" id="e-zh"></div></div></div>
+      <div class="fi"><div class="fl req">类型名称（葡语）：</div><div class="fc"><input class="f-input" id="t-pt" maxlength="30" placeholder="前台显示，最多 30 个字符"><div class="ferr" id="e-pt"></div></div></div>
+      <div class="fi"><div class="fl req">排序：</div><div class="fc"><input class="f-input" id="t-sort" placeholder="1~999 的整数"><div class="help">数字越小越靠前；排序相同时按创建时间先后。</div><div class="ferr" id="e-sort"></div></div></div>
+      <div class="fi"><div class="fl req">提示联系客服：</div><div class="fc"><div class="radio-g"><label><input type="radio" name="t-cs" value="1">开启</label><label><input type="radio" name="t-cs" value="0">关闭</label></div><div class="help">开启后，前台用户选中该类型时，在类型下方显示「联系客服」提示条，点击跳转在线客服。</div></div></div>
+      <div class="fi"><div class="fl req">状态：</div><div class="fc"><div class="radio-g"><label><input type="radio" name="t-on" value="1">启用</label><label><input type="radio" name="t-on" value="0">停用</label></div><div class="ferr" id="e-on"></div></div></div>
+    </div>
+    <div class="mf"><button class="btn btn-white" onclick="closeM('m-type')">取 消</button><button class="btn btn-blue" onclick="typeSave()">确 定</button></div>
+  </div>
+</div>
+
+<!-- 反馈详情（只读） -->
+<div class="overlay" id="m-detail">
+  <div class="modal" style="width:780px">
+    <div class="mh"><span class="mt">反馈详情</span><span class="mc" onclick="closeM('m-detail')">×</span></div>
+    <div class="mb">
+      <div class="ro-note">总控只读，处理由所属站点在商户后台「消息管理 / 用户反馈」中完成。</div>
+      <div class="sec">反馈内容</div><table class="kv"><tbody id="d-fb"></tbody></table>
+      <div class="sec">会员与提交环境</div><table class="kv"><tbody id="d-env"></tbody></table>
+      <div class="sec">处理记录</div>
+      <table class="kv"><thead><tr><th>操作时间</th><th>操作人</th><th>处理状态</th><th>处理备注</th></tr></thead><tbody id="d-log"></tbody></table>
+    </div>
+    <div class="mf"><button class="btn btn-white" onclick="closeM('m-detail')">关 闭</button></div>
+  </div>
+</div>
+
+<!-- 图片放大查看 -->
+<div class="lb" id="lb" onclick="this.classList.remove('show')"><span class="lb-x">×</span><img id="lb-img" alt=""></div>
+
+<div class="toast" id="g-toast"></div>
+
+<script>
+function openM(id){document.getElementById(id).classList.add('show')}
+function closeM(id){document.getElementById(id).classList.remove('show')}
+function toast(msg,err){var t=document.getElementById('g-toast');t.innerHTML='<span class="'+(err?'no':'ok')+'">'+(err?'✕':'✓')+'</span><span>'+msg+'</span>';t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show')},2500);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function nowStr(){var d=new Date(),p=function(n){return n<10?'0'+n:n};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds())}
+var ME='admin001', MAX_ON=10;
+var PAGES={list:'会员反馈管理',type:'会员反馈管理',stat:'会员反馈管理'};
+var PARENT={list:'站点会员管理',type:'站点会员管理',stat:'站点会员管理'};
+function go(p){
+  Object.keys(PAGES).forEach(function(k){
+    document.getElementById('pg-'+k).classList.toggle('on',k===p);
+    document.getElementById('pt-'+k).classList.toggle('active',k===p);
+  });
+  document.getElementById('si-fb').classList.add('active');
+  document.getElementById('bc-p').textContent=PARENT[p];
+  document.getElementById('bc').textContent=PAGES[p];
+  document.getElementById('tabname').textContent=PAGES[p];
+  history.replaceState(null,'','#'+p);
+  if(p==='type') typeRender(); if(p==='list') listRender(); if(p==='stat') statRender();
+}
+
+/* ───────── 反馈类型配置 ───────── */
+var TYPES=[
+  {id:1,zh:'游戏太少',pt:'Poucos jogos',sort:1,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:2,zh:'游戏卡顿或加载慢',pt:'Jogo trava ou demora',sort:2,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:3,zh:'很难找到游戏',pt:'Difícil encontrar jogos',sort:3,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:4,zh:'活动与彩金',pt:'Promoções e bônus',sort:4,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:5,zh:'充值或提款',pt:'Depósito ou saque',sort:5,cs:true,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:6,zh:'客服',pt:'Atendimento',sort:6,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:7,zh:'其他',pt:'Outro',sort:99,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:8,zh:'页面显示异常',pt:'Erro na página',sort:7,cs:false,on:false,op:'admin002',ut:'2026-11-04 11:40:05'}
+];
+var typeEdit=-1;
+function tById(id){return TYPES.filter(function(t){return t.id===id})[0]}
+function sortedTypes(){return TYPES.slice().sort(function(a,b){return a.sort-b.sort||a.id-b.id})}
+function onCount(){return TYPES.filter(function(t){return t.on}).length}
+function typeUseCount(id){return FB.filter(function(f){return f.tp.indexOf(id)>-1}).length}
+function typeRender(){
+  document.getElementById('type-tbody').innerHTML=sortedTypes().map(function(t){
+    return '<tr><td>'+t.sort+'</td><td>'+esc(t.zh)+'</td><td>'+esc(t.pt)+'</td>'
+      +'<td>'+(t.cs?'<span class="st-tag on">开启</span>':'<span style="color:#bfbfbf">关闭</span>')+'</td>'
+      +'<td><span class="tgl'+(t.on?'':' off')+'" onclick="typeToggle('+t.id+')"><i class="k"></i>'+(t.on?'启':'停')+'</span></td>'
+      +'<td>'+typeUseCount(t.id)+'</td><td>'+t.op+'</td><td>'+t.ut+'</td>'
+      +'<td><span class="op-btn edit" onclick="typeOpen('+t.id+')">编 辑</span></td></tr>';
+  }).join('');
+}
+function typeToggle(id){
+  var t=tById(id);
+  if(!t.on&&onCount()>=MAX_ON){toast('最多启用 '+MAX_ON+' 个反馈类型',1);return}
+  if(t.on&&onCount()<=1){toast('至少保留 1 个启用的反馈类型',1);return}
+  t.on=!t.on; t.op=ME; t.ut=nowStr(); typeRender(); toast(t.on?'已启用':'已停用');
+}
+function setRadio(n,v){document.querySelectorAll('input[name="'+n+'"]').forEach(function(i){i.checked=(i.value===v)})}
+function getRadio(n){var i=document.querySelector('input[name="'+n+'"]:checked');return i?i.value:null}
+function clrErr(){['zh','pt','sort','on'].forEach(function(k){var e=document.getElementById('e-'+k);e.style.display='none';var i=document.getElementById('t-'+k);if(i)i.classList.remove('err')})}
+function showErr(k,m){var e=document.getElementById('e-'+k);e.textContent=m;e.style.display='block';var i=document.getElementById('t-'+k);if(i)i.classList.add('err')}
+function typeOpen(id){
+  typeEdit=id; clrErr();
+  var t=id>0?tById(id):{zh:'',pt:'',sort:'',cs:false,on:true};
+  document.getElementById('m-type-t').textContent=id>0?'编辑类型':'新增类型';
+  document.getElementById('t-zh').value=t.zh; document.getElementById('t-pt').value=t.pt; document.getElementById('t-sort').value=t.sort;
+  setRadio('t-cs',t.cs?'1':'0'); setRadio('t-on',t.on?'1':'0');
+  openM('m-type');
+}
+function typeSave(){
+  clrErr();
+  var zh=document.getElementById('t-zh').value.trim(), pt=document.getElementById('t-pt').value.trim(), so=document.getElementById('t-sort').value.trim();
+  var cs=getRadio('t-cs')==='1', on=getRadio('t-on')==='1', ok=true;
+  if(!zh){showErr('zh','请输入类型名称（中文）');ok=false}
+  else if(TYPES.some(function(t){return t.zh===zh&&t.id!==typeEdit})){showErr('zh','类型名称（中文）已存在');ok=false}
+  if(!pt){showErr('pt','请输入类型名称（葡语）');ok=false}
+  else if(TYPES.some(function(t){return t.pt.toLowerCase()===pt.toLowerCase()&&t.id!==typeEdit})){showErr('pt','类型名称（葡语）已存在');ok=false}
+  if(!/^\d+$/.test(so)||+so<1||+so>999){showErr('sort','请输入 1~999 的整数');ok=false}
+  var cur=typeEdit>0?tById(typeEdit):null;
+  var onAfter=onCount()+(on?1:0)-(cur&&cur.on?1:0);
+  if(onAfter>MAX_ON){showErr('on','最多启用 '+MAX_ON+' 个反馈类型');ok=false}
+  if(onAfter<1){showErr('on','至少保留 1 个启用的反馈类型');ok=false}
+  if(!ok) return;
+  if(cur){cur.zh=zh;cur.pt=pt;cur.sort=+so;cur.cs=cs;cur.on=on;cur.op=ME;cur.ut=nowStr()}
+  else TYPES.push({id:TYPES.length+1,zh:zh,pt:pt,sort:+so,cs:cs,on:on,op:ME,ut:nowStr()});
+  closeM('m-type'); typeRender(); toast(cur?'编辑成功':'新增成功');
+}
+
+/* ───────── 站点多选（同业务报表：可全选 / 多选；不选等同全部） ───────── */
+var SITES=[{n:'巴西一站',o:'owner_a01'},{n:'巴西二站',o:'owner_a01'},{n:'巴西三站',o:'owner_b02'}];
+function ownerOf(s){var x=SITES.filter(function(i){return i.n===s})[0];return x?x.o:'-'}
+function msBuild(id,cb){
+  var el=document.getElementById(id);
+  el.innerHTML='<div class="ms-btn"></div><div class="ms-pop"><label class="all"><input type="checkbox" data-all="1" checked>全选</label>'
+    +SITES.map(function(s){return '<label><input type="checkbox" value="'+s.n+'" checked>'+s.n+'</label>'}).join('')+'</div>';
+  el.querySelector('.ms-btn').onclick=function(e){e.stopPropagation();document.querySelectorAll('.ms.open').forEach(function(m){if(m!==el)m.classList.remove('open')});el.classList.toggle('open')};
+  el.querySelector('.ms-pop').onclick=function(e){e.stopPropagation()};
+  el.querySelectorAll('input').forEach(function(i){i.onchange=function(){
+    var items=el.querySelectorAll('input:not([data-all])');
+    if(i.dataset.all) items.forEach(function(x){x.checked=i.checked});
+    else el.querySelector('[data-all]').checked=[].every.call(items,function(x){return x.checked});
+    msLabel(id); if(cb) cb();
+  }});
+  msLabel(id);
+}
+function msVals(id){return [].map.call(document.querySelectorAll('#'+id+' input:not([data-all]):checked'),function(x){return x.value})}
+function msLabel(id){var n=msVals(id).length;document.querySelector('#'+id+' .ms-btn').textContent=(n===0||n===SITES.length)?'全部站点':'已选 '+n+' 个站点'}
+function msReset(id){document.querySelectorAll('#'+id+' input').forEach(function(x){x.checked=true});msLabel(id)}
+function msHit(id,s){var a=msVals(id);return a.length===0||a.indexOf(s)>-1}
+document.addEventListener('click',function(){document.querySelectorAll('.ms.open').forEach(function(m){m.classList.remove('open')})});
+
+/* ───────── 会员反馈列表 ───────── */
+var ST=['待处理','已处理','无需处理'];
+var FB=[
+  {im:2,m:'巴西一站',id:'FB10093',t:'2026-11-04 14:22:18',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[2],txt:'Fortune Tiger 每次进去都要转好久，转完还经常卡住。',ct:'11987654321',src:'游戏加载页',game:'Fortune Tiger',vd:'PG',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
+  {im:1,m:'巴西一站',id:'FB10092',t:'2026-11-04 13:05:41',mid:'26890317',acc:'21988120034',vip:'VIP3',tp:[5,6],txt:'提款两个小时还没到账，客服一直没回复。',ct:'',src:'「我的」页',game:'',vd:'',term:'App',os:'iOS 17.5',br:'WebView',ip:'189.4.77.102',st:1,log:[{t:'2026-11-04 13:40:02',op:'admin001',st:1,rm:'已转财务核实，订单已出款'}]},
+  {m:'巴西二站',id:'FB10087',t:'2026-11-04 12:51:30',mid:'31002118',acc:'11933448812',vip:'VIP6',tp:[2],txt:'游戏一直加载不出来。',ct:'',src:'游戏加载页',game:'Fortune Tiger',vd:'PG',term:'H5',os:'Android 13',br:'Chrome 130',ip:'177.10.88.5',st:0,log:[]},
+  {m:'巴西一站',id:'FB10091',t:'2026-11-04 11:47:09',mid:'26881552',acc:'31977004512',vip:'VIP8',tp:[1,3],txt:'',ct:'joao.silva@gmail.com',src:'游戏加载页',game:'Aviator',vd:'Spribe',term:'H5',os:'Android 13',br:'Samsung Internet 24',ip:'200.150.9.31',st:0,log:[]},
+  {m:'巴西三站',id:'FB10086',t:'2026-11-04 09:13:52',mid:'41200675',acc:'21966551234',vip:'VIP2',tp:[4,7],txt:'首充活动看不懂规则。',ct:'',src:'「我的」页',game:'',vd:'',term:'H5',os:'iOS 18.1',br:'Safari',ip:'191.5.220.17',st:1,log:[{t:'2026-11-04 10:30:00',op:'op999',st:1,rm:'已优化活动规则文案'}]},
+  {m:'巴西一站',id:'FB10090',t:'2026-11-03 22:16:55',mid:'26870021',acc:'11955550198',vip:'VIP1',tp:[4],txt:'希望多一些每日签到类活动，彩金门槛太高了。',ct:'',src:'「我的」页',game:'',vd:'',term:'H5',os:'Android 12',br:'Chrome 129',ip:'177.89.2.140',st:2,log:[{t:'2026-11-04 10:02:11',op:'admin002',st:2,rm:'运营类建议，已汇总至周报'}]},
+  {m:'巴西二站',id:'FB10085',t:'2026-11-03 21:40:12',mid:'31005520',acc:'41977332201',vip:'VIP10',tp:[2,3],txt:'',ct:'',src:'游戏加载页',game:'Gates of Olympus',vd:'PP',term:'App',os:'Android 14',br:'WebView',ip:'187.66.1.90',st:0,log:[]},
+  {im:3,m:'巴西一站',id:'FB10089',t:'2026-11-03 20:31:07',mid:'26894081',acc:'11912311111',vip:'VIP24',tp:[8],txt:'游戏图标有的显示不出来。',ct:'',src:'游戏加载页',game:'Gates of Olympus',vd:'PP',term:'H5',os:'Android 14',br:'Chrome 130',ip:'177.32.18.24',st:0,log:[]},
+  {im:1,m:'巴西三站',id:'FB10084',t:'2026-11-03 19:02:44',mid:'41209981',acc:'31988771100',vip:'VIP4',tp:[5],txt:'PIX 充值后余额没到。',ct:'31988771100',src:'「我的」页',game:'',vd:'',term:'H5',os:'Android 11',br:'Chrome 128',ip:'200.18.40.66',st:1,log:[{t:'2026-11-03 19:30:10',op:'op999',st:1,rm:'已补单'}]},
+  {m:'巴西一站',id:'FB10088',t:'2026-11-03 18:09:44',mid:'26855430',acc:'41966002233',vip:'VIP5',tp:[7],txt:'界面字有点小，老人看不清楚。',ct:'41966002233',src:'「我的」页',game:'',vd:'',term:'App',os:'Android 11',br:'WebView',ip:'187.21.60.8',st:0,log:[]},
+  {m:'巴西二站',id:'FB10083',t:'2026-11-03 15:25:19',mid:'31001002',acc:'11944556677',vip:'VIP1',tp:[1],txt:'想要更多捕鱼游戏。',ct:'',src:'游戏加载页',game:'Aviator',vd:'Spribe',term:'H5',os:'iOS 17.2',br:'Safari',ip:'191.22.3.4',st:2,log:[{t:'2026-11-03 18:00:00',op:'op666',st:2,rm:''}]},
+  {m:'巴西一站',id:'FB10061',t:'2026-10-18 16:20:05',mid:'26870021',acc:'11955550198',vip:'VIP1',tp:[3],txt:'搜索不到想玩的游戏。',ct:'',src:'「我的」页',game:'',vd:'',term:'H5',os:'Android 12',br:'Chrome 129',ip:'177.89.2.140',st:1,log:[{t:'2026-10-19 10:00:00',op:'admin001',st:1,rm:'已优化搜索'}]},
+  {m:'巴西三站',id:'FB10032',t:'2026-09-21 20:11:47',mid:'41200675',acc:'21966551234',vip:'VIP2',tp:[2],txt:'',ct:'',src:'游戏加载页',game:'Fortune Tiger',vd:'PG',term:'H5',os:'iOS 18.0',br:'Safari',ip:'191.5.220.17',st:1,log:[{t:'2026-09-22 09:30:00',op:'op999',st:1,rm:'已反馈厂商'}]},
+  {m:'巴西二站',id:'FB10008',t:'2026-08-15 12:02:33',mid:'31002118',acc:'11933448812',vip:'VIP6',tp:[1,4],txt:'游戏和活动都太少了。',ct:'',src:'「我的」页',game:'',vd:'',term:'App',os:'Android 13',br:'WebView',ip:'177.10.88.5',st:2,log:[{t:'2026-08-16 11:00:00',op:'op666',st:2,rm:''}]}
+];
+// 示例图片（占位截图），im = 图片张数
+function ph(n,c){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640"><rect width="360" height="640" fill="'+c+'"/><rect x="24" y="60" width="312" height="180" rx="12" fill="rgba(255,255,255,.25)"/><rect x="24" y="270" width="200" height="18" rx="9" fill="rgba(255,255,255,.35)"/><rect x="24" y="304" width="260" height="18" rx="9" fill="rgba(255,255,255,.25)"/><text x="180" y="560" font-size="28" text-anchor="middle" fill="#fff" font-family="sans-serif">用户截图 '+n+'</text></svg>')}
+var PH_C=['#3b5b8c','#7a4b2a','#2f6b4f'];
+FB.forEach(function(r){r.imgs=[];for(var i=0;i<(r.im||0);i++) r.imgs.push(ph(i+1,PH_C[i%3]))});
+function imgHtml(r,lg){return r.imgs.length?r.imgs.map(function(s,i){return '<img class="th'+(lg?' lg':'')+'" src="'+s+'" onclick="lb(\''+r.id+'\','+i+')">'}).join(''):'-'}
+function lb(id,i){var r=FB.filter(function(x){return x.id===id})[0];document.getElementById('lb-img').src=r.imgs[i];document.getElementById('lb').classList.add('show')}
+function tpHtml(ids){return ids.map(function(id){var t=tById(id);return '<span class="tp'+(t.on?'':' off')+'">'+esc(t.zh)+(t.on?'':'（已停用）')+'</span>'}).join('')}
+function ps(s){return '<span class="ps s'+s+'">'+ST[s]+'</span>'}
+function lastLog(r){return r.log.length?r.log[r.log.length-1]:null}
+function v(id){return document.getElementById(id).value}
+function listInit(){
+  var s=document.getElementById('l-tp'); var keep=s.value;
+  s.innerHTML='<option value="">全部</option>'+sortedTypes().map(function(t){return '<option value="'+t.id+'">'+esc(t.zh)+(t.on?'':'（已停用）')+'</option>'}).join('');
+  s.value=keep;
+}
+function listRender(){
+  listInit();
+  var own=v('l-own').trim(),fs=v('l-s'),fe=v('l-e'),mid=v('l-mid').trim(),tp=v('l-tp'),src=v('l-src'),st=v('l-st'),gm=v('l-game').trim().toLowerCase();
+  var rows=FB.filter(function(r){
+    if(!msHit('l-m',r.m)) return false; if(own&&ownerOf(r.m)!==own) return false; if(mid&&r.mid!==mid) return false;
+    if(tp&&r.tp.indexOf(+tp)<0) return false; if(src&&r.src!==src) return false;
+    if(st!==''&&String(r.st)!==st) return false; if(gm&&r.game.toLowerCase().indexOf(gm)<0) return false;
+    var d=r.t.slice(0,10); if(fs&&d<fs) return false; if(fe&&d>fe) return false; return true;
+  });
+  document.getElementById('list-cnt').textContent=rows.length;
+  document.getElementById('list-tbody').innerHTML=rows.length?rows.map(function(r){
+    var l=lastLog(r);
+    return '<tr><td>'+r.m+'</td><td>'+ownerOf(r.m)+'</td><td>'+r.id+'</td><td>'+r.t+'</td><td>'+r.mid+'</td><td>'+r.acc+'</td><td>'+r.vip+'</td><td>'+tpHtml(r.tp)+'</td>'
+      +'<td class="txt">'+(r.txt?esc(r.txt):'-')+'</td><td>'+imgHtml(r)+'</td><td>'+(r.ct?esc(r.ct):'-')+'</td><td>'+r.src+'</td>'
+      +'<td>'+(r.game?esc(r.game)+'<br><span style="color:#8c8c8c;font-size:12px">'+esc(r.vd)+'</span>':'-')+'</td>'
+      +'<td>'+ps(r.st)+'</td><td>'+(l?l.op:'-')+'</td><td>'+(l?l.t:'-')+'</td><td><span class="op-link" onclick="detail(\''+r.id+'\')">详情</span></td></tr>';
+  }).join(''):'<tr><td colspan="17" style="color:#bfbfbf;padding:40px">暂无数据</td></tr>';
+}
+function listReset(){msReset('l-m');['l-own','l-s','l-e','l-mid','l-tp','l-src','l-st','l-game'].forEach(function(id){document.getElementById(id).value=''});listRender()}
+function detail(id){
+  var r=FB.filter(function(x){return x.id===id})[0];
+  var kv=function(a){return a.map(function(x){return '<tr><td class="k">'+x[0]+'</td><td>'+x[1]+'</td></tr>'}).join('')};
+  document.getElementById('d-fb').innerHTML=kv([['站点名称',r.m],['厅主账号',ownerOf(r.m)],['反馈ID',r.id],['提交时间',r.t],['反馈类型',tpHtml(r.tp)],['补充说明',r.txt?esc(r.txt):'-'],['图片',imgHtml(r,1)],['联系方式',r.ct?esc(r.ct):'-'],['处理状态',ps(r.st)]]);
+  document.getElementById('d-env').innerHTML=kv([['会员ID',r.mid],['会员账号',r.acc],['VIP等级',r.vip],['来源入口',r.src],['游戏',r.game?esc(r.game)+'（'+esc(r.vd)+'）':'-'],['终端',r.term],['设备系统',r.os],['浏览器',esc(r.br)],['IP',r.ip]]);
+  document.getElementById('d-log').innerHTML=r.log.length?r.log.slice().reverse().map(function(l,i,a){var prev=i+1<a.length?a[i+1].st:0;return '<tr><td>'+l.t+'</td><td>'+l.op+'</td><td>'+(prev!==l.st?ST[prev]+' → '+ST[l.st]:ST[l.st])+'</td><td>'+(l.rm?esc(l.rm):'-')+'</td></tr>'}).join(''):'<tr><td colspan="4" style="color:#bfbfbf;text-align:center">暂无处理记录</td></tr>';
+  openM('m-detail');
+}
+
+/* ───────── 反馈统计（原型以示例数据计算；修改筛选项后点「查询」才生效，进入页面默认近 30 天） ───────── */
+var TODAY='2026-11-04'; // 原型以示例数据的「今天」为基准
+var SQ={sites:[],d:30,src:''}; // 已生效的查询条件；sites 为空 = 全部站点
+function dayDiff(a,b){return Math.round((new Date(a)-new Date(b))/86400000)}
+function statQuery(){SQ={sites:msVals('s-m'),d:+v('s-d'),src:v('s-src')};statRender()}
+function statRender(){
+  var src=SQ.src, all=SQ.sites.length===0||SQ.sites.length===SITES.length;
+  var rows=FB.filter(function(r){
+    var dd=dayDiff(TODAY,r.t.slice(0,10));
+    return (all||SQ.sites.indexOf(r.m)>-1)&&(!src||r.src===src)&&dd>=0&&dd<SQ.d;
+  });
+  var total=rows.length, users={}, c=[0,0,0];
+  rows.forEach(function(r){users[r.m+'-'+r.mid]=1;c[r.st]++});
+  var rate=total?Math.round((c[1]+c[2])/total*1000)/10:0;
+  document.getElementById('s-cards').innerHTML=[
+    ['反馈总数',total,'提交成功的反馈条数'],['反馈会员数',Object.keys(users).length,'按会员去重'],
+    ['待处理',c[0],'处理状态为「待处理」'],['处理率',rate+'%','（已处理 + 无需处理）÷ 反馈总数']
+  ].map(function(x){return '<div class="card"><div class="k">'+x[0]+'</div><div class="v">'+x[1]+'</div><div class="h">'+x[2]+'</div></div>'}).join('');
+  // 按类型
+  var tc={}; rows.forEach(function(r){r.tp.forEach(function(id){tc[id]=(tc[id]||0)+1})});
+  var tl=sortedTypes().filter(function(t){return tc[t.id]}).sort(function(a,b){return tc[b.id]-tc[a.id]});
+  document.getElementById('s-type').innerHTML=tl.length?tl.map(function(t){
+    var p=Math.round(tc[t.id]/total*1000)/10;
+    return '<tr><td style="text-align:left">'+tpHtml([t.id])+'</td><td>'+tc[t.id]+'</td><td><div class="bar"><i style="width:'+Math.min(p,100)*1.6+'px"></i><span>'+p+'%</span></div></td></tr>';
+  }).join(''):'<tr><td colspan="3" style="color:#bfbfbf">暂无数据</td></tr>';
+  // 游戏 TOP10
+  var g={}; rows.filter(function(r){return r.src==='游戏加载页'&&r.game}).forEach(function(r){
+    var k=r.game+'|'+r.vd; g[k]=g[k]||{n:0,tp:{}}; g[k].n++; r.tp.forEach(function(id){g[k].tp[id]=(g[k].tp[id]||0)+1});
+  });
+  var gl=Object.keys(g).sort(function(a,b){return g[b].n-g[a].n}).slice(0,10);
+  document.getElementById('s-game').innerHTML=gl.length?gl.map(function(k,i){
+    var tp=Object.keys(g[k].tp).sort(function(a,b){return g[k].tp[b]-g[k].tp[a]})[0];
+    return '<tr><td>'+(i+1)+'</td><td style="text-align:left">'+esc(k.split('|')[0])+'</td><td>'+esc(k.split('|')[1])+'</td><td>'+g[k].n+'</td><td style="text-align:left">'+tpHtml([+tp])+'</td></tr>';
+  }).join(''):'<tr><td colspan="5" style="color:#bfbfbf">暂无数据</td></tr>';
+  // 按站点
+  var ms={}; rows.forEach(function(r){ms[r.m]=ms[r.m]||{n:0,u:{},c:[0,0,0]}; ms[r.m].n++; ms[r.m].u[r.mid]=1; ms[r.m].c[r.st]++});
+  var ml=Object.keys(ms).sort(function(a,b){return ms[b].n-ms[a].n});
+  document.getElementById('s-merch').innerHTML=ml.length?ml.map(function(k){
+    var x=ms[k]; return '<tr><td>'+k+'</td><td>'+ownerOf(k)+'</td><td>'+x.n+'</td><td>'+Object.keys(x.u).length+'</td><td>'+x.c[0]+'</td><td>'+x.c[1]+'</td><td>'+x.c[2]+'</td><td>'+Math.round((x.c[1]+x.c[2])/x.n*1000)/10+'%</td></tr>';
+  }).join(''):'<tr><td colspan="8" style="color:#bfbfbf">暂无数据</td></tr>';
+}
+
+msBuild('l-m'); msBuild('s-m');
+var h=(location.hash||'').slice(1);
+go(PAGES[h]?h:'stat');
+</script>
+</body>
+</html>
