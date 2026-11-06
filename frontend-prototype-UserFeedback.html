@@ -43,9 +43,11 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .ld-foot{padding:0 20px 34px;text-align:center}
 .ld-foot .s{color:#a8a39b;font-size:12px;margin-bottom:10px}
 .ld-foot .s b{color:var(--y);font-weight:700}
-.ld-st{font-size:11.5px;color:#a8a39b;text-align:center;margin:-4px 0 8px;display:none;white-space:nowrap}
+.ld-st{font-size:12px;line-height:16px;color:var(--t3);margin-top:4px;display:none;white-space:nowrap}
 .ld-st.on{display:block}
 .ld-st.ok{color:#6fcf7f}
+.ld-st:not(.ok)::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--y);margin-right:6px;vertical-align:1px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.25}}
 .reload{margin-top:10px;width:100%;background:#2a2a2a;border:1px solid #444;color:#ddd;border-radius:6px;padding:6px;font-size:12px;cursor:pointer}
 .ld-foot .lk{color:var(--y);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
 .ld-done{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#777;font-size:13px}
@@ -81,49 +83,50 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--sheet);border-radius:20px 20px 0 0;padding:10px 16px 22px;z-index:11;transform:translateY(105%);transition:transform .25s ease;max-height:92%;overflow-y:auto}
 .sheet::-webkit-scrollbar{width:0}
 .sheet.on{transform:translateY(0)}
-.grab{width:40px;height:4px;border-radius:2px;background:#5a5650;margin:0 auto 10px}
-.sh-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.sh-hd h2{margin:0;font-size:20px;color:#fff;font-weight:700}
-.sh-x{font-size:24px;color:#bbb;cursor:pointer;line-height:1;padding:2px 4px}
-.q{font-size:15px;color:#fff;font-weight:600;margin-bottom:10px}
-.q span{font-size:12px;color:var(--t3);font-weight:400;margin-left:6px}
+/* 浮层字体层级：标题 18 / 区块标题 14 / 正文 13-14 / 辅助 12；间距按 4 的倍数 */
+.grab{width:36px;height:4px;border-radius:2px;background:#57534d;margin:0 auto 14px}
+.sh-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.sh-hd h2{margin:0;font-size:18px;line-height:24px;color:var(--t1);font-weight:700}
+.sh-x{width:28px;height:28px;margin:-2px 0 0 0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t3);cursor:pointer;border-radius:50%}
+.sh-x:hover{background:#3a3733;color:var(--t2)}
+.q,.fld-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;white-space:nowrap}
+.q .n,.fld-hd .n{font-size:14px;line-height:20px;color:var(--t1);font-weight:600}
+.n i,.n .tip,.q .tip{font-style:normal;font-size:12px;color:var(--t3);font-weight:400}
+.n .tip,.q .tip{margin-left:8px}
+.fld-hd .c{font-size:12px;color:var(--t3);font-variant-numeric:tabular-nums}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{background:var(--chip);border:1px solid var(--chipline);color:#fff;border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;user-select:none}
-.chip.on{background:var(--y);border-color:var(--y);color:#1a1a1a}
-.chip .ck{display:none;font-size:12px}
+.chip{background:var(--chip);border:1px solid var(--chipline);color:var(--t1);border-radius:10px;padding:7px 12px;font-size:13px;line-height:18px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:4px;user-select:none}
+.chip.on{background:var(--y);border-color:var(--y);color:#1a1a1a;font-weight:600}
+.chip .ck{display:none;font-size:11px}
 .chip.on .ck{display:inline}
-.cs{display:none;margin-top:12px;background:#3a372f;border-radius:10px;padding:10px 12px;align-items:center;justify-content:space-between;gap:10px}
+.cs{display:none;margin-top:10px;background:#36332e;border-radius:10px;padding:8px 8px 8px 12px;align-items:center;justify-content:space-between;gap:10px}
 .cs.on{display:flex}
-.cs .t{font-size:12.5px;color:#e6e1d6;line-height:1.5}
-.cs .b{flex-shrink:0;border:1px solid var(--y);color:var(--y);border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
-.fld{margin-top:12px}
-.fld-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;white-space:nowrap}
-.fld-hd .tip{font-size:11.5px;color:var(--t3);font-weight:400;margin-left:6px}
-.fld-hd .n{font-size:13.5px;color:#fff;font-weight:600}
-.fld-hd .c{font-size:12px;color:var(--t3)}
-.ta,.ip{width:100%;background:#211f1c;border:1px solid var(--line);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;padding:9px 12px;outline:none}
-.ta{height:64px;resize:none}
-.ta::placeholder,.ip::placeholder{color:#7d786f}
+.cs .t{font-size:12px;color:var(--t2);line-height:18px}
+.cs .b{flex-shrink:0;border:1px solid var(--y);color:var(--y);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.fld{margin-top:16px}
+.ta,.ip{width:100%;background:#211f1c;border:1px solid var(--line);border-radius:10px;color:var(--t1);font-size:14px;line-height:20px;font-family:inherit;padding:9px 12px;outline:none}
+.ta{height:64px;resize:none;display:block}
+.ta::placeholder,.ip::placeholder{color:#6f6a62}
 .ta:focus,.ip:focus{border-color:#77705f}
 .ip.err{border-color:#e5484d}
-.reward{display:flex;gap:8px;align-items:flex-start;background:linear-gradient(90deg,#4a3d12,#3a3424);border:1px solid #6b5a1c;border-radius:10px;padding:7px 12px;margin:0 0 12px;font-size:12.5px;color:#f1e6c2;line-height:1.5;white-space:nowrap;align-items:center}
-.reward b{color:var(--y)}
+.reward{display:flex;gap:8px;align-items:center;background:rgba(245,197,66,.10);border:1px solid rgba(245,197,66,.28);border-radius:10px;padding:8px 12px;margin:0 0 18px;font-size:13px;line-height:18px;color:#efe3c0;white-space:nowrap}
+.reward b{color:var(--y);font-weight:700}
 .rw-ic{flex-shrink:0;font-size:14px;line-height:1}
 .imgs{display:flex;gap:8px;flex-wrap:wrap}
 .img-it,.img-add{width:60px;height:60px;border-radius:10px;position:relative;flex-shrink:0}
 .img-it img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
-.img-it .del{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#000;border:1px solid #666;color:#fff;font-size:12px;line-height:18px;text-align:center;cursor:pointer}
-.img-add{border:1px dashed #6b665d;background:#211f1c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#9a958c;font-size:11px;cursor:pointer;gap:2px}
-.img-add i{font-style:normal;font-size:24px;line-height:1;color:#bdb8b0}
+.img-it .del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#000;border:1px solid #666;color:#fff;font-size:10px;line-height:16px;text-align:center;cursor:pointer}
+.img-add{border:1px dashed #5f5a52;background:#211f1c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--t3);font-size:11px;cursor:pointer;gap:2px}
+.img-add i{font-style:normal;font-size:20px;line-height:1;color:var(--t2)}
 .err-t{display:none;color:#ff6b6b;font-size:12px;margin-top:6px}
 .err-t.on{display:block}
-.sub{margin-top:14px;width:100%;height:44px;border:none;border-radius:12px;background:var(--y);color:#1a1a1a;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
-.sub:disabled{background:#5a5546;color:#8f8a7c;cursor:not-allowed}
+.sub{margin-top:20px;width:100%;height:44px;border:none;border-radius:12px;background:var(--y);color:#1a1a1a;font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:inherit}
+.sub:disabled{background:#4d493f;color:#8a8478;cursor:not-allowed}
 /* 成功 */
 .ok-wrap{display:none;text-align:center;padding:8px 6px 4px}
 .ok-ic{width:56px;height:56px;border-radius:50%;background:var(--y);margin:6px auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#1a1a1a;font-weight:700}
-.ok-t{font-size:19px;color:#fff;font-weight:700;margin-bottom:6px}
-.ok-s{font-size:13px;color:var(--t2);margin-bottom:20px}
+.ok-t{font-size:18px;color:#fff;font-weight:700;margin-bottom:6px}
+.ok-s{font-size:13px;line-height:20px;color:var(--t2);margin-bottom:24px}
 
 /* toast */
 .ftoast{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;z-index:30;display:none;max-width:78%;text-align:center;line-height:1.5}
@@ -210,24 +213,23 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
     <div class="mask" id="mask" onclick="closeSheet()"></div>
     <div class="sheet" id="sheet">
       <div class="grab"></div>
-      <div class="ld-st" id="ld-st"></div>
       <div id="form-wrap">
-        <div class="sh-hd"><h2>帮助我们改进</h2><span class="sh-x" onclick="closeSheet()">✕</span></div>
+        <div class="sh-hd"><div><h2>帮助我们改进</h2><div class="ld-st" id="ld-st"></div></div><span class="sh-x" onclick="closeSheet()">✕</span></div>
         <div class="reward"><span class="rw-ic">🎁</span><span>反馈或建议被采纳，最高奖励 <b>R$ 88</b>，诚挚欢迎！</span></div>
-        <div class="q">我们可以改进什么？<span>可多选</span></div>
+        <div class="q"><span class="n">我们可以改进什么？<span class="tip">可多选</span></span></div>
         <div class="chips" id="chips"></div>
         <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')">联系客服</div></div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">补充说明（选填）</span><span class="c"><span id="ta-n">0</span>/300</span></div>
+          <div class="fld-hd"><span class="n">补充说明<i>（选填）</i></span><span class="c"><span id="ta-n">0</span>/300</span></div>
           <textarea class="ta" id="ta" maxlength="300" placeholder="想说的话，可以写在这里……" oninput="document.getElementById('ta-n').textContent=this.value.length"></textarea>
         </div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">上传图片（选填）<span class="tip">JPG / PNG，单张 ≤ 5MB</span></span><span class="c"><span id="img-n">0</span>/3</span></div>
+          <div class="fld-hd"><span class="n">上传图片<i>（选填）</i><span class="tip">JPG / PNG，单张 ≤ 5MB</span></span><span class="c"><span id="img-n">0</span>/3</span></div>
           <div class="imgs" id="imgs"></div>
           <input type="file" id="img-in" accept="image/jpeg,image/png" multiple style="display:none" onchange="pickImgs(this)">
         </div>
         <div class="fld">
-          <div class="fld-hd"><span class="n">联系方式（选填）</span></div>
+          <div class="fld-hd"><span class="n">联系方式<i>（选填）</i></span></div>
           <input class="ip" id="ip" placeholder="WhatsApp 或邮箱" maxlength="64" oninput="clearErr()">
           <div class="err-t" id="ip-err">请输入正确的 WhatsApp 号码或邮箱</div>
         </div>
