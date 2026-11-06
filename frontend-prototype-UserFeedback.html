@@ -28,7 +28,6 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .panel .tip b{color:#e6e6e6;font-weight:600}
 .tbd{outline:1px dashed #ff9f43;outline-offset:1px;border-radius:2px}
 .tbd-ph{outline:1px dashed #ff9f43;outline-offset:1px}
-.tbd-note{font-size:11.5px;color:#8d8d8d;margin-top:8px;line-height:1.6}
 
 /* 手机 */
 .phone{width:390px;height:844px;border-radius:38px;background:var(--bg);border:9px solid #000;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;position:relative;display:flex;flex-direction:column}
@@ -160,7 +159,6 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
     <h3>演示条件</h3>
     <div class="grp"><div class="lb">界面语言</div>
       <div class="seg" id="seg-lang"><button class="on" data-v="zh">中文</button><button data-v="pt">Português</button></div>
-      <div class="tbd-note">葡语模式下，<span class="tbd">橙色虚线框</span>为「葡语待提供」的文案，暂显示中文。</div></div>
     <div class="grp"><div class="lb">入口页面</div>
       <div class="seg" id="seg-page"><button class="on" data-v="loading">游戏加载页</button><button data-v="mine">「我的」页</button></div>
       <button class="reload" onclick="startLoad()">重新模拟游戏加载（约 20 秒）</button></div>
@@ -278,32 +276,32 @@ var TYPES=[
 var S={page:'loading',login:'1',sw:'1',cnt:0,net:'ok',src:'loading',sel:[],imgs:[]};
 var seq=10086;
 
-// ── 界面文案：[中文, 葡语]；葡语为 null 表示「葡语待提供」，葡语模式下显示中文并加橙色虚线框 ──
-// 葡语来源：老板原型原文、竞品客户端语言包（我的页菜单、加载中、图片大小提示等），未自行翻译
+// ── 界面文案：[中文, 葡语] ──
+// 葡语来源：先取项目中葡字典 / 竞品语言包 / 老板原型原文，没有的按现有葡语风格翻译并已入字典（glossary-build.ps1 $MANUAL）
 var LANG='zh';
 var I18N={
   menu:['菜单','Menu'],
   loading:['加载中…… {n}%','Carregando... {n}%'],
-  ldDesc:['一起打造更好玩的游戏，建议被采纳最高奖 <b>R$ 88</b>',null],
-  ldLink:['我要反馈 →',null],
+  ldDesc:['一起打造更好玩的游戏，建议被采纳最高奖 <b>R$ 88</b>','Ajude a melhorar: sugestão aceita ganha até <b>R$ 88</b>'],
+  ldLink:['我要反馈 →','Enviar feedback →'],
   acct:['账号：','Conta:'],
   report:['报表','Relatórios'], invite:['邀请','Convidar'], redeem:['兑换码','Código de Resgate'], support:['客服','Suporte'],
-  mineFb:['意见反馈',null], security:['安全中心','Centro de Segurança'], language:['切换语言','Alterar idioma'], logout:['退出','Sair'],
+  mineFb:['意见反馈','Feedback'], security:['安全中心','Centro de Segurança'], language:['切换语言','Alterar idioma'], logout:['退出','Sair'],
   navHome:['首页','Inicio'], navPromo:['优惠','Promoção'], navInvite:['邀请','Convidar'], navWallet:['钱包','Carteira'], navMine:['我的','Perfil'],
   title:['帮助我们改进','Ajude a gente a melhorar'],
-  ldIng:['游戏正在后台加载 {n}%，填写不影响游戏加载',null],
-  ldOk:['✓ 游戏已加载完成，可随时返回游戏',null],
+  ldIng:['游戏正在后台加载 {n}%，填写不影响游戏加载','Carregando o jogo {n}% · pode continuar preenchendo'],
+  ldOk:['✓ 游戏已加载完成，可随时返回游戏','✓ Jogo carregado, volte quando quiser'],
   rwTag:['反馈有奖','Sugestão premiada'],
   reward:['建议被采纳，最高可得 <b>R$ 88</b>','Se for aceita, ganhe até <b>R$ 88</b>'],
-  q:['我们可以改进什么？',null], multi:['可多选',null],
-  csTip:['现在需要{t}方面的帮助吗？',null], cs:['联系客服','Atendimento'],
-  txtLb:['补充说明','Conte mais'], opt:['（选填）',' (opcional)'], txtPh:['想说的话，可以写在这里……',null],
-  imgLb:['上传图片',null], imgTip:['JPG、PNG，单张不超过 5MB','JPG ou PNG, até 5MB cada'], imgAdd:['添加图片',null],
-  ctLb:['联系方式','Contato'], ctPh:['WhatsApp 或邮箱','WhatsApp ou e-mail'], ctErr:['请输入正确的 WhatsApp 号码或邮箱',null],
+  q:['我们可以改进什么？','O que podemos melhorar?'], multi:['可多选','Escolha uma ou mais'],
+  csTip:['现在需要{t}方面的帮助吗？','Precisa de ajuda agora com {t}?'], cs:['联系客服','Atendimento'],
+  txtLb:['补充说明','Conte mais'], opt:['（选填）',' (opcional)'], txtPh:['想说的话，可以写在这里……','Escreva aqui o que quiser nos contar...'],
+  imgLb:['上传图片','Imagens'], imgTip:['JPG、PNG，单张不超过 5MB','JPG ou PNG, até 5MB cada'], imgAdd:['添加图片','Adicionar'],
+  ctLb:['联系方式','Contato'], ctPh:['WhatsApp 或邮箱','WhatsApp ou e-mail'], ctErr:['请输入正确的 WhatsApp 号码或邮箱','Por favor, insira um WhatsApp ou e-mail válido'],
   submit:['提交','Enviar'], okT:['谢谢！','Obrigado!'], okS:['你的意见能帮助我们做得更好。','Sua opinião nos ajuda a melhorar.'],
   back:['返回游戏','Voltar ao jogo'], done:['完成','Finalizar'],
-  eMax:['最多上传 3 张图片',null], eFmt:['仅支持 JPG、PNG 格式图片',null], eSize:['图片大小不得超过 5MB','O tamanho da imagem não deve exceder 5MB'],
-  eDay:['今天的反馈次数已达上限，请明天再来',null], eNet:['提交失败，请稍后重试',null]
+  eMax:['最多上传 3 张图片','Máximo de 3 imagens'], eFmt:['仅支持 JPG、PNG 格式图片','Apenas imagens JPG ou PNG'], eSize:['图片大小不得超过 5MB','O tamanho da imagem não deve exceder 5MB'],
+  eDay:['今天的反馈次数已达上限，请明天再来','Você atingiu o limite de feedbacks de hoje. Tente novamente amanhã.'], eNet:['提交失败，请稍后重试','Falha no envio. Tente novamente.']
 };
 // 反馈类型葡语：老板原型原文（总控配置的名称）
 var TYPE_PT={1:'Poucos jogos',2:'Jogo trava ou demora',3:'Difícil encontrar jogos',4:'Promoções e bônus',5:'Depósito ou saque',6:'Atendimento',7:'Outro'};
@@ -397,9 +395,10 @@ function renderChips(){
     var on=S.sel.indexOf(t.id)>-1;
     return '<span class="chip'+(on?' on':'')+'" onclick="toggleChip('+t.id+')"><span class="ck">✓</span>'+typeName(t)+'</span>';
   }).join('');
-  var csNames=TYPES.filter(function(t){return t.cs&&S.sel.indexOf(t.id)>-1}).map(function(t){return '「'+t.name+'」'});
+  var csTypes=TYPES.filter(function(t){return t.cs&&S.sel.indexOf(t.id)>-1});
+  var csNames=LANG==='pt'?csTypes.map(function(t){return TYPE_PT[t.id].toLowerCase()}):csTypes.map(function(t){return '「'+t.name+'」'});
   var cs=document.getElementById('cs');
-  if(csNames.length){document.getElementById('cs-t').innerHTML=tr('csTip',{t:csNames.join('、')});cs.classList.add('on')}
+  if(csNames.length){document.getElementById('cs-t').innerHTML=tr('csTip',{t:csNames.join(LANG==='pt'?' e ':'、')});cs.classList.add('on')}
   else cs.classList.remove('on');
   document.getElementById('sub').disabled=S.sel.length===0;
 }
