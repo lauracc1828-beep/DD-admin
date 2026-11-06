@@ -2449,7 +2449,7 @@ select.fs.ph{color:#bfbfbf}
           </div></div>
           <div class="fi"><div class="fl">每日提交上限：</div><div class="fc" style="line-height:32px">每个会员每天 3 条（系统统一，不可修改）</div></div>
           <div class="fi"><div class="fl">反馈类型：</div><div class="fc"><div class="ufb-tlist" id="ufb-tlist"></div>
-            <div class="ufb-help">由总控后台统一配置，前台按排序显示已启用的类型；标注「提示联系客服」的类型被选中时，前台显示联系客服提示。</div></div></div>
+            <div class="ufb-help">由总控后台统一配置，前台按排序显示已启用的类型。</div></div></div>
           <div class="fi"><div class="fl"></div><div class="fc"><button class="btn btn-save" onclick="ufbSaveSet()">保 存</button></div></div>
         </div>
       </div>
@@ -9367,10 +9367,10 @@ function rtLinkSave(){
 (function(){
   // 反馈类型：总控后台统一配置；停用的类型前台不显示，历史反馈保留原名称
   var UFB_TYPES=[
-    {id:1,name:'游戏太少',on:true,cs:false},{id:2,name:'游戏卡顿或加载慢',on:true,cs:false},
-    {id:3,name:'很难找到游戏',on:true,cs:false},{id:4,name:'活动与彩金',on:true,cs:false},
-    {id:5,name:'充值或提款',on:true,cs:true},{id:6,name:'客服',on:true,cs:false},
-    {id:7,name:'其他',on:true,cs:false},{id:8,name:'页面显示异常',on:false,cs:false}
+    {id:1,name:'游戏太少',on:true},{id:2,name:'游戏卡顿或加载慢',on:true},
+    {id:3,name:'很难找到游戏',on:true},{id:4,name:'活动与彩金',on:true},
+    {id:5,name:'充值或提款',on:true},{id:6,name:'客服',on:true},
+    {id:7,name:'其他',on:true},{id:8,name:'页面显示异常',on:false}
   ];
   var ST=['待处理','已处理','无需处理'];
   var U_ME='admin001';
@@ -9400,7 +9400,7 @@ function rtLinkSave(){
     var sel=document.getElementById('ufb-f-type');
     if(sel.options.length) return;
     sel.innerHTML='<option value="">全部</option>'+UFB_TYPES.map(function(t){return '<option value="'+t.id+'">'+t.name+(t.on?'':'（已停用）')+'</option>'}).join('');
-    document.getElementById('ufb-tlist').innerHTML=UFB_TYPES.filter(function(t){return t.on}).map(function(t){return '<span class="ufb-tp">'+t.name+(t.cs?'<span class="cs">· 提示联系客服</span>':'')+'</span>'}).join('');
+    document.getElementById('ufb-tlist').innerHTML=UFB_TYPES.filter(function(t){return t.on}).map(function(t){return '<span class="ufb-tp">'+t.name+'</span>'}).join('');
   }
   window.ufbRender=function(){
     initFilters();

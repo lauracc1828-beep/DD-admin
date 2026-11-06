@@ -205,7 +205,7 @@ tr:hover td{background:#fafcff}
       </div>
       <div class="table-wrap"><div class="table-scroll">
         <table>
-          <thead><tr><th>排序</th><th>类型名称（中文）</th><th>类型名称（葡语）</th><th>提示联系客服</th><th>状态</th><th>累计反馈数</th><th>更新人</th><th>更新时间</th><th>操作</th></tr></thead>
+          <thead><tr><th>排序</th><th>类型名称（中文）</th><th>类型名称（葡语）</th><th>状态</th><th>累计反馈数</th><th>更新人</th><th>更新时间</th><th>操作</th></tr></thead>
           <tbody id="type-tbody"></tbody>
         </table>
       </div></div>
@@ -268,7 +268,6 @@ tr:hover td{background:#fafcff}
       <div class="fi"><div class="fl req">类型名称（中文）：</div><div class="fc"><input class="f-input" id="t-zh" maxlength="20" placeholder="后台显示，最多 20 字"><div class="ferr" id="e-zh"></div></div></div>
       <div class="fi"><div class="fl req">类型名称（葡语）：</div><div class="fc"><input class="f-input" id="t-pt" maxlength="30" placeholder="前台显示，最多 30 个字符"><div class="ferr" id="e-pt"></div></div></div>
       <div class="fi"><div class="fl req">排序：</div><div class="fc"><input class="f-input" id="t-sort" placeholder="1~999 的整数"><div class="help">数字越小越靠前；排序相同时按创建时间先后。</div><div class="ferr" id="e-sort"></div></div></div>
-      <div class="fi"><div class="fl req">提示联系客服：</div><div class="fc"><div class="radio-g"><label><input type="radio" name="t-cs" value="1">开启</label><label><input type="radio" name="t-cs" value="0">关闭</label></div><div class="help">开启后，前台用户选中该类型时，在类型下方显示「联系客服」提示条，点击跳转在线客服。</div></div></div>
       <div class="fi"><div class="fl req">状态：</div><div class="fc"><div class="radio-g"><label><input type="radio" name="t-on" value="1">启用</label><label><input type="radio" name="t-on" value="0">停用</label></div><div class="ferr" id="e-on"></div></div></div>
     </div>
     <div class="mf"><button class="btn btn-white" onclick="closeM('m-type')">取 消</button><button class="btn btn-blue" onclick="typeSave()">确 定</button></div>
@@ -319,14 +318,14 @@ function go(p){
 
 /* ───────── 反馈类型配置 ───────── */
 var TYPES=[
-  {id:1,zh:'游戏太少',pt:'Poucos jogos',sort:1,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:2,zh:'游戏卡顿或加载慢',pt:'Jogo trava ou demora',sort:2,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:3,zh:'很难找到游戏',pt:'Difícil encontrar jogos',sort:3,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:4,zh:'活动与彩金',pt:'Promoções e bônus',sort:4,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:5,zh:'充值或提款',pt:'Depósito ou saque',sort:5,cs:true,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:6,zh:'客服',pt:'Atendimento',sort:6,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:7,zh:'其他',pt:'Outro',sort:99,cs:false,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
-  {id:8,zh:'页面显示异常',pt:'Erro na página',sort:7,cs:false,on:false,op:'admin002',ut:'2026-11-04 11:40:05'}
+  {id:1,zh:'游戏太少',pt:'Poucos jogos',sort:1,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:2,zh:'游戏卡顿或加载慢',pt:'Jogo trava ou demora',sort:2,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:3,zh:'很难找到游戏',pt:'Difícil encontrar jogos',sort:3,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:4,zh:'活动与彩金',pt:'Promoções e bônus',sort:4,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:5,zh:'充值或提款',pt:'Depósito ou saque',sort:5,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:6,zh:'客服',pt:'Atendimento',sort:6,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:7,zh:'其他',pt:'Outro',sort:99,on:true,op:'admin001',ut:'2026-11-04 10:12:30'},
+  {id:8,zh:'页面显示异常',pt:'Erro na página',sort:7,on:false,op:'admin002',ut:'2026-11-04 11:40:05'}
 ];
 var typeEdit=-1;
 function tById(id){return TYPES.filter(function(t){return t.id===id})[0]}
@@ -336,7 +335,6 @@ function typeUseCount(id){return FB.filter(function(f){return f.tp.indexOf(id)>-
 function typeRender(){
   document.getElementById('type-tbody').innerHTML=sortedTypes().map(function(t){
     return '<tr><td>'+t.sort+'</td><td>'+esc(t.zh)+'</td><td>'+esc(t.pt)+'</td>'
-      +'<td>'+(t.cs?'<span class="st-tag on">开启</span>':'<span style="color:#bfbfbf">关闭</span>')+'</td>'
       +'<td><span class="tgl'+(t.on?'':' off')+'" onclick="typeToggle('+t.id+')"><i class="k"></i>'+(t.on?'启':'停')+'</span></td>'
       +'<td>'+typeUseCount(t.id)+'</td><td>'+t.op+'</td><td>'+t.ut+'</td>'
       +'<td><span class="op-btn edit" onclick="typeOpen('+t.id+')">编 辑</span></td></tr>';
@@ -354,16 +352,16 @@ function clrErr(){['zh','pt','sort','on'].forEach(function(k){var e=document.get
 function showErr(k,m){var e=document.getElementById('e-'+k);e.textContent=m;e.style.display='block';var i=document.getElementById('t-'+k);if(i)i.classList.add('err')}
 function typeOpen(id){
   typeEdit=id; clrErr();
-  var t=id>0?tById(id):{zh:'',pt:'',sort:'',cs:false,on:true};
+  var t=id>0?tById(id):{zh:'',pt:'',sort:'',on:true};
   document.getElementById('m-type-t').textContent=id>0?'编辑类型':'新增类型';
   document.getElementById('t-zh').value=t.zh; document.getElementById('t-pt').value=t.pt; document.getElementById('t-sort').value=t.sort;
-  setRadio('t-cs',t.cs?'1':'0'); setRadio('t-on',t.on?'1':'0');
+  setRadio('t-on',t.on?'1':'0');
   openM('m-type');
 }
 function typeSave(){
   clrErr();
   var zh=document.getElementById('t-zh').value.trim(), pt=document.getElementById('t-pt').value.trim(), so=document.getElementById('t-sort').value.trim();
-  var cs=getRadio('t-cs')==='1', on=getRadio('t-on')==='1', ok=true;
+  var on=getRadio('t-on')==='1', ok=true;
   if(!zh){showErr('zh','请输入类型名称（中文）');ok=false}
   else if(TYPES.some(function(t){return t.zh===zh&&t.id!==typeEdit})){showErr('zh','类型名称（中文）已存在');ok=false}
   if(!pt){showErr('pt','请输入类型名称（葡语）');ok=false}
@@ -374,8 +372,8 @@ function typeSave(){
   if(onAfter>MAX_ON){showErr('on','最多启用 '+MAX_ON+' 个反馈类型');ok=false}
   if(onAfter<1){showErr('on','至少保留 1 个启用的反馈类型');ok=false}
   if(!ok) return;
-  if(cur){cur.zh=zh;cur.pt=pt;cur.sort=+so;cur.cs=cs;cur.on=on;cur.op=ME;cur.ut=nowStr()}
-  else TYPES.push({id:TYPES.length+1,zh:zh,pt:pt,sort:+so,cs:cs,on:on,op:ME,ut:nowStr()});
+  if(cur){cur.zh=zh;cur.pt=pt;cur.sort=+so;cur.on=on;cur.op=ME;cur.ut=nowStr()}
+  else TYPES.push({id:TYPES.length+1,zh:zh,pt:pt,sort:+so,on:on,op:ME,ut:nowStr()});
   closeM('m-type'); typeRender(); toast(cur?'编辑成功':'新增成功');
 }
 

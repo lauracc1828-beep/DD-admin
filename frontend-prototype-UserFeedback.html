@@ -68,6 +68,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .mitem .mv{margin-left:auto;color:#8a8a8f;display:flex;align-items:center}
 .mitem .mv svg{width:13px;height:13px}
 .mitem.fb{color:#eee;cursor:pointer;background:rgba(255,230,0,.06);outline:1px dashed #6e6520;outline-offset:-1px}
+.b247{display:inline-flex;align-items:center;gap:3px;height:18px;padding:0 7px 0 5px;border-radius:9px;background:linear-gradient(90deg,#ffe600,#ffb800);color:#111;font-size:10.5px;font-weight:800;letter-spacing:.2px;line-height:1}
+.b247 svg{width:12px;height:12px}
 .newtag{font-size:10px;font-weight:700;color:#111;background:#ffe600;border-radius:6px;padding:0 6px;line-height:1.6}
 .nav{flex:0 0 auto;display:flex;justify-content:space-around;padding:8px 0 10px;background:#1a1a1c;border-top:1px solid #2e2e31}
 .nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:#8a8a8f;text-decoration:none;width:60px;position:relative}
@@ -88,7 +90,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .sheet.on{transform:translateY(0)}
 /* 浮层字体层级：标题 18 / 区块标题 14 / 正文 13-14 / 辅助 12；间距按 4 的倍数 */
 .grab{width:36px;height:4px;border-radius:2px;background:#57534d;margin:0 auto 14px}
-.sh-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.sh-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
 .sh-hd h2{margin:0;font-size:18px;line-height:24px;color:var(--t1);font-weight:700}
 .sh-x{width:28px;height:28px;margin:-2px 0 0 0;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t3);cursor:pointer;border-radius:50%}
 .sh-x:hover{background:#3a3733;color:var(--t2)}
@@ -102,19 +104,12 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .chip.on{background:var(--y);border-color:var(--y);color:#1a1a1a;font-weight:600}
 .chip .ck{display:none;font-size:11px}
 .chip.on .ck{display:inline}
-.cs{display:none;margin-top:10px;background:#36332e;border-radius:10px;padding:8px 8px 8px 12px;align-items:center;justify-content:space-between;gap:10px}
-.cs.on{display:flex}
-.cs .t{font-size:12px;color:var(--t2);line-height:18px}
-.cs .b{flex-shrink:0;border:1px solid var(--y);color:var(--y);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer}
 .fld{margin-top:16px}
 .ta,.ip{width:100%;background:#211f1c;border:1px solid var(--line);border-radius:10px;color:var(--t1);font-size:14px;line-height:20px;font-family:inherit;padding:9px 12px;outline:none}
 .ta{height:64px;resize:none;display:block}
 .ta::placeholder,.ip::placeholder{color:#6f6a62}
 .ta:focus,.ip:focus{border-color:#77705f}
 .ip.err{border-color:#e5484d}
-.reward{display:flex;gap:8px;align-items:center;background:rgba(245,197,66,.10);border:1px solid rgba(245,197,66,.28);border-radius:10px;padding:8px 12px;margin:0 0 18px;font-size:13px;line-height:18px;color:#efe3c0;white-space:nowrap}
-.reward b{color:var(--y);font-weight:700}
-.rw-tag{flex-shrink:0;font-size:11px;line-height:16px;font-weight:700;color:#1a1a1a;background:var(--y);border-radius:4px;padding:1px 6px}
 .imgs{display:flex;gap:8px;flex-wrap:wrap}
 .img-it,.img-add{width:60px;height:60px;border-radius:10px;position:relative;flex-shrink:0}
 .img-it img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
@@ -174,8 +169,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
       <b>入口显示条件</b>：已登录 且 商户开关开启，两个入口同时显示或同时隐藏。<br>
       <b>提交按钮</b>：至少选 1 个类型才可点击。<br>
       <b>每日上限</b>：入口不隐藏；达到 3 条后点「提交」提示已达上限，浮层保持打开，已填内容保留。<br>
-      <b>联系客服提示</b>：选中的类型中有开启「提示联系客服」的（默认仅「充值或提款」），在类型下方显示提示条。<br>
       <b>反馈类型</b>：由总控后台统一配置，按排序显示已启用的类型。<br>
+      <b>客服 7×24 小时</b>：「我的」页「客服」后显示「7×24h」提示图片，仅展示，不可点击。<br>
       <b>不影响游戏加载</b>：从加载页打开浮层后，游戏在后台继续加载，浮层顶部显示加载进度；加载完成时浮层不自动关闭，关闭浮层或点「返回游戏」即进入游戏。
     </div>
   </div>
@@ -208,7 +203,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
           <button class="mitem"><span data-i="report"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="invite"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="redeem"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
-          <button class="mitem"><span data-i="support"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="support"></span><span class="b247" title="7×24 小时提示图片（本期新增）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>7×24h</span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem fb" id="mine-fb" onclick="openSheet('mine')"><span data-i="mineFb"></span><span class="newtag">新增</span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="security"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="language"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
@@ -224,10 +219,8 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
       <div class="grab"></div>
       <div id="form-wrap">
         <div class="sh-hd"><div><h2 data-i="title"></h2><div class="ld-st" id="ld-st"></div></div><span class="sh-x" onclick="closeSheet()">✕</span></div>
-        <div class="reward"><span class="rw-tag" data-i="rwTag"></span><span data-i="reward"></span></div>
         <div class="q"><span class="n"><span data-i="q"></span><span class="tip" data-i="multi"></span></span></div>
         <div class="chips" id="chips"></div>
-        <div class="cs" id="cs"><div class="t" id="cs-t"></div><div class="b" onclick="ftoast('跳转至在线客服')" data-i="cs"></div></div>
         <div class="fld">
           <div class="fld-hd"><span class="n"><span data-i="txtLb"></span><i data-i="opt"></i></span><span class="c"><span id="ta-n">0</span>/300</span></div>
           <textarea class="ta" id="ta" maxlength="300" data-ph="txtPh" oninput="document.getElementById('ta-n').textContent=this.value.length"></textarea>
@@ -265,13 +258,13 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 <script>
 // 反馈类型：来自总控后台「反馈类型配置」（已启用，按排序）
 var TYPES=[
-  {id:1,name:'游戏太少',cs:false},
-  {id:2,name:'游戏卡顿或加载慢',cs:false},
-  {id:3,name:'很难找到游戏',cs:false},
-  {id:4,name:'活动与彩金',cs:false},
-  {id:5,name:'充值或提款',cs:true},
-  {id:6,name:'客服',cs:false},
-  {id:7,name:'其他',cs:false}
+  {id:1,name:'游戏太少'},
+  {id:2,name:'游戏卡顿或加载慢'},
+  {id:3,name:'很难找到游戏'},
+  {id:4,name:'活动与彩金'},
+  {id:5,name:'充值或提款'},
+  {id:6,name:'客服'},
+  {id:7,name:'其他'}
 ];
 var S={page:'loading',login:'1',sw:'1',cnt:0,net:'ok',src:'loading',sel:[],imgs:[]};
 var seq=10086;
@@ -282,8 +275,8 @@ var LANG='zh';
 var I18N={
   menu:['菜单','Menu'],
   loading:['加载中…… {n}%','Carregando... {n}%'],
-  ldDesc:['一起打造更好玩的游戏，建议被采纳最高奖 <b>R$ 88</b>','Ajude a melhorar: sugestão aceita ganha até <b>R$ 88</b>'],
-  ldLink:['我要反馈 →','Enviar feedback →'],
+  ldDesc:['我们想创造世界上最好的游戏平台。','Queremos criar a melhor plataforma de jogos do mundo.'],
+  ldLink:['有什么可以改进的？请告诉我们 →','Algo que podemos melhorar? Conte para nós →'],
   acct:['账号：','Conta:'],
   report:['报表','Relatórios'], invite:['邀请','Convidar'], redeem:['兑换码','Código de Resgate'], support:['客服','Suporte'],
   mineFb:['意见反馈','Feedback'], security:['安全中心','Centro de Segurança'], language:['切换语言','Alterar idioma'], logout:['退出','Sair'],
@@ -291,10 +284,8 @@ var I18N={
   title:['帮助我们改进','Ajude a gente a melhorar'],
   ldIng:['游戏正在后台加载 {n}%，填写不影响游戏加载','Carregando o jogo {n}% · pode continuar preenchendo'],
   ldOk:['✓ 游戏已加载完成，可随时返回游戏','✓ Jogo carregado, volte quando quiser'],
-  rwTag:['反馈有奖','Sugestão premiada'],
-  reward:['建议被采纳，最高可得 <b>R$ 88</b>','Se for aceita, ganhe até <b>R$ 88</b>'],
   q:['我们可以改进什么？','O que podemos melhorar?'], multi:['可多选','Escolha uma ou mais'],
-  csTip:['现在需要{t}方面的帮助吗？','Precisa de ajuda agora com {t}?'], cs:['联系客服','Atendimento'],
+
   txtLb:['补充说明','Conte mais'], opt:['（选填）',' (opcional)'], txtPh:['想说的话，可以写在这里……','Escreva aqui o que quiser nos contar...'],
   imgLb:['上传图片','Imagens'], imgTip:['JPG、PNG，单张不超过 5MB','JPG ou PNG, até 5MB cada'], imgAdd:['添加图片','Adicionar'],
   ctLb:['联系方式','Contato'], ctPh:['WhatsApp 或邮箱','WhatsApp ou e-mail'], ctErr:['请输入正确的 WhatsApp 号码或邮箱','Por favor, insira um WhatsApp ou e-mail válido'],
@@ -395,11 +386,6 @@ function renderChips(){
     var on=S.sel.indexOf(t.id)>-1;
     return '<span class="chip'+(on?' on':'')+'" onclick="toggleChip('+t.id+')"><span class="ck">✓</span>'+typeName(t)+'</span>';
   }).join('');
-  var csTypes=TYPES.filter(function(t){return t.cs&&S.sel.indexOf(t.id)>-1});
-  var csNames=LANG==='pt'?csTypes.map(function(t){return TYPE_PT[t.id].toLowerCase()}):csTypes.map(function(t){return '「'+t.name+'」'});
-  var cs=document.getElementById('cs');
-  if(csNames.length){document.getElementById('cs-t').innerHTML=tr('csTip',{t:csNames.join(LANG==='pt'?' e ':'、')});cs.classList.add('on')}
-  else cs.classList.remove('on');
   document.getElementById('sub').disabled=S.sel.length===0;
 }
 function toggleChip(id){
