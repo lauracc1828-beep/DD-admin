@@ -2424,12 +2424,12 @@ select.fs.ph{color:#bfbfbf}
             <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" id="ufb-f-kt" style="min-width:96px"><option value="mid">会员ID</option><option value="acc">会员账号</option></select><input class="f-input" id="ufb-f-kw" placeholder="请输入" style="min-width:140px"></div>
             <div class="filter-item"><span class="filter-label">反馈类型：</span><select class="f-select" id="ufb-f-type"></select></div>
             <div class="filter-item"><span class="filter-label">来源入口：</span><select class="f-select" id="ufb-f-src"><option value="">全部</option><option>游戏加载页</option><option>「我的」页</option></select></div>
+            <div class="filter-item"><span class="filter-label">处理状态：</span><select class="f-select" id="ufb-f-st"><option value="">全部</option><option value="0">待处理</option><option value="1">已处理</option><option value="2">无需处理</option></select></div>
             <div class="filter-item"><span class="filter-label">游戏名称：</span><input class="f-input" id="ufb-f-game" placeholder="请输入游戏名称" style="min-width:140px"></div>
             <div class="filter-item"><span class="filter-label">联系方式：</span><select class="f-select" id="ufb-f-ct" style="min-width:96px"><option value="">全部</option><option value="1">有</option><option value="0">无</option></select></div>
             <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="ufbReset()">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="ufbRender()">查 询</button></div>
           </div>
         </div>
-        <div class="quick-filter"><span class="qf-label">处理状态：</span><span id="ufb-qtags"></span></div>
         <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出任务已创建，请到「报表查询 / 导出页面」下载')">导 出</button></div>
         <div class="table-wrap"><div class="table-scroll">
           <table>
@@ -9388,7 +9388,7 @@ function rtLinkSave(){
   UFB.forEach(function(r){r.imgs=[];for(var i=0;i<(r.im||0);i++) r.imgs.push(ph(i+1,PH_C[i%3]))});
   function imgHtml(r,lg){return r.imgs.length?r.imgs.map(function(s,i){return '<img class="ufb-th'+(lg?' lg':'')+'" src="'+s+'" onclick="ufbLb(\''+r.id+'\','+i+')">'}).join(''):'-'}
   window.ufbLb=function(id,i){var r=UFB.filter(function(x){return x.id===id})[0];document.getElementById('ufb-lb-img').src=r.imgs[i];document.getElementById('ufb-lb').classList.add('show')};
-  var cur=null, qst='';
+  var cur=null;
   function tname(id){var t=UFB_TYPES.filter(function(x){return x.id===id})[0];return t?t:{name:'-',on:false}}
   function tpHtml(ids){return ids.map(function(id){var t=tname(id);return '<span class="ufb-tp'+(t.on?'':' off')+'">'+t.name+(t.on?'':'（已停用）')+'</span>'}).join('')}
   function stHtml(s){return '<span class="ufb-st s'+s+'">'+ST[s]+'</span>'}
@@ -9402,17 +9402,11 @@ function rtLinkSave(){
     sel.innerHTML='<option value="">全部</option>'+UFB_TYPES.map(function(t){return '<option value="'+t.id+'">'+t.name+(t.on?'':'（已停用）')+'</option>'}).join('');
     document.getElementById('ufb-tlist').innerHTML=UFB_TYPES.filter(function(t){return t.on}).map(function(t){return '<span class="ufb-tp">'+t.name+(t.cs?'<span class="cs">· 提示联系客服</span>':'')+'</span>'}).join('');
   }
-  function renderQtags(base){
-    var c=[0,0,0]; base.forEach(function(r){c[r.st]++});
-    var items=[['','全部（'+base.length+'）']].concat(ST.map(function(s,i){return [String(i),s+'（'+c[i]+'）']}));
-    document.getElementById('ufb-qtags').innerHTML=items.map(function(it){return '<span class="tag'+(qst===it[0]?' active':'')+'" onclick="ufbQ(\''+it[0]+'\')">'+it[1]+'</span>'}).join('');
-  }
-  window.ufbQ=function(s){qst=s;ufbRender()};
   window.ufbRender=function(){
     initFilters();
-    var kt=v('ufb-f-kt'),kw=v('ufb-f-kw').trim(),tp=v('ufb-f-type'),src=v('ufb-f-src'),gm=v('ufb-f-game').trim().toLowerCase(),ct=v('ufb-f-ct'),fs=v('ufb-f-s'),fe=v('ufb-f-e');
-    // 处理状态标签上的条数 = 其他筛选条件下各状态的条数
-    var base=UFB.filter(function(r){
+    var st=v('ufb-f-st'),kt=v('ufb-f-kt'),kw=v('ufb-f-kw').trim(),tp=v('ufb-f-type'),src=v('ufb-f-src'),gm=v('ufb-f-game').trim().toLowerCase(),ct=v('ufb-f-ct'),fs=v('ufb-f-s'),fe=v('ufb-f-e');
+    var rows=UFB.filter(function(r){
+      if(st&&String(r.st)!==st) return false;
       if(kw&&(kt==='mid'?r.mid:r.acc)!==kw) return false;
       if(tp&&r.tp.indexOf(parseInt(tp,10))<0) return false;
       if(src&&r.src!==src) return false;
@@ -9421,8 +9415,6 @@ function rtLinkSave(){
       var d=r.t.slice(0,10); if(fs&&d<fs) return false; if(fe&&d>fe) return false;
       return true;
     });
-    renderQtags(base);
-    var rows=base.filter(function(r){return qst===''||String(r.st)===qst});
     document.getElementById('ufb-cnt').textContent=rows.length;
     document.getElementById('ufb-tbody').innerHTML=rows.length?rows.map(function(r){
       var l=last(r);
@@ -9434,8 +9426,8 @@ function rtLinkSave(){
   };
   window.ufbReset=function(){
     ['ufb-f-kw','ufb-f-game','ufb-f-s','ufb-f-e'].forEach(function(id){document.getElementById(id).value=''});
-    ['ufb-f-type','ufb-f-src','ufb-f-ct'].forEach(function(id){document.getElementById(id).value=''});
-    document.getElementById('ufb-f-kt').value='mid'; qst=''; ufbRender();
+    ['ufb-f-type','ufb-f-src','ufb-f-st','ufb-f-ct'].forEach(function(id){document.getElementById(id).value=''});
+    document.getElementById('ufb-f-kt').value='mid'; ufbRender();
   };
   window.ufbSwitchTab=function(n){
     ['list','set'].forEach(function(k){
