@@ -68,8 +68,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
 .mitem .mv{margin-left:auto;color:#8a8a8f;display:flex;align-items:center}
 .mitem .mv svg{width:13px;height:13px}
 .mitem.fb{color:#eee;cursor:pointer;background:rgba(255,230,0,.06);outline:1px dashed #6e6520;outline-offset:-1px}
-.b247{display:inline-flex;align-items:center;gap:3px;height:18px;padding:0 7px 0 5px;border-radius:9px;background:linear-gradient(90deg,#ffe600,#ffb800);color:#111;font-size:10.5px;font-weight:800;letter-spacing:.2px;line-height:1}
-.b247 svg{width:12px;height:12px}
+.mitem .msub{margin-left:-2px;color:#7d7d82;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .newtag{font-size:10px;font-weight:700;color:#111;background:#ffe600;border-radius:6px;padding:0 6px;line-height:1.6}
 .nav{flex:0 0 auto;display:flex;justify-content:space-around;padding:8px 0 10px;background:#1a1a1c;border-top:1px solid #2e2e31}
 .nav a{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:#8a8a8f;text-decoration:none;width:60px;position:relative}
@@ -170,7 +169,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
       <b>提交按钮</b>：至少选 1 个类型才可点击。<br>
       <b>每日上限</b>：入口不隐藏；达到 3 条后点「提交」提示已达上限，浮层保持打开，已填内容保留。<br>
       <b>反馈类型</b>：由总控后台统一配置，按排序显示已启用的类型。<br>
-      <b>客服 7×24 小时</b>：「我的」页「客服」后显示「7×24h」提示图片，仅展示，不可点击。<br>
+      <b>客服副文案</b>：「我的」页「客服」后显示浅灰小字「24 小时在线服务 / Atendimento online 24h」，仅展示，点击整行仍进入客服。<br>
       <b>不影响游戏加载</b>：从加载页打开浮层后，游戏在后台继续加载，浮层顶部显示加载进度；加载完成时浮层不自动关闭，关闭浮层或点「返回游戏」即进入游戏。
     </div>
   </div>
@@ -203,7 +202,7 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
           <button class="mitem"><span data-i="report"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="invite"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="redeem"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
-          <button class="mitem"><span data-i="support"></span><span class="b247" title="7×24 小时提示图片（本期新增）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>7×24h</span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
+          <button class="mitem"><span data-i="support"></span><span class="msub" data-i="supSub" title="本期新增副文案"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem fb" id="mine-fb" onclick="openSheet('mine')"><span data-i="mineFb"></span><span class="newtag">新增</span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="security"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
           <button class="mitem"><span data-i="language"></span><span class="mv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></span></button>
@@ -278,7 +277,7 @@ var I18N={
   ldDesc:['我们想创造世界上最好的游戏平台。','Queremos criar a melhor plataforma de jogos do mundo.'],
   ldLink:['有什么可以改进的？请告诉我们 →','Algo que podemos melhorar? Conte para nós →'],
   acct:['账号：','Conta:'],
-  report:['报表','Relatórios'], invite:['邀请','Convidar'], redeem:['兑换码','Código de Resgate'], support:['客服','Suporte'],
+  report:['报表','Relatórios'], invite:['邀请','Convidar'], redeem:['兑换码','Código de Resgate'], support:['客服','Suporte'], supSub:['24 小时在线服务','Atendimento online 24h'],
   mineFb:['意见反馈','Feedback'], security:['安全中心','Centro de Segurança'], language:['切换语言','Alterar idioma'], logout:['退出','Sair'],
   navHome:['首页','Inicio'], navPromo:['优惠','Promoção'], navInvite:['邀请','Convidar'], navWallet:['钱包','Carteira'], navMine:['我的','Perfil'],
   title:['帮助我们改进','Ajude a gente a melhorar'],
