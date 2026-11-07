@@ -1,126 +1,271 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>用户反馈收集 · 设计稿清单</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>用户反馈收集 · 页面与状态设计稿清单</title>
 <style>
+:root{
+  --page:#0d0d0f; --panel:#17171a; --edge:#26262b; --ink:#e8e8ec; --dim:#8e8e98;
+  --yellow:#f6f542; --new:#3fb37a; --keep:#6f8fbf;
+  --y:#F5C542; --bg:#0f0f0f; --sheet:#2c2a27; --chipbg:#201f1d; --chipline:#4a4744;
+  --t1:#fff; --t2:#bdb8b0; --t3:#8a857d; --line:#3a3733; --err:#e5484d;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.7}
-.page{max-width:1180px;margin:0 auto;padding:28px 20px 72px}
-.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:36px 40px;color:#fff;margin-bottom:18px}
-.cover h1{font-size:26px;font-weight:700;margin-bottom:6px}
-.cover .meta{font-size:13px;opacity:.8;display:flex;gap:28px;flex-wrap:wrap}
-.section{background:#fff;border-radius:10px;padding:22px 28px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
-h2{font-size:17px;font-weight:700;color:#08305c;padding-bottom:8px;border-bottom:2px solid #dbe8f6;margin-bottom:14px}
-h3{font-size:15px;font-weight:600;color:#0b3f78;margin:18px 0 8px;padding-left:10px;border-left:3px solid #1a5fa8}
-p{margin-bottom:8px;color:#333}
-ul{padding-left:20px;margin-bottom:8px}
-li{margin-bottom:4px}
-table{border-collapse:collapse;width:100%;margin:8px 0 4px;font-size:13.5px}
-th{background:#eaf2fb;padding:8px 10px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8;white-space:nowrap}
-td{padding:8px 10px;border:1px solid #e0e4ea;vertical-align:top}
-tr:nth-child(even) td{background:#fafbfc}
-td.id{font-weight:700;color:#1a5fa8;white-space:nowrap}
-td.st{font-weight:600;white-space:nowrap}
-.pt{color:#8a5a00;font-family:Consolas,Menlo,monospace;font-size:12.5px}
-.tag{display:inline-block;padding:0 7px;border-radius:9px;font-size:12px;line-height:18px;margin-right:4px;white-space:nowrap}
-.new{background:#fff3d6;color:#9a6200}
-.var{background:#e6f0fb;color:#1a5fa8}
-.sum{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 2px}
-.sum div{flex:1;min-width:150px;background:#f5f8fc;border:1px solid #e0e8f2;border-radius:8px;padding:10px 14px}
-.sum b{display:block;font-size:22px;color:#08305c}
-.sum span{font-size:12.5px;color:#666}
-.no td{color:#666}
-a{color:#0961BD}
+body{background:var(--page);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.65;padding:32px 28px 90px}
+.hd{border:1px solid var(--edge);background:var(--panel);border-radius:14px;padding:26px 30px;margin-bottom:18px}
+.hd h1{font-size:25px;margin-bottom:6px}
+.hd .sub{color:var(--dim);font-size:13.5px;margin-bottom:16px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.meta .chip{background:#1f1f24;border:1px solid var(--edge);border-radius:999px;padding:3px 13px;font-size:12.5px;color:var(--dim)}
+.meta .chip b{color:var(--ink);font-weight:600}
+.legend{border:1px solid var(--edge);background:var(--panel);border-radius:14px;padding:20px 30px;margin-bottom:26px}
+.legend h3{font-size:15px;margin-bottom:10px}
+.legend table{border-collapse:collapse;font-size:13px}
+.legend th,.legend td{border:1px solid var(--edge);padding:7px 12px;text-align:left;vertical-align:top}
+.legend th{background:#1f1f24;color:#c9c9d2;font-weight:600;white-space:nowrap}
+.legend .note{color:var(--dim);font-size:12.5px;margin-top:10px}
+.legend a{color:#8fb4ff}
+.grp{margin-bottom:34px}
+.grp-hd{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--edge);padding-bottom:10px;margin-bottom:18px}
+.grp-hd .gid{width:30px;height:30px;border-radius:8px;background:var(--yellow);color:#15150a;font-weight:800;font-size:15px;
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.grp-hd h2{font-size:18px;white-space:nowrap}
+.grp-hd .cnt{color:var(--dim);font-size:12.5px;white-space:nowrap}
+.grp-hd .gd{color:var(--dim);font-size:12.5px;line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:20px}
+.card{width:296px;border:1px solid var(--edge);background:var(--panel);border-radius:14px;padding:14px;display:flex;flex-direction:column}
+.card .ct{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.card .code{background:#2b2b31;border:1px solid #3a3a42;border-radius:6px;padding:1px 8px;font-size:12.5px;font-weight:700;color:var(--yellow)}
+.card .nm{font-size:13.5px;font-weight:600}
+.card .tg{margin-left:auto;font-size:11px;border-radius:999px;padding:1px 8px;border:1px solid;white-space:nowrap}
+.tg.design{color:var(--new);border-color:rgba(63,179,122,.45);background:rgba(63,179,122,.12)}
+.tg.ref{color:var(--keep);border-color:rgba(111,143,191,.45);background:rgba(111,143,191,.12)}
+.card.ref{border-style:dashed;border-color:#2f2f36;background:#131316}
+.card.ref .shot{opacity:.5;filter:grayscale(.55)}
+.card.ref .code,.card.ref .nm{color:#9a9aa6}
+.shot{width:268px;height:580px;overflow:hidden;border-radius:26px;position:relative;flex:0 0 auto;margin:0 auto}
+.scale{transform:scale(.6872);transform-origin:top left}
+.ann{margin-top:13px;font-size:12.5px;line-height:1.6}
+.ann dl{display:grid;grid-template-columns:52px 1fr;gap:4px 8px}
+.ann dt{color:#7f7f8a}
+.ann dd{color:#cfcfd6}
+.ann dd b{color:var(--yellow);font-weight:600}
+.ann .cp{margin-top:9px;padding-top:9px;border-top:1px dashed #33333a;color:#9aa6bd;font-size:12px;line-height:1.55}
+.ann .prd{margin-top:7px;font-size:11.5px;color:#6f6f79}
+
+/* ============ 手机画面（沿用前台原型样式，390×844 基准） ============ */
+.phone{width:390px;height:844px;background:var(--bg);position:relative;overflow:hidden;color:var(--t1);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC",sans-serif;line-height:1.5}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column}
+/* 加载页 */
+.ld{background:#0d0d0d}
+.menu-btn{position:absolute;top:44px;left:12px;width:46px;height:46px;border-radius:50%;border:1px solid #333;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#888;font-size:10px;font-weight:700;gap:2px}
+.menu-btn i{font-style:normal;font-size:15px;line-height:1}
+.ld-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.ld-text{color:#ddd;font-size:15px;letter-spacing:.5px}
+.ld-bar{width:150px;height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden}
+.ld-bar i{display:block;height:100%;background:var(--y)}
+.ld-foot{padding:0 20px 74px;text-align:center}
+.ld-foot .s{color:#a8a39b;font-size:12px;margin-bottom:10px}
+.ld-foot .lk{color:#c9a94a;font-size:12px}
+.game{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#777;font-size:13px;
+  background:radial-gradient(circle at 50% 40%,#3a2a12,#120d06 70%)}
+.game b{color:#d8b25a;font-size:20px}
+/* 我的页 */
+.me{background:#141415}
+.me-scroll{flex:1;overflow:hidden;padding:46px 14px 12px}
+.me-head{display:flex;align-items:center;gap:12px;padding:6px 2px 16px;border-bottom:1px solid #2e2e31}
+.me-av{width:52px;height:52px;border-radius:50%;background:#2f2f2f}
+.me-head .mi{font-size:12.5px;color:#cfcfcf;line-height:1.7}
+.me-head .mi b{color:#fff;font-weight:600}
+.mlist{margin-top:8px}
+.mitem{display:flex;align-items:center;gap:10px;padding:13px 4px;border-bottom:1px solid #2e2e31;font-size:13.5px;color:#cfcfcf}
+.mitem .ico{width:22px;height:22px;border-radius:7px;background:#34343a;flex:0 0 auto}
+.mitem .ico.newic{background:none;border:1.5px dashed var(--yellow);display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--yellow);font-weight:700}
+.mitem .msub{margin-left:-2px;color:#7d7d82;font-size:12px;white-space:nowrap}
+.mitem .rb{margin-left:auto;background:#e5222b;color:#fff;font-size:11px;font-weight:700;border-radius:9px;padding:0 6px;line-height:18px}
+.mitem .mv{color:#8a8a8f;font-size:14px}
+.mitem .rb+.mv{margin-left:6px}
+.mitem .msub+.mv,.mitem>span:nth-child(2)+.mv{margin-left:auto}
+.mitem.hl{background:rgba(246,245,66,.06);outline:1px dashed #6e6520;outline-offset:-1px}
+.nav{flex:0 0 auto;display:flex;justify-content:space-around;padding:8px 0 12px;background:#1a1a1c;border-top:1px solid #2e2e31}
+.nav span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:#8a8a8f;width:60px}
+.nav span i{width:22px;height:22px;border-radius:6px;background:#2f2f33;display:block}
+.nav span.mid i{width:44px;height:44px;border-radius:50%;margin-top:-24px;border:3px solid #1a1a1c;background:#2f2f2f}
+.nav span.on{color:#ffe600}
+.nav span.on i{background:#5c5a1f}
+/* 遮罩 + 浮层 */
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:10}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--sheet);border-radius:20px 20px 0 0;padding:10px 16px 22px;z-index:11;max-height:92%;overflow:hidden}
+.grab{width:36px;height:4px;border-radius:2px;background:#57534d;margin:0 auto 14px}
+.sh-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.sh-hd h2{font-size:18px;line-height:24px;font-weight:700}
+.sh-x{font-size:18px;color:var(--t3);line-height:24px}
+.ld-st{font-size:12px;line-height:16px;color:var(--t3);margin-top:4px;white-space:nowrap}
+.ld-st:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--y);margin-right:6px;vertical-align:1px}
+.ld-st.ok{color:#6fcf7f}
+.ld-st.ok:before{display:none}
+.q{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;white-space:nowrap}
+.q .n,.fh .n{font-size:14px;line-height:20px;font-weight:600}
+.tip{font-size:12px;color:var(--t3);font-weight:400}
+.fh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;white-space:nowrap}
+.fh .c{font-size:12px;color:var(--t3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{background:var(--chipbg);border:1px solid var(--chipline);border-radius:10px;padding:7px 12px;font-size:13px;line-height:18px;font-weight:500}
+.chips span.on{background:var(--y);border-color:var(--y);color:#1a1a1a;font-weight:600}
+.chips span.on:before{content:"✓ ";font-size:11px}
+.fld{margin-top:16px}
+.ta,.ip{background:#211f1c;border:1px solid var(--line);border-radius:10px;font-size:14px;line-height:20px;padding:9px 12px;color:#6f6a62}
+.ta{height:64px}
+.ta.v,.ip.v{color:var(--t1)}
+.ta.focus,.ip.focus{border-color:#77705f}
+.ta.focus:after,.ip.focus:after{content:"";display:inline-block;width:1.5px;height:16px;background:var(--y);vertical-align:-3px;margin-left:1px}
+.ip.err{border-color:var(--err)}
+.err-t{color:#ff6b6b;font-size:12px;margin-top:6px}
+.imgs{display:flex;gap:8px}
+.img,.add{width:60px;height:60px;border-radius:10px;position:relative;flex-shrink:0}
+.img{background:linear-gradient(135deg,#5a4a33,#2c3d4f)}
+.img.b{background:linear-gradient(135deg,#2f4a3a,#4b3a5a)}
+.img.c{background:linear-gradient(135deg,#4f3030,#33424f)}
+.img .del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#000;border:1px solid #666;color:#fff;font-size:10px;line-height:16px;text-align:center}
+.img .ov{position:absolute;inset:0;border-radius:10px;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;color:#ddd}
+.img .ov.fail{background:rgba(60,10,10,.7);color:#ff8a8a}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid #666;border-top-color:var(--y)}
+.add{border:1px dashed #5f5a52;background:#211f1c;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--t3);font-size:11px;gap:2px}
+.add i{font-style:normal;font-size:20px;line-height:1;color:var(--t2)}
+.sbtn{margin-top:20px;height:44px;border-radius:12px;background:var(--y);color:#1a1a1a;font-size:15px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sbtn.dis{background:#4d493f;color:#8a8478}
+.sbtn .spin{border-color:#6e6a60;border-top-color:#cfc6b0}
+.ok{text-align:center;padding:8px 6px 4px}
+.ok-ic{width:56px;height:56px;border-radius:50%;background:var(--y);margin:6px auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#1a1a1a;font-weight:700;outline:1.5px dashed var(--yellow);outline-offset:4px}
+.ok-t{font-size:18px;font-weight:700;margin-bottom:6px}
+.ok-s{font-size:13px;line-height:20px;color:var(--t2);margin-bottom:24px}
+.toast{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);background:rgba(0,0,0,.88);color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;z-index:30;width:78%;text-align:center;line-height:1.5}
+/* 系统键盘占位 */
+.kbph{position:absolute;left:0;right:0;bottom:0;height:291px;z-index:45;
+  background:repeating-linear-gradient(45deg,#2a2a2e 0 10px,#232327 10px 20px);border-top:1px solid #3a3a42;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.kbph-t{font-size:15px;font-weight:700;color:#b9b9c4;text-align:center;line-height:1.5}
+.kbph-t span{font-size:12px;font-weight:400;color:#8a8a95}
+.kbph-n{font-size:11.5px;color:#7c7c88;text-align:center;line-height:1.5}
+@media print{body{background:#fff}}
 </style>
 </head>
 <body>
-<div class="page">
-
-<div class="cover">
-  <h1>用户反馈收集 · 设计稿清单</h1>
-  <div class="meta"><span>对应 PRD：用户反馈收集 v1.3</span><span>作者：Laura</span><span>日期：2026-11-07</span></div>
-</div>
-
-<div class="section">
-  <h2>一、说明</h2>
-  <div class="sum">
-    <div><b>4</b><span>需要出稿的页面</span></div>
-    <div><b>17</b><span>需要出稿的状态（A1、B1、C1~C13、D1~D2）</span></div>
-    <div><b>2</b><span>新增图标（Feedback 菜单图标、提交成功图标）</span></div>
+<div class="hd">
+  <h1>用户反馈收集 · 页面与状态设计稿清单</h1>
+  <p class="sub">UI 设计排期用。按「页面 × 状态」逐帧拆分，一帧即一张需交付的设计稿。</p>
+  <div class="meta">
+    <span class="chip">需求 <b>用户反馈收集</b></span>
+    <span class="chip">依据 <b>《用户反馈收集 PRD》v1.3</b></span>
+    <span class="chip">需出稿 <b>17 帧</b></span>
+    <span class="chip">沿用不出稿 <b>2 帧</b></span>
+    <span class="chip">合计 <b>19 帧</b></span>
+    <span class="chip">新增图标 <b>2 个</b></span>
+    <span class="chip">作者 <b>Laura</b></span>
+    <span class="chip">日期 <b>2026-11-07</b></span>
   </div>
-  <ul style="margin-top:12px">
-    <li><b>范围</b>：只有 H5 前台需要出设计稿。商户后台、总控后台沿用现有后台组件，按原型开发，不出设计稿（见第四章）。</li>
-    <li><b>主稿语言</b>：前台按葡语显示，设计稿以葡语为主稿，中文仅作对照；葡语普遍比中文长，换行和截断以葡语为准。下表中 <span class="pt">等宽棕色字</span> 为葡语文案，全部文案见 PRD 第八章。</li>
-    <li><b>交互原型</b>：<a href="https://lauracc1828-beep.github.io/DD-admin/frontend-prototype-UserFeedback.html" target="_blank">H5 前台原型</a>，左侧控制台可切换入口、中葡语言、提交次数和接口结果。原型只表达结构与交互，视觉以设计稿为准。</li>
-    <li><b>标记</b>：<span class="tag new">新增</span>本需求新增的页面或元素；<span class="tag var">变体</span>可在同一张稿上用标注说明差异，不必单独出整页。</li>
-  </ul>
 </div>
 
-<div class="section">
-  <h2>二、页面与状态清单</h2>
-
-  <h3>A. 游戏加载页（1 个状态）</h3>
+<div class="legend">
+  <h3>看图说明</h3>
   <table>
-    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
-    <tr><td class="id">A1</td><td class="st">加载中 + 反馈入口 <span class="tag new">新增</span></td><td>会员已登录，且站点「意见反馈功能」开启；游戏加载期间</td><td>在现有加载页底部新增两行居中文字，整体距底部约两行高度：<br>① 说明文字 <span class="pt">Queremos criar a melhor plataforma de jogos do mundo.</span>（灰色 12px 常规）<br>② 文字链 <span class="pt">Algo que podemos melhorar? Conte para nós →</span>（12px 常规不加粗，柔和黄色，低调、不抢游戏加载的视觉）<br>需标注文字链按压态。入口不显示时即现有加载页，不用另出。</td></tr>
+    <tr><th>帧编号</th><td>A1、C7 等编号为设计稿交付与评审的唯一索引，设计稿文件名请沿用该编号。</td></tr>
+    <tr><th>文案语言</th><td>帧内文案<b>为葡语</b>（上线语言），每帧下方给出中文对照。葡语长度明显长于中文，排版请按葡语实际长度预留空间，取值见《用户反馈收集 PRD》第八章中葡对照表。</td></tr>
+    <tr><th>键盘占位</th><td>斜纹灰块代表<b>设备系统自带键盘</b>，由系统提供、无需设计，仅用于表达浮层上推后的可见区域（示意高度 291）。</td></tr>
+    <tr><th>新增图标</th><td>帧内<b>黄色虚线框</b>为本次需新出的图标：「我的」页 Feedback 菜单图标（B1）、提交成功图标（E1/E2 共用）。风格与现网图标一致。</td></tr>
+    <tr><th>视觉规格</th><td>帧内仅表达元素构成、层级与状态差异，<b>不作为视觉稿</b>。字号、间距、圆角、配色由设计定义；标签之间、缩略图删除按钮等相邻可点击元素请预留足够点击安全间距以防误触。</td></tr>
+    <tr><th>需出稿 / 沿用</th><td>标 <b>需出稿</b> 的帧为本次需求真正需要设计输出的部分。标 <b>沿用 · 不出稿</b> 的帧（虚线框、画面置灰）为现网已有或与其他帧仅差一处的状态，列出仅供设计师理解流程衔接与前后状态关系，<b>不需重新设计</b>。</td></tr>
   </table>
-
-  <h3>B. 「我的」页（1 个状态）</h3>
-  <table>
-    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
-    <tr><td class="id">B1</td><td class="st">菜单列表 <span class="tag new">新增</span></td><td>会员已登录；Feedback 菜单仅在站点「意见反馈功能」开启时显示</td><td>两处改动：<br>①「客服」<span class="pt">Suporte</span> 后加浅灰 12px 副文案 <span class="pt">Atendimento online 24h</span>，与 Suporte 同行，右侧红色角标和箭头保持原样；<br>② 新增菜单项 <span class="pt">Feedback</span>，排在 Suporte 之后、安全中心之前，<b>需要新出一个菜单图标</b>，风格与现有菜单图标一致。<br>原型里的「新增」黄色标签只是原型标记，不是真实界面元素。</td></tr>
-  </table>
-
-  <h3>C. 反馈浮层（13 个状态）</h3>
-  <p>从屏幕底部弹出，带半透明遮罩。结构自上而下：标题栏、加载状态行（仅加载页来源）、问题、反馈类型标签、补充说明、上传图片、联系方式、提交按钮。字号层级见 PRD 4.4。</p>
-  <table>
-    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
-    <tr><td class="id">C1</td><td class="st">初始态 · 加载页打开 <span class="tag new">新增</span></td><td>从游戏加载页文字链打开</td><td>标题 <span class="pt">Ajude a gente a melhorar</span> + 右上角 ✕；标题下方加载状态行 <span class="pt">Carregando o jogo {N}% · pode continuar preenchendo</span>（带进行中的小圆点）；7 个类型标签均未选中；输入框为空；提交按钮置灰。<b>本页为浮层主稿</b>，其余状态在此基础上变化。</td></tr>
-    <tr><td class="id">C2</td><td class="st">初始态 · 「我的」页打开 <span class="tag var">变体</span></td><td>从「我的」页 Feedback 菜单打开</td><td>与 C1 相同，但没有加载状态行，标题下直接是问题区。</td></tr>
-    <tr><td class="id">C3</td><td class="st">游戏已加载完成 <span class="tag var">变体</span></td><td>浮层打开期间游戏加载完成</td><td>加载状态行变为 <span class="pt">✓ Jogo carregado, volte quando quiser</span>（完成色）；浮层下方背景由加载页变为游戏画面，浮层不自动关闭。</td></tr>
-    <tr><td class="id">C4</td><td class="st">已选类型 · 填写中</td><td>选中至少 1 个类型</td><td>选中标签带勾选标记；补充说明有内容，右上角字数 <span class="pt">N/300</span>，到 300/300 后不能再输入；提交按钮激活。</td></tr>
-    <tr><td class="id">C5</td><td class="st">类型多、名称长</td><td>总控最多可启用 10 个类型，葡语名称最长 30 个字符</td><td>出 10 个标签、含长葡语名称时的换行排布，确认浮层高度和滚动方式（浮层内容超出屏幕时内部滚动，提交按钮位置需明确）。</td></tr>
-    <tr><td class="id">C6</td><td class="st">键盘弹起</td><td>聚焦补充说明或联系方式输入框</td><td>键盘弹起后浮层的位置与可视区域，保证当前输入框和提交按钮不被键盘遮挡。</td></tr>
-    <tr><td class="id">C7</td><td class="st">图片 · 已添加 1~2 张</td><td>从相册选择图片后</td><td>标题行 <span class="pt">Imagens (opcional)</span>，同行灰色说明 <span class="pt">JPG ou PNG, até 5MB cada</span>，行尾张数 <span class="pt">N/3</span>；缩略图（带删除按钮）+ 添加按钮 <span class="pt">+ Adicionar</span>。</td></tr>
-    <tr><td class="id">C8</td><td class="st">图片 · 已满 3 张 <span class="tag var">变体</span></td><td>已添加 3 张</td><td>添加按钮隐藏，张数显示 3/3。</td></tr>
-    <tr><td class="id">C9</td><td class="st">图片 · 上传中 <span class="tag new">新增</span></td><td>图片添加后立即上传</td><td>缩略图上显示 <span class="pt">Enviando</span>（可配进度或转圈）；此时提交按钮置灰。原型未画此状态，需设计。</td></tr>
-    <tr><td class="id">C10</td><td class="st">图片 · 上传失败 <span class="tag new">新增</span></td><td>单张图片上传失败</td><td>缩略图上显示 <span class="pt">Falha no envio</span>，仍可点删除后重新添加；不影响提交（只提交成功的图片）。原型未画此状态，需设计。</td></tr>
-    <tr><td class="id">C11</td><td class="st">联系方式格式错误</td><td>点击提交时联系方式不是邮箱或 10~13 位号码</td><td>联系方式输入框标红，下方红字 <span class="pt">Por favor, insira um WhatsApp ou e-mail válido</span>；浮层不关闭，已填内容保留。</td></tr>
-    <tr><td class="id">C12</td><td class="st">提交中</td><td>点击提交后至接口返回前</td><td>提交按钮置灰（可加 loading），防止重复点击。</td></tr>
-    <tr><td class="id">C13</td><td class="st">Toast 提示</td><td>图片校验不通过、当天已达上限、提交失败</td><td>浮层上方居中的轻提示，约 2 秒后消失。按最长的一条出稿，确认换行：<br><span class="pt">Você atingiu o limite de feedbacks de hoje. Tente novamente amanhã.</span><br>其余文案：<span class="pt">Apenas imagens JPG ou PNG</span> / <span class="pt">O tamanho da imagem não deve exceder 5MB</span> / <span class="pt">Máximo de 3 imagens</span> / <span class="pt">Falha no envio. Tente novamente.</span><br>若站点已有统一的 Toast 组件，直接套用即可。</td></tr>
-  </table>
-
-  <h3>D. 提交成功页（2 个状态）</h3>
-  <table>
-    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
-    <tr><td class="id">D1</td><td class="st">成功 · 加载页来源 <span class="tag new">新增</span></td><td>从游戏加载页打开的浮层提交成功</td><td>浮层内容整体替换为成功页：成功图标、标题 <span class="pt">Obrigado!</span>、说明 <span class="pt">Sua opinião nos ajuda a melhorar.</span>、按钮 <span class="pt">Voltar ao jogo</span>。<b>成功图标需设计</b>。页面不显示任何奖励信息。</td></tr>
-    <tr><td class="id">D2</td><td class="st">成功 · 「我的」页来源 <span class="tag var">变体</span></td><td>从「我的」页打开的浮层提交成功</td><td>与 D1 相同，按钮文案为 <span class="pt">Finalizar</span>。</td></tr>
-  </table>
+  <p class="note">未列入清单：系统相册与相册权限弹窗（系统原生界面）；关闭浮层无确认弹窗，动效沿用现有底部浮层；商户后台「消息管理 › 用户反馈」与总控后台「站点会员管理 › 会员反馈管理」全部沿用现有后台组件，按原型开发，不出设计稿。交互可对照 <a href="https://lauracc1828-beep.github.io/DD-admin/frontend-prototype-UserFeedback.html" target="_blank">H5 前台原型</a>。</p>
 </div>
 
-<div class="section">
-  <h2>三、前台不需要出稿的情况</h2>
-  <table>
-    <tr><th style="width:280px">情况</th><th>原因</th></tr>
-    <tr class="no"><td>未登录，或站点关闭「意见反馈功能」</td><td>两个入口都不显示，就是现有的加载页和「我的」页，没有新界面。</td></tr>
-    <tr class="no"><td>点击「添加图片」调起相册、相册权限请求</td><td>使用手机系统原生界面。</td></tr>
-    <tr class="no"><td>浮层关闭（✕ / 点击遮罩）</td><td>只是关闭动作，没有确认弹窗；动效与现有底部浮层保持一致即可。</td></tr>
-    <tr class="no"><td>采纳奖励相关界面</td><td>本需求前台不显示任何奖励信息。</td></tr>
-  </table>
-</div>
+<div id="groups"></div>
 
-<div class="section">
-  <h2>四、后台页面（不出设计稿）</h2>
-  <p>以下页面全部使用现有后台的筛选栏、表格、弹窗、开关和标签组件，开发直接按原型实现，不需要设计稿。</p>
-  <table>
-    <tr><th style="width:110px">端</th><th style="width:240px">菜单</th><th>页面</th><th style="width:150px">原型</th></tr>
-    <tr class="no"><td>商户后台</td><td>消息管理 › 用户反馈</td><td>反馈列表、反馈详情与处理弹窗、功能设置</td><td><a href="https://lauracc1828-beep.github.io/DD-admin/prototype.html#ufb" target="_blank">商户后台原型</a></td></tr>
-    <tr class="no"><td>总控后台</td><td>站点会员管理 › 会员反馈管理</td><td>反馈统计、反馈列表、反馈详情（只读）弹窗、反馈类型配置及新增 / 编辑类型弹窗</td><td><a href="https://lauracc1828-beep.github.io/DD-admin/prototype-master-UserFeedback.html" target="_blank">总控后台原型</a></td></tr>
-  </table>
-</div>
+<script>
+var TYPES=['Poucos jogos','Jogo trava ou demora','Difícil encontrar jogos','Promoções e bônus','Depósito ou saque','Atendimento','Outro'];
+var LONG=['Poucos jogos','Jogo trava ou demora','Difícil encontrar jogos','Promoções e bônus','Depósito ou saque','Atendimento','Problemas no cadastro e login','Sugestão de novas funções','Desempenho no celular antigo','Outro'];
 
-</div>
+function loading(o){o=o||{};
+  return '<div class="screen ld"><div class="menu-btn"><i>≡</i>Menu</div><div class="ld-center"><div class="ld-text">Carregando... '+(o.p||26)+'%</div><div class="ld-bar"><i style="width:'+(o.p||26)+'%"></i></div></div>'+
+  (o.entry===false?'':'<div class="ld-foot"><div class="s">Queremos criar a melhor plataforma de jogos do mundo.</div><div class="lk">Algo que podemos melhorar? Conte para nós →</div></div>')+'</div>';}
+function game(){return '<div class="screen"><div class="game"><b>Fortune Tiger</b>画面（示意）</div></div>';}
+function mine(o){o=o||{};
+  var it=function(t,ex,cls){return '<div class="mitem'+(cls?' '+cls:'')+'"><span class="ico'+(cls==='hl'?' newic':'')+'">'+(cls==='hl'?'新图标':'')+'</span><span>'+t+'</span>'+(ex||'')+'<span class="mv">›</span></div>';};
+  var h='<div class="screen me"><div class="me-scroll"><div class="me-head"><div class="me-av"></div><div class="mi"><b>ID: 26894081</b><br>Conta: player_a01</div></div><div class="mlist">'+
+  it('Relatórios')+it('Convidar')+it('Código de Resgate')+it('Suporte','<span class="msub">Atendimento online 24h</span><span class="rb">42</span>')+
+  (o.fb===false?'':it('Feedback','', 'hl'))+it('Centro de Segurança')+it('Alterar idioma')+it('Sair')+
+  '</div></div><div class="nav"><span><i></i>Inicio</span><span><i></i>Promoção</span><span class="mid"><i></i>Convidar</span><span><i></i>Carteira</span><span class="on"><i></i>Perfil</span></div></div>';
+  return h;}
+function sheet(o){
+  var types=o.types||TYPES, sel=o.sel||[];
+  var h='<div class="mask"></div><div class="sheet"'+(o.kb?' style="bottom:291px;max-height:62%;border-radius:20px 20px 0 0"':'')+'><div class="grab"></div>';
+  if(o.ok){
+    h+='<div class="ok"><div class="ok-ic">✓</div><div class="ok-t">Obrigado!</div><div class="ok-s">Sua opinião nos ajuda a melhorar.</div><div class="sbtn">'+o.ok+'</div></div></div>';
+    return h;}
+  h+='<div class="sh-hd"><div><h2>Ajude a gente a melhorar</h2>'+
+    (o.st==='ing'?'<div class="ld-st">Carregando o jogo '+(o.p||38)+'% · pode continuar preenchendo</div>':o.st==='ok'?'<div class="ld-st ok">✓ Jogo carregado, volte quando quiser</div>':'')+
+    '</div><span class="sh-x">✕</span></div>';
+  if(!o.kb||o.kbFull){
+    h+='<div class="q"><span class="n">O que podemos melhorar?</span><span class="tip">Escolha uma ou mais</span></div><div class="chips">'+
+      types.map(function(t,i){return '<span'+(sel.indexOf(i)>-1?' class="on"':'')+'>'+t+'</span>';}).join('')+'</div>';}
+  var txt=o.txt||'', n=o.n!=null?o.n:txt.length;
+  h+='<div class="fld"><div class="fh"><span class="n">Conte mais<span class="tip"> (opcional)</span></span><span class="c">'+n+'/300</span></div><div class="ta'+(txt?' v':'')+(o.focus==='ta'?' focus':'')+'">'+(txt||'Escreva aqui o que quiser nos contar...')+'</div></div>';
+  if(!o.kb){
+    var im=o.imgs||[], cls=['','b','c'];
+    h+='<div class="fld"><div class="fh"><span class="n">Imagens<span class="tip"> (opcional) · JPG ou PNG, até 5MB cada</span></span><span class="c">'+im.length+'/3</span></div><div class="imgs">'+
+      im.map(function(s,i){return '<div class="img '+cls[i]+'"><span class="del">✕</span>'+(s==='up'?'<div class="ov"><span class="spin"></span>Enviando</div>':s==='fail'?'<div class="ov fail">!<br>Falha no envio</div>':'')+'</div>';}).join('')+
+      (im.length<3?'<div class="add"><i>+</i>Adicionar</div>':'')+'</div></div>';
+    h+='<div class="fld"><div class="fh"><span class="n">Contato<span class="tip"> (opcional)</span></span></div><div class="ip'+(o.ct?' v':'')+(o.ctErr?' err':'')+'">'+(o.ct||'WhatsApp ou e-mail')+'</div>'+
+      (o.ctErr?'<div class="err-t">Por favor, insira um WhatsApp ou e-mail válido</div>':'')+'</div>';
+  }
+  h+='<div class="sbtn'+(o.sub==='on'?'':' dis')+'">'+(o.sub==='busy'?'<span class="spin"></span>':'')+'Enviar</div></div>';
+  if(o.kb) h+='<div class="kbph"><div class="kbph-t">系统键盘<br><span>Teclado do sistema</span></div><div class="kbph-n">系统提供 · 无需设计<br>仅示意占高 291</div></div>';
+  if(o.toast) h+='<div class="toast">'+o.toast+'</div>';
+  return h;}
+function bgLoad(o){return loading(o||{});}
+
+var LONGTXT='O jogo demora muito para abrir quando estou usando dados móveis.';
+var G=[
+ {id:'A',name:'游戏加载页',cnt:'1 帧需出稿 · 1 帧沿用',gd:'入口一。加载页本体为现网页面，本次仅在底部新增两行入口文字，其余区域不出稿。',f:[
+  {c:'A1',n:'加载中 · 显示反馈入口',s:loading({}),t:'会员已登录，且站点商户后台「意见反馈功能」开启；游戏加载期间。',k:'底部新增两行居中文字，整体<b>距底部约两行高度</b>：第一行灰色说明，第二行文字链 <b>12px 常规、不加粗、柔和黄色</b>，低调不抢加载进度的视觉；需标注文字链按压态。游戏加载完成后两行随加载页一起消失。',cp:'说明：我们想创造世界上最好的游戏平台。｜文字链：有什么可以改进的？请告诉我们 →',p:'PRD 4.1、4.2'},
+  {c:'A2',n:'加载中 · 不显示入口',ref:1,s:loading({entry:false}),t:'未登录，或站点关闭「意见反馈功能」。',k:'即现网加载页，本次不改。',p:'依据：PRD 4.1 · 现网沿用'}]},
+ {id:'B',name:'「我的」页 · 菜单列表',cnt:'1 帧需出稿 · 1 帧沿用',gd:'入口二。页面为现网页面，本次改动两处：「Suporte」后加副文案；新增「Feedback」菜单项。',f:[
+  {c:'B1',n:'菜单 · 显示 Feedback 入口',s:mine({}),t:'会员已登录，且站点开启「意见反馈功能」。',k:'①「Suporte」后加<b>浅灰 12px 常规副文案</b>，与 Suporte 同行，右侧红色角标与箭头保持现网；② 新增菜单项「Feedback」，排在 Suporte 之后、Centro de Segurança 之前，<b>需新出菜单图标</b>（帧内黄色虚线框）。点击整行打开反馈浮层。',cp:'客服｜24 小时在线服务｜意见反馈',p:'PRD 4.3'},
+  {c:'B2',n:'菜单 · 功能关闭',ref:1,s:mine({fb:false}),t:'站点关闭「意见反馈功能」。',k:'与 B1 仅差 Feedback 一行；Suporte 副文案照常显示，样式以 B1 为准，不单独出稿。',p:'依据：PRD 4.1、4.3'}]},
+ {id:'C',name:'反馈浮层',cnt:'12 帧需出稿',gd:'新增组件。从屏幕底部弹出，带半透明遮罩；两个入口打开同一个浮层。C1 为主稿，其余帧在 C1 基础上变化。',f:[
+  {c:'C1',n:'初始态 · 加载页来源',s:bgLoad({p:38})+sheet({st:'ing'}),t:'点击加载页文字链「Algo que podemos melhorar?」。',k:'标题下方显示<b>加载状态行</b>（闪烁圆点 + 进度，游戏在后台继续加载）；7 个类型标签均未选，输入框为空，「Enviar」置灰。字号层级：标题 18 加粗、区块标题 14 加粗、辅助说明与计数 12 灰色常规，与区块标题同行。',cp:'帮助我们改进｜游戏正在后台加载 38%，填写不影响游戏加载｜我们可以改进什么？ 可多选｜补充说明（选填）｜上传图片（选填）JPG、PNG，单张不超过 5MB｜联系方式（选填）WhatsApp 或邮箱｜提交',p:'PRD 4.2、4.4'},
+  {c:'C2',n:'初始态 · 「我的」页来源',s:mine({})+sheet({}),t:'点击「我的」页 Feedback 菜单。',k:'与 C1 相同，<b>没有加载状态行</b>，标题下直接是问题区。',cp:'同 C1（无加载状态行）',p:'PRD 4.3、4.4'},
+  {c:'C3',n:'浮层打开期间游戏加载完成',s:game()+sheet({st:'ok',sel:[1],txt:'Demora para abrir.',sub:'on'}),t:'从加载页打开浮层，填写过程中游戏加载完成。',k:'加载状态行变为<b>完成色</b>文案；浮层<b>不自动关闭</b>，已填内容保留；遮罩下方背景由加载页变为游戏画面。',cp:'✓ 游戏已加载完成，可随时返回游戏',p:'PRD 4.2、第九章'},
+  {c:'C4',n:'已选类型 · 填写中',s:bgLoad({p:52})+sheet({st:'ing',p:52,sel:[1,4],txt:LONGTXT,ct:'+55 11 91234-5678',sub:'on'}),t:'选中至少 1 个类型并填写内容。',k:'选中标签为黄底 + 勾选标记，再次点击取消；补充说明右上角字数 <b>N/300</b>，到 300/300 后不能再输入；「Enviar」激活。',cp:'字数 N/300',p:'PRD 4.4'},
+  {c:'C5',n:'类型多 · 名称长',s:mine({})+sheet({types:LONG,sel:[6]}),t:'总控最多启用 10 个类型，葡语名称最长 30 个字符（帧内后 3 个为示意名称）。',k:'确认 10 个标签含长名称时的<b>换行排布</b>；浮层最高占屏 92%，超出时<b>浮层内部滚动</b>，需明确「Enviar」在滚动时的位置。',cp:'类型名称由总控配置，初始 7 个见 PRD 2.5.4',p:'PRD 2.5.3、4.4'},
+  {c:'C6',n:'键盘弹起',s:mine({})+sheet({kb:1,focus:'ta',txt:'O jogo trava',sub:'on',sel:[1]}),t:'聚焦补充说明或联系方式输入框，系统键盘弹起。',k:'浮层整体上推至键盘上方，<b>当前输入框与「Enviar」不被键盘遮挡</b>；上方内容可在浮层内滚动查看。',cp:'—',p:'PRD 4.4'},
+  {c:'C7',n:'图片 · 已添加 2 张',s:mine({})+sheet({sel:[0],imgs:['ok','ok'],sub:'on'}),t:'点击「Adicionar」从相册选图后。',k:'缩略图按选择顺序排列，右上角删除按钮；行尾张数 <b>N/3</b>；未满 3 张时末尾保留「+ Adicionar」。',cp:'添加图片｜张数 N/3',p:'PRD 5.3'},
+  {c:'C8',n:'图片 · 已满 3 张',s:mine({})+sheet({sel:[0],imgs:['ok','ok','ok'],sub:'on'}),t:'已添加 3 张。',k:'「+ Adicionar」隐藏，张数显示 3/3。',cp:'—',p:'PRD 5.3'},
+  {c:'C9',n:'图片 · 上传中',s:mine({})+sheet({sel:[0],imgs:['ok','up']}),t:'图片添加后立即上传。',k:'缩略图上叠加<b>上传中</b>状态（转圈 + 文案）；有图片上传中时「Enviar」<b>置灰</b>，全部上传结束后恢复。原型未画此状态，需设计。',cp:'上传中',p:'PRD 5.3'},
+  {c:'C10',n:'图片 · 上传失败',s:mine({})+sheet({sel:[0],imgs:['ok','fail'],sub:'on'}),t:'单张图片上传失败。',k:'缩略图上叠加<b>上传失败</b>状态，可点删除后重新添加；不影响提交，提交时只附带上传成功的图片。原型未画此状态，需设计。',cp:'上传失败',p:'PRD 5.3'},
+  {c:'C11',n:'联系方式格式错误',s:mine({})+sheet({sel:[2],ct:'abc123',ctErr:1,sub:'on'}),t:'点击「Enviar」时，联系方式不是邮箱，也不是 10~13 位号码。',k:'输入框<b>标红</b>，下方红色提示；浮层不关闭，已填内容保留。',cp:'请输入正确的 WhatsApp 号码或邮箱',p:'PRD 4.4、5.1'},
+  {c:'C12',n:'提交中',s:mine({})+sheet({sel:[2],txt:LONGTXT,sub:'busy'}),t:'点击「Enviar」后至接口返回前。',k:'按钮置灰 + loading，防止重复提交。',cp:'提交',p:'PRD 4.4'}]},
+ {id:'D',name:'轻提示',cnt:'1 帧需出稿',gd:'新增文案，浮层上方居中显示，约 2 秒后自动消失。若站点已有统一的 Toast 组件，直接套用。',f:[
+  {c:'D1',n:'Toast · 最长文案',s:mine({})+sheet({sel:[2],sub:'on',toast:'Você atingiu o limite de feedbacks de hoje. Tente novamente amanhã.'}),t:'图片校验不通过、当天已提交 3 条、提交失败。',k:'按<b>最长一条</b>出稿确认换行；其余文案：Apenas imagens JPG ou PNG ／ O tamanho da imagem não deve exceder 5MB ／ Máximo de 3 imagens ／ Falha no envio. Tente novamente.',cp:'今天的反馈次数已达上限，请明天再来｜仅支持 JPG、PNG 格式图片｜图片大小不得超过 5MB｜最多上传 3 张图片｜提交失败，请稍后重试',p:'PRD 5.1、5.2、5.3'}]},
+ {id:'E',name:'提交成功页',cnt:'2 帧需出稿',gd:'新增状态，在浮层内原地切换，不跳转页面。按来源入口区分按钮文案。不显示任何奖励信息。',f:[
+  {c:'E1',n:'成功 · 来源＝加载页',s:bgLoad({p:71})+sheet({ok:'Voltar ao jogo'}),t:'从游戏加载页打开的浮层提交成功。',k:'图标 + 标题 + 说明 + 按钮；<b>成功图标需新出</b>（帧内黄色虚线框）。点击按钮或遮罩关闭浮层，回到加载页或已加载完成的游戏。',cp:'谢谢！｜你的意见能帮助我们做得更好。｜返回游戏',p:'PRD 4.5'},
+  {c:'E2',n:'成功 · 来源＝「我的」页',s:mine({})+sheet({ok:'Finalizar'}),t:'从「我的」页打开的浮层提交成功。',k:'与 E1 相同，按钮文案不同；成功图标与 E1 共用。',cp:'完成',p:'PRD 4.5'}]}
+];
+
+var out='';
+G.forEach(function(g){
+  out+='<div class="grp"><div class="grp-hd"><span class="gid">'+g.id+'</span><h2>'+g.name+'</h2><span class="cnt">'+g.cnt+'</span><span class="gd">'+g.gd+'</span></div><div class="row">';
+  g.f.forEach(function(f){
+    out+='<div class="card'+(f.ref?' ref':'')+'"><div class="ct"><span class="code">'+f.c+'</span><span class="nm">'+f.n+'</span><span class="tg '+(f.ref?'ref">沿用 · 不出稿':'design">需出稿')+'</span></div>'+
+      '<div class="shot"><div class="scale"><div class="phone">'+f.s+'</div></div></div>'+
+      '<div class="ann"><dl><dt>触发</dt><dd>'+f.t+'</dd><dt>要点</dt><dd>'+f.k+'</dd></dl>'+(f.cp?'<div class="cp">中文对照：'+f.cp+'</div>':'')+'<div class="prd">'+(f.p.indexOf('依据')===0?f.p:'依据：'+f.p)+'</div></div></div>';
+  });
+  out+='</div></div>';
+});
+document.getElementById('groups').innerHTML=out;
+</script>
 </body>
 </html>
