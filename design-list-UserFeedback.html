@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>用户反馈收集 · 设计稿清单</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.7}
+.page{max-width:1180px;margin:0 auto;padding:28px 20px 72px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:36px 40px;color:#fff;margin-bottom:18px}
+.cover h1{font-size:26px;font-weight:700;margin-bottom:6px}
+.cover .meta{font-size:13px;opacity:.8;display:flex;gap:28px;flex-wrap:wrap}
+.section{background:#fff;border-radius:10px;padding:22px 28px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h2{font-size:17px;font-weight:700;color:#08305c;padding-bottom:8px;border-bottom:2px solid #dbe8f6;margin-bottom:14px}
+h3{font-size:15px;font-weight:600;color:#0b3f78;margin:18px 0 8px;padding-left:10px;border-left:3px solid #1a5fa8}
+p{margin-bottom:8px;color:#333}
+ul{padding-left:20px;margin-bottom:8px}
+li{margin-bottom:4px}
+table{border-collapse:collapse;width:100%;margin:8px 0 4px;font-size:13.5px}
+th{background:#eaf2fb;padding:8px 10px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8;white-space:nowrap}
+td{padding:8px 10px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+td.id{font-weight:700;color:#1a5fa8;white-space:nowrap}
+td.st{font-weight:600;white-space:nowrap}
+.pt{color:#8a5a00;font-family:Consolas,Menlo,monospace;font-size:12.5px}
+.tag{display:inline-block;padding:0 7px;border-radius:9px;font-size:12px;line-height:18px;margin-right:4px;white-space:nowrap}
+.new{background:#fff3d6;color:#9a6200}
+.var{background:#e6f0fb;color:#1a5fa8}
+.sum{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 2px}
+.sum div{flex:1;min-width:150px;background:#f5f8fc;border:1px solid #e0e8f2;border-radius:8px;padding:10px 14px}
+.sum b{display:block;font-size:22px;color:#08305c}
+.sum span{font-size:12.5px;color:#666}
+.no td{color:#666}
+a{color:#0961BD}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <h1>用户反馈收集 · 设计稿清单</h1>
+  <div class="meta"><span>对应 PRD：用户反馈收集 v1.3</span><span>作者：Laura</span><span>日期：2026-11-07</span></div>
+</div>
+
+<div class="section">
+  <h2>一、说明</h2>
+  <div class="sum">
+    <div><b>4</b><span>需要出稿的页面</span></div>
+    <div><b>17</b><span>需要出稿的状态（A1、B1、C1~C13、D1~D2）</span></div>
+    <div><b>2</b><span>新增图标（Feedback 菜单图标、提交成功图标）</span></div>
+  </div>
+  <ul style="margin-top:12px">
+    <li><b>范围</b>：只有 H5 前台需要出设计稿。商户后台、总控后台沿用现有后台组件，按原型开发，不出设计稿（见第四章）。</li>
+    <li><b>主稿语言</b>：前台按葡语显示，设计稿以葡语为主稿，中文仅作对照；葡语普遍比中文长，换行和截断以葡语为准。下表中 <span class="pt">等宽棕色字</span> 为葡语文案，全部文案见 PRD 第八章。</li>
+    <li><b>交互原型</b>：<a href="https://lauracc1828-beep.github.io/DD-admin/frontend-prototype-UserFeedback.html" target="_blank">H5 前台原型</a>，左侧控制台可切换入口、中葡语言、提交次数和接口结果。原型只表达结构与交互，视觉以设计稿为准。</li>
+    <li><b>标记</b>：<span class="tag new">新增</span>本需求新增的页面或元素；<span class="tag var">变体</span>可在同一张稿上用标注说明差异，不必单独出整页。</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>二、页面与状态清单</h2>
+
+  <h3>A. 游戏加载页（1 个状态）</h3>
+  <table>
+    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
+    <tr><td class="id">A1</td><td class="st">加载中 + 反馈入口 <span class="tag new">新增</span></td><td>会员已登录，且站点「意见反馈功能」开启；游戏加载期间</td><td>在现有加载页底部新增两行居中文字，整体距底部约两行高度：<br>① 说明文字 <span class="pt">Queremos criar a melhor plataforma de jogos do mundo.</span>（灰色 12px 常规）<br>② 文字链 <span class="pt">Algo que podemos melhorar? Conte para nós →</span>（12px 常规不加粗，柔和黄色，低调、不抢游戏加载的视觉）<br>需标注文字链按压态。入口不显示时即现有加载页，不用另出。</td></tr>
+  </table>
+
+  <h3>B. 「我的」页（1 个状态）</h3>
+  <table>
+    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
+    <tr><td class="id">B1</td><td class="st">菜单列表 <span class="tag new">新增</span></td><td>会员已登录；Feedback 菜单仅在站点「意见反馈功能」开启时显示</td><td>两处改动：<br>①「客服」<span class="pt">Suporte</span> 后加浅灰 12px 副文案 <span class="pt">Atendimento online 24h</span>，与 Suporte 同行，右侧红色角标和箭头保持原样；<br>② 新增菜单项 <span class="pt">Feedback</span>，排在 Suporte 之后、安全中心之前，<b>需要新出一个菜单图标</b>，风格与现有菜单图标一致。<br>原型里的「新增」黄色标签只是原型标记，不是真实界面元素。</td></tr>
+  </table>
+
+  <h3>C. 反馈浮层（13 个状态）</h3>
+  <p>从屏幕底部弹出，带半透明遮罩。结构自上而下：标题栏、加载状态行（仅加载页来源）、问题、反馈类型标签、补充说明、上传图片、联系方式、提交按钮。字号层级见 PRD 4.4。</p>
+  <table>
+    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
+    <tr><td class="id">C1</td><td class="st">初始态 · 加载页打开 <span class="tag new">新增</span></td><td>从游戏加载页文字链打开</td><td>标题 <span class="pt">Ajude a gente a melhorar</span> + 右上角 ✕；标题下方加载状态行 <span class="pt">Carregando o jogo {N}% · pode continuar preenchendo</span>（带进行中的小圆点）；7 个类型标签均未选中；输入框为空；提交按钮置灰。<b>本页为浮层主稿</b>，其余状态在此基础上变化。</td></tr>
+    <tr><td class="id">C2</td><td class="st">初始态 · 「我的」页打开 <span class="tag var">变体</span></td><td>从「我的」页 Feedback 菜单打开</td><td>与 C1 相同，但没有加载状态行，标题下直接是问题区。</td></tr>
+    <tr><td class="id">C3</td><td class="st">游戏已加载完成 <span class="tag var">变体</span></td><td>浮层打开期间游戏加载完成</td><td>加载状态行变为 <span class="pt">✓ Jogo carregado, volte quando quiser</span>（完成色）；浮层下方背景由加载页变为游戏画面，浮层不自动关闭。</td></tr>
+    <tr><td class="id">C4</td><td class="st">已选类型 · 填写中</td><td>选中至少 1 个类型</td><td>选中标签带勾选标记；补充说明有内容，右上角字数 <span class="pt">N/300</span>，到 300/300 后不能再输入；提交按钮激活。</td></tr>
+    <tr><td class="id">C5</td><td class="st">类型多、名称长</td><td>总控最多可启用 10 个类型，葡语名称最长 30 个字符</td><td>出 10 个标签、含长葡语名称时的换行排布，确认浮层高度和滚动方式（浮层内容超出屏幕时内部滚动，提交按钮位置需明确）。</td></tr>
+    <tr><td class="id">C6</td><td class="st">键盘弹起</td><td>聚焦补充说明或联系方式输入框</td><td>键盘弹起后浮层的位置与可视区域，保证当前输入框和提交按钮不被键盘遮挡。</td></tr>
+    <tr><td class="id">C7</td><td class="st">图片 · 已添加 1~2 张</td><td>从相册选择图片后</td><td>标题行 <span class="pt">Imagens (opcional)</span>，同行灰色说明 <span class="pt">JPG ou PNG, até 5MB cada</span>，行尾张数 <span class="pt">N/3</span>；缩略图（带删除按钮）+ 添加按钮 <span class="pt">+ Adicionar</span>。</td></tr>
+    <tr><td class="id">C8</td><td class="st">图片 · 已满 3 张 <span class="tag var">变体</span></td><td>已添加 3 张</td><td>添加按钮隐藏，张数显示 3/3。</td></tr>
+    <tr><td class="id">C9</td><td class="st">图片 · 上传中 <span class="tag new">新增</span></td><td>图片添加后立即上传</td><td>缩略图上显示 <span class="pt">Enviando</span>（可配进度或转圈）；此时提交按钮置灰。原型未画此状态，需设计。</td></tr>
+    <tr><td class="id">C10</td><td class="st">图片 · 上传失败 <span class="tag new">新增</span></td><td>单张图片上传失败</td><td>缩略图上显示 <span class="pt">Falha no envio</span>，仍可点删除后重新添加；不影响提交（只提交成功的图片）。原型未画此状态，需设计。</td></tr>
+    <tr><td class="id">C11</td><td class="st">联系方式格式错误</td><td>点击提交时联系方式不是邮箱或 10~13 位号码</td><td>联系方式输入框标红，下方红字 <span class="pt">Por favor, insira um WhatsApp ou e-mail válido</span>；浮层不关闭，已填内容保留。</td></tr>
+    <tr><td class="id">C12</td><td class="st">提交中</td><td>点击提交后至接口返回前</td><td>提交按钮置灰（可加 loading），防止重复点击。</td></tr>
+    <tr><td class="id">C13</td><td class="st">Toast 提示</td><td>图片校验不通过、当天已达上限、提交失败</td><td>浮层上方居中的轻提示，约 2 秒后消失。按最长的一条出稿，确认换行：<br><span class="pt">Você atingiu o limite de feedbacks de hoje. Tente novamente amanhã.</span><br>其余文案：<span class="pt">Apenas imagens JPG ou PNG</span> / <span class="pt">O tamanho da imagem não deve exceder 5MB</span> / <span class="pt">Máximo de 3 imagens</span> / <span class="pt">Falha no envio. Tente novamente.</span><br>若站点已有统一的 Toast 组件，直接套用即可。</td></tr>
+  </table>
+
+  <h3>D. 提交成功页（2 个状态）</h3>
+  <table>
+    <tr><th style="width:56px">编号</th><th style="width:170px">状态</th><th style="width:220px">出现条件</th><th>设计要点</th></tr>
+    <tr><td class="id">D1</td><td class="st">成功 · 加载页来源 <span class="tag new">新增</span></td><td>从游戏加载页打开的浮层提交成功</td><td>浮层内容整体替换为成功页：成功图标、标题 <span class="pt">Obrigado!</span>、说明 <span class="pt">Sua opinião nos ajuda a melhorar.</span>、按钮 <span class="pt">Voltar ao jogo</span>。<b>成功图标需设计</b>。页面不显示任何奖励信息。</td></tr>
+    <tr><td class="id">D2</td><td class="st">成功 · 「我的」页来源 <span class="tag var">变体</span></td><td>从「我的」页打开的浮层提交成功</td><td>与 D1 相同，按钮文案为 <span class="pt">Finalizar</span>。</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>三、前台不需要出稿的情况</h2>
+  <table>
+    <tr><th style="width:280px">情况</th><th>原因</th></tr>
+    <tr class="no"><td>未登录，或站点关闭「意见反馈功能」</td><td>两个入口都不显示，就是现有的加载页和「我的」页，没有新界面。</td></tr>
+    <tr class="no"><td>点击「添加图片」调起相册、相册权限请求</td><td>使用手机系统原生界面。</td></tr>
+    <tr class="no"><td>浮层关闭（✕ / 点击遮罩）</td><td>只是关闭动作，没有确认弹窗；动效与现有底部浮层保持一致即可。</td></tr>
+    <tr class="no"><td>采纳奖励相关界面</td><td>本需求前台不显示任何奖励信息。</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>四、后台页面（不出设计稿）</h2>
+  <p>以下页面全部使用现有后台的筛选栏、表格、弹窗、开关和标签组件，开发直接按原型实现，不需要设计稿。</p>
+  <table>
+    <tr><th style="width:110px">端</th><th style="width:240px">菜单</th><th>页面</th><th style="width:150px">原型</th></tr>
+    <tr class="no"><td>商户后台</td><td>消息管理 › 用户反馈</td><td>反馈列表、反馈详情与处理弹窗、功能设置</td><td><a href="https://lauracc1828-beep.github.io/DD-admin/prototype.html#ufb" target="_blank">商户后台原型</a></td></tr>
+    <tr class="no"><td>总控后台</td><td>站点会员管理 › 会员反馈管理</td><td>反馈统计、反馈列表、反馈详情（只读）弹窗、反馈类型配置及新增 / 编辑类型弹窗</td><td><a href="https://lauracc1828-beep.github.io/DD-admin/prototype-master-UserFeedback.html" target="_blank">总控后台原型</a></td></tr>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
