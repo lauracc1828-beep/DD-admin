@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>待领取奖励入口与范围扩展 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#123a66;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8;white-space:nowrap}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.nw{white-space:nowrap}
+.req{color:#d93025;font-weight:700}
+.w360{min-width:360px}
+a{color:#0961BD}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">待领取奖励入口与范围扩展</div>
+  <div class="cover-sub">功能 PRD · H5 首页待领取入口 / 待领取页面纳入 VIP 奖励与返水</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-11-09</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、名词定义</a></li>
+    <li><a href="#s3">三、交互逻辑流程图</a></li>
+    <li><a href="#s4">四、后台配置</a>
+      <ol><li><a href="#s41">4.1 配置位置</a></li><li><a href="#s42">4.2 字段规格</a></li></ol></li>
+    <li><a href="#s5">五、前台：待领取入口</a>
+      <ol><li><a href="#s51">5.1 显示条件</a></li><li><a href="#s52">5.2 入口形式（待确认）</a></li><li><a href="#s53">5.3 方案一：首页横条</a></li><li><a href="#s54">5.4 方案二：底部导航「优惠」气泡</a></li><li><a href="#s55">5.5 数据刷新时机</a></li></ol></li>
+    <li><a href="#s6">六、前台：待领取页面奖励范围</a>
+      <ol><li><a href="#s61">6.1 纳入范围总表</a></li><li><a href="#s62">6.2 VIP 奖励</a></li><li><a href="#s63">6.3 返水</a></li><li><a href="#s64">6.4 一键领取与状态同步</a></li><li><a href="#s65">6.5 红点与数量</a></li></ol></li>
+    <li><a href="#s7">七、文案中葡对照</a></li>
+    <li><a href="#s8">八、边界与异常</a></li>
+    <li><a href="#s9">九、修订记录</a></li>
+  </ol>
+</div>
+
+<div class="section" id="s1">
+<h1>一、需求背景与范围</h1>
+<p>H5「优惠 → 待领取」页面已上线（《客户端-待领取》需求，任务 t104856），用于集中领取需要会员手动领取的活动奖励。目前存在两个问题：</p>
+<ol>
+<li>入口较深，会员需主动进入「优惠 → 待领取」才能发现可领取奖励，容易遗漏；</li>
+<li>VIP 奖励与返水同样需要会员手动领取，但未纳入待领取页面，会员需分别进入 VIP 页、返水页领取。</li>
+</ol>
+<h2>本次需求范围</h2>
+<table>
+<thead><tr><th>端</th><th>改动</th></tr></thead>
+<tbody>
+<tr><td class="nw">站点后台</td><td>系统管理 → 系统设置 → 站点显示配置，新增「待领取入口」配置（开关、最低展示金额）</td></tr>
+<tr><td class="nw">H5 前台</td><td>新增待领取入口：会员存在待领取奖励时显示，点击进入「优惠 → 待领取」</td></tr>
+<tr><td class="nw">H5 前台 / 后端</td><td>待领取页面的列表、数量、总金额、一键领取纳入 VIP 奖励与返水</td></tr>
+</tbody>
+</table>
+<p>原型：<a href="https://lauracc1828-beep.github.io/DD-admin/pending-entry-prototype.html">待领取入口原型</a>。</p>
+</div>
+
+<div class="section" id="s2">
+<h1>二、名词定义</h1>
+<table>
+<thead><tr><th>名词</th><th>定义</th></tr></thead>
+<tbody>
+<tr><td class="nw">待领取奖励</td><td>已发放到会员名下、当前可立即领取、需会员手动操作才会进入账户的奖励。系统自动派发到账的奖励不属于待领取奖励。</td></tr>
+<tr><td class="nw">待领取数量</td><td>待领取页面列表的记录条数。活动奖励与 VIP 奖励按笔计数，返水合并为 1 条计数（见 6.3）。</td></tr>
+<tr><td class="nw">待领取总金额</td><td>待领取页面所有记录的奖励金额之和，即待领取页面顶部「奖金」显示的金额。</td></tr>
+<tr><td class="nw">待领取入口</td><td>本需求新增的前台入口，仅在满足 5.1 显示条件时出现，点击进入「优惠 → 待领取」。</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section" id="s3">
+<h1>三、交互逻辑流程图</h1>
+<svg width="760" height="730" viewBox="0 0 760 730" xmlns="http://www.w3.org/2000/svg" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="13">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5b6b80"/></marker></defs>
+<g stroke="#5b6b80" stroke-width="1.4" fill="none">
+<line x1="300" y1="64" x2="300" y2="82" marker-end="url(#ar)"/>
+<line x1="300" y1="156" x2="300" y2="182" marker-end="url(#ar)"/>
+<line x1="300" y1="256" x2="300" y2="288" marker-end="url(#ar)"/>
+<line x1="300" y1="334" x2="300" y2="358" marker-end="url(#ar)"/>
+<line x1="300" y1="440" x2="300" y2="478" marker-end="url(#ar)"/>
+<line x1="300" y1="524" x2="300" y2="568" marker-end="url(#ar)"/>
+<line x1="300" y1="614" x2="300" y2="658" marker-end="url(#ar)"/>
+<polyline points="420,120 640,120 640,196" marker-end="url(#ar)"/>
+<line x1="420" y1="220" x2="558" y2="220" marker-end="url(#ar)"/>
+<polyline points="450,400 640,400 640,244" marker-end="url(#ar)"/>
+<polyline points="150,682 90,682 90,312 148,312" marker-end="url(#ar)"/>
+</g>
+<g fill="#eaf2fb" stroke="#1a5fa8" stroke-width="1.2">
+<rect x="150" y="20" width="300" height="44" rx="8"/>
+<polygon points="300,84 420,120 300,156 180,120" fill="#fff8e8" stroke="#f0a800"/>
+<polygon points="300,184 420,220 300,256 180,220" fill="#fff8e8" stroke="#f0a800"/>
+<rect x="150" y="290" width="300" height="44" rx="8"/>
+<polygon points="300,360 450,400 300,440 150,400" fill="#fff8e8" stroke="#f0a800"/>
+<rect x="150" y="480" width="300" height="44" rx="8" fill="#e8f7ee" stroke="#2e9d5b"/>
+<rect x="150" y="570" width="300" height="44" rx="8"/>
+<rect x="150" y="660" width="300" height="44" rx="8"/>
+<rect x="560" y="198" width="160" height="44" rx="8" fill="#f3f4f6" stroke="#8a94a6"/>
+</g>
+<g fill="#1a1a2e" text-anchor="middle">
+<text x="300" y="47">会员打开首页 / 带底部导航的页面</text>
+<text x="300" y="125">会员已登录？</text>
+<text x="300" y="225">「待领取入口」开关已开启？</text>
+<text x="300" y="317">读取待领取数量与总金额</text>
+<text x="300" y="397">待领取数量 &gt; 0 且</text>
+<text x="300" y="414">总金额 ≥ 最低展示金额？</text>
+<text x="300" y="507">显示待领取入口</text>
+<text x="300" y="597">点击入口 → 进入「优惠 → 待领取」</text>
+<text x="300" y="687">领取成功 / 下拉刷新 / 重新进入页面</text>
+<text x="640" y="225">不显示入口</text>
+</g>
+<g fill="#5b6b80" font-size="12">
+<text x="430" y="112">否</text><text x="430" y="212">否</text><text x="460" y="392">否</text>
+<text x="308" y="174">是</text><text x="308" y="274">是</text><text x="308" y="464">是</text>
+<text x="20" y="500">重新判断</text>
+</g>
+</svg>
+</div>
+
+<div class="section" id="s4">
+<h1>四、后台配置</h1>
+<h2 id="s41">4.1 配置位置</h2>
+<p>站点后台 → 系统管理 → 系统设置 → 站点显示配置，左侧子菜单新增「待领取入口」，排在「快捷入口」之后。页面底部为「保存」按钮，保存后立即生效，前台在下次触发 5.5 刷新时读取新配置。</p>
+<h2 id="s42">4.2 字段规格</h2>
+<table>
+<thead><tr><th>字段</th><th>含义</th><th>控件</th><th>必填</th><th>输入要求</th><th class="w360">说明 / 前台效果</th></tr></thead>
+<tbody>
+<tr><td class="nw">待领取入口</td><td>是否在前台显示待领取入口</td><td>开关</td><td><span class="req">是</span></td><td>开启 / 关闭，默认关闭</td><td>关闭时前台不显示入口，待领取页面本身不受影响。</td></tr>
+<tr><td class="nw">最低展示金额</td><td>待领取总金额达到该值才显示入口</td><td>数字输入框，前缀 R$</td><td>否</td><td>≥ 0 的数字，最多 2 位小数；暗文提示「0 或空表示不限制」</td><td>为空或 0：只要待领取数量 &gt; 0 即显示入口。<br>格式错误时提示：「请输入大于等于 0 的金额，最多 2 位小数」。</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section" id="s5">
+<h1>五、前台：待领取入口</h1>
+<h2 id="s51">5.1 显示条件</h2>
+<p>同时满足以下条件时显示入口，任一条件不满足则不显示：</p>
+<ol>
+<li>会员已登录；</li>
+<li>后台「待领取入口」开关已开启；</li>
+<li>待领取数量 &gt; 0（含活动奖励、VIP 奖励、返水，见第六章）；</li>
+<li>待领取总金额 ≥ 最低展示金额（最低展示金额为空或 0 时不判断此条）。</li>
+</ol>
+<p>入口无入场、退场动效：满足条件时直接显示，条件不再满足（如全部领取完毕）时直接隐藏。入口不提供关闭按钮。</p>
+
+<h2 id="s52">5.2 入口形式（待确认）</h2>
+<div class="notice"><p>入口形式待确认：方案一（首页横条）与方案二（底部导航「优惠」气泡）二选一或同时上线，评审确定后更新本节。两种方案共用 5.1 显示条件、4.2 后台配置与 5.5 刷新时机。</p></div>
+<table>
+<thead><tr><th>对比项</th><th>方案一：首页横条</th><th>方案二：底部导航「优惠」气泡</th></tr></thead>
+<tbody>
+<tr><td>显示页面</td><td>仅首页</td><td>所有显示底部导航的页面</td></tr>
+<tr><td>展示内容</td><td>待领取总金额 + 引导文案 + 「去领取」按钮</td><td>待领取总金额</td></tr>
+<tr><td>对现有布局的影响</td><td>出现时 Banner 以下内容下移一行</td><td>无，气泡浮于导航上方</td></tr>
+</tbody>
+</table>
+
+<h2 id="s53">5.3 方案一：首页横条</h2>
+<table>
+<thead><tr><th>项</th><th class="w360">规则</th></tr></thead>
+<tbody>
+<tr><td class="nw">位置</td><td>首页 Banner 下方、跑马灯上方，通栏，左右边距与 Banner 一致。横条显示时下方内容整体下移；隐藏时恢复原位。</td></tr>
+<tr><td class="nw">内容</td><td>左侧礼包图标；中间文案「你有 {待领取总金额} 奖励待领取」，金额按 R$ 格式显示两位小数（如 R$ 12,50、R$ 1.250,00），文案超长时省略号截断；右侧「去领取」按钮。按钮与横条样式以 UI 设计稿为准。</td></tr>
+<tr><td class="nw">点击</td><td>点击横条任意位置（含「去领取」按钮）进入「优惠 → 待领取」。</td></tr>
+<tr><td class="nw">常驻动效</td><td>循环播放：礼包图标每 3.6 秒摇晃一次；一道扫光每 3.6 秒从左到右划过横条。「去领取」按钮不单独加动效。</td></tr>
+</tbody>
+</table>
+
+<h2 id="s54">5.4 方案二：底部导航「优惠」气泡</h2>
+<table>
+<thead><tr><th>项</th><th class="w360">规则</th></tr></thead>
+<tbody>
+<tr><td class="nw">位置</td><td>底部导航「优惠」图标正上方，底部带指向「优惠」的尖角，浮于页面内容之上，不占用布局。</td></tr>
+<tr><td class="nw">内容</td><td>待领取总金额。金额 &lt; R$ 1.000 时显示两位小数（如 R$ 12,50）；≥ R$ 1.000 时不显示小数（如 R$ 1.250）。</td></tr>
+<tr><td class="nw">与红点的关系</td><td>气泡显示时，「优惠」原有红点不显示；气泡隐藏时，「优惠」红点按原逻辑显示。</td></tr>
+<tr><td class="nw">点击</td><td>点击气泡进入「优惠 → 待领取」；点击「优惠」图标本身按原逻辑进入「优惠」页。</td></tr>
+<tr><td class="nw">常驻动效</td><td>循环播放，均不超出气泡原有面积：气泡每 2.4 秒上下浮动 3px；一道扫光每 3.6 秒划过气泡。</td></tr>
+</tbody>
+</table>
+
+<h2 id="s55">5.5 数据刷新时机</h2>
+<p>以下时机重新读取待领取数量与总金额，并重新判断入口是否显示：</p>
+<ul>
+<li>进入首页 / 进入带底部导航的页面；</li>
+<li>首页下拉刷新；</li>
+<li>任一领取成功后（待领取页面一键领取、活动详情页领取、VIP 页领取、返水页领取）。</li>
+</ul>
+</div>
+
+<div class="section" id="s6">
+<h1>六、前台：待领取页面奖励范围</h1>
+<h2 id="s61">6.1 纳入范围总表</h2>
+<table>
+<thead><tr><th>奖励</th><th>纳入条件</th><th>本次是否改动</th></tr></thead>
+<tbody>
+<tr><td>救援金、神秘彩金、充值、红包雨</td><td>活动后台「领取方式」= 手动领取，且奖励当前可领取</td><td>否，沿用现有逻辑</td></tr>
+<tr><td>VIP 奖励</td><td>见 6.2</td><td><b>新增</b></td></tr>
+<tr><td>返水</td><td>见 6.3</td><td><b>新增</b></td></tr>
+<tr><td>会员答谢、签到、首充亏损返利、限时充值返利、助力转盘、幸运转盘、注册引导转盘、自定义</td><td>不纳入。会员答谢在点击领取时才计算奖励；签到、首充亏损返利在活动内点击后自动发放；其余为自动派发或走各自申请流程</td><td>否</td></tr>
+</tbody>
+</table>
+
+<h2 id="s62">6.2 VIP 奖励</h2>
+<ul>
+<li><b>纳入条件</b>：站点后台「VIP 管理 → 等级奖励记录」中状态为「未领取」的记录，每条记录在待领取列表中显示为一条。</li>
+<li><b>奖励类型</b>：以等级奖励记录的福利类型为准：升级福利、每日福利、每周福利、月度福利。</li>
+<li><b>列表字段</b>：时间 = 奖励生成时间；活动名称 = VIP；奖励 = 福利金额；来源 = 「VIP{等级}{福利类型}」，例如「VIP1 每日奖励」。</li>
+<li><b>移出条件</b>：奖励被领取；或按 VIP 管理「领取规则」跨天 / 跨周 / 跨月后被系统回收作废或改为邮件下发，此时该记录立即从待领取列表移出。</li>
+</ul>
+
+<h2 id="s63">6.3 返水</h2>
+<ul>
+<li><b>纳入条件</b>：会员存在「领取状态 = 未领取」的返水记录（站点后台「返水管理 → 会员返水记录」）。</li>
+<li><b>合并显示</b>：所有未领取返水在待领取列表中合并为 <b>1 条</b>：时间 = 最近一笔未领取返水的发放时间；活动名称 = 返水；奖励 = 未领取返水金额合计，与返水页「可领取」金额一致；来源 = 实时返水。</li>
+<li><b>计数</b>：无论未领取返水记录有多少笔，在待领取数量中计为 1。</li>
+<li><b>移出条件</b>：未领取返水全部领取后移出。</li>
+</ul>
+
+<h2 id="s64">6.4 一键领取与状态同步</h2>
+<ul>
+<li>待领取页面「一键领取（Coletar Tudo）」一次领取列表内全部奖励，包括活动奖励、VIP 奖励、返水；领取结果弹框中的金额为本次实际到账总额。</li>
+<li>在待领取页面领取后：VIP 页对应奖励变为已领取，返水页可领取金额清零，活动详情页领取按钮回到不可领取状态。</li>
+<li>在 VIP 页、返水页、活动详情页领取后：待领取页面对应记录同步移出，待领取数量与总金额同步更新。</li>
+<li>一键领取中部分奖励领取失败时：成功部分正常到账并移出列表，失败部分保留在列表中，弹框提示「部分奖励领取失败，请稍后重试」。</li>
+</ul>
+
+<h2 id="s65">6.5 红点与数量</h2>
+<ul>
+<li>「优惠 → 待领取」标签红点、待领取数量与总金额均包含 VIP 奖励与返水。</li>
+<li>VIP 标签、返水标签原有红点逻辑不变。</li>
+</ul>
+</div>
+
+<div class="section" id="s7">
+<h1>七、文案中葡对照</h1>
+<table>
+<thead><tr><th>位置</th><th>中文</th><th>葡语</th><th>来源</th></tr></thead>
+<tbody>
+<tr><td>方案一横条</td><td>你有 {金额} 奖励待领取</td><td>Você tem {valor} em bônus pendentes</td><td>新增</td></tr>
+<tr><td>方案一横条按钮</td><td>去领取</td><td>Coletar</td><td>沿用（竞品 VIP 领取按钮）</td></tr>
+<tr><td>待领取页面按钮</td><td>一键领取</td><td>Coletar Tudo</td><td>沿用</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>VIP</td><td>VIP</td><td>沿用</td></tr>
+<tr><td>待领取列表 · 来源</td><td>VIP{等级} 升级奖励</td><td>VIP{nível} Bonus de Aumento de Nível</td><td>沿用（竞品）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>VIP{等级} 每日奖励</td><td>VIP{nível} Bônus Diário</td><td>沿用（竞品）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>VIP{等级} 每周奖励</td><td>VIP{nível} Bônus Semanal</td><td>沿用（竞品）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>VIP{等级} 每月奖励</td><td>VIP{nível} Bônus Mensal</td><td>沿用（竞品）</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>返水</td><td>Rebate</td><td>沿用（竞品）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>实时返水</td><td>Rebate em Tempo Real</td><td>新增</td></tr>
+<tr><td>一键领取部分失败提示</td><td>部分奖励领取失败，请稍后重试</td><td>Alguns bônus não foram coletados. Tente novamente mais tarde.</td><td>新增</td></tr>
+<tr><td>后台 · 最低展示金额暗文</td><td>0 或空表示不限制</td><td>—</td><td>后台中文</td></tr>
+<tr><td>后台 · 最低展示金额校验</td><td>请输入大于等于 0 的金额，最多 2 位小数</td><td>—</td><td>后台中文</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section" id="s8">
+<h1>八、边界与异常</h1>
+<table>
+<thead><tr><th>场景</th><th class="w360">处理</th></tr></thead>
+<tbody>
+<tr><td>待领取数量 / 总金额接口请求失败</td><td>不显示入口，不提示错误；下次刷新时机重新请求。</td></tr>
+<tr><td>入口显示期间，会员在其他页面领完全部奖励</td><td>回到首页或进入带底部导航的页面时重新判断，入口隐藏。</td></tr>
+<tr><td>点击入口进入待领取页面时，奖励已被领取或已作废</td><td>待领取页面按最新数据展示；无数据时显示空状态「Sem Registros」。</td></tr>
+<tr><td>后台关闭开关或调高最低展示金额</td><td>前台在下次刷新时机按新配置判断，已显示的入口随之隐藏。</td></tr>
+<tr><td>VIP 奖励过期回收或改为邮件下发</td><td>该记录从待领取列表移出，数量与总金额同步扣减（见 6.2）。</td></tr>
+<tr><td>未登录访客</td><td>不显示入口，不请求待领取接口。</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section" id="s9">
+<h1>九、修订记录</h1>
+<table class="rev">
+<thead><tr><th>版本</th><th>日期</th><th>修订内容</th></tr></thead>
+<tbody>
+<tr><td>v1.0</td><td>2026-11-09</td><td>首版：新增待领取入口（后台开关与最低展示金额、显示条件、两种入口形式待确认、刷新时机）；待领取页面纳入 VIP 奖励与返水（纳入条件、合并规则、一键领取与状态同步、红点与数量）。</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</body>
+</html>
