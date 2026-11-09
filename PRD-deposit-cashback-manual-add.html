@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>充值返现列表改为手动新增 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{width:fit-content;min-width:100%;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;gap:36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#123a66;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+table{border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.fc-wrap{padding:8px 0 2px}
+.legend{font-size:12px;color:#888;margin-top:6px}
+.req{color:#d93025;font-weight:700}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">充值返现列表改为手动新增</div>
+  <div class="cover-sub">PRD 产品需求文档 · 充提返现设置 — 充值返现标签页</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-11-07</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、改动前后对比</a></li>
+    <li><a href="#s3">三、交互逻辑流程图</a></li>
+    <li><a href="#s4">四、后台改动说明</a>
+      <ol>
+        <li><a href="#s41">4.1 列表页</a></li>
+        <li><a href="#s42">4.2 筛选区：存款方式</a></li>
+        <li><a href="#s43">4.3 新增与编辑弹窗</a></li>
+        <li><a href="#s44">4.4 删除</a></li>
+        <li><a href="#s45">4.5 状态与生效判定</a></li>
+      </ol>
+    </li>
+    <li><a href="#s5">五、上线时的存量数据处理</a></li>
+    <li><a href="#s6">六、边界与异常处理</a></li>
+    <li><a href="#s7">七、权限与操作留痕</a></li>
+    <li><a href="#s8">八、关联需求同步说明</a></li>
+    <li><a href="#s9">九、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与范围</h1>
+  <p>商户后台「商户财务配置 — 充提返现设置」包含「充值返现」「提款返现」两个标签页。现状下两者的列表逻辑不一致：「充值返现」自动同步支付方式管理中的全部存款方式，只能编辑、不能新增或删除；「提款返现」由运营手动新增需要返现的提款通道，并支持删除。</p>
+  <p>本需求将<b>「充值返现」标签页的列表逻辑改为与「提款返现」一致</b>：列表只展示手动新增的存款方式，通过「新增」按钮逐条添加，并支持删除。运营只需维护实际要做返现的存款方式，列表不再堆积大量未配置的行。</p>
+
+  <h2>本次改动范围</h2>
+  <table>
+    <thead><tr><th style="width:150px">模块</th><th>改动内容</th><th style="width:100px">对应章节</th></tr></thead>
+    <tbody>
+      <tr><td>列表页</td><td>数据来源改为手动新增；新增「新增」按钮；「操作」列新增「删除」；默认排序与部分列的说明随之调整。</td><td>4.1</td></tr>
+      <tr><td>筛选区</td><td>「存款方式」下拉改为固定列出全部存款方式，不与列表联动。</td><td>4.2</td></tr>
+      <tr><td>弹窗</td><td>「会员存款返现设置」弹窗新增「新增」模式，新增时以下拉框选择存款方式；编辑时存款方式不可修改。</td><td>4.3</td></tr>
+      <tr><td>提现稽核倍数</td><td>弹窗中「提现稽核倍数」改为必填，默认填入 0，只能填写 0 或正整数；温馨提示第 4、5 条合并为一条。</td><td>4.3</td></tr>
+      <tr><td>删除</td><td>删除已添加的存款方式配置，含二次确认与删除后的影响。</td><td>4.4</td></tr>
+      <tr><td>生效判定</td><td>由「状态开启且返现百分比 &gt; 0」改为「该存款方式已添加且状态开启」。</td><td>4.5</td></tr>
+      <tr><td>存量数据</td><td>上线时原列表数据的保留规则。</td><td>第五章</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice notice-info">
+    <p><b>不在本需求范围</b>：返现的计算基数与取整、每日最高优惠封顶、提现稽核倍数对有效投注要求的追加方式、入账与账变类型「充值赠送」、前台充值页的角标与「含赠送」副行呈现，均沿用《充值返现 PRD》第五、六章，本需求不做改动。弹窗中返现百分比、每日最高优惠两项的输入区间、校验与温馨提示第 1 ~ 3 条也保持不变，见《充值返现 PRD》4.5、4.6 节。「提款返现」标签页不做改动。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、改动前后对比</h1>
+  <table>
+    <thead><tr><th style="width:150px">项</th><th style="width:360px">改动前</th><th style="width:420px">改动后</th></tr></thead>
+    <tbody>
+      <tr><td>列表数据来源</td><td>自动同步支付方式管理中的全部存款方式；新接入的存款方式自动追加一行，配置值为 0、状态关闭。</td><td>只展示<b>手动新增</b>的存款方式；新接入的存款方式不自动加入列表，仅出现在新增下拉中。</td></tr>
+      <tr><td>「新增」按钮</td><td>无</td><td>列表区右上角，列工具组左侧。</td></tr>
+      <tr><td>「操作」列</td><td>「编辑」</td><td>「编辑」「删除」</td></tr>
+      <tr><td>默认排序</td><td>最近操作时间倒序，从未配置过的存款方式排在末尾。</td><td>最近操作时间倒序，新增的行位于首行。</td></tr>
+      <tr><td>筛选区「存款方式」下拉</td><td>选项与列表行一一对应。</td><td>固定列出全部存款方式，不与列表联动。</td></tr>
+      <tr><td>弹窗模式</td><td>仅编辑。</td><td>新增 / 编辑共用同一弹窗。</td></tr>
+      <tr><td>弹窗「提现稽核倍数」</td><td>非必填（无星标）；温馨提示第 4、5 条分两条展示。</td><td><b>必填</b>（带星标），<b>默认填入 0</b>，只能填写 0 或正整数；温馨提示第 4、5 条合并为一条。</td></tr>
+      <tr><td>返现百分比可为 0 的行</td><td>存在（从未配置过的行展示为 0）。</td><td>不存在：新增与编辑时返现百分比均必填且 ≥ 0.001。</td></tr>
+      <tr><td>生效判定</td><td>状态开启且返现百分比 &gt; 0。</td><td>该存款方式已添加且状态开启。</td></tr>
+      <tr><td>存款方式在支付方式管理中下线</td><td>列表保留该行，「编辑」按钮与状态开关置灰（不可点击）。</td><td>已添加的行保留，可查看、编辑与删除，详见第六章。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、交互逻辑流程图</h1>
+  <div class="fc-wrap">
+  <svg viewBox="0 0 700 760" width="700" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC',Arial,sans-serif">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#7c8da3"/>
+      </marker>
+    </defs>
+    <text x="250" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">新增流程</text>
+
+    <rect x="120" y="56" width="260" height="42" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="250" y="82" text-anchor="middle" font-size="12.5" fill="#123a66">运营点击列表右上角「新增」</text>
+
+    <rect x="120" y="128" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="147" text-anchor="middle" font-size="12.5" fill="#333">下拉选择存款方式（已添加的置灰），</text>
+    <text x="250" y="164" text-anchor="middle" font-size="12.5" fill="#333">填写返现设置三项后点击「保存」</text>
+
+    <polygon points="250,204 380,244 250,284 120,244" fill="#fff6e0" stroke="#e0b060"/>
+    <text x="250" y="240" text-anchor="middle" font-size="12" fill="#6a4a00">存款方式已选择</text>
+    <text x="250" y="256" text-anchor="middle" font-size="12" fill="#6a4a00">且必填项已填写？</text>
+
+    <rect x="432" y="222" width="206" height="44" rx="8" fill="#fdecec" stroke="#e09b9b"/>
+    <text x="535" y="241" text-anchor="middle" font-size="12" fill="#8a2b2b">对应字段标红提示，</text>
+    <text x="535" y="257" text-anchor="middle" font-size="12" fill="#8a2b2b">弹窗保持打开</text>
+
+    <rect x="120" y="314" width="260" height="46" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="333" text-anchor="middle" font-size="12.5" fill="#333">保存成功，列表首行新增该存款方式，</text>
+    <text x="250" y="350" text-anchor="middle" font-size="12.5" fill="#333">状态默认关闭</text>
+
+    <rect x="120" y="390" width="260" height="42" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="416" text-anchor="middle" font-size="12.5" fill="#333">运营核对配置后在列表中开启状态</text>
+
+    <rect x="120" y="462" width="260" height="50" rx="8" fill="#e8f6ec" stroke="#8cc9a3"/>
+    <text x="250" y="481" text-anchor="middle" font-size="12.5" fill="#15542f">此后支付成功的该存款方式订单</text>
+    <text x="250" y="498" text-anchor="middle" font-size="12.5" fill="#15542f">按《充值返现 PRD》第五章发放</text>
+
+    <text x="250" y="566" text-anchor="middle" font-size="15" font-weight="700" fill="#08305c">删除流程</text>
+
+    <rect x="120" y="596" width="260" height="46" rx="8" fill="#eaf2fb" stroke="#8fb8e0"/>
+    <text x="250" y="615" text-anchor="middle" font-size="12.5" fill="#123a66">运营点击行内「删除」，</text>
+    <text x="250" y="632" text-anchor="middle" font-size="12.5" fill="#123a66">在二次确认框点击「确定」</text>
+
+    <rect x="120" y="672" width="260" height="50" rx="8" fill="#fff" stroke="#b9c7d8"/>
+    <text x="250" y="691" text-anchor="middle" font-size="12.5" fill="#333">该行移除，存款方式在新增下拉中</text>
+    <text x="250" y="708" text-anchor="middle" font-size="12.5" fill="#333">恢复可选；此后订单不再发放返现</text>
+
+    <line x1="250" y1="98" x2="250" y2="124" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="174" x2="250" y2="200" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="284" x2="250" y2="310" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="360" x2="250" y2="386" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="432" x2="250" y2="458" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="250" y1="642" x2="250" y2="668" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <line x1="380" y1="244" x2="428" y2="244" stroke="#7c8da3" stroke-width="1.4" marker-end="url(#ah)"/>
+    <path d="M535 222 L535 151 L384 151" fill="none" stroke="#7c8da3" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+
+    <text x="264" y="302" font-size="11.5" fill="#15542f">是</text>
+    <text x="392" y="238" font-size="11.5" fill="#8a2b2b">否</text>
+  </svg>
+  </div>
+  <p class="legend">说明：虚线为校验未通过后回到弹窗继续填写的路径。删除不论该行状态开启或关闭均可执行。</p>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、后台改动说明</h1>
+
+  <h2 id="s41">4.1 列表页</h2>
+  <ul>
+    <li><b>数据来源</b>：列表<b>只展示已手动添加的存款方式</b>，不再自动同步支付方式管理中的全部存款方式。未添加的存款方式不产生充值返现。</li>
+    <li><b>「新增」按钮</b>：位于列表区<b>右上角</b>（列工具组左侧）。点击唤起「会员存款返现设置」新增弹窗（4.3）。全部存款方式均已添加时，按钮<b>置灰（不可点击）</b>，悬停提示「全部存款方式均已添加」；删除任一行后恢复可点击。</li>
+    <li><b>与存款方式启停无关</b>：在支付方式管理中为「禁用」的存款方式同样可添加与编辑，便于提前配置；前台不展示该存款方式，故不会产生返现。</li>
+    <li><b>默认排序</b>：按<b>最近操作时间倒序</b>，新增的行位于首行。</li>
+    <li><b>列表为空</b>：未添加任何存款方式时，列表展示「暂无数据」。</li>
+  </ul>
+  <p>列字段中发生变化的项如下，未列出的列（返现方式、状态）不变：</p>
+  <table>
+    <thead><tr><th style="width:150px">列</th><th>改动后的说明</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式</td><td>新增时选定的存款方式名称，与支付方式管理中的配置同名。添加后不可修改。</td></tr>
+      <tr><td>返现百分比例（%）</td><td>去除末尾无意义的 0 后展示。取消「展示为 0 表示尚未配置」的说明，列表中不再出现 0。</td></tr>
+      <tr><td>每日最高优惠（元）</td><td>去除末尾无意义的 0 后展示。取消「展示为 0 表示尚未配置」的说明。</td></tr>
+      <tr><td>最近操作时间</td><td>该行最后一次<b>新增</b>、保存配置或切换状态的时间，格式 <code>YYYY-MM-DD HH:mm:ss (UTC-3)</code>。取消「从未操作过时展示为空」的说明。</td></tr>
+      <tr><td>操作人</td><td>最近一次操作的后台账号。取消「从未操作过时展示为空」的说明。</td></tr>
+      <tr><td>操作</td><td>「编辑」按钮唤起「会员存款返现设置」编辑弹窗（4.3）；<b>「删除」按钮</b>位于「编辑」右侧，删除该行配置（4.4）。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s42">4.2 筛选区：存款方式</h2>
+  <table>
+    <thead><tr><th style="width:110px">字段</th><th style="width:90px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式</td><td>下拉单选</td><td>否</td><td>选项为支付方式管理中的<b>全部存款方式</b>（不区分状态，顺序与该页一致），<b>不与列表联动</b>：未添加到列表的存款方式同样列出，选中后查询结果为「暂无数据」。默认空（全部）。</td></tr>
+    </tbody>
+  </table>
+  <p>筛选区其余字段（最后操作时间、操作人）与「查询」「重置」按钮不变。</p>
+
+  <h2 id="s43">4.3 新增与编辑弹窗：会员存款返现设置</h2>
+  <p>新增与编辑共用同一弹窗，标题均为<b>「会员存款返现设置」</b>，分「基本信息」与「返现设置」两组，底部为「保存」「重置」。两种模式的差异如下：</p>
+  <table>
+    <thead><tr><th style="width:150px">项</th><th style="width:330px">新增（点击「新增」按钮）</th><th style="width:330px">编辑（点击行内「编辑」）</th></tr></thead>
+    <tbody>
+      <tr><td>存款方式</td><td>下拉单选，必填，默认未选</td><td>纯文本只读，<b>不可修改</b></td></tr>
+      <tr><td>返现设置三项</td><td>返现百分比、每日最高优惠为空；提现稽核倍数<b>默认填入 0</b></td><td>回填该行已保存值</td></tr>
+      <tr><td>「重置」</td><td>清空全部输入，存款方式回到未选</td><td>还原为本次打开弹窗时的已保存值</td></tr>
+      <tr><td>保存后</td><td>弹窗关闭，列表新增一行并置于首行，<b>状态为关闭</b>；轻提示「新增成功」</td><td>弹窗关闭，更新该行；轻提示「保存成功」</td></tr>
+    </tbody>
+  </table>
+
+  <h3>基本信息 — 存款方式</h3>
+  <table>
+    <thead><tr><th style="width:110px">字段</th><th style="width:110px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
+    <tbody>
+      <tr><td><span class="req">*</span> 存款方式</td><td>新增：下拉单选<br>编辑：纯文本</td><td>是</td><td><b>含义</b>：本条返现配置适用的存款方式。<br><b>选项来源</b>：支付方式管理中的<b>全部存款方式，不区分启用 / 禁用状态</b>，顺序与该页一致；下拉占位为「请选择存款方式」。<br><b>已添加的存款方式</b>：在下拉中<b>置灰（不可选）</b>并标注「（已添加）」，保证同一存款方式在列表中只存在一行；删除后恢复可选。<br><b>校验</b>：未选择即点击「保存」时，在字段下方标红提示「请选择存款方式」，不提交。<br><b>编辑时</b>：只读展示，不可修改；如需更换存款方式，删除后重新新增。</td></tr>
+    </tbody>
+  </table>
+  <h3>返现设置 — 提现稽核倍数</h3>
+  <table>
+    <thead><tr><th style="width:110px">字段</th><th style="width:110px">控件</th><th style="width:60px">必填</th><th>说明与选项</th></tr></thead>
+    <tbody>
+      <tr><td><span class="req">*</span> 提现稽核倍数</td><td>数字输入</td><td>是</td><td><b>含义</b>：返现金额需完成的有效投注倍数，同时作为前台奖励规则气泡中「提现流水要求」的倍数取值来源。<br><b>默认值</b>：新增时<b>默认填入 0</b>；编辑时回填该行已保存值。<br><b>输入要求</b>：<b>只能填写 0 或正整数</b>，不设上限；输入框只能输入数字，小数点、负号等字符无法输入，粘贴时自动过滤；失焦时去掉前导 0（如 05 → 5）；占位为「请输入」。为 0 时该笔赠送金额不参与提现流水稽核计算，发放时不追加有效投注要求。<br><b>校验</b>：清空后失焦或点击「保存」，输入框标红，下方提示「请输入提现稽核倍数」，不提交。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>温馨提示</h3>
+  <p>原第 4、5 条合并为第 4 条，温馨提示共 4 条，第 1 ~ 3 条文案不变：</p>
+  <table>
+    <thead><tr><th style="width:40px">序</th><th style="width:460px">提示文案</th><th>对应校验</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>「返现百分比（%）」与「每日最高优惠」为必填项，必须同时填写</td><td>校验不变；新增模式下补充：未选存款方式时提示「请选择存款方式」，与其他必填提示同时出现。</td></tr>
+      <tr><td>4</td><td>「提现稽核倍数」为必填项，默认为 0，只能填写 0 或正整数；为 0 时加赠金额部分不参与提现流水稽核计算</td><td>见上表「提现稽核倍数」。</td></tr>
+    </tbody>
+  </table>
+  <p>返现百分比、每日最高优惠两项的字段规格、输入区间与校验不变，见《充值返现 PRD》4.5、4.6 节。</p>
+
+  <h2 id="s44">4.4 删除</h2>
+  <table>
+    <thead><tr><th style="width:150px">项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>入口</td><td>列表「操作」列「删除」按钮，位于「编辑」右侧。不论状态开启或关闭均可删除。</td></tr>
+      <tr><td>二次确认</td><td>点击后弹出确认框：标题「删除确认」，正文「确认删除「{存款方式}」的充值返现配置？删除后该存款方式不再发放充值返现，已发放的返现不受影响。」，按钮「确定」「取消」。点击「确定」后删除该行，轻提示「删除成功」；点击「取消」或右上角关闭，不做任何改动。</td></tr>
+      <tr><td>删除后的影响</td><td>即时生效：此后支付成功的该存款方式订单<b>不再发放</b>返现（以支付成功回调时是否存在配置为准）；<b>已发放的返现不回收</b>、已追加的提现流水要求不撤销；前台该渠道的赠送角标、快捷档位比例角标与「含赠送」副行随之不展示。</td></tr>
+      <tr><td>重新添加</td><td>删除后该存款方式在新增下拉中恢复可选，可重新添加，新增后状态仍默认关闭。同一自然日（UTC-3）内删除后又重新添加并开启的，会员当日在该存款方式的已发放累计值 S <b>延续计算</b>，不因删除而清零。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="s45">4.5 状态与生效判定</h2>
+  <ul>
+    <li><b>新增后默认关闭</b>：新增成功的行状态为<b>关闭</b>，需运营在列表中手动开启后才生效，避免配置未核对即对会员生效。状态开关的切换方式不变（行内点击即生效，不弹二次确认）。</li>
+    <li><b>生效判定</b>：返现是否发放，取决于<b>「该存款方式已添加」与「状态开启」同时成立</b>。任一不成立视同无返现：不计算、不发放、不产生账变，前台不展示赠送角标、快捷档位比例角标与「含赠送」副行。</li>
+    <li><b>原「返现百分比 &gt; 0」条件取消</b>：新增与编辑时返现百分比均必填且 ≥ 0.001，已添加的行不会出现返现百分比为 0 的情况。</li>
+  </ul>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、上线时的存量数据处理</h1>
+  <table>
+    <thead><tr><th style="width:240px">上线前的行</th><th>上线后的处理</th></tr></thead>
+    <tbody>
+      <tr><td>返现百分比 &gt; 0</td><td>视为已添加，保留在列表中；返现百分比、每日最高优惠、提现稽核倍数、状态、最近操作时间与操作人<b>均保持不变</b>。</td></tr>
+      <tr><td>返现百分比为 0（从未配置过）</td><td>不保留，不在列表中展示；该存款方式在新增下拉中可选，需要时通过「新增」添加。</td></tr>
+    </tbody>
+  </table>
+  <p>存量数据处理不改变任何已生效的返现：上线前状态开启且返现百分比 &gt; 0 的存款方式，上线后仍为已添加且开启，返现照常发放。</p>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、边界与异常处理</h1>
+  <table>
+    <thead><tr><th style="width:280px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>两名管理员同时新增同一存款方式</td><td><b>先提交者成功</b>；后提交者保存时提示「该存款方式已添加」，弹窗保持打开。</td></tr>
+      <tr><td>全部存款方式均已添加</td><td>「新增」按钮置灰（不可点击），悬停提示「全部存款方式均已添加」；删除任一行后恢复可点击。</td></tr>
+      <tr><td>删除正在生效的存款方式</td><td>即时停止发放；删除前已支付成功的订单已按规则发放，不回收。删除时尚未支付成功的订单，回调时已无配置，不发放。</td></tr>
+      <tr><td>新接入存款方式</td><td>不自动加入列表，仅出现在新增下拉中，需手动添加并开启后才产生返现。</td></tr>
+      <tr><td>存款方式在支付方式管理中被禁用</td><td>已添加的行保留，可查看、编辑与删除；该存款方式在新增下拉中仍可选。前台不再展示该存款方式，会员无法新发起充值。禁用前已提交、禁用后才支付成功的订单，只要回调时该存款方式的返现配置存在且开启，照常发放。</td></tr>
+      <tr><td>存款方式从支付方式管理中移除</td><td>新增下拉与筛选下拉中不再出现该存款方式；已添加的行保留并可删除，历史账变记录保留可查。移除前已提交、移除后才支付成功的订单，规则同上。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、权限与操作留痕</h1>
+  <ul>
+    <li><b>权限归属</b>：「新增」与「删除」均归属「充值返现」标签页的<b>编辑</b>权限，不新增权限点。仅具备查看权限时，「新增」「编辑」「删除」按钮与状态开关置灰（不可点击）。</li>
+    <li><b>操作留痕</b>：新增与删除行为记入后台操作日志，记录操作账号、时间（UTC-3）与存款方式；新增记录完整的初始配置值，删除记录删除前的完整配置值。新增同时刷新该行的「最近操作时间」「操作人」两列。</li>
+  </ul>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、关联需求同步说明</h1>
+  <table>
+    <thead><tr><th style="width:230px">关联文档</th><th>同步点</th></tr></thead>
+    <tbody>
+      <tr><td>《充值返现 PRD》</td><td>已同步至 v1.6：4.1 ~ 4.5 节改为手动新增逻辑，新增 4.8「删除」，流程图判断条件、前台降级条件、边界、权限与关联说明随之调整。返现计算、发放、账变与前台呈现规则不变。</td></tr>
+      <tr><td>《提款返现 PRD》</td><td>已同步至 v1.9：概述中两个标签页的差异说明改为「列表逻辑一致」；4.4「新增」按钮不再仅限「提款返现」标签页。</td></tr>
+      <tr><td>支付方式管理</td><td>本页新增弹窗与筛选区的「存款方式」下拉选项取自该模块的全部存款方式（不区分状态）；列表不再随该模块自动同步。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 九 -->
+<div class="section" id="s9">
+  <h1>九、修订记录</h1>
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:120px">日期</th><th style="width:90px">作者</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-11-07</td><td>Laura</td><td>首版。「充值返现」标签页列表由自动同步全部存款方式改为手动新增：新增「新增」按钮与删除功能，新增 / 编辑共用弹窗，新增后状态默认关闭，生效判定改为「已添加且开启」；提现稽核倍数改为必填、默认填入 0、只能填写 0 或正整数，温馨提示第 4、5 条合并；明确上线时的存量数据处理、边界、权限与关联需求同步。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
