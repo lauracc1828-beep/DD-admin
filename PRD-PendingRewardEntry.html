@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>待领取奖励入口与范围扩展 PRD v1.2</title>
+<title>待领取奖励入口与范围扩展 PRD v1.3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -49,7 +49,7 @@ a{color:#0961BD}
 <div class="cover">
   <div class="cover-title">待领取奖励入口与范围扩展</div>
   <div class="cover-sub">功能 PRD · H5 首页待领取入口 / 待领取页面纳入 VIP 奖励与返水</div>
-  <div class="cover-meta"><span>版本：v1.2</span><span>作者：Laura</span><span>更新日期：2026-11-09</span></div>
+  <div class="cover-meta"><span>版本：v1.3</span><span>作者：Laura</span><span>更新日期：2026-11-10</span></div>
 </div>
 
 <div class="toc">
@@ -214,14 +214,14 @@ a{color:#0961BD}
 <ul>
 <li><b>纳入条件</b>：站点后台「VIP 管理 → 等级奖励记录」中状态为「未领取」的记录，每条记录在待领取列表中显示为一条。</li>
 <li><b>奖励类型</b>：以等级奖励记录的福利类型为准：升级福利、每日福利、每周福利、月度福利。</li>
-<li><b>列表字段</b>：时间 = 奖励生成时间；活动名称 = VIP；奖励 = 福利金额；来源 = 「VIP{等级}{福利类型}」，例如「VIP1 每日奖励」。名称与来源用词沿用我方 VIP 页现有文案。</li>
+<li><b>列表字段</b>：时间 = 奖励生成时间；活动名称 = 「VIP + 福利类型」，如「VIP 每日奖励」；奖励 = 福利金额；来源 = 获奖条件「VIP{等级}」，如「VIP1」。来源列与其他活动统一显示获奖条件，不显示奖励类型；用词沿用我方 VIP 页现有文案。</li>
 <li><b>移出条件</b>：奖励被领取；或按 VIP 管理「领取规则」跨天 / 跨周 / 跨月后被系统回收作废或改为邮件下发，此时该记录立即从待领取列表移出。</li>
 </ul>
 
 <h2 id="s63">6.3 返水</h2>
 <ul>
 <li><b>纳入条件</b>：会员存在「领取状态 = 未领取」的返水记录（站点后台「返水管理 → 会员返水记录」）。</li>
-<li><b>合并显示</b>：所有未领取返水在待领取列表中合并为 <b>1 条</b>：时间 = 最近一笔未领取返水的发放时间；活动名称 = 返水；奖励 = 未领取返水金额合计，与返水页「可领取」金额一致；来源 = 实时返水。名称与来源用词沿用我方前台现有文案。</li>
+<li><b>合并显示</b>：所有未领取返水在待领取列表中合并为 <b>1 条</b>：时间 = 最近一笔未领取返水的发放时间；活动名称 = 返水；奖励 = 未领取返水金额合计，与返水页「可领取」金额一致；来源 = 获奖条件「有效投注 {金额}」，金额为这些未领取返水对应的有效投注额合计，复用现有来源文案「有效投注 {sourceAmount}」。</li>
 <li><b>计数</b>：无论未领取返水记录有多少笔，在待领取数量中计为 1。</li>
 <li><b>移出条件</b>：未领取返水全部领取后移出。</li>
 </ul>
@@ -249,13 +249,13 @@ a{color:#0961BD}
 <tr><td>首页横条</td><td>你有 {金额} 奖励待领取</td><td>Você tem {valor} em bônus pendentes</td><td>新增</td></tr>
 <tr><td>首页横条按钮</td><td>去领取</td><td>Coletar</td><td>沿用（竞品 VIP 领取按钮）</td></tr>
 <tr><td>待领取页面按钮</td><td>一键领取</td><td>Coletar Tudo</td><td>沿用</td></tr>
-<tr><td>待领取列表 · 活动名称</td><td>VIP</td><td>VIP</td><td>沿用（我方前台）</td></tr>
-<tr><td>待领取列表 · 来源</td><td>VIP{等级} 升级奖励</td><td>VIP{nível} Recompensa de upgrade</td><td>沿用（我方 VIP 页）</td></tr>
-<tr><td>待领取列表 · 来源</td><td>VIP{等级} 每日奖励</td><td>VIP{nível} Bônus Diário</td><td>沿用（我方 VIP 页）</td></tr>
-<tr><td>待领取列表 · 来源</td><td>VIP{等级} 每周奖励</td><td>VIP{nível} Bônus Semanal</td><td>沿用（我方 VIP 页）</td></tr>
-<tr><td>待领取列表 · 来源</td><td>VIP{等级} 每月奖励</td><td>VIP{nível} Bônus Mensal</td><td>沿用（我方 VIP 页）</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>VIP 升级奖励</td><td>VIP Recompensa de upgrade</td><td>沿用（我方 VIP 页）</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>VIP 每日奖励</td><td>VIP Bônus Diário</td><td>沿用（我方 VIP 页）</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>VIP 每周奖励</td><td>VIP Bônus Semanal</td><td>沿用（我方 VIP 页）</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>VIP 每月奖励</td><td>VIP Bônus Mensal</td><td>沿用（我方 VIP 页）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>VIP{等级}</td><td>VIP{nível}</td><td>沿用（我方前台）</td></tr>
 <tr><td>待领取列表 · 活动名称</td><td>返水</td><td>Cashback</td><td>沿用（我方前台）</td></tr>
-<tr><td>待领取列表 · 来源</td><td>实时返水</td><td>Cashback em tempo real</td><td>沿用（我方前台）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>有效投注 {金额}</td><td>Aposta válida de {valor}</td><td>沿用（我方待领取页）</td></tr>
 <tr><td>一键领取部分失败提示</td><td>部分奖励领取失败，请稍后重试</td><td>Alguns bônus não foram coletados. Tente novamente mais tarde.</td><td>新增</td></tr>
 <tr><td>后台 · 最低展示金额校验</td><td>请输入大于等于 0 的金额，最多 2 位小数</td><td>—</td><td>后台中文</td></tr>
 </tbody>
@@ -285,6 +285,7 @@ a{color:#0961BD}
 <tr><td>v1.0</td><td>2026-11-09</td><td>首版：新增待领取入口（后台开关与最低展示金额、显示条件、两种入口形式待确认、刷新时机）；待领取页面纳入 VIP 奖励与返水（纳入条件、合并规则、一键领取与状态同步、红点与数量）。</td></tr>
 <tr><td>v1.1</td><td>2026-11-09</td><td>入口形式确定为方案一（首页横条），删除方案二；最低展示金额默认 0.10，规则改为待领取总金额大于该值时显示入口；刷新时机与边界场景同步改为仅首页。</td></tr>
 <tr><td>v1.2</td><td>2026-11-09</td><td>待领取列表中 VIP、返水的名称与来源葡语改为沿用我方前台现有文案：升级奖励 Recompensa de upgrade，返水 Cashback，实时返水 Cashback em tempo real。</td></tr>
+<tr><td>v1.3</td><td>2026-11-10</td><td>待领取列表「来源」列统一为获奖条件：VIP 来源改为「VIP{等级}」，福利类型移到活动名称（如「VIP 每日奖励」）；返水来源改为「有效投注 {金额}」。</td></tr>
 </tbody>
 </table>
 </div>
