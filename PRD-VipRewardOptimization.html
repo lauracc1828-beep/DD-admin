@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VIP 奖励发放领取优化 PRD v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{max-width:1080px;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:24px;text-align:center}
+.cover-title{font-size:32px;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.cover-sub{font-size:16px;opacity:.85;margin-bottom:24px}
+.cover-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:12px 36px;font-size:13px;opacity:.78}
+.toc{background:#fff;border-radius:10px;padding:20px 28px;margin-bottom:18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.toc-title{font-size:15px;font-weight:600;color:#0b3f78;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #dbe8f6}
+.toc ol{padding-left:20px;list-style:none}
+.toc li{margin:4px 0}
+.toc a{color:#0961BD;text-decoration:none;font-size:13px}
+.toc a:hover{text-decoration:underline}
+.toc ol ol{padding-left:16px}
+.toc ol ol li{margin:2px 0;opacity:.85}
+.section{background:#fff;border-radius:10px;padding:26px 32px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:20px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:18px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:22px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h3{font-size:14px;font-weight:600;color:#123a66;margin:16px 0 8px}
+p{margin-bottom:10px;color:#333}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{margin-bottom:5px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;margin:12px 0;font-size:13px;width:100%}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#fff8e8;border-left:4px solid #f0a800;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#6a4a00}
+.notice-info{background:#edf2ff;border-left-color:#4a7aee;color:#1a3a8a}
+.notice p:last-child{margin-bottom:0}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+b,strong{color:#1a1a2e}
+.check li{list-style:none;margin-left:-20px}
+.check li::before{content:"☐ ";color:#1a5fa8}
+@media (max-width:600px){.page{padding:16px 16px 60px}.cover{padding:32px 20px}.cover-title{font-size:24px}.section{padding:20px 18px}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">VIP 奖励发放领取优化</div>
+  <div class="cover-sub">PRD 产品需求文档 · 福利中心 — VIP管理 / 客户端 VIP 中心</div>
+  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-11-09</span></div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">目录</div>
+  <ol>
+    <li><a href="#s1">一、需求背景与范围</a></li>
+    <li><a href="#s2">二、改动前后对比</a></li>
+    <li><a href="#s3">三、优化点 1：门槛为 0 的日/周/月奖只发给近 7 天登录过的会员</a></li>
+    <li><a href="#s4">四、优化点 2：受众用户1 下领取晋级奖励校验受众条件</a></li>
+    <li><a href="#s5">五、优化点 3：等级奖励记录增加「已作废」状态</a>
+      <ol>
+        <li><a href="#s51">5.1 状态定义</a></li>
+        <li><a href="#s52">5.2 列表与筛选</a></li>
+        <li><a href="#s53">5.3 上线时的存量数据处理</a></li>
+      </ol>
+    </li>
+    <li><a href="#s6">六、边界与异常处理</a></li>
+    <li><a href="#s7">七、验收标准</a></li>
+    <li><a href="#s8">八、修订记录</a></li>
+  </ol>
+</div>
+
+<!-- 一 -->
+<div class="section" id="s1">
+  <h1>一、需求背景与范围</h1>
+  <p>VIP管理（《【站点】vip管理（对齐熊猫）》）上线后，对照熊猫的规则发现几处发放、领取和后台展示上的差异。经讨论，本需求只处理以下三个优化点，其余 VIP 规则保持现状。</p>
+
+  <h2>本次改动范围</h2>
+  <div class="tw"><table>
+    <thead><tr><th style="width:60px">序号</th><th style="width:220px">优化点</th><th style="width:110px">涉及端</th><th>改动内容</th><th style="width:80px">章节</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>门槛为 0 的日/周/月奖</td><td>服务端</td><td>日/周/月奖励所需流水为 0 时，只给近 7 天登录过的会员生成奖励记录。</td><td>第三章</td></tr>
+      <tr><td>2</td><td>受众用户1 · 晋级奖励</td><td>服务端、客户端</td><td>领取规则为「受众用户1」时，领取晋级奖励也要满足受众条件，不满足的弹充值引导。</td><td>第四章</td></tr>
+      <tr><td>3</td><td>作废奖励的后台显示</td><td>服务端、后台</td><td>「等级奖励记录」增加「已作废」状态和筛选项，备注列写明作废原因；上线时刷新存量记录。</td><td>第五章</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="notice notice-info">
+    <p><b>不在本需求范围</b>：门槛大于 0 时的奖励生成规则、奖励金额、稽核倍数与限定平台、保级规则、周期中途晋级的处理、作废时间点、「回收作废」与「受众用户2」的领取规则、前台各页签与弹窗样式，均沿用现有 VIP管理 PRD 与当前实现，本需求不做改动。</p>
+  </div>
+</div>
+
+<!-- 二 -->
+<div class="section" id="s2">
+  <h1>二、改动前后对比</h1>
+  <div class="tw"><table>
+    <thead><tr><th style="width:170px">项</th><th style="width:380px">改动前</th><th>改动后</th></tr></thead>
+    <tbody>
+      <tr><td>门槛为 0 的日/周/月奖生成对象</td><td>每天 00:10 生成日奖、周一 00:10 生成周奖、1 号 00:10 生成月奖，<b>全部 VIP≥1 会员都生成</b>。</td><td>生成时间不变；<b>只给近 7 天登录过的</b> VIP≥1 会员生成，近 7 天没登录的不生成。</td></tr>
+      <tr><td>受众用户1 · 领取晋级奖励</td><td>不校验受众条件，直接可领。</td><td>要满足受众条件；不满足的弹充值引导弹窗，充值后才能领。</td></tr>
+      <tr><td>受众用户1 · 「一键领取」「领取全部晋级奖励」</td><td>晋级奖励部分不校验受众条件。</td><td>与日/周/月奖一样校验受众条件。</td></tr>
+      <tr><td>「等级奖励记录」状态</td><td>只有「未领取」「已领取」；已作废的记录显示为「未领取」。</td><td>增加<b>「已作废」</b>；作废的记录显示「已作废」，备注列写明作废原因。</td></tr>
+      <tr><td>「等级奖励记录」状态筛选</td><td>未领取 / 已领取</td><td>未领取 / 已领取 / <b>已作废</b></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- 三 -->
+<div class="section" id="s3">
+  <h1>三、优化点 1：门槛为 0 的日/周/月奖只发给近 7 天登录过的会员</h1>
+  <h2>规则</h2>
+  <ul>
+    <li><b>适用条件</b>：后台「VIP等级配置」中某等级的「日奖励所需流水」「周奖励所需流水」「月奖励所需流水」为 <b>0</b>，且对应奖励金额大于 0、奖励项已勾选启用。三种奖励分别判断，例如日奖流水为 0、周奖流水为 100 时，只有日奖按本规则生成。</li>
+    <li><b>生成时间不变</b>：日奖每天 00:10、周奖每周一 00:10、月奖每月 1 号 00:10（UTC-3）。</li>
+    <li><b>生成对象</b>：生成时刻会员当前等级 ≥ VIP1，且<b>「最后登录时间」在生成时刻往前 7×24 小时内</b>。例如 11-10 00:10 生成日奖时，最后登录时间在 11-03 00:10 ~ 11-10 00:10 之间的会员会生成。</li>
+    <li><b>不满足的会员</b>：本周期不生成奖励记录，前台对应页签不展示可领取的奖励，后台「等级奖励记录」中也没有这条记录。生成之后才登录的，本周期不补发，下个周期生成时再按规则判断。</li>
+    <li><b>与领取规则的关系</b>：本规则只决定是否生成记录。生成之后的领取、受众校验、过期作废仍按当前领取规则（回收作废 / 受众用户1 / 受众用户2）处理。领取规则为「受众用户2」时，会员需同时满足近 7 天登录和受众条件才会生成。</li>
+  </ul>
+  <h2>示例</h2>
+  <div class="tw"><table>
+    <thead><tr><th style="width:240px">会员</th><th>11-10 00:10 生成日奖（日奖流水为 0）</th></tr></thead>
+    <tbody>
+      <tr><td>VIP3，最后登录 11-09 21:00</td><td>生成 VIP3 日奖记录</td></tr>
+      <tr><td>VIP3，最后登录 11-01 10:00</td><td>不生成；11-10 08:00 登录后本日也不补发，11-11 00:10 生成</td></tr>
+      <tr><td>VIP0，最后登录 11-09 21:00</td><td>不生成（等级不足 VIP1）</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- 四 -->
+<div class="section" id="s4">
+  <h1>四、优化点 2：受众用户1 下领取晋级奖励校验受众条件</h1>
+  <h2>规则</h2>
+  <ul>
+    <li><b>适用条件</b>：后台「领取规则」选择「受众用户1」（跨天/跨周/跨月未领取奖励回收作废，N 天内充值）。</li>
+    <li><b>受众条件</b>：与日/周/月奖相同，即近 N 天（不含当天）或当天有任意金额的成功充值。N 取后台「N天内充值」的配置值。</li>
+    <li><b>校验时机</b>：会员点击领取时由服务端校验，前台不提前置灰。按钮的「未达标 / 已达标」显示规则不变：有未领取的晋级奖励时按钮高亮可点。</li>
+    <li><b>满足条件</b>：发放所有未领取的晋级奖励，弹领取成功弹窗，展示到账金额。</li>
+    <li><b>不满足条件</b>：不发放，弹充值引导弹窗。文案「Receba uma recompensa exclusiva após efetuar qualquer depósito」（完成任意金额充值后，即可获得专属奖励），按钮「Depósito」跳转充值页、「Cancelar」关闭弹窗。晋级奖励保留为未领取，充值成功后可再领。</li>
+    <li><b>晋级奖励不作废</b>：晋级奖励没有周期，不因跨天/跨周/跨月作废；本优化只增加领取校验，不改变晋级奖励的累加和保级相关的作废规则。</li>
+  </ul>
+  <h2>涉及的领取入口</h2>
+  <div class="tw"><table>
+    <thead><tr><th style="width:240px">入口</th><th>受众用户1 下的处理</th></tr></thead>
+    <tbody>
+      <tr><td>「Bônus」页签底部「Reclamar Recompensa de Upgrade」</td><td>按上述规则校验。满足则一次领取全部未领取的晋级奖励；不满足则弹充值引导弹窗，一笔都不发。</td></tr>
+      <tr><td>顶部「Coletar Tudo」（一键领取）</td><td>晋级奖励与日/周/月奖使用同一受众条件。满足则一并领取全部可领奖励；不满足则弹充值引导弹窗，一笔都不发。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="notice">
+    <p>领取规则为「回收作废」「受众用户2」时，晋级奖励领取不校验受众条件，保持现状。</p>
+  </div>
+</div>
+
+<!-- 五 -->
+<div class="section" id="s5">
+  <h1>五、优化点 3：等级奖励记录增加「已作废」状态</h1>
+  <p>页面路径：福利中心 ＞ VIP管理 ＞ 等级奖励记录。</p>
+
+  <h2 id="s51">5.1 状态定义</h2>
+  <div class="tw"><table>
+    <thead><tr><th style="width:110px">状态</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td>未领取</td><td>已生成、尚未领取，且还没到作废时间，会员仍可领取。</td></tr>
+      <tr><td>已领取</td><td>会员已领取，或「受众用户2」到期时系统自动发放。</td></tr>
+      <tr><td><b>已作废</b></td><td>系统已作废，会员不能再领取。作废后状态不再变化。</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>变为「已作废」的场景与备注</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:280px">场景</th><th style="width:160px">作废时刻</th><th>备注列写入</th></tr></thead>
+    <tbody>
+      <tr><td>日/周/月奖到期未领取（领取规则为回收作废、受众用户1、受众用户2）</td><td>到达该奖励的作废时间点（沿用现有规则）</td><td>过期作废</td></tr>
+      <tr><td>晋级奖励未领取，保级关闭时会员降级</td><td>降级时</td><td>降级作废</td></tr>
+    </tbody>
+  </table></div>
+  <p>备注列原本已有内容的，作废原因追加在原内容后，用「；」分隔。</p>
+
+  <h2 id="s52">5.2 列表与筛选</h2>
+  <div class="tw"><table>
+    <thead><tr><th style="width:150px">位置</th><th>改动</th></tr></thead>
+    <tbody>
+      <tr><td>筛选区「状态」</td><td>下拉单选，选项改为：全部（默认）/ 未领取 / 已领取 / <b>已作废</b>。</td></tr>
+      <tr><td>列表「状态」列</td><td>按 5.1 展示三种状态；「已作废」用灰色文字展示。</td></tr>
+      <tr><td>列表「领取时间」列</td><td>状态为「已作废」时展示「-」。</td></tr>
+      <tr><td>列表「备注」列</td><td>状态为「已作废」时展示作废原因（过期作废 / 降级作废）。</td></tr>
+      <tr><td>「导出」</td><td>导出文件的状态、备注与列表一致，按当前筛选条件导出。</td></tr>
+    </tbody>
+  </table></div>
+  <p>列表其余列（手机号、订单号、福利金额、福利类型、稽核倍数、订单生成时间、账号类型、会员等级、上级代理）和其余筛选项不变。</p>
+
+  <h2 id="s53">5.3 上线时的存量数据处理</h2>
+  <ul>
+    <li>上线时，把已被系统作废、列表中仍显示「未领取」的历史记录统一改为「已作废」，备注按 5.1 的场景写入「过期作废」或「降级作废」。</li>
+    <li>仍在有效期内的「未领取」记录、所有「已领取」记录不变。</li>
+    <li>存量处理只改展示状态，不改变奖励金额，也不影响会员的领取结果。</li>
+  </ul>
+</div>
+
+<!-- 六 -->
+<div class="section" id="s6">
+  <h1>六、边界与异常处理</h1>
+  <div class="tw"><table>
+    <thead><tr><th style="width:300px">场景</th><th>处理方式</th></tr></thead>
+    <tbody>
+      <tr><td>会员从未登录过（无最后登录时间）</td><td>视为近 7 天未登录，门槛为 0 的日/周/月奖不生成。</td></tr>
+      <tr><td>运营把流水门槛从 0 改为大于 0（或反过来）</td><td>只影响之后的生成，已生成的记录不变。</td></tr>
+      <tr><td>受众用户1 下，会员在充值引导弹窗点「Depósito」但没有完成充值</td><td>回到 VIP 页面后晋级奖励仍为未领取，再次点击仍弹充值引导弹窗。</td></tr>
+      <tr><td>受众用户1 下，会员当天充值成功后立即领取</td><td>当天有充值即满足受众条件，可正常领取。</td></tr>
+      <tr><td>运营把领取规则从受众用户1 改为其他规则</td><td>改动保存后，会员再领取晋级奖励时按新规则处理，不再校验受众条件。</td></tr>
+      <tr><td>前台未刷新、会员点击已作废的奖励</td><td>服务端拒绝发放，前台提示领取失败并刷新奖励列表。</td></tr>
+      <tr><td>同一会员并发点击领取</td><td>服务端按奖励记录加锁，同一记录只发放一次；作废与领取同时发生时，先完成的生效。</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- 七 -->
+<div class="section" id="s7">
+  <h1>七、验收标准</h1>
+  <ul class="check">
+    <li>日奖流水为 0 时，00:10 只给最后登录时间在近 7×24 小时内的 VIP≥1 会员生成日奖；周奖、月奖同理。</li>
+    <li>近 7 天未登录的会员不生成记录，生成后登录不补发，下个周期按规则重新判断。</li>
+    <li>流水门槛大于 0 的奖励生成规则不受影响。</li>
+    <li>领取规则为受众用户1、会员不满足 N 天内充值时，点击「Reclamar Recompensa de Upgrade」弹充值引导弹窗，晋级奖励不发放。</li>
+    <li>同一场景下点击「Coletar Tudo」弹充值引导弹窗，晋级奖励和日/周/月奖都不发放。</li>
+    <li>满足受众条件（含当天充值）后，以上两个入口都能正常领取，弹领取成功弹窗并展示合计到账金额。</li>
+    <li>领取规则为回收作废、受众用户2 时，晋级奖励领取不校验受众条件。</li>
+    <li>直接调用领取接口时，服务端同样按受众条件校验。</li>
+    <li>日/周/月奖过期后，「等级奖励记录」中状态为「已作废」，备注「过期作废」，领取时间「-」。</li>
+    <li>保级关闭、会员降级后，未领取的晋级奖励状态为「已作废」，备注「降级作废」。</li>
+    <li>状态筛选包含「已作废」，筛选和导出结果正确。</li>
+    <li>上线后，历史上已作废的记录显示为「已作废」，有效期内的未领取记录不受影响。</li>
+  </ul>
+</div>
+
+<!-- 八 -->
+<div class="section" id="s8">
+  <h1>八、修订记录</h1>
+  <div class="tw"><table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:120px">日期</th><th style="width:90px">作者</th><th>修订内容</th></tr></thead>
+    <tbody>
+      <tr><td>v1.0</td><td>2026-11-09</td><td>Laura</td><td>首版。门槛为 0 的日/周/月奖只发给近 7 天登录过的会员（生成时间不变）；受众用户1 下领取晋级奖励校验受众条件；等级奖励记录增加「已作废」状态、筛选项与作废原因，并处理存量记录。</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+</div>
+</body>
+</html>
