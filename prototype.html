@@ -730,7 +730,7 @@ select.fs.ph{color:#bfbfbf}
   <div class="submenu" id="sub-sys" style="display:none">
     <div class="submenu-item disabled">角色管理</div>
     <div class="submenu-item" id="si-account" onclick="switchPage('account',this)">账号管理</div>
-    <div class="submenu-item disabled">系统设置</div>
+    <div class="submenu-item" id="si-sitecfg" onclick="switchPage('sitecfg',this)">系统设置</div>
     <div class="submenu-item disabled">登录日志</div>
     <div class="submenu-item disabled">谷歌令牌</div>
     <div class="submenu-item disabled">域名管理(新)</div>
@@ -1734,6 +1734,66 @@ select.fs.ph{color:#bfbfbf}
         <div class="pagination">
           <div class="pg-info">共 <b id="rb-pm-total">11</b> 条数据</div>
           <div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: 系统设置 → 站点显示配置 → 待领取入口 -->
+    <div id="pg-sitecfg" style="display:none">
+      <style>
+        #pg-sitecfg .sc-tabs{background:#fff;padding:0 20px;border-bottom:1px solid #f0f0f0;display:flex;border-radius:6px 6px 0 0}
+        #pg-sitecfg .sc-tab{padding:13px 0;font-size:14px;font-weight:600;color:#bfbfbf;margin-right:28px;border-bottom:2px solid transparent;white-space:nowrap}
+        #pg-sitecfg .sc-tab.on{color:#0961BD;border-bottom-color:#0961BD}
+        #pg-sitecfg .sc-body{background:#fff;border-radius:0 0 6px 6px;display:flex;min-height:460px}
+        #pg-sitecfg .sc-side{width:180px;flex-shrink:0;border-right:1px solid #f0f0f0;padding:12px 0}
+        #pg-sitecfg .sc-side div{padding:10px 20px;font-size:13px;color:#595959;cursor:pointer;border-right:2px solid transparent}
+        #pg-sitecfg .sc-side div:hover{color:#0961BD}
+        #pg-sitecfg .sc-side div.on{color:#0961BD;background:#e6f0fa;border-right-color:#0961BD;font-weight:600}
+        #pg-sitecfg .sc-side div.dim{color:#bfbfbf;cursor:default}
+        #pg-sitecfg .sc-main{flex:1;padding:24px 32px;min-width:0}
+        #pg-sitecfg .sc-title{font-size:15px;font-weight:600;color:#262626;margin-bottom:20px}
+        #pg-sitecfg .sc-row{display:flex;align-items:flex-start;margin-bottom:22px}
+        #pg-sitecfg .sc-lbl{width:120px;flex-shrink:0;text-align:right;padding-right:12px;line-height:32px;font-size:13px;color:#262626}
+        #pg-sitecfg .sc-lbl .req{color:#ff4d4f;margin-right:3px}
+        #pg-sitecfg .sc-ctl{flex:1;min-width:0}
+        #pg-sitecfg .sc-ctl .sw{height:32px}
+        #pg-sitecfg .sc-help{font-size:12px;color:#8c8c8c;margin-top:4px;line-height:1.6}
+        #pg-sitecfg .sc-err{font-size:12px;color:#ff4d4f;margin-top:4px;display:none}
+        #pg-sitecfg .sc-amt{display:inline-flex;align-items:center;height:32px;border:1px solid #d9d9d9;border-radius:4px;width:220px;background:#fff}
+        #pg-sitecfg .sc-amt.err{border-color:#ff4d4f}
+        #pg-sitecfg .sc-amt span{padding:0 10px;color:#8c8c8c;font-size:13px;border-right:1px solid #f0f0f0;height:100%;display:flex;align-items:center;background:#fafafa;border-radius:4px 0 0 4px}
+        #pg-sitecfg .sc-amt input{border:none;outline:none;flex:1;min-width:0;padding:0 10px;font-size:13px;font-family:inherit}
+        #pg-sitecfg .sc-foot{padding-left:120px;margin-top:8px}
+        #pg-sitecfg .sc-empty{color:#8c8c8c;font-size:13px;padding:40px 0;text-align:center}
+      </style>
+      <div class="sc-tabs"><div class="sc-tab">基础设置</div><div class="sc-tab on">站点显示配置</div></div>
+      <div class="sc-body">
+        <div class="sc-side">
+          <div class="dim">…</div>
+          <div onclick="scPick(this,'qe')">快捷入口</div>
+          <div class="on" onclick="scPick(this,'pe')">待领取入口</div>
+        </div>
+        <div class="sc-main">
+          <div id="sc-qe" style="display:none"><div class="sc-empty">快捷入口为现有配置，本期不改动</div></div>
+          <div id="sc-pe">
+            <div class="sc-title">待领取入口</div>
+            <div class="sc-row">
+              <div class="sc-lbl"><span class="req">*</span>待领取入口</div>
+              <div class="sc-ctl">
+                <label class="sw"><input type="checkbox" class="sw-input" id="sc-pe-on"><span class="sw-track"></span><span class="sw-knob"></span></label>
+                <div class="sc-help">开启后，会员有待领取奖励时，H5 首页 Banner 下方显示待领取横条；关闭时不显示入口，「优惠 → 待领取」页面本身不受影响。</div>
+              </div>
+            </div>
+            <div class="sc-row">
+              <div class="sc-lbl">最低展示金额</div>
+              <div class="sc-ctl">
+                <div class="sc-amt" id="sc-pe-box"><span>R$</span><input id="sc-pe-min" value="0.10" oninput="scValid()"></div>
+                <div class="sc-err" id="sc-pe-err">请输入大于等于 0 的金额，最多 2 位小数</div>
+                <div class="sc-help">待领取总金额大于该值时才显示入口，默认 0.10；为空按 0 处理，即有待领取奖励就显示。</div>
+              </div>
+            </div>
+            <div class="sc-foot"><button class="btn btn-save" onclick="scSave()">保 存</button></div>
+          </div>
         </div>
       </div>
     </div>
@@ -5513,7 +5573,7 @@ function apkMethod(radioEl, actId, addrId, nameId){
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox','pg-mlist','pg-mlog','pg-dorder','pg-sharemoney','pg-ufb','pg-paymethod'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox','pg-mlist','pg-mlog','pg-dorder','pg-sharemoney','pg-ufb','pg-paymethod','pg-sitecfg'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -5545,9 +5605,10 @@ function switchPage(page, el){
     'dorder':'商户财务管理 / 充值订单记录',
     'sharemoney':'福利中心 / 推荐好友领彩金',
     'ufb':'消息管理 / 用户反馈',
-    'paymethod':'商户财务配置 / 支付方式管理'
+    'paymethod':'商户财务配置 / 支付方式管理',
+    'sitecfg':'系统管理 / 系统设置'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理','mlist':'DD后台管理','mlog':'DD后台管理','dorder':'DD后台管理','sharemoney':'DD后台管理','ufb':'DD后台管理','paymethod':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理','mlist':'DD后台管理','mlog':'DD后台管理','dorder':'DD后台管理','sharemoney':'DD后台管理','ufb':'DD后台管理','paymethod':'DD后台管理','sitecfg':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -5565,6 +5626,25 @@ function switchPage(page, el){
   if(page==='ufb') ufbRender();
   if(page==='paymethod') rbPmRender();
   if(page==='withdraw') rbWcRender();
+}
+
+// ─── 系统设置 · 站点显示配置 · 待领取入口 ───
+function scPick(el,key){
+  el.parentNode.querySelectorAll('div').forEach(d=>d.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('sc-qe').style.display = key==='qe'?'block':'none';
+  document.getElementById('sc-pe').style.display = key==='pe'?'block':'none';
+}
+function scValid(){
+  const v=document.getElementById('sc-pe-min').value.trim();
+  const ok = v==='' || /^\d+(\.\d{1,2})?$/.test(v);
+  document.getElementById('sc-pe-err').style.display = ok?'none':'block';
+  document.getElementById('sc-pe-box').classList.toggle('err',!ok);
+  return ok;
+}
+function scSave(){
+  if(!scValid()) return;
+  toast('保存成功');
 }
 
 // ─── 马甲包管理：本地上传（一期）───
