@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>推荐好友领彩金推广统计修改 PRD v1.5</title>
+<title>推荐好友领彩金推广统计修改 PRD v1.6</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -50,7 +50,7 @@ b,strong{color:#1a1a2e}
 <div class="cover">
   <div class="cover-title">推荐好友领彩金 · 推广统计修改</div>
   <div class="cover-sub">PRD 产品需求文档 · 福利中心 — 推荐好友领彩金</div>
-  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
+  <div class="cover-meta"><span>版本：v1.6</span><span>作者：Laura</span><span>更新日期：2026-11-03</span></div>
 </div>
 
 <div class="section" id="s1">
@@ -68,8 +68,8 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:50px">序号</th><th style="width:180px">新增字段</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td>累计充值金额</td><td>有效会员：统计至有效会员生效时间，生效后不再更新。<br>无效会员：统计最新充值金额。</td></tr>
-      <tr><td>2</td><td>累计有效投注</td><td>有效会员：统计至有效会员生效时间，生效后不再更新。<br>无效会员：按最新配置的限定平台，统计最新投注金额。</td></tr>
+      <tr><td>1</td><td>累计充值金额</td><td>有效会员：统计至有效会员生效时间，生效后不再更新。<br>无效会员：统计最新充值金额。<br>触发同注册IP / 同注册设备上限的会员：不统计，显示「-」。</td></tr>
+      <tr><td>2</td><td>累计有效投注</td><td>有效会员：统计至有效会员生效时间，生效后不再更新。<br>无效会员：按最新配置的限定平台，统计最新投注金额。<br>触发同注册IP / 同注册设备上限的会员：不统计，显示「-」。</td></tr>
       <tr><td>3</td><td>是否有效会员</td><td>是 / 否。</td></tr>
       <tr><td>4</td><td>有效会员生效时间</td><td>下级转为有效的时间；无效下级显示「-」。</td></tr>
       <tr><td>5</td><td>备注</td><td>说明无效原因，规则见下方第 2 点。</td></tr>
@@ -92,7 +92,7 @@ b,strong{color:#1a1a2e}
   </table>
   <ul>
     <li>触发判定按<b>全站</b>、按<b>注册顺序</b>计数：全站同注册IP（或同注册设备）的会员中（不区分推广者），前 N 个注册的下级正常判定，从第 N+1 个注册的下级开始触发上限。N 为当时配置的上限值。</li>
-    <li>触发同注册IP / 同注册设备上限的下级<b>永久无效</b>：无论充值、投注是否达标，之后修改活动配置（包括调高上限），都不会再转为有效。</li>
+    <li>触发同注册IP / 同注册设备上限的下级<b>永久无效</b>：无论充值、投注是否达标，之后修改活动配置（包括调高上限），都不会再转为有效。触发后也不再统计其充值、投注，累计充值金额、累计有效投注显示「-」。</li>
     <li>上限配置为 0 表示不限制，不会因此产生无效会员。</li>
     <li>有效会员备注显示「-」。</li>
   </ul>
@@ -113,6 +113,7 @@ b,strong{color:#1a1a2e}
   <table>
     <thead><tr><th style="width:70px">版本</th><th style="width:110px">日期</th><th style="width:80px">作者</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.6</td><td>2026-11-12</td><td>Laura</td><td>触发同注册IP / 同注册设备上限的会员不统计充值、投注，显示「-」。</td></tr>
       <tr><td>v1.5</td><td>2026-11-03</td><td>Laura</td><td>触发同注册IP / 同注册设备上限的下级永久无效，无论充值、投注是否达标，修改配置也不会转为有效。触发按全站、按注册顺序判定，第 N+1 个起触发。</td></tr>
       <tr><td>v1.4</td><td>2026-11-03</td><td>Laura</td><td>推广统计去掉「是否同IP同设备」，新增字段移到「注册IP」前（备注在最后）；有效会员的充值、投注统计至生效时间。</td></tr>
       <tr><td>v1.3</td><td>2026-11-03</td><td>Laura</td><td>推广统计增加「备注」列，说明超过同注册IP / 同注册设备上限的无效原因。</td></tr>

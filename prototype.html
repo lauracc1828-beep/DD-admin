@@ -9323,8 +9323,9 @@ function rtLinkSave(){
     return CFG.cond==='and' ? (a&&b) : (a||b);
   }
   // 推广统计展示：有效会员取生效时间点的数据，无效会员取最新数据（投注按最新配置的限定平台）
-  function showDep(s){ return s.valid ? s.vdep : s.dep; }
-  function showBet(s){ return s.valid ? s.vbet : vBet(s); }
+  // 触发同注册IP/设备上限的会员永久无效，不再统计充值投注，显示「-」
+  function showDep(s){ return s.lim ? '-' : m2(s.valid ? s.vdep : s.dep); }
+  function showBet(s){ return s.lim ? '-' : m2(s.valid ? s.vbet : vBet(s)); }
   function sameIp(s){ return SUBS.filter(function(x){ return x.ip===s.ip; }); }
   function sameDev(s){ return SUBS.filter(function(x){ return x.dev===s.dev; }); }
   function sameFlag(s){ return (sameIp(s).length>1 || sameDev(s).length>1) ? '是' : '否'; }
@@ -9393,7 +9394,7 @@ function rtLinkSave(){
     document.getElementById('sm-s-n').textContent=list.length;
     document.getElementById('sm-s-tb').innerHTML=list.length ? list.map(function(s,i){
       return '<tr><td>'+(i+1)+'</td><td><span class="sm-link">'+s.pid+'</span> <span class="copy-icon">⧉</span></td><td>'+PROMO[s.pid].acc+'</td><td>'+s.id+'</td><td>'+s.acc+'</td><td>'+s.reg+'</td>'+
-        '<td>'+m2(showDep(s))+'</td><td>'+m2(showBet(s))+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td><td>'+s.ip+'</td><td>'+s.term+'</td><td>'+remark(s)+'</td></tr>';
+        '<td>'+showDep(s)+'</td><td>'+showBet(s)+'</td><td>'+(s.valid?'是':'<span class="sm-no">否</span>')+'</td><td>'+(s.vt||'-')+'</td><td>'+s.ip+'</td><td>'+s.term+'</td><td>'+remark(s)+'</td></tr>';
     }).join('') : '<tr><td colspan="13" class="sm-empty">暂无数据</td></tr>';
   };
   window.smStatReset=function(){ ['sm-s-acc','sm-s-pid','sm-s-iid','sm-s-v'].forEach(function(id){document.getElementById(id).value='';}); smStatRender(); };
