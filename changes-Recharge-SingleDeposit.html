@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>充值活动 · 本次改动说明 v1.20</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{max-width:980px;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:44px 48px;color:#fff;margin-bottom:22px;text-align:center}
+.cover-title{font-size:28px;font-weight:700;letter-spacing:2px;margin-bottom:8px}
+.cover-sub{font-size:15px;opacity:.85;margin-bottom:22px}
+.cover-meta{display:flex;justify-content:center;gap:32px;font-size:13px;opacity:.75;flex-wrap:wrap}
+.section{background:#fff;border-radius:10px;padding:24px 30px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:19px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:16px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:26px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h2:first-of-type{margin-top:0}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 6px}
+p{margin-bottom:10px;color:#333}ul,ol{padding-left:20px;margin-bottom:10px}li{margin-bottom:4px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#edf2ff;border-left:4px solid #4a7aee;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#1a3a8a}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:4px;white-space:nowrap}
+.t-new{background:#e8f7ef;color:#0a5c3a;border:1px solid #8fceb0}
+.t-mod{background:#fdf3e3;color:#7a4b00;border:1px solid #e0b878}
+.t-del{background:#fdecec;color:#c0341d;border:1px solid #e6a5a5}
+.legend{font-size:12px;color:#888;margin-top:8px}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+.before{color:#a33}
+.after{color:#0a7d3e;font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="cover-title">充值活动 · 本次改动说明</div>
+  <div class="cover-sub">新增活动条件「单笔充值」+ 解除待领取页临时限制</div>
+  <div class="cover-meta"><span>对应 PRD：v1.13 → v1.20</span><span>更新日期：2026-11-14</span><span>作者：Laura</span></div>
+</div>
+
+<div class="section">
+  <h1>一、改动概览</h1>
+  <p>本次在充值活动模板上新增第四种活动条件「单笔充值」，并解除此前因待领取页未上线而施加的临时配置限制。完整需求以《充值活动 PRD》v1.20 为准，本文只说明相对 v1.13 的改动点；改动起点以 <b>UAT 现状</b>为准，核对结果见第四章。</p>
+  <table>
+    <thead><tr><th style="width:5%">#</th><th style="width:30%">改动点</th><th style="width:10%">类型</th><th>涉及章节</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>新增活动条件「单笔充值」（含条件顺序调整）</td><td><span class="tag t-new">新增</span></td><td>一、二、三、4.1、4.3 ②、4.6、4.7、4.11、4.12</td></tr>
+      <tr><td>2</td><td>新增配置项「获奖次数上限」（含计次口径）</td><td><span class="tag t-new">新增</span></td><td>二、4.3 ⑤、4.5、4.12</td></tr>
+      <tr><td>3</td><td>选择「单笔充值」后的字段联动</td><td><span class="tag t-new">新增</span></td><td>4.3 ③、4.4 表一、5.8</td></tr>
+      <tr><td>4</td><td>系统默认活动名称</td><td><span class="tag t-new">新增</span></td><td>4.2、4.4 表一、六</td></tr>
+      <tr><td>5</td><td>活动规则说明（系统默认）的联动生成</td><td><span class="tag t-mod">修改</span></td><td>4.14、5.7、六</td></tr>
+      <tr><td>6</td><td>解除待领取页上线前的临时限制</td><td><span class="tag t-del">解除</span></td><td>4.4 表二、4.10、5.6</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">前台页面展示见第三章；本次新增的中葡对照随各改动点一并给出，完整对照表见 PRD 第六章。</p>
+</div>
+
+<div class="section">
+  <h1>二、逐项说明</h1>
+
+  <h2>改动 1 · 新增活动条件「单笔充值」<span class="tag t-new" style="margin-left:8px">新增</span></h2>
+  <p><b>规则：</b>周期内<b>每一笔</b>充值成功到账后，按该笔金额匹配达到的<b>最高单档</b>发放 1 笔奖励，不向下叠加；低于最低档不发奖。<b>每笔都发</b>，同一档可重复获得。</p>
+  <h3>与现有条件的区别</h3>
+  <table>
+    <thead><tr><th style="width:16%">对比项</th><th style="width:28%">首笔充值</th><th style="width:28%">累计充值</th><th>单笔充值（新增）</th></tr></thead>
+    <tbody>
+      <tr><td>看哪一笔</td><td>只看周期内第一笔</td><td>周期内所有充值加总</td><td>周期内任意一笔</td></tr>
+      <tr><td>一笔对应几档</td><td>达到的最高档</td><td>一笔可一次打满多档</td><td>达到的最高档，不叠加</td></tr>
+      <tr><td>周期内可得几次</td><td>1 次</td><td>每档 1 次，可叠加</td><td>由「获奖次数上限」决定（见改动 2）</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">示例（档位 50→5 / 100→12 / 500→68，每日最多 3 次）：当日依次充值 100、60、30、500 → 第 1 笔得 12、第 2 笔得 5、第 3 笔低于最低档不发奖且不占次数、第 4 笔得 68；次数 3/3 用完，当日后续充值不再发奖。</p>
+  <h3>活动条件顺序</h3>
+  <p>后台单选、活动列表「活动条件」列、PRD 各表格统一调整为：<b>首笔充值 / 单笔充值 / 累计充值 / 连续天数充值</b>。</p>
+  <h3>计入口径</h3>
+  <p>以<b>单个充值订单</b>为单位，<b>订单成功到账才计入</b>，按到账时间归属周期；金额取该订单的到账金额，不含充值返现、活动赠送；未到账 / 失败 / 取消的订单不计入、不占次数。同一会员同时有多笔订单到账时，按到账先后逐笔判定档位与次数。</p>
+  <h3>领取与账变</h3>
+  <p>固定手动领取。点击领取时一次领走当前所有「已产生未领」的奖励，<b>按笔生成多条账变</b>，不支持只领其中某一笔；往期滞留的未领奖励在待领取页领取（见改动 6）。</p>
+
+  <h2>改动 2 · 新增配置项「获奖次数上限」<span class="tag t-new" style="margin-left:8px">新增</span></h2>
+  <p>仅「单笔充值」显示，位于稽核方式与奖励配置之间，文案为「〔周期词〕最多可获奖 [N] 次」，输入框后附说明「（填 0 表示不限制次数，每笔达标充值均赠送）」。周期词随重置方式变化：不重置 = 活动期间、每日、每周。</p>
+  <table>
+    <thead><tr><th style="width:18%">模式</th><th style="width:12%">取值</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td><b>不限次数</b></td><td>N = 0</td><td>周期内每一笔达到最低档的充值均赠送，无上限；不存在「次数用完」状态</td></tr>
+      <tr><td><b>限次数</b></td><td>N = 1~99</td><td>周期内最多获奖 N 次，用完后后续充值不再产生奖励；周期重置后次数归 0 重新计算</td></tr>
+    </tbody>
+  </table>
+  <h3>取值与校验</h3>
+  <ul>
+    <li><b>新增时默认填入 0</b>，为空保存时自动恢复 0。</li>
+    <li>0~99 的整数；小数、负数、超过 99 拦截，提示「获奖次数上限必须为0-99的整数」。</li>
+  </ul>
+  <h3>计次口径</h3>
+  <ul>
+    <li>每产生 1 笔奖励计 1 次；低于最低档的充值不发奖、<b>不计次数</b>。</li>
+    <li>限次数模式下，次数在奖励<b>产生时</b>即占用，与是否领取无关；奖励后续被作废（过期作废 / 保留天数作废）<b>不退回次数</b>。</li>
+    <li><b>次数按充值日期归属周期</b>：每笔奖励占用的是该笔充值日期（以订单到账成功时间为准）所在周期的次数，<b>与领取日期无关</b>。</li>
+  </ul>
+  <p class="legend">例：每日限 3 次、次日领取——1 日充值产生的奖励在 2 日领取，仍计入 1 日的次数，不占用 2 日的次数。跨重置时间点到账的订单计入新周期，例如 23:59 下单、次日 00:01 到账，算次日的次数。</p>
+
+  <h2>改动 3 · 选择「单笔充值」后的字段联动<span class="tag t-new" style="margin-left:8px">新增</span></h2>
+  <table>
+    <thead><tr><th style="width:20%">联动项</th><th style="width:20%">首笔充值</th><th style="width:20%">单笔充值</th><th style="width:20%">累计充值</th><th>连续天数充值</th></tr></thead>
+    <tbody>
+      <tr><td>领取时间</td><td>次日 / 实时</td><td class="after"><b>强制实时</b>（次日置灰）</td><td>次日 / 实时</td><td><b>强制实时</b>（次日置灰）</td></tr>
+      <tr><td>重置方式</td><td>不重置 / 每日 / 每周</td><td class="after">不重置 / 每日 / 每周</td><td>不重置 / 每日 / 每周</td><td>每日置灰</td></tr>
+      <tr><td>稽核方式</td><td>赠送部分 / 本金+赠送</td><td class="after">赠送部分 / 本金+赠送</td><td>两项均置灰，固定赠送部分</td><td>赠送部分 / 本金+赠送</td></tr>
+      <tr><td>连续充值天数设置</td><td>隐藏</td><td class="after">隐藏</td><td>隐藏</td><td>显示</td></tr>
+      <tr><td>获奖次数上限</td><td>隐藏</td><td class="after"><b>显示</b>（见改动 2）</td><td>隐藏</td><td>隐藏</td></tr>
+      <tr><td>奖励配置</td><td>充值金额→奖励（多档）</td><td class="after">充值金额→奖励（多档，每笔匹配最高档）</td><td>充值金额→奖励（多档，叠加领取）</td><td>连续天数→奖励（单档）</td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><b>强制实时领取：</b>与连续天数充值一致，「次日领取」置灰、不显示「选择时间」；前台第 2 行固定「今日可领 R$X」，按钮不存在「次日待领」态；5.8 次日提示切换逻辑<b>不适用</b>单笔。</li>
+    <li><b>本金口径：</b>稽核方式选「本金+赠送」时，本金取<b>触发该笔奖励的那一笔充值订单金额</b>，即该笔奖励的打码量 =（该笔充值金额 + 该笔奖励）× 稽核倍数。</li>
+    <li><b>奖励配置校验：</b>沿用首笔 / 累计——充值金额大于 0 的整数、各档严格升序、奖励金额大于 0。</li>
+  </ul>
+
+  <h2>改动 4 · 系统默认活动名称<span class="tag t-new" style="margin-left:8px">新增</span></h2>
+  <p>活动名称选「系统默认」时，单笔充值的默认名称为「<b>单笔充值加赠</b>」，每日 / 每周在基础名前加前缀；切换活动条件或重置方式时自动刷新。其余三种条件的名称不变。</p>
+  <table>
+    <thead><tr><th style="width:18%">重置方式</th><th style="width:30%">中文</th><th>葡语</th></tr></thead>
+    <tbody>
+      <tr><td>不重置</td><td>单笔充值加赠</td><td>Bônus para uma única recarga</td></tr>
+      <tr><td>每日</td><td>每日单笔充值加赠</td><td>Bônus diário para uma única recarga</td></tr>
+      <tr><td>每周</td><td>每周单笔充值加赠</td><td>Bônus semanal para uma única recarga</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">前台活动标题取自后台「活动名称」，系统默认时按客户端语言显示上表对应文案。</p>
+
+  <h2>改动 5 · 活动规则说明（系统默认）的联动生成<span class="tag t-mod" style="margin-left:8px">修改</span></h2>
+  <p>「规则说明 = 系统默认」时，后台在新增 / 编辑页按当前配置实时生成 5 条规则。本次新增单笔充值一套模板，<b>第 1 条随「重置方式 + 获奖次数上限」两种句式</b>；第 2 条（奖励作废 + 过期天数）、第 3 条（稽核方式 + 稽核倍数）、第 4 / 5 条沿用现有逻辑不变。</p>
+  <table>
+    <thead><tr><th style="width:20%">条件</th><th style="width:40%">中文（第 1 条）</th><th>葡语</th></tr></thead>
+    <tbody>
+      <tr><td>不限次数（N = 0）</td><td>本活动为〔重置前缀〕单笔充值活动，会员每笔充值满足要求均可获得相应彩金，不限次数</td><td>Esta é uma promoção de depósito único〔diário / semanal〕. Cada depósito do membro que atender aos requisitos receberá o bônus correspondente, sem limite de vezes</td></tr>
+      <tr><td>限次数（N = 1~99）</td><td>本活动为〔重置前缀〕单笔充值活动，会员单笔充值满足要求，可获得相应彩金，〔周期词〕最多可获得 N 次</td><td>Esta é uma promoção de depósito único〔diário / semanal〕. Se um único depósito do membro atender aos requisitos, ele receberá o bônus correspondente, até N vezes〔por dia / por semana / durante o evento〕</td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li>重置前缀：不重置 =（空）/ 每日 / 每周；周期词：不重置 = 活动期间、每日、每周。</li>
+    <li><b>刷新触发：</b>活动条件、重置方式、<b>获奖次数上限</b>、奖励作废方式、过期天数、稽核方式、稽核倍数 任一变化即重新生成。</li>
+    <li>「规则说明 = 自定义」时不生成，前台原样显示后台录入内容。</li>
+  </ul>
+  <p class="legend">单笔共 6 种组合（3 种重置 × 不限 / 限次），完整中葡对照见 PRD 第六章。</p>
+
+  <h2>改动 6 · 解除待领取页上线前的临时限制<span class="tag t-del" style="margin-left:8px">解除</span></h2>
+  <p>旧版 4.10 因「待领取」跨周期领取入口未上线，对每日 / 每周重置的充值活动做过临时配置限制（<b>UAT 已按此实现</b>，见第四章）。<b>待领取页已上线，充值活动奖励已在其纳入范围内</b>（后台领取方式 = 手动领取且当前可领即进入），跨周期未领的奖励可在待领取页领取，限制前提不再成立，本次全部解除。</p>
+  <table>
+    <thead><tr><th style="width:30%">配置组合</th><th style="width:32%">改前（临时限制）</th><th>改后</th></tr></thead>
+    <tbody>
+      <tr><td>首笔 / 累计 + <b>每日 / 每周</b></td><td class="before">锁定「实时领取」，「次日领取」置灰</td><td class="after">次日 / 实时均可选，选次日时显示「选择时间」</td></tr>
+      <tr><td>首笔 / 单笔 / 累计 + <b>每日 / 每周</b><br>连续天数 + <b>每周</b></td><td class="before">奖励作废仅可选「过期自动派发 / 过期作废」，两个「保留天数」置灰</td><td class="after">四项均可选，选保留天数时「奖励领取过期天数」可编辑</td></tr>
+      <tr><td>任意条件 + 不重置</td><td>不受限</td><td>不变</td></tr>
+    </tbody>
+  </table>
+  <p><b>仍然保留的限制</b>（属于功能本身的联动，不是临时措施）：单笔充值 / 连续天数充值强制实时领取；次日领取时奖励作废仅「保留天数」两项；连续天数充值无「每日」重置。默认值沿用 4.4 表二：实时领取 → 奖励作废默认「过期自动派发」；次日领取 → 默认「奖励保留天数自动派发」。</p>
+
+  <h3>解除后各配置组合的奖励处理</h3>
+  <p>解除放开的是前两行组合，它们会产生<b>跨周期滞留的未领奖励</b>——奖励还在有效期内，但主活动页已进入新周期。后两行是原本就能配的组合，处理方式不变。</p>
+  <table>
+    <thead><tr><th style="width:26%">配置组合</th><th style="width:42%">奖励何时开放 / 何时处理</th><th>是否会跨周期滞留</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="after"><b>每日 / 每周 + 次日领取</b><br><span class="legend">首笔 / 累计（本次放开）</span></td>
+        <td>开放时间 = <b>达标日次日的〔选择时间〕</b>，与重置时间点无关；开放后按其「奖励作废」配置继续保留</td>
+        <td><b>是</b>，开放时通常已进入新周期</td>
+      </tr>
+      <tr>
+        <td class="after"><b>每日 / 每周 + 保留天数<br>自动派发 / 作废</b><br><span class="legend">首笔 / 单笔 / 累计；连续为每周（本次放开）</span></td>
+        <td>自动处理日 = <b>参与日 + 1 + 保留天数</b>，与活动重置无关：重置<b>不</b>提前派发、<b>不</b>提前作废</td>
+        <td><b>是</b>，保留期可横跨多个周期</td>
+      </tr>
+      <tr>
+        <td>每日 / 每周 + 过期自动派发 / 过期作废<br><span class="legend">原本即可配</span></td>
+        <td>绑定<b>活动重置 / 结束边界</b>即时处理</td>
+        <td>否，重置即处理完毕</td>
+      </tr>
+      <tr>
+        <td>不重置 + 任意奖励作废<br><span class="legend">原本即可配</span></td>
+        <td>按所选奖励作废方式处理，无周期边界</td>
+        <td>否，不存在周期切换</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>领取位置（统一规则，不随组合变化）</h3>
+  <ul>
+    <li><b>待领取页：</b>奖励一经产生、进入可领状态，即出现在待领取页，<b>与是否跨周期无关</b>；累计多档的每一档、单笔的每一笔各占一行，支持「全部领取」。直到被领取，或按其「奖励作废」配置自动派发 / 作废后才移除。</li>
+    <li><b>主活动页：</b>只展示并只能领取<b>当前周期内产生</b>的奖励——进度与顶部「可领取」金额只计这部分，领取按钮也只领这部分。</li>
+    <li><b>周期重置后：</b>主活动页进入新周期，上一周期未领的奖励<b>不再展示、也不能在活动页领取</b>；但它<b>仍在待领取页可领</b>，直至自动派发或作废。</li>
+    <li><b>单笔获奖次数不受影响：</b>仍按<b>充值日期</b>所在周期计算，与奖励在哪个周期、哪个页面领取无关（见改动 2）。</li>
+  </ul>
+  <p class="legend">例（每日重置 + 保留 3 天）：1 日充值达标产生的奖励保留至 5 日。1 日当天在主活动页和待领取页都能领；2 日起主活动页已是新周期、不再显示这笔奖励，只能在待领取页领；5 日仍未领则按配置自动派发或作废。</p>
+</div>
+
+<div class="section">
+  <h1>三、前台展示（单笔充值）</h1>
+  <p>页面结构沿用首笔 / 累计的档位页；按获奖次数上限分两种展示。</p>
+  <table>
+    <thead><tr><th style="width:24%">位置</th><th style="width:38%">限次数（N = 1~99，1 次与多次同样式）</th><th>不限次数（N = 0）</th></tr></thead>
+    <tbody>
+      <tr><td>次数行</td><td>〔周期〕获奖次数 used/N</td><td><b>不显示</b></td></tr>
+      <tr><td>第 1 行 · 未获奖</td><td>单笔充值满 R$50 即可获得 R$5，今日剩余 3 次</td><td>单笔充值满 R$50 即可获得 R$5，每笔都送</td></tr>
+      <tr><td>第 1 行 · 已获奖</td><td>已获得 R$17，今日剩余 1 次</td><td>已获得 R$17，继续充值继续送</td></tr>
+      <tr><td>第 1 行 · 次数用完</td><td>所有充值挑战已完成！</td><td>无此状态</td></tr>
+      <tr><td>第 2 行</td><td colspan="2">固定「今日可领 R$X」（强制实时领取，见改动 3）</td></tr>
+      <tr><td>顶部「可领取」</td><td colspan="2">本周期内已产生未领的奖励合计 = 已获得 − 已领取</td></tr>
+      <tr><td>档位列表 / 按钮</td><td colspan="2">沿用首笔 / 累计：档位行静态展示；按钮两态，文字始终「领取」</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">周期词：每日 = 今日、每周 = 本周、不重置 = 无前缀。前台提示的葡语对照见 PRD 第六章。</p>
+</div>
+
+<div class="section">
+  <h1>四、UAT 现状核对（2026-11-14 实测）</h1>
+  <p>以 UAT 后台「福利中心 → 活动列表」中活动类型 = 充值 的现有活动与新增表单为准，核对本次改动的起点。</p>
+
+  <h2>4.1 已实现、本次不改动的部分</h2>
+  <table>
+    <thead><tr><th style="width:26%">项</th><th>UAT 现状</th></tr></thead>
+    <tbody>
+      <tr><td>活动条件</td><td>首笔充值 / 累计充值 / 连续天数充值 三项，<b>无单笔充值</b>（本次新增第四项）</td></tr>
+      <tr><td>连续天数充值联动</td><td>选中后「次日领取」置灰、重置方式「每日」置灰，与 PRD 一致</td></tr>
+      <tr><td>累计充值联动</td><td>稽核方式两项均置灰、固定「赠送部分」，与 PRD 一致</td></tr>
+      <tr><td>临时限制</td><td>已实现：重置 = 每日 / 每周时，「次日领取」与两个「奖励保留天数」置灰不可选（本次解除，见改动 6）</td></tr>
+      <tr><td>奖励作废</td><td>实时领取时四项可选、默认「过期自动派发」；次日领取时默认「奖励保留天数自动派发」，与 PRD 一致</td></tr>
+      <tr><td>规则说明</td><td>系统默认 5 条，文案与 PRD 4.14 一致（例：「1. 本活动为首笔充值活动，会员首笔充值满足要求，可获得相应彩金；」）</td></tr>
+      <tr><td>其余字段</td><td>重置方式、派发 / 审核 / 派奖、领取方式、稽核倍数、参与条件、奖励配置多档、申领终端 / 限制、稽核限定平台、参与层级、展示配置均与 PRD 一致</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 非本次需求的部分：已按 UAT 现状回写</h2>
+  <p>以下均不属于本次需求范围，PRD 与原型<b>一律以 UAT 现状为准</b>，已完成对齐（PRD v1.20）。</p>
+  <table>
+    <thead><tr><th style="width:24%">项</th><th style="width:36%">UAT 现状（以此为准）</th><th>PRD / 原型原先写法</th></tr></thead>
+    <tbody>
+      <tr><td>次日领取 · 选择时间</td><td class="after">整点下拉，0 点 ~ 23 点</td><td class="before">[时:分:秒] 下拉（如 02:00:00）</td></tr>
+      <tr><td>次日领取 · 奖励领取过期天数</td><td class="after">可编辑，附提示「0 或留空 → 永不过期」</td><td class="before">锁定 = 2 且置灰</td></tr>
+      <tr><td>次日领取 · 奖励作废</td><td class="after">「过期自动派发 / 过期作废」<b>隐藏</b>，只留两个保留天数</td><td class="before">曾改为置灰保留，已回退为隐藏</td></tr>
+      <tr><td>累计充值 · 稽核方式</td><td class="after">两项均展示但<b>都置灰</b>，固定选中「赠送部分」</td><td class="before">隐藏「本金+赠送」，只留置灰的「赠送部分」</td></tr>
+      <tr><td>活动列表字段</td><td class="after">无「开启时间」列，共 15 列</td><td class="before">含「开启时间」，共 16 列</td></tr>
+    </tbody>
+  </table>
+  <p class="legend">前台提示中的〔选择时间〕随之按整点表述：中文「2 点」、葡语「2h」。</p>
+
+  <h2>4.3 实现与需求不符，需开发修正</h2>
+  <table>
+    <thead><tr><th style="width:24%">项</th><th style="width:36%">UAT 现状</th><th>应有表现</th></tr></thead>
+    <tbody>
+      <tr><td>活动列表「活动条件」列</td><td class="before">显示的是<b>稽核方式</b>的值（所有充值活动都显示「赠送部分」）</td><td class="after">显示该活动的活动条件：首笔充值 / 单笔充值 / 累计充值 / 连续天数充值（PRD 4.1）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h1>五、交付物与版本</h1>
+  <table>
+    <thead><tr><th style="width:34%">交付物</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>PRD-Recharge.html</td><td>完整需求，已更新至 <b>v1.20</b>（全文为最新状态，不再标注本期改动，历史见第七章版本记录）</td></tr>
+      <tr><td>prototype.html</td><td>后台原型：新增 / 编辑活动页的单笔充值条件、获奖次数上限字段与校验、名称与规则联动；活动列表新增一条单笔示例</td></tr>
+      <tr><td>frontend-prototype-Recharge.html</td><td>前台原型：单笔充值页面，控制台可切换重置方式（不重置 / 每日 / 每周）与获奖次数上限（0 不限 / 1 次 / 3 次）</td></tr>
+      <tr><td>充值活动-后台原型修改点汇总.md</td><td>发开发的后台改动点，已同步临时限制解除与 UAT 对齐项</td></tr>
+      <tr><td>zh-pt-glossary.html</td><td>中葡字典，已收录本次新增文案</td></tr>
+    </tbody>
+  </table>
+  <table>
+    <thead><tr><th style="width:12%">版本</th><th style="width:14%">日期</th><th>对应改动</th></tr></thead>
+    <tbody>
+      <tr><td>v1.14</td><td>2026-11-13</td><td>新增单笔充值条件、获奖次数上限与字段联动（改动 1、2、3）</td></tr>
+      <tr><td>v1.15</td><td>2026-11-13</td><td>前台展示按次数上限区分（已被 v1.16 的 0 / 1~99 两种模式取代）</td></tr>
+      <tr><td>v1.16</td><td>2026-11-13</td><td>次数上限新增 0 = 不限次数并设为默认、计次按充值日期归属；活动条件顺序调整（改动 1、2）</td></tr>
+      <tr><td>v1.17</td><td>2026-11-13</td><td>单笔强制实时领取；系统默认名称改为「单笔充值加赠」（改动 3、4）</td></tr>
+      <tr><td>v1.18</td><td>2026-11-14</td><td>解除待领取页临时限制并明确跨周期逻辑（改动 6）</td></tr>
+      <tr><td>v1.19</td><td>2026-11-14</td><td>非本次需求的部分按 UAT 现状回写（第四章 4.2）</td></tr>
+      <tr><td>v1.20</td><td>2026-11-14</td><td>明确主活动页与待领取页的分工（改动 6 · 领取位置）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>

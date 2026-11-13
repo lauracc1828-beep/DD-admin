@@ -46,8 +46,7 @@ body{background:#eef1f5;color:#1a1a1a;display:flex;justify-content:center;align-
 .acc-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #22242c;margin-bottom:10px}
 .acc-row .l{font-size:13px;color:#c8ccd4}
 .acc-row .v{font-size:18px;font-weight:800;color:#ffd24a}
-.acc-lines{margin-bottom:14px}
-.acc-lines .ln{display:flex;align-items:center;gap:6px;font-size:12px;color:#a6a6ae;margin:3px 0}
+.acc-lines{margin-bottom:14px}.acc-lines .ln{display:flex;align-items:center;gap:6px;font-size:12px;color:#a6a6ae;margin:3px 0}
 .acc-lines .tri{font-size:11px}
 .acc-lines b{color:#f2c94c;font-weight:600}
 .tbl-hd{display:flex;color:#8c8c94;font-size:12px;padding:0 2px 10px}
@@ -124,6 +123,7 @@ body{background:#eef1f5;color:#1a1a1a;display:flex;justify-content:center;align-
     <div class="plabel">活动条件</div>
     <div class="seg" id="seg-mode">
       <button data-v="first" class="on">首笔充值</button>
+      <button data-v="single">单笔充值</button>
       <button data-v="accum">累计充值</button>
       <button data-v="days">连续天数</button>
     </div>
@@ -133,6 +133,22 @@ body{background:#eef1f5;color:#1a1a1a;display:flex;justify-content:center;align-
     <div class="seg" id="seg-login">
       <button data-v="in" class="on">已登录</button>
       <button data-v="out">未登录</button>
+    </div>
+  </div>
+  <div class="pgroup" id="grp-sreset" style="display:none">
+    <div class="plabel">重置方式（单笔）</div>
+    <div class="seg" id="seg-sreset">
+      <button data-v="none">不重置</button>
+      <button data-v="day" class="on">每日</button>
+      <button data-v="week">每周</button>
+    </div>
+  </div>
+  <div class="pgroup" id="grp-smax" style="display:none">
+    <div class="plabel">获奖次数上限（单笔）</div>
+    <div class="seg" id="seg-smax">
+      <button data-v="0" class="on">0 · 不限</button>
+      <button data-v="1">1 次</button>
+      <button data-v="3">3 次</button>
     </div>
   </div>
   <div class="pgroup" id="grp-claim">
@@ -173,14 +189,52 @@ body{background:#eef1f5;color:#1a1a1a;display:flex;justify-content:center;align-
 </div>
 
 <script>
-const S={mode:'first',claim:'realtime',state:'claimable',days:'2',dayTab:0,seqClaimed:false,login:'in'};
+const S={mode:'first',claim:'realtime',state:'claimable',days:'2',dayTab:0,seqClaimed:false,login:'in',sreset:'day',smax:'0'};
 const FIRST_TIERS=[[20,5],[40,10],[60,15]];
 const ACCUM_TIERS=[[20,3],[40,7],[60,12]];
 // 状态集(首笔2种 / 累计3种)
 const STATE_SETS={
   first:[['claimable','可领取'],['zero','未达标 / 已领取']],
-  accum:[['notstart','未开始'],['ongoing','进行中'],['alldone','全部完成']]
+  accum:[['notstart','未开始'],['ongoing','进行中'],['alldone','全部完成']],
+  single:[]   // 按"获奖次数上限"动态生成,见 singleStateSet()
 };
+// 单笔充值示例:本金+赠送;每笔按金额匹配达到的最高档(不叠加);重置方式 / 次数上限可在控制台切换
+const SINGLE_TIERS=[[50,5],[100,12],[500,68]];
+// 各状态下本周期已产生的奖励(每笔一条):充100得12、充60得5、再充500得68;1 次 → 充100得12 即用完
+const SINGLE_STATE={
+  notstart:{got:[],claimed:0},
+  ongoing:{got:[12,5],claimed:0},
+  claimed:{got:[12,5],claimed:17},
+  alldone:{got:[12,5,68],claimed:17},
+  one:{got:[12],claimed:0},
+  oneclaimed:{got:[12],claimed:12}
+};
+function singleStateSet(){
+  if(S.smax==='0') return [['notstart','未获奖'],['ongoing','已获奖 2 次 · 未领'],['claimed','已获奖 2 次 · 已领'],['alldone','已获奖 3 次 · 末笔未领']];
+  if(S.smax==='1') return [['notstart','未获奖(0/1 次)'],['one','次数用完(1/1 次) · 未领'],['oneclaimed','次数用完(1/1 次) · 已领']];
+  return [['notstart','未获奖(0/3 次)'],['ongoing','已获奖 2 次 · 未领'],['claimed','已获奖 2 次 · 已领'],['alldone','次数用完(3/3 次) · 末笔未领']];
+}
+// 周期词:标题/规则前缀、次数行前缀、规则第1条周期词
+const SR={
+  none:{prefix:'', cnt:'', left:'', period:'活动期间'},
+  day:{prefix:'每日', cnt:'今日', left:'今日', period:'每日'},
+  week:{prefix:'每周', cnt:'本周', left:'本周', period:'每周'}
+};
+function rulesSingle(){
+  const r=SR[S.sreset], n=+S.smax;
+  // 每日/每周按临时方案只能"过期"两项,示例取过期作废;不重置示例取保留天数类且过期天数=0(一直保留)
+  const l2=S.sreset==='none'?'彩金需要手动领取，活动期间彩金将一直保留；':'彩金需要手动领取，过期后彩金将自动作废；';
+  // 0 = 不限次数:每笔达标均赠送;1~99:周期内最多 N 次(1 次与多次同句式)
+  const l1=n===0
+    ? `本活动为${r.prefix}单笔充值活动，会员每笔充值满足要求均可获得相应彩金，不限次数；`
+    : `本活动为${r.prefix}单笔充值活动，会员单笔充值满足要求，可获得相应彩金，${r.period}最多可获得 ${n} 次；`;
+  return [
+   l1,
+   l2,
+   '本金+彩金需 1 倍有效投注才能提现；',
+   '仅限账号本人进行正常的人为操作，否则将取消或扣除奖励、冻结、甚至拉入黑名单；',
+   '为避免文字理解差异，平台将保留本活动最终解释权。'];
+}
 // 系统默认活动规则（示例取参考原文；第1/2/3条随配置联动，见 PRD 5.7）
 const RULES_FIRST=[
  '本活动为首笔充值活动，会员首笔充值满足要求，可获得相应彩金；',
@@ -233,6 +287,7 @@ function goRecharge(){ const t=document.getElementById('fe-toast'); t.textConten
 function render(){
   const sc=document.getElementById('screen');
   if(S.mode==='days'){ sc.innerHTML=renderSeq(); bindTabs(); }
+  else if(S.mode==='single') sc.innerHTML=renderSingle();
   else sc.innerHTML=renderTiered();
 }
 const nav=t=>`<div class="nav"><span class="back">‹</span>${t}</div>`;
@@ -273,6 +328,50 @@ function renderTiered(){
    + `<div class="coletavel"><span class="lb">可领取</span><span class="amt">${money(claimAmt)}</span></div>`
    + `<div class="body">${mid}<div class="tbl-hd"><span class="c1">充值金额</span><span class="c2">奖励金额</span></div>${rows}${rulesBlock(isFirst?RULES_FIRST:RULES_ACCUM)}</div>`
    + `<div class="btnbar">${btn}</div>`;
+}
+
+// 单笔充值:顶部可领取 = 已获得 − 已领取;第1行看剩余次数;第2行按领取时间(每日重置锁定实时)
+function renderSingle(){
+  const guest=S.login==='out';
+  const d=SINGLE_STATE[guest?'notstart':S.state]||SINGLE_STATE.notstart;
+  const max=+S.smax, r=SR[S.sreset];
+  const unlimited=max===0;   // 0 = 不限次数,每笔达标都送
+  const used=d.got.length, left=max-used;
+  const gotSum=d.got.reduce((a,b)=>a+b,0);
+  const claimAmt=gotSum-d.claimed;
+  const low=SINGLE_TIERS[0];
+  const leftTxt=n=>`,${r.left?r.left:''}剩余 <b>${n}</b> 次`;
+  let line1;
+  if(unlimited){
+    line1 = used===0
+      ? `单笔充值满 <b>${money(low[0])}</b> 即可获得 <b>${money(low[1])}</b>,每笔都送`
+      : `已获得 <b>${money(gotSum)}</b>,继续充值继续送`;
+  }
+  else if(left<=0) line1='所有充值挑战已完成!';
+  else if(used===0) line1=`单笔充值满 <b>${money(low[0])}</b> 即可获得 <b>${money(low[1])}</b>${leftTxt(left)}`;
+  else line1=`已获得 <b>${money(gotSum)}</b>${leftTxt(left)}`;
+  // 单笔强制实时领取(无次日),提示固定"今日可领"
+  const btn=claimAmt>0?`<div class="btn on" onclick="singleClaim(${claimAmt})">领取</div>`:`<div class="btn off">领取</div>`;
+  const hint2=`今日可领 <b>${money(claimAmt)}</b>`;
+  // 限次(1 次与多次同样式):次数行 used/N;不限次:不显示次数行,靠第1行"每笔都送 / 继续充值继续送"区分
+  const cntRow=unlimited
+    ? ''
+    : `<div class="acc-row"><span class="l">${r.cnt}获奖次数</span><span class="v">${used}/${max}</span></div>`;
+  const mid=cntRow
+    + `<div class="acc-lines"><div class="ln"><span class="tri">🎯</span>${line1}</div><div class="ln"><span class="tri">🎯</span>${hint2}</div></div>`;
+  const rows=SINGLE_TIERS.map(t=>`<div class="tier"><span class="amt-l">${money(t[0])}</span><span class="rwd">+${money(t[1])}</span></div>`).join('');
+  return nav(r.prefix+'单笔充值加赠')
+   + `<div class="banner">${bannerSVG()}</div>`
+   + `<div class="coletavel"><span class="lb">可领取</span><span class="amt">${money(claimAmt)}</span></div>`
+   + `<div class="body">${mid}<div class="tbl-hd"><span class="c1">充值金额</span><span class="c2">奖励金额</span></div>${rows}${rulesBlock(rulesSingle())}</div>`
+   + `<div class="btnbar">${btn}</div>`;
+}
+function singleClaim(amt){
+  openCongrats(amt);
+  const next={ongoing:'claimed',alldone:'alldone',one:'oneclaimed'}[S.state];
+  if(S.state==='alldone') SINGLE_STATE.alldone.claimed=85;   // 演示:领取后可领归零
+  if(next && next!==S.state){ S.state=next; document.querySelectorAll('#seg-state button').forEach(b=>b.classList.toggle('on',b.dataset.v===next)); }
+  render();
 }
 
 function renderSeq(){
@@ -342,7 +441,8 @@ function bindTabs(){
 }
 
 function buildState(){
-  const set=STATE_SETS[S.mode]; if(!set) return;
+  const set=S.mode==='single'?singleStateSet():STATE_SETS[S.mode]; if(!set) return;
+  SINGLE_STATE.alldone.claimed=17;   // 恢复演示初值
   const box=document.getElementById('seg-state');
   box.innerHTML=set.map((o,i)=>`<button data-v="${o[0]}" class="${i===0?'on':''}">${o[1]}</button>`).join('');
   S.state=set[0][0];
@@ -358,12 +458,18 @@ function segClick(id,key,cb){
 function syncPanel(){
   const isDays=S.mode==='days';
   const guest=S.login==='out';
-  document.getElementById('grp-claim').style.display=isDays?'none':'block';
+  const isSingle=S.mode==='single';
+  // 连续天数、单笔充值强制实时领取 → 隐藏领取时间切换
+  document.getElementById('grp-claim').style.display=(isDays||isSingle)?'none':'block';
+  document.getElementById('grp-sreset').style.display=isSingle?'block':'none';
+  document.getElementById('grp-smax').style.display=isSingle?'block':'none';
   document.getElementById('grp-state').style.display=(isDays||guest)?'none':'block';   // 未登录时状态强制"未开始",隐藏状态切换
   document.getElementById('grp-days').style.display=isDays?'block':'none';
 }
 segClick('seg-mode','mode',()=>{ if(S.mode==='days'){S.dayTab=0;} else {buildState();} });
 segClick('seg-claim','claim');
+segClick('seg-sreset','sreset');
+segClick('seg-smax','smax',()=>{ buildState(); });
 segClick('seg-login','login');
 segClick('seg-days','days',()=>{S.dayTab=0;S.seqClaimed=false;});
 buildState();syncPanel();render();
