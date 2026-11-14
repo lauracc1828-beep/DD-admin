@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD · 推广渠道管理模块 v2.1</title>
+<title>PRD · 推广渠道管理模块 v3.0</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
@@ -56,6 +56,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 .flow-branch-item{display:flex;flex-direction:column;align-items:center;gap:0;flex:1}
 .flow-branch-label{font-size:11px;color:#888;margin-bottom:4px}
 .chg{background:#fff3cd;box-shadow:0 0 0 1px #ffe58f inset;border-radius:3px;padding:0 2px}
+.upd{background:#e6f7ff;box-shadow:0 0 0 1px #91d5ff inset;border-radius:3px;padding:0 2px}
 </style>
 </head>
 <body>
@@ -63,10 +64,11 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h1>推广渠道管理模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v2.7</span>
+  <span>📄 版本：v3.0</span>
   <span>✏️ 作者：Laura</span>
-  <span>📅 更新日期：2026-09-05</span>
+  <span>📅 更新日期：2026-11-14</span>
 </div>
+<div class="info"><span class="upd">v3.0 改动以蓝底标注：「安装pwa/App赠送」正式生效，发放规则见《安装PWA/APP奖励配置 PRD》。</span></div>
 
 <!-- TOC -->
 <div class="toc">
@@ -84,6 +86,7 @@ td:first-child{white-space:nowrap;font-weight:500}
       </ol>
     </li>
     <li><a href="#page2">子页面二：推广效果报表</a></li>
+    <li><a href="#rev"><span class="upd">修订记录</span></a></li>
   </ol>
 </div>
 
@@ -119,11 +122,11 @@ td:first-child{white-space:nowrap;font-weight:500}
   <div class="flow-branch">
     <div class="flow-branch-item">
       <div class="flow-branch-label">落地指向：仿谷歌页 / 防封下载页</div>
-      <div class="flow-box orange">⑥A 下载页（仿谷歌/苹果商店样式）<br>用户只有下载操作，无H5跳转<br>下载按钮和引导安装弹窗不生效<br><span class="chg">支持安卓与iOS，按设备/安装类型/浏览器区分交互</span><br><span class="chg">安卓→安装类型决定PWA/APK；iOS→保存桌面/添加到主屏幕</span><br><span class="chg">安卓路由：Chrome 直接下载；非 Chrome 加载即唤起 Chrome（支持→手机自带跳转确认，不支持→就地打开点安装下载）</span></div>
+      <div class="flow-box orange">⑥A 下载页（仿谷歌/苹果商店样式）<br>用户只有下载操作，无H5跳转<br><span class="chg">顶部横幅、底部安装浮层和引导安装弹窗均不生效</span><br><span class="chg">支持安卓与iOS，按设备/安装类型/浏览器区分交互</span><br><span class="chg">安卓→安装类型决定PWA/APK；iOS→保存桌面/添加到主屏幕</span><br><span class="chg">安卓路由：Chrome 直接下载；非 Chrome 加载即唤起 Chrome（支持→手机自带跳转确认，不支持→就地打开点安装下载）</span></div>
     </div>
     <div class="flow-branch-item">
       <div class="flow-branch-label">落地指向：官网首页 / 官网注册页 / 主域名</div>
-      <div class="flow-box green">⑥B H5页面<br>下载按钮（顶部横幅+底部安装浮层）生效<br>引导安装弹窗生效<br>按渠道配置触发时机和安装类型<br><span class="chg">安卓路由：Chrome 点安装→新标签跳「防封谷歌页」域名商店页完成安装；非 Chrome 点安装→唤起 Chrome（支持→跳转确认，不支持→就地下载）</span></div>
+      <div class="flow-box green">⑥B H5页面<br><span class="chg">顶部横幅、底部安装浮层各自独立生效</span><br>引导安装弹窗生效<br>按渠道配置触发时机和安装类型<br><span class="chg">安卓路由：Chrome 点安装→新标签跳「防封谷歌页」域名商店页完成安装；非 Chrome 点安装→唤起 Chrome（支持→跳转确认，不支持→就地下载）</span></div>
     </div>
   </div>
   <div class="flow-arrow">↓</div>
@@ -157,7 +160,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>渠道ID（ch参数）</td><td>系统为每条渠道分配的唯一数字标识，附加在渠道链接URL参数中，用于所有后续用户行为的数据归因。APK包本身不内嵌渠道ID，渠道信息通过下载URL参数在安装时透传</td></tr>
   <tr><td>跳转域名</td><td>推广链接的入口域名，负责接收用户点击请求并根据落地指向转发。来源于系统管理-域名管理中已配置并生效的推广域名</td></tr>
   <tr><td>落地指向</td><td>决定用户最终看到的页面类型，共5个选项，本质上分为「下载页类」和「H5页类」两大类，详见子页面一字段说明</td></tr>
-  <tr><td>埋点回传</td><td>当前支持三种三方API回传：Facebook API / TK API / Kwai API，均为服务器端回传，不依赖浏览器，数据准确性高。回传参数（Pixel ID / Token）由投流方提供</td></tr>
+  <tr><td>埋点回传</td><td>分两类：① 三方API回传（Facebook API / TK API / Kwai API），均为服务器端回传，不依赖浏览器，数据准确性高，回传参数（Pixel ID / Token）由投流方提供；<span class="chg">② 上架包埋点（APK上架包 / IOS上架包），由上架包客户端按统一事件规范上报用户行为，用于上架包渠道的归因与效果分析</span></td></tr>
   <tr><td>直推 vs 裂变</td><td>直推：用户自己点击推广链接进入；裂变：已注册用户邀请带来的新用户。两者数据在推广效果报表中分开统计</td></tr>
   <tr><td>充提差</td><td>充值金额 - 提现金额，是衡量渠道质量的核心指标。正值表示渠道用户为平台贡献利润，负值表示亏损</td></tr>
 </table>
@@ -176,7 +179,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><th>字段</th><th>控件</th><th>说明</th></tr>
   <tr><td>地区</td><td>下拉单选</td><td>默认当前账号授权地区</td></tr>
   <tr><td>商户</td><td>下拉单选</td><td>随地区联动刷新</td></tr>
-  <tr><td>埋点类型</td><td>下拉单选</td><td>可选：全部 / 常规推广 / Facebook API / TK API / Kwai API</td></tr>
+  <tr><td>埋点类型</td><td>下拉单选</td><td>可选：全部 / 常规推广 / Facebook API / TK API / Kwai API<span class="chg"> / APK上架包 / IOS上架包 / APK</span></td></tr>
   <tr><td>推广渠道</td><td>下拉单选</td><td>可选：全部 / 各推广商名称</td></tr>
 </table>
 <p><strong>第二行</strong></p>
@@ -215,14 +218,14 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>商户</td><td>商户 ID</td></tr>
   <tr><td>推广商</td><td>所属推广商名称</td></tr>
   <tr><td>渠道 Id</td><td>系统分配的唯一 ID</td></tr>
-  <tr><td>埋点类型</td><td>如：常规推广、Facebook API 等</td></tr>
+  <tr><td>埋点类型</td><td>如：常规推广、Facebook API、<span class="chg">APK上架包</span> 等</td></tr>
   <tr><td>渠道链接</td><td>固定列宽换行完整展示，绿色可点击文字，点击在新标签页打开；链接后附复制图标，点击一键复制完整链接</td></tr>
   <tr><td>安卓引导安装弹框</td><td>Toggle 开关，可直接在列表切换开/关，操作后即时保存</td></tr>
   <tr><td>弹框时间点</td><td>如：访问主页、用户充值</td></tr>
   <tr><td>弹框间隔</td><td>如：0小时(强制安装)</td></tr>
   <tr><td>安装类型</td><td>如：pwa(快速安装)</td></tr>
   <tr><td>安装方式</td><td>显示安装包地址（APK包地址），截断显示约前8-10个字符后加省略号，绿色可点击，点击在新标签页打开，后附复制图标；无链接时显示「-」</td></tr>
-  <tr><td>操作</td><td>编辑图标（打开编辑弹窗）/ Test按钮（悬浮提示「测试」，点击打开测试回传弹窗）/ 事件说明图标（仅非常规推广渠道显示，悬浮提示「事件说明」，点击弹出事件说明弹窗）</td></tr>
+  <tr><td>操作</td><td>编辑图标（打开编辑弹窗）/ Test按钮（悬浮提示「测试」，点击打开测试回传弹窗）/ 事件说明图标（<span class="chg">仅已定义回传事件清单的埋点类型显示，即 Facebook API / TK API / Kwai API / APK上架包 / IOS上架包；常规推广与 APK 不显示</span>，悬浮提示「事件说明」，点击弹出事件说明弹窗）</td></tr>
 </table>
 <p style="font-size:13px;color:#888;margin-top:6px">分页器：显示总条数，支持页码点击跳转，支持输入页码直接跳至指定页，支持切换每页显示条数（默认50条/页）。</p>
 
@@ -272,9 +275,9 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td class="indent2">↳↳ 选择APK</td><td>按钮组</td><td>同上；逻辑与更换安装包一致</td></tr>
   <tr><td class="indent">↳ 弹框安装类型（苹果）</td><td>下拉单选</td><td>苹果类型时展示；固定为「苹果商店」。<span class="chg"><strong>注：</strong>因「苹果商店」当前暂不支持，本字段暂时隐藏，待功能支持后恢复。</span></td></tr>
   <tr><td class="indent2">↳↳ iOS地址类型</td><td>单选（Radio）</td><td>苹果类型时展示；可选：普通地址 / OneLink地址；字段逻辑同更换安装包。<span class="chg">随「弹框安装类型（苹果）」一并暂时隐藏。</span></td></tr>
-  <tr><td>安装送彩金</td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；为用户实际到账的赠送金额</td></tr>
-  <tr><td class="indent">↳ 赠送金额</td><td>数字输入</td><td>选非关闭时展示；为实际赠送金额</td></tr>
-  <tr><td class="indent">↳ 打码倍数</td><td>数字输入</td><td>同上</td></tr>
+  <tr><td>安装送彩金</td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；为用户实际到账的赠送金额<span class="upd">。替换后写入所选平台的「安装pwa/App赠送」配置，立即生效。</span></td></tr>
+  <tr><td class="indent">↳ 赠送金额</td><td>数字输入</td><td>选非关闭时展示；为实际赠送金额<span class="upd">；输入规则同渠道设置（3.5.3 新增渠道弹窗安卓 Tab）</span></td></tr>
+  <tr><td class="indent">↳ 打码倍数</td><td>数字输入</td><td>同上<span class="upd">；输入规则同渠道设置</span></td></tr>
   <tr><td>替换引导开关</td><td>单选（Radio）</td><td>可选：保持原有 / 全部开启 / 全部关闭；<span class="chg">控制批量替换后各渠道<strong>所选「渠道安装类型」对应平台</strong>的引导安装开关状态（安卓类型→安卓引导；苹果类型→苹果引导），另一平台的引导开关保持原样。</span></td></tr>
   <tr><td>替换渠道 <span class="tag tag-req">必填</span></td><td>两层级联多选 + 全选</td><td>同更换安装包；仅展示安装类型与所选「渠道安装类型」完全匹配的渠道</td></tr>
 </table>
@@ -326,33 +329,37 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <p><strong>落地指向选项说明</strong></p>
 <table>
-  <tr><th>选项</th><th>落地页类型</th><th>下载按钮/引导安装</th><th>说明</th></tr>
+  <tr><th>选项</th><th>落地页类型</th><th><span class="chg">顶部横幅/底部安装浮层/引导安装</span></th><th>说明</th></tr>
   <tr><td>仿谷歌页</td><td>下载页（仿谷歌商店样式）</td><td>❌ 不生效</td><td>仿应用商店模板页面；<span class="chg">支持安卓与 iOS，按设备/安装类型/浏览器区分交互（安卓走安装类型决定 PWA/APK，iOS 走保存桌面/添加到主屏幕），页面区块、样式与下载交互详见《仿应用商店模块 PRD》</span>；页面只有下载操作，不跳转 H5；弹框安装类型和 APK 包地址生效，决定安装方式<br><span class="chg">安卓：Chrome 直接下载；非 Chrome 加载即唤起 Chrome（不支持唤起则就地打开点安装下载）</span></td></tr>
   <tr><td>防封下载页</td><td>下载页（防封中转）</td><td>❌ 不生效</td><td>功能与仿谷歌页类似；弹框安装类型和APK包地址生效；<span class="chg">下载页样式与交互同样详见《仿应用商店模块 PRD》；安卓：Chrome 直接下载，非 Chrome 加载即唤起 Chrome（不支持唤起则就地打开点安装下载）</span></td></tr>
-  <tr><td>官网首页</td><td>H5官网主页</td><td>✅ 生效</td><td>落地到H5首页，下载按钮（顶部横幅 + 底部安装浮层）和引导安装弹窗按渠道配置生效</td></tr>
+  <tr><td>官网首页</td><td>H5官网主页</td><td>✅ 生效</td><td>落地到H5首页，<span class="chg">顶部横幅、底部安装浮层</span>和引导安装弹窗按渠道配置<span class="chg">各自独立</span>生效</td></tr>
   <tr><td>官网注册页</td><td>H5注册页</td><td>✅ 生效</td><td>落地到H5注册页，同上</td></tr>
   <tr><td>主域名</td><td>H5主域名</td><td>✅ 生效</td><td>直接走主域名落地H5页面，同上</td></tr>
 </table>
 
 <p><strong>埋点类型说明</strong></p>
-<div class="tip">当前平台支持4种埋点类型：常规推广（无三方回传）+ Facebook API / TK API / Kwai API（三方服务器端API回传）。三方埋点的Pixel ID和Token均由投流方提供。</div>
+<div class="tip">当前平台支持<span class="chg">7</span>种埋点类型：常规推广（无三方回传）+ Facebook API / TK API / Kwai API（三方服务器端API回传）<span class="chg">+ APK上架包 / IOS上架包 / APK（上架包埋点）</span>。三方埋点的Pixel ID和Token均由投流方提供。</div>
 <table>
   <tr><th>埋点类型</th><th>展开字段</th><th>说明</th></tr>
   <tr><td>常规推广</td><td>无</td><td>不接入任何第三方广告平台，数据仅在我方后台统计</td></tr>
   <tr><td>Facebook API（Facebook服务器接口回传）</td><td>Pixel ID <span class="tag tag-req">必填</span>、Token <span class="tag tag-req">必填</span>、test_event_code事件测试 <span class="tag">非必填</span></td><td>服务器端回传至Facebook广告平台；test_event_code仅供测试使用，测试完成后应删除填入的内容；具体回传事件以Facebook官方文档为准</td></tr>
   <tr><td>TK API（TikTok服务器接口回传）</td><td>Pixel ID <span class="tag tag-req">必填</span>、Token <span class="tag tag-req">必填</span>、test_event_code事件测试 <span class="tag">非必填</span></td><td>服务器端回传至TikTok广告平台；test_event_code仅供测试使用，测试完成后应删除填入的内容；具体回传事件以TikTok官方文档为准</td></tr>
   <tr><td>Kwai API（快手服务器接口回传）</td><td>Pixel ID <span class="tag tag-req">必填</span>、Token <span class="tag tag-req">必填</span>、test_event_code事件测试 <span class="tag">非必填</span></td><td>服务器端回传至快手广告平台；test_event_code仅供测试使用，测试完成后应删除填入的内容；具体回传事件以快手官方文档为准</td></tr>
+  <tr><td><span class="chg">APK上架包</span></td><td>全渠道回传kwai ID <span class="tag">非必填</span></td><td>商户自行封装并上架谷歌商店的马甲包，渠道链接打包进该上架包、由安卓用户在App内访问。「全渠道回传kwai ID」为该渠道在快手侧的全渠道回传标识，由投流方提供，留空表示不做快手全渠道回传；该类型的客户端上报事件清单见 3.5.7 事件说明弹窗，完整需求见《推广渠道埋点类型新增 PRD》</td></tr>
+  <tr><td><span class="chg">IOS上架包</span></td><td>无</td><td>商户自行封装并上架苹果商店的安装包，渠道链接打包进该上架包、由iOS用户在App内访问；该类型的客户端上报事件清单见 3.5.7 事件说明弹窗，完整需求见《推广渠道埋点类型新增 PRD》</td></tr>
+  <tr><td><span class="chg">APK</span></td><td>无</td><td>平台自有的H5套壳包，打包指定URL生成安装包、由商户自行分发（不经应用商店），由安卓用户在App内访问；不接入三方回传，也无客户端上报事件清单，数据仅在我方后台统计，列表操作列不展示「事件说明」图标；完整需求见《推广渠道埋点类型新增 PRD》</td></tr>
 </table>
-<p style="font-size:13px;color:#888">事件说明弹窗格式：标题为「[埋点类型名称]」，内容为该类型的回传事件列表，每条格式为「中文事件名称 - 事件标识符」，具体内容以三方平台官方文档为准。</p>
+<p style="font-size:13px;color:#888">事件说明弹窗格式：标题为「[埋点类型名称]」，内容为该类型的回传事件列表，每条格式为「中文事件名称 - 事件标识符」。三方API类型的具体内容以三方平台官方文档为准；<span class="chg">上架包类型（APK上架包 / IOS上架包）的事件清单见 3.5.7</span>。</p>
 
 <p><strong>渠道设置 - 安卓 Tab</strong></p>
 <div class="info">字段值持久化说明：弹框相关字段（弹框内容、弹框时间点、弹框间隔时间等）在新增渠道时均有系统初始默认值（见各字段说明）。「引导安装」开关的开启/关闭操作仅控制下方子字段的展开与收起，不重置或清空字段内容。无论开关处于何种状态，字段始终保留其最后一次编辑的值（或从未编辑时的系统默认值）。</div>
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>配置说明</th><th>前端实际效果</th></tr>
-  <tr><td>下载按钮</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」；落地指向为下载页类（仿谷歌页/防封下载页）时不生效</td><td><span class="chg">开启后，H5首页展示两个安装入口，均为下载按钮的前台表现，同受本开关控制：① 顶部固定横幅（提示用户下载安装APP，并提供安装入口）；② 底部安装浮层（按弹框时间点触发，带遮罩覆盖页面）。关闭则两者均不展示。用户完成安装后，顶部横幅保持可见，可点击「×」手动关闭。</span>下载按钮和引导安装弹框均仅在H5端显示，不限制用户登录状态。<span class="chg">横幅与浮层的样式、触发优先级及交互细节详见《安装引导模块 PRD》3.2 / 3.3 节。</span></td></tr>
-  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」；落地指向为下载页类时不生效</td><td>开启后，在H5页面按配置的时间点弹出安装引导弹窗，引导用户安装PWA或APK；关闭则不弹出任何引导弹窗。<span class="chg">系统不做已安装判定，开启期间按弹框时间点 / 间隔持续弹出，不因用户已安装而停止。</span><br><br><strong>特殊情况：</strong>当下载按钮与引导安装弹框同时开启、且弹框时间点为「访问主页」时，未登录用户仅显示下载按钮（底部弹窗需关闭后才能操作页面，顶部弹框需手动关闭）；用户登录后，引导安装弹框叠加覆盖在页面上方显示。弹框时间点为「用户充值」或「首次提现」时不受此限制，两者各自独立触发。</td></tr>
+  <tr><td><span class="chg">顶部横幅</span></td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」；落地指向为下载页类（仿谷歌页/防封下载页）时不生效</td><td><span class="chg">开启后，H5首页顶部常驻展示下载提示横幅（流布局，将页面内容向下推移，不覆盖页面），提示用户下载安装APP并提供安装入口；关闭则不展示。仅在H5端显示，不区分登录状态，已登录用户同样可见；用户点击「×」后当次会话不再显示，完成安装后横幅保持可见、不自动隐藏。横幅样式与交互细节详见《安装引导模块 PRD》3.2 节。</span></td></tr>
+  <tr><td><span class="chg">底部安装浮层</span></td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」；落地指向为下载页类（仿谷歌页/防封下载页）时不生效</td><td><span class="chg">开启后，未登录用户每次进入H5首页时从底部弹出安装浮层（带遮罩，覆盖整个页面含顶部横幅）；关闭则不展示。用户登录后浮层隐藏且不再触发；进入首页时若存在其他弹窗（活动弹窗、公告弹窗等）则浮层让位不弹，且本次访问不补弹。浮层的触发时机由上述规则直接约定，不读取「弹框时间点」「弹框间隔时间」配置。浮层样式、关闭逻辑与交互细节详见《安装引导模块 PRD》3.3 节。</span></td></tr>
+  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」；落地指向为下载页类时不生效</td><td>开启后，在H5页面按配置的时间点弹出安装引导弹窗，引导用户安装PWA或APK；关闭则不弹出任何引导弹窗。<span class="chg">系统不做已安装判定，开启期间按弹框时间点 / 间隔持续弹出，不因用户已安装而停止。</span><br><br><span class="chg"><strong>与底部安装浮层的关系：</strong>底部安装浮层为未登录专属，引导安装弹框在弹框时间点为「访问主页」时于用户登录后触发，两者因登录态天然错开，不存在同屏叠加。顶部横幅与引导安装弹框可同屏，弹框遮罩覆盖横幅，横幅不被关闭。弹框时间点为「用户充值」或「首次提现」时各自独立触发。</span></td></tr>
   <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「常规升级」</td><td>「常规升级」：弹窗展示为普通的下载升级提示，不含赠送信息。「赠送彩金升级」：弹窗中额外展示赠送彩金的金额，以吸引用户点击安装。注意：此处展示的金额仅为前端吸引用户的展示值，不等于实际赠送金额（实际赠送金额在「安装pwa/App赠送」中配置）。</td></tr>
-  <tr><td class="indent2">↳↳ 赠送金额类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额；默认「固定金额」</td><td>「固定金额」：弹窗展示一个固定的赠送数值，如「安装送100」。「随机金额」：弹窗展示一个区间值，如「安装送50~200」，实际赠送金额在区间内随机。</td></tr>
+  <tr><td class="indent2">↳↳ 赠送金额类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额；默认「固定金额」</td><td>「固定金额」：弹窗展示一个固定的赠送数值，如「安装送100」。「随机金额」：弹窗展示一个区间值，如「安装送50~200」。<span class="upd">两者都只用于弹窗展示；实际赠送金额为「安装pwa/App赠送 → 赠送金额」配置的固定值，不在区间内随机。</span></td></tr>
   <tr><td class="indent2">↳↳ 显示赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>固定金额为单一输入框，随机金额为两个输入框（最小值/最大值）</td><td>仅为弹窗中展示给用户看的营销数字，不影响实际赠送金额。</td></tr>
   <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「用户充值」</td><td>「访问主页」：用户每次访问H5首页时触发弹窗（受弹框间隔时间控制）。「用户充值」：用户每次充值回调成功后触发（若用户当前在游戏中则不弹，退出游戏后仍会弹出）。「首次提现」：用户第一次提现回调成功后触发，仅触发一次。</td></tr>
   <tr><td class="indent">↳ 弹框间隔时间</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「0小时(强制安装)」；可选：0小时(强制安装) / 1~24小时</td><td>「0小时(强制安装)」：弹窗强制弹出，无「×」按钮，用户无法关闭，也无法点击弹窗外区域关闭。<span class="chg">用户触发下载或完成安装后，弹窗仍保留、不会自动关闭，直至页面刷新或跳转。</span>1~24小时：弹窗弹出后用户可点击弹窗外区域关闭。<span class="chg">用户触发下载或完成安装后，弹窗同样保留、不自动关闭；</span>每隔对应时长会再次弹出（<span class="chg">不做已安装判定，按间隔持续弹出</span>）。<span class="chg">（弹窗关闭逻辑与《安装引导模块 PRD》3.4 节「弹窗关闭逻辑」口径一致）</span></td></tr>
@@ -360,9 +367,9 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td class="indent2">↳↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>弹框安装类型含APK时展示</td><td>APK文件的下载地址，用户点击安装时从该地址下载APK包。</td></tr>
   <tr><td class="indent2">↳↳ APK包名</td><td>—</td><td>自动填充</td><td>含APK时展示；选择马甲包后自动读取，手动修改APK包地址后自动清空</td><td><span class="chg">APK的唯一包标识符，仅作渠道包的标识与管理记录，<strong>不用于</strong>判断用户设备是否已安装（前台不做已安装判定）。</span></td></tr>
   <tr><td class="indent2">↳↳ 选择APK</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮组</td><td>「选择马甲包」从系统管理-马甲包管理中选（自动填入地址和包名）；「上传」直接上传apk文件（限100MB）。<span class="chg">二期：马甲包管理暂未上线，「选择马甲包」下拉暂空，当前用「上传」手动上传跑通。</span></td><td>马甲包是经过伪装的APK，外观与普通APP相似，用于规避应用商店审核。选择马甲包后APK包地址和包名自动填入。</td></tr>
-  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；默认「关闭」；<strong>注：当前功能配置可保存但暂不上线生效</strong></td><td>「关闭」：用户安装后不赠送任何彩金。「充值用户赠送」：仅有过充值记录的用户完成安装后，系统自动赠送彩金到账户，未充值用户不赠送。「无需充值赠送」：所有完成安装的用户均可获得赠送彩金，包括未充值用户。赠送彩金到账后需满足打码倍数要求方可提现。</td></tr>
-  <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示</td><td>用户安装后实际到账的彩金金额，与弹窗中「显示赠送金额」相互独立，两者可以不同。</td></tr>
-  <tr><td class="indent">↳ 打码倍数</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示</td><td>赠送彩金的流水要求倍数。例如赠送100元、打码倍数为10，则用户需累计投注1000元后，赠送金额方可提现。</td></tr>
+  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；默认「关闭」；<span class="upd">保存后立即生效。选「关闭」时下方两个字段收起，已填写的值保留。</span></td><td><span class="upd">适用于<strong>注册渠道为本渠道</strong>、在<strong>安卓设备</strong>上以 PWA / APP 方式打开站点并处于登录状态的会员，每个账号只判定一次。</span>「关闭」：不发放。「充值用户赠送」：<span class="upd">判定时已有成功到账充值记录的会员才发放，之后充值不补发。</span>「无需充值赠送」：<span class="upd">不要求充值记录。</span>奖励自动到账，<span class="upd">需满足打码倍数要求方可提现。判定时机、配置来源、账变与统计等完整规则见《安装PWA/APP奖励配置 PRD》。</span></td></tr>
+  <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选非「关闭」时展示且必填；<span class="upd">须大于 0，最多两位小数，不设上限，超过两位的小数无法输入。为空保存提示「请输入赠送金额」，为 0 保存提示「赠送金额须大于0」。</span></td><td>会员实际到账的彩金金额<span class="upd">（固定值）</span>，与弹窗中「显示赠送金额」相互独立，两者可以不同。</td></tr>
+  <tr><td class="indent">↳ 打码倍数</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选非「关闭」时展示且必填；<span class="upd">只能填写 0 或正整数，不设上限，小数点、负号等字符无法输入，失焦时去掉前导 0。为空保存提示「请输入打码倍数」。</span></td><td>赠送彩金的流水要求倍数。例如赠送100元、打码倍数为10，则用户需累计投注1000元后，赠送金额方可提现。<span class="upd">为 0 时不追加稽核要求。</span></td></tr>
 </table>
 <div class="tip"><span class="chg">安装引导弹窗触发下载或安装动作后均不会自动关闭：「0小时(强制安装)」下弹窗保留至页面刷新或跳转，「1~24小时」下需用户手动关闭。系统不判断用户是否已完成安装（PWA / APK 均不做已安装判定），弹窗按弹框间隔持续弹出，不因"已安装"而停止；仅顶部横幅保持可见，用户可点击「×」手动关闭（与《安装引导模块 PRD》口径一致）。</span></div>
 <div class="tip"><span class="chg"><strong>已安装唤起（二期新增）：</strong>用户在 H5 点击任意安装入口（顶部横幅 / 底部浮层 / 引导弹窗 / 下载页下载按钮）时，系统先尝试唤起该渠道对应的已安装 PWA / APK：已安装则直接打开并保持登录态无缝进入 App，不再重复下载；未安装则兜底回落到原下载安装流程；PWA+APK 按优先级（优先 PWA，不支持再 APK）判断后唤起。本逻辑仅作用于「点击安装」的瞬间，<strong>不改变</strong>弹窗弹出频率——仍不做持续性已安装判定，横幅 / 浮层 / 弹窗照常按时间点与间隔展示（与《安装引导模块 PRD》口径一致）。</span></div>
@@ -370,7 +377,8 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>渠道设置 - 苹果 Tab</strong></p>
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th></tr>
-  <tr><td>下载按钮</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td><span class="chg">顶部横幅</span></td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
+  <tr><td><span class="chg">底部安装浮层</span></td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td><span class="chg">同安卓</span></td></tr>
   <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓；字段值持久化规则同安卓Tab说明</td></tr>
   <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
   <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>同安卓</td></tr>
@@ -380,7 +388,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td class="indent2">↳↳ 苹果地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>上架包地址类型选「普通地址」时展示；填写苹果商店App下载链接</td></tr>
   <tr><td class="indent2">↳↳ IOS上架包名字</td><td>—</td><td>自动填充</td><td>上架包地址类型选「OneLink地址」时展示；选择后自动填入</td></tr>
   <tr><td class="indent2">↳↳ 选择IOS上架包</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮</td><td>上架包地址类型选「OneLink地址」时展示；点击弹出子弹窗选择已上传的IOS上架包（由后端上传）</td></tr>
-  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>同安卓；当前功能配置可保存但暂不上线生效</td></tr>
+  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td><span class="upd">字段、输入规则同安卓；与安卓配置相互独立，适用于注册渠道为本渠道、在 iOS 设备上以 PWA / APP 方式打开站点并处于登录状态的会员，下属「赠送金额」「打码倍数」同安卓。完整规则见《安装PWA/APP奖励配置 PRD》。</span></td></tr>
 </table>
 
 <!-- 7.4 批量新增渠道 -->
@@ -416,7 +424,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <!-- 7.7 事件说明 -->
 <h4>3.5.7 事件说明弹窗</h4>
-<p>点击表格操作列「事件说明」图标后弹出（仅非常规推广类型的渠道显示此按钮）。弹窗标题为该埋点类型名称，内容展示该类型的回传事件列表，每条格式为「中文事件名称 - 事件标识符」。具体事件内容以三方平台官方文档为准。</p>
+<p>点击表格操作列「事件说明」图标后弹出（<span class="chg">仅已定义回传事件清单的埋点类型显示此按钮，即 Facebook API / TK API / Kwai API / APK上架包 / IOS上架包；常规推广与 APK 不显示</span>）。弹窗标题为该埋点类型名称，内容展示该类型的回传事件列表，每条格式为「中文事件名称 - 事件标识符」。<span class="chg">三方API类型的具体事件内容以三方平台官方文档为准；上架包类型的事件清单由我方客户端埋点规范定义，见下方。</span></p>
 <p><strong>格式范例（以Facebook API为例）：</strong></p>
 <div class="info" style="font-family:monospace;font-size:13px">
   <strong>Facebook API（Facebook服务器接口回传）</strong><br><br>
@@ -424,6 +432,22 @@ td:first-child{white-space:nowrap;font-weight:500}
   登录 - SubmitApplication<br>
   充值 - Purchase（仅在首充时触发）
 </div>
+
+<p><strong><span class="chg">上架包事件清单（APK上架包 / IOS上架包 共用，共9个事件）</span></strong></p>
+<div class="tip">事件标识符严格区分大小写，两种上架包类型的事件清单完全一致，弹窗内按下表顺序展示。</div>
+<table>
+  <tr><th>中文事件名称</th><th>事件标识符</th><th>触发时机</th></tr>
+  <tr><td>登录成功</td><td>login</td><td>用户登录成功后</td></tr>
+  <tr><td>登出</td><td>logout</td><td>用户退出登录</td></tr>
+  <tr><td>点击注册</td><td>registerClick</td><td>点击注册按钮提交时（不等待结果，此时 uid 多为空）</td></tr>
+  <tr><td>注册成功</td><td>registerSuccess</td><td>注册成功后</td></tr>
+  <tr><td>点击充值</td><td>depositClick</td><td>点击充值按钮提交时</td></tr>
+  <tr><td>首存成功</td><td>depositFirst</td><td>首次存款到账（后端确认）</td></tr>
+  <tr><td>复存成功</td><td>depositRepeat</td><td>复充到账（后端确认）</td></tr>
+  <tr><td>进入游戏</td><td>enterGame</td><td>进入游戏成功</td></tr>
+  <tr><td>打开外链</td><td>openWindow</td><td>需要打开外部链接时</td></tr>
+</table>
+<p style="font-size:13px;color:#888">说明：事件的附加参数与基础参数属客户端埋点上报规范，由技术侧按埋点文档实现，后台弹窗仅展示「中文事件名称 - 事件标识符」两列信息，不展示触发时机与参数。</p>
 </div>
 
 <!-- 子页面二 -->
@@ -450,11 +474,19 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>裂变效果</td><td>通过已注册用户邀请带来的新用户产生的数据</td></tr>
 </table>
 <p>各数据块字段：注册人数 / 首充人数 / 首充金额 / 充值人数 / 充值金额 / 提现人数 / 提现金额 / 充提差 / 提现手续费 / 投注人数 / 投注金额 / 有效投注 / 赠送金额</p>
-<div class="info"><span class="chg"><strong>字段口径说明：</strong>「赠送金额」统计所有活动的奖励金额，即统计范围内各类活动发放给用户的奖励总额；其余字段的含义与统计口径均与「推广渠道报表」一致。</span></div>
+<div class="info"><span class="chg"><strong>字段口径说明：</strong>「赠送金额」统计所有活动的奖励金额，即统计范围内各类活动发放给用户的奖励总额；其余字段的含义与统计口径均与「推广渠道报表」一致。</span><br><span class="upd">安装PWA/APP奖励同样计入「赠送金额」，归属会员的<strong>注册渠道</strong>，不计入会员安装时访问的渠道。</span></div>
+</div>
+
+<div class="section-card" id="rev">
+<h2><span class="upd">五、修订记录</span></h2>
+<table>
+  <tr><th>版本</th><th>日期</th><th>作者</th><th>修订内容</th></tr>
+  <tr><td>v3.0</td><td>2026-11-14</td><td>Laura</td><td>「安装pwa/App赠送」去掉「暂不上线生效」，安卓 / 苹果 Tab 分别适用于对应设备端；补充「赠送金额」「打码倍数」输入规则；批量替换「安装送彩金」注明写入所选平台并立即生效；修正「随机金额」说明（只作展示，实际赠送为固定值）；推广效果报表「赠送金额」注明包含安装奖励、按注册渠道归属。完整发放规则见《安装PWA/APP奖励配置 PRD》。</td></tr>
+</table>
 </div>
 
 <!-- 子页面三 -->
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">推广渠道管理模块 PRD v2.7 · 2026-09-05 · 作者：Laura</p>
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">推广渠道管理模块 PRD v3.0 · 2026-11-14 · 作者：Laura</p>
 </div>
 </body>
 </html>

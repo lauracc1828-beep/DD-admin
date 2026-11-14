@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD · 安装引导模块 v1.9</title>
+<title>PRD · 安装引导模块 v2.1</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#333;font-size:14px;line-height:1.7}
@@ -43,6 +43,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 .indent2{padding-left:48px !important}
 .flow-wrap{background:#f8f9ff;border-radius:8px;padding:20px;margin:12px 0;overflow-x:auto}
 .chg{background:#fff3cd;box-shadow:0 0 0 1px #ffe58f inset;border-radius:3px;padding:0 2px}
+.upd{background:#e6f7ff;box-shadow:0 0 0 1px #91d5ff inset;border-radius:3px;padding:0 2px}
 </style>
 </head>
 <body>
@@ -50,10 +51,11 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h1>安装引导模块 · PRD</h1>
 <div class="meta">
-  <span>📄 版本：v1.9</span>
+  <span>📄 版本：v2.1</span>
   <span>✏️ 作者：Laura</span>
-  <span>📅 更新日期：2026-10-13</span>
+  <span>📅 更新日期：2026-11-14</span>
 </div>
+<div class="info"><span class="upd">v2.1 改动以蓝底标注：「安装pwa/App赠送」正式生效，发放规则见《安装PWA/APP奖励配置 PRD》。</span></div>
 
 <!-- TOC -->
 <div class="toc">
@@ -70,7 +72,7 @@ td:first-child{white-space:nowrap;font-weight:500}
     <li><a href="#frontend">前台显示逻辑</a>
       <ol class="sub">
         <li><a href="#f-scope">生效条件</a></li>
-        <li><a href="#f-topbar">下载按钮（顶部横幅）</a></li>
+        <li><a href="#f-topbar">顶部横幅</a></li>
         <li><a href="#f-sheet">底部安装浮层</a></li>
         <li><a href="#f-android">安卓安装流程</a></li>
         <li><a href="#f-ios">iOS 安装流程</a></li>
@@ -78,18 +80,19 @@ td:first-child{white-space:nowrap;font-weight:500}
     </li>
     <li><a href="#flowchart">活动逻辑流程图</a></li>
     <li><a href="#i18n">中葡文案对照</a></li>
+    <li><a href="#rev"><span class="upd">修订记录</span></a></li>
   </ol>
 </div>
 
 <!-- 一、模块概述 -->
 <div class="section-card" id="overview">
 <h2>一、模块概述</h2>
-<p>安装引导模块用于配置官网主域名（不带渠道 ID）下的下载按钮和安装引导弹框行为，面向未通过推广渠道链接访问站点的用户。</p>
+<p>安装引导模块用于配置官网主域名（不带渠道 ID）下的<span class="chg">顶部横幅、底部安装浮层</span>和安装引导弹框行为，面向未通过推广渠道链接访问站点的用户。</p>
 <p>本模块配置与各推广渠道的渠道设置<strong>相互独立、互不影响</strong>，各自生效。推广渠道的引导安装配置详见《推广渠道管理模块 PRD》。</p>
 <table>
   <tr><th>项目</th><th>说明</th></tr>
   <tr><td>菜单位置</td><td>商户后台 → 推广渠道管理 → 安装引导</td></tr>
-  <tr><td>生效范围</td><td>下载按钮与引导安装仅对落地指向为 H5 页类（官网首页 / 官网注册页）的访问生效；落地指向为下载页类（仿谷歌页 / 仿苹果商店页）时，下载按钮与引导安装不生效，但安装类型、安装包地址等配置字段仍生效。</td></tr>
+  <tr><td>生效范围</td><td><span class="chg">顶部横幅、底部安装浮层与引导安装</span>仅对落地指向为 H5 页类（官网首页 / 官网注册页）的访问生效；落地指向为下载页类（仿谷歌页 / 仿苹果商店页）时，<span class="chg">该三项</span>不生效，但安装类型、安装包地址等配置字段仍生效。</td></tr>
   <tr><td>配置粒度</td><td>以商户为单位配置</td></tr>
 </table>
 </div>
@@ -114,23 +117,24 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>通用字段</strong></p>
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th><th>前台效果</th></tr>
-  <tr><td>下载按钮</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」</td><td>开启后，H5 首页顶部展示下载提示横幅（顶部横幅）及底部安装浮层，引导用户安装 APP；关闭则均不展示。</td></tr>
-  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」</td><td>开启后，在 H5 页面按配置的时间点弹出引导安装弹窗（安卓 3.4 / iOS 3.5），引导用户安装 PWA 或 APK；关闭则不弹出。<span class="chg">系统不做已安装判定，开启期间按弹框时间点 / 间隔持续弹出，不因用户已安装而停止。</span><br><br><strong>特殊情况：</strong>下载按钮与引导安装同时开启、且弹框时间点为「访问主页」时，未登录用户仅显示顶部横幅（底部浮层需关闭后才能操作页面，顶部横幅需手动关闭）；用户登录后引导安装弹窗叠加覆盖在页面上方显示。弹框时间点为「用户充值」或「首次提现」时不受此限制，两者各自独立触发。</td></tr>
+  <tr><td><span class="chg">顶部横幅</span></td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」</td><td><span class="chg">开启后，H5 首页顶部常驻展示下载提示横幅（流布局，将页面内容向下推移，不覆盖页面），引导用户安装 APP；关闭则不展示。不区分登录状态，已登录用户同样可见；用户点击「×」后当次会话不再显示。详见 3.2 节。</span></td></tr>
+  <tr><td><span class="chg">底部安装浮层</span></td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」</td><td><span class="chg">开启后，未登录用户每次进入 H5 首页时从底部弹出安装浮层（带遮罩，覆盖整个页面含顶部横幅）；关闭则不展示。用户登录后浮层隐藏且不再触发；进入首页时若存在其他弹窗则让位不弹且本次访问不补弹。浮层不读取「弹框时间点」「弹框间隔时间」配置。详见 3.3 节。</span></td></tr>
+  <tr><td>引导安装</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：开启 / 关闭；默认「关闭」</td><td>开启后，在 H5 页面按配置的时间点弹出引导安装弹窗（安卓 3.4 / iOS 3.5），引导用户安装 PWA 或 APK；关闭则不弹出。<span class="chg">系统不做已安装判定，开启期间按弹框时间点 / 间隔持续弹出，不因用户已安装而停止。</span><br><br><span class="chg"><strong>与底部安装浮层的关系：</strong>底部安装浮层为未登录专属，引导安装弹窗在弹框时间点为「访问主页」时于用户登录后触发，两者因登录态天然错开，不存在同屏叠加。顶部横幅与引导安装弹窗可同屏，弹窗遮罩覆盖横幅，横幅不被关闭。</span></td></tr>
   <tr><td class="indent">↳ 弹框内容</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：常规升级 / 赠送彩金升级；默认「常规升级」</td><td>「常规升级」：弹窗展示为普通下载升级提示，不含赠送信息。「赠送彩金升级」：弹窗中额外展示赠送彩金金额，以吸引用户点击安装。注意：此处展示的金额仅为前端营销展示值，不等于实际赠送金额。</td></tr>
   <tr><td class="indent2">↳↳ 赠送金额类型</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>弹框内容选「赠送彩金升级」后展示；可选：固定金额 / 随机金额；默认「固定金额」</td><td>「固定金额」：弹窗展示固定值，如「安装送100」。「随机金额」：弹窗展示区间值，如「安装送50～200」。</td></tr>
   <tr><td class="indent2">↳↳ 显示赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>固定金额为单一输入框；随机金额为两个输入框（最小值 / 最大值）</td><td>仅为弹窗中展示给用户看的营销数字，不影响实际赠送金额。<br><strong>展示格式：</strong>固定金额 → R$[金额]，如「R$100」；随机金额 → R$[最小值]～R$[最大值]，如「R$100～R$500」。</td></tr>
   <tr><td class="indent">↳ 弹框时间点</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「用户充值」；可选：访问主页 / 用户充值 / 首次提现</td><td>「访问主页」：用户每次访问 H5 首页时触发（受弹框间隔时间控制）。「用户充值」：用户每次充值回调成功后触发（若用户当前在游戏中则不弹，退出游戏后仍会弹出）。「首次提现」：用户第一次提现回调成功后触发，仅触发一次。<br><br><span class="chg"><strong>弹窗内容差异：</strong>选「用户充值」时，引导安装弹窗在标题上方额外展示「充值确认区块」，告知用户本次充值已到账，详见 3.4 节；选「访问主页」「首次提现」时不展示该区块。本差异仅作用于引导安装弹窗，顶部横幅与底部安装浮层的内容不随弹框时间点变化。</span></td></tr>
   <tr><td class="indent">↳ 弹框间隔时间</td><td><span class="tag tag-cond">条件必填</span></td><td>下拉单选</td><td>引导安装开启后展示；默认「0小时(强制安装)」；可选：0小时(强制安装) / 1～24小时</td><td>「0小时」：弹窗强制弹出，用户无法关闭，只能停留在弹窗上。<span class="chg">1～24小时：弹窗弹出后用户可关闭，每隔对应时长重新弹出（不做已安装判定，按间隔持续弹出）。</span></td></tr>
-  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；默认「关闭」；<strong>当前功能配置可保存但暂不上线生效</strong></td><td>「关闭」：用户安装后不赠送彩金。「充值用户赠送」：仅有过充值记录的用户安装后系统自动赠送彩金。「无需充值赠送」：所有完成安装的用户均可获赠，包括未充值用户。赠送彩金需满足打码倍数要求方可提现。</td></tr>
-  <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示</td><td>用户安装后实际到账的彩金金额，与浮层「显示赠送金额」相互独立，两者可以不同。</td></tr>
-  <tr><td class="indent">↳ 打码倍数</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选赠送类型后展示</td><td>赠送彩金的流水要求倍数。</td></tr>
+  <tr><td>安装pwa/App赠送</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>可选：关闭 / 充值用户赠送 / 无需充值赠送；默认「关闭」；<span class="upd">保存后立即生效。选「关闭」时下方两个字段收起，已填写的值保留。</span></td><td><span class="upd">适用于<strong>无注册渠道的会员（官方渠道）</strong>，安卓与 iOS 共用本配置；会员以 PWA / APP 方式打开站点并处于登录状态时判定，每个账号只判定一次。注册渠道为推广渠道的会员按该渠道的配置发放，不读本配置。</span>「关闭」：不发放。「充值用户赠送」：<span class="upd">判定时已有成功到账充值记录的会员才发放，之后充值不补发。</span>「无需充值赠送」：<span class="upd">不要求充值记录。</span>奖励自动到账，需满足打码倍数要求方可提现。<span class="upd">完整规则见《安装PWA/APP奖励配置 PRD》。</span></td></tr>
+  <tr><td class="indent">↳ 赠送金额</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选非「关闭」时展示且必填；<span class="upd">须大于 0，最多两位小数，不设上限，超过两位的小数无法输入。为空保存提示「请输入赠送金额」，为 0 保存提示「赠送金额须大于0」。</span></td><td>会员实际到账的彩金金额<span class="upd">（固定值）</span>，与弹窗「显示赠送金额」相互独立，两者可以不同。</td></tr>
+  <tr><td class="indent">↳ 打码倍数</td><td><span class="tag tag-cond">条件必填</span></td><td>数字输入</td><td>选非「关闭」时展示且必填；<span class="upd">只能填写 0 或正整数，不设上限，小数点、负号等字符无法输入，失焦时去掉前导 0。为空保存提示「请输入打码倍数」。</span></td><td>赠送彩金的流水要求倍数<span class="upd">，所需有效投注 = 赠送金额 × 打码倍数；为 0 时不追加稽核要求</span>。</td></tr>
 </table>
 
 <p><strong>安卓专属字段</strong></p>
 <table>
   <tr><th>字段</th><th>必填</th><th>控件</th><th>说明</th><th>前台效果</th></tr>
   <tr><td>安卓安装类型</td><td><span class="tag tag-req">必填</span></td><td>下拉单选</td><td>引导安装开启后展示；可选：pwa(快速安装) / apk(需要自己封装) / pwa(优先)+apk(推荐使用)；默认「pwa(快速安装)」；<span class="chg">二期：APK / PWA+APK 选项已启用</span></td><td><span class="chg">安卓点击安装后先按浏览器路由（Chrome→新标签跳「防封谷歌页」商店页完成安装；非 Chrome→唤起 Chrome，不支持唤起则就地），见 3.4；以下为就地 / 商店页的安装机制。</span>「pwa」：引导用户将 H5 页面添加到手机桌面（PWA 方式）；前台判断当前浏览器是否支持 PWA 安装（能否触发 beforeinstallprompt 事件）：支持则触发系统 PWA 安装提示，不支持则弹出复制链接弹框，引导用户换支持 PWA 的浏览器打开安装。「apk」：引导用户下载并安装 APK 包，需商户提前上传封装好的 APK。「pwa(优先)+apk(推荐)」：优先引导安装 PWA，若浏览器不支持 PWA 则降级至 APK 下载。</td></tr>
-  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-req">必填</span></td><td><span class="chg">单选（三选一）</span></td><td><span class="chg">安卓安装类型含 APK 时展示；三种来源方式互斥单选，默认选中「马甲包」。可选：<br>• <strong>马甲包</strong>：展示「选择马甲包」按钮，点击从系统管理-马甲包管理中选包，选定后自动填入 APK 包地址（只读来源）与包名；<br>• <strong>上传APK</strong>：展示「上传」按钮（仅支持 apk 文件，限 100MB），上传解析后自动填入 APK 包地址与包名；<br>• <strong>自定义链接</strong>：无操作按钮，APK 包地址改为手动输入。<br>切换三种方式时，清空已填的 APK 包地址与 APK 包名，避免残留上一方式的数据。<span class="chg">二期：马甲包管理暂未上线，「马甲包」方式下拉暂空，当前用「上传APK」手动上传跑通。</span></td><td><span class="chg">原三种来源平铺同时可见，易误操作；现收敛为单选，选定方式后仅呈现对应操作入口，路径唯一。</span>马甲包是经过伪装的 APK。</td></tr>
+  <tr><td class="indent">↳ 选择APK</td><td><span class="tag tag-req">必填</span></td><td><span class="chg">单选（三选一）</span></td><td><span class="chg">安卓安装类型含 APK 时展示；三种来源方式互斥单选，默认选中「马甲包」。可选：<br>• <strong>马甲包</strong>：展示「选择马甲包」按钮，点击从系统管理-马甲包管理中选包，选定后自动填入 APK 包地址（只读来源）与包名；<br>• <strong>上传APK</strong>：展示「上传」按钮（仅支持 apk 文件，限 100MB），上传解析后自动填入 APK 包地址与包名；<br>• <strong>自定义链接</strong>：无操作按钮，APK 包地址改为手动输入。<br>切换三种方式时，清空已填的 APK 包地址与 APK 包名，避免残留上一方式的数据。<span class="chg">二期：马甲包管理暂未上线，「马甲包」方式下拉暂空，当前用「上传APK」手动上传跑通。</span></span></td><td><span class="chg">原三种来源平铺同时可见，易误操作；现收敛为单选，选定方式后仅呈现对应操作入口，路径唯一。</span>马甲包是经过伪装的 APK。</td></tr>
   <tr><td class="indent">↳ APK包地址</td><td><span class="tag tag-cond">条件必填</span></td><td>文本输入</td><td>安卓安装类型含 APK 时展示，位于「选择APK」下方；「马甲包」「上传马甲包」方式下由系统自动填入，「自定义链接」方式下手动输入</td><td>APK 文件下载地址，用户点击安装时从该地址下载 APK 包。</td></tr>
   <tr><td class="indent">↳ APK包名</td><td>—</td><td>自动填充</td><td>含 APK 时展示，位于 APK 包地址下方；选择马甲包或上传后自动读取（只读），手动修改 APK 包地址或切换选择APK方式后自动清空</td><td><span class="chg">APK 唯一包标识符，仅作渠道包的标识与管理记录，<strong>不用于</strong>判断用户设备是否已安装（前台不做已安装判定）。</span></td></tr>
 </table>
@@ -145,7 +149,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td class="indent2">↳↳ 选择IOS上架包</td><td><span class="tag tag-cond">条件必填</span></td><td>按钮</td><td>上架包地址类型选「OneLink地址」时展示；点击弹出子弹窗选择已上传的 IOS 上架包（由后端上传）</td><td>选择后自动填入上架包名字及对应 OneLink 地址。</td></tr>
 </table>
 
-<div class="tip"><span class="chg">系统不判断用户是否已完成安装（PWA / APK 均不做已安装判定）：引导安装弹窗与底部安装浮层按配置（下载按钮 / 引导安装开关、弹框时间点、弹框间隔）持续弹出，不因"已安装"而停止；仅顶部横幅保持可见并可点击「×」手动关闭。</span></div>
+<div class="tip"><span class="chg">系统不判断用户是否已完成安装（PWA / APK 均不做已安装判定）：引导安装弹窗按配置（引导安装开关、弹框时间点、弹框间隔）持续弹出，底部安装浮层按未登录状态每次进入首页持续弹出，均不因"已安装"而停止；仅顶部横幅保持可见并可点击「×」手动关闭。</span></div>
 <div class="tip"><span class="chg"><strong>已安装唤起（二期新增）：</strong>用户在 H5 点击任意安装入口（顶部横幅 / 底部浮层 / 引导弹窗）时，系统先尝试唤起该渠道对应的已安装 PWA / APK：已安装则直接打开并保持登录态无缝进入 App，不再重复下载；未安装则兜底回落到原安装流程（3.4 安卓分支）；PWA+APK 按优先级（优先 PWA，不支持再 APK）判断后唤起。本逻辑仅作用于「点击安装」的瞬间，<strong>不改变</strong>弹窗弹出频率——仍不做持续性已安装判定，横幅 / 浮层 / 弹窗照常按时间点与间隔展示。</span></div>
 </div>
 
@@ -155,22 +159,27 @@ td:first-child{white-space:nowrap;font-weight:500}
 
 <h3 id="f-scope">3.1 生效条件</h3>
 <table>
-  <tr><th>落地指向类型</th><th>下载按钮</th><th>引导安装</th><th>安装类型 / 安装包地址等</th></tr>
-  <tr><td>下载页类（仿谷歌页 / 仿苹果商店页）</td><td>❌ 不生效</td><td>❌ 不生效</td><td>✅ 生效</td></tr>
-  <tr><td>H5 页类（官网首页 / 官网注册页）</td><td>✅ 生效</td><td>✅ 生效</td><td>✅ 生效</td></tr>
+  <tr><th>落地指向类型</th><th><span class="chg">顶部横幅</span></th><th><span class="chg">底部安装浮层</span></th><th>引导安装</th><th>安装类型 / 安装包地址等</th></tr>
+  <tr><td>下载页类（仿谷歌页 / 仿苹果商店页）</td><td>❌ 不生效</td><td>❌ 不生效</td><td>❌ 不生效</td><td>✅ 生效</td></tr>
+  <tr><td>H5 页类（官网首页 / 官网注册页）</td><td>✅ 生效</td><td>✅ 生效</td><td>✅ 生效</td><td>✅ 生效</td></tr>
 </table>
+<div class="info"><span class="chg">顶部横幅与底部安装浮层为两个相互独立的开关，无互斥、无父子联动，四种组合均为合法配置；两者同时关闭时 H5 首页无常驻下载入口。</span></div>
 <div class="info"><span class="chg">下载页类（仿谷歌页 / 仿苹果商店页）的页面区块、样式与下载交互统一以《仿应用商店模块 PRD》为准。</span></div>
 
-<h3 id="f-topbar">3.2 下载按钮（顶部横幅）</h3>
-<p>下载按钮开启时，H5 首页顶部展示下载提示横幅（流布局，展开时将页面内容向下推移，不覆盖页面）。</p>
+<h3 id="f-topbar">3.2 顶部横幅</h3>
+<p><span class="chg">顶部横幅开关开启时</span>，H5 首页顶部展示下载提示横幅（流布局，展开时将页面内容向下推移，不覆盖页面）。<span class="chg">横幅不区分登录状态，开关开启即常驻展示，已登录用户同样可见。</span></p>
 <p>横幅内容：APP 图标（来源：系统管理 → 系统配置 → 站点配置 → APP 图标）+ 固定文案（见第五章中葡对照）+ 装饰图（静态资源）+ 安装按钮 + 关闭按钮（「×」，点击后当次会话不再显示）。</p>
 <p>点击安装按钮，进入对应设备的安装流程（见 3.4 / 3.5 节）。</p>
-<div class="note">底部安装浮层出现时，横幅被遮罩层覆盖，不被关闭。用户点击安装按钮并完成安装流程后，顶部横幅保持可见，不自动隐藏。</div>
+<div class="note">底部安装浮层<span class="chg">或引导安装弹窗</span>出现时，横幅被遮罩层覆盖，不被关闭<span class="chg">，弹层关闭后恢复可见</span>。用户点击安装按钮并完成安装流程后，顶部横幅保持可见，不自动隐藏。</div>
 
 <h3 id="f-sheet">3.3 底部安装浮层</h3>
-<p>下载按钮开启时，在 H5 页面按弹框时间点触发底部安装浮层。浮层出现时带遮罩层，覆盖在整个页面上方（包括顶部横幅）。</p>
+<p><span class="chg">底部安装浮层开关开启时，未登录用户每次进入 H5 首页均触发一次底部安装浮层</span>。浮层出现时带遮罩层，覆盖在整个页面上方（包括顶部横幅）。</p>
 
-<p><strong>触发优先级</strong>：底部安装浮层优先级低于首页其他弹窗（活动弹窗、公告弹窗等）。首页存在其他弹窗时，底部安装浮层不显示，仅展示顶部横幅。</p>
+<p><span class="chg"><strong>登录态限制</strong>：底部安装浮层仅对未登录用户展示；用户登录后浮层隐藏，且不再触发。</span></p>
+
+<p><span class="chg"><strong>触发频率</strong>：未登录用户每次进入 H5 首页均触发，不做已安装判定，不做会话级去重。浮层的触发时机由本节规则直接约定，<strong>不读取「弹框时间点」「弹框间隔时间」配置</strong>——该两项仍仅归属「引导安装」。</span></p>
+
+<p><strong>触发优先级</strong>：底部安装浮层优先级低于首页其他弹窗（活动弹窗、公告弹窗等）。<span class="chg">进入首页时若存在其他弹窗，浮层让位不弹，仅展示顶部横幅；其他弹窗关闭后<strong>不补弹</strong>，本次访问不再展示浮层。</span></p>
 
 <p><strong>内容说明</strong>：APP 图标（来源：系统管理 → 系统配置 → 站点配置 → APP 图标）+ 说明文案（固定文案，含动态域名，见第五章中葡对照）+ 取消按钮 + 安装按钮。</p>
 <p>域名展示规则：读取当前最终 URL 的 hostname 部分（去除 https:// 前缀及路径，保留纯域名字符串），如「v5kk678w.com」。</p>
@@ -184,8 +193,8 @@ td:first-child{white-space:nowrap;font-weight:500}
 <div class="info">关闭浮层后，遮罩消失，顶部横幅恢复可见。点击安装按钮后进入对应设备的安装流程（见 3.4 / 3.5 节）。</div>
 
 <h3 id="f-android">3.4 引导安装流程（安卓分支）</h3>
-<p><span class="chg">引导安装弹窗对安卓与 iOS 设备均生效</span>，与下载按钮（顶部横幅 / 底部安装浮层）共用同一套安装交互逻辑（含设备 / 浏览器分支），仅入口形式不同。触发后从屏幕底部上推显示弹窗，带遮罩覆盖页面。<span class="chg">本节描述安卓设备分支；iOS 设备分支与下载按钮一致，详见 3.5 节（Safari→整页进入仿苹果页并按其流程安装；非 Safari→弹出复制链接弹框）。iOS 设备下弹窗<strong>整块隐藏本节的「安卓应用安装说明」（步骤 + 友情提示）</strong>。</span></p>
-<div class="info"><span class="chg"><strong>本次调整（仅安卓）：</strong>安卓用户点击安装后，先按【浏览器环境】路由（Chrome / 非 Chrome）再进入安装，详见下方「点击安装后的浏览器路由」；iOS 不受本次调整影响，维持原有流程（见 3.5 节）。</span></p>
+<p><span class="chg">引导安装弹窗对安卓与 iOS 设备均生效</span>，与<span class="chg">顶部横幅 / 底部安装浮层</span>共用同一套安装交互逻辑（含设备 / 浏览器分支），仅入口形式不同。触发后从屏幕底部上推显示弹窗，带遮罩覆盖页面。<span class="chg">本节描述安卓设备分支；iOS 设备分支与顶部横幅 / 底部安装浮层一致，详见 3.5 节（Safari→整页进入仿苹果页并按其流程安装；非 Safari→弹出复制链接弹框）。iOS 设备下弹窗<strong>整块隐藏本节的「安卓应用安装说明」（步骤 + 友情提示）</strong>。</span></p>
+<div class="info"><span class="chg"><strong>本次调整（仅安卓）：</strong>安卓用户点击安装后，先按【浏览器环境】路由（Chrome / 非 Chrome）再进入安装，详见下方「点击安装后的浏览器路由」；iOS 不受本次调整影响，维持原有流程（见 3.5 节）。</span></div>
 
 <p><strong>弹窗内容</strong>：顶部品牌插图（静态资源）+ 标题 + 副标题 + APP 信息行（APP 图标及站点名称，来源：系统管理 → 系统配置 → 站点配置）+ 安装按钮 + 客服按钮 + 安装步骤区 + 安全提示（文案见第五章中葡对照）。</p>
 <p>客服按钮与安装按钮并排同行，点击后跳转客服页面；常规升级和赠送彩金升级状态下均显示。</p>
@@ -281,7 +290,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 </table>
 
 <h4>安卓复制链接弹框（适用于 PWA / PWA+APK 配置且浏览器不支持 PWA 时）</h4>
-<p>安卓设备在 PWA 或 PWA+APK 安装类型下，若检测到当前浏览器不支持 PWA（无 beforeinstallprompt 事件），则弹出复制链接引导弹框，引导用户在 Chrome 中打开安装。此弹框对下载按钮（顶部横幅 / 底部浮层）和引导安装弹窗均适用。</p>
+<p>安卓设备在 PWA 或 PWA+APK 安装类型下，若检测到当前浏览器不支持 PWA（无 beforeinstallprompt 事件），则弹出复制链接引导弹框，引导用户在 Chrome 中打开安装。此弹框对<span class="chg">顶部横幅 / 底部安装浮层</span>和引导安装弹窗均适用。</p>
 <p>弹框内容：说明文案（固定，见第五章）+ 链接展示框（左侧 Chrome 图标 + 右侧当前页面 URL，超出截断省略）+ 取消按钮 + 复制链接按钮。链接来源：动态读取当前页面 URL。</p>
 <div class="info">点击复制链接后，链接复制到剪贴板，同时显示「Cópia Bem-sucedida」居中 toast 提示（2 秒后自动消失）。toast 关闭不影响底层顶部横幅或底部浮层。</div>
 
@@ -291,7 +300,7 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>0小时（强制安装）</td><td>无法关闭：无 × 按钮，无法点击弹窗外区域关闭。下载/安装完成后弹窗仍保留，直至页面刷新或跳转</td></tr>
   <tr><td>1～24小时</td><td>下载/安装完成后弹窗保留，用户可点击弹窗外区域关闭。距上次关闭超过配置时长后再次弹出</td></tr>
 </table>
-<div class="note">引导安装弹窗与下载按钮（顶部横幅 / 底部安装浮层）交互逻辑完全一致，仅入口形式不同。<span class="chg">系统不判断用户是否已完成安装（PWA / APK 均不做已安装判定），引导安装弹窗与底部安装浮层按配置持续弹出，不因"已安装"而停止；仅顶部横幅保持可见，用户可点击「×」手动关闭（与 3.2 节口径一致）。</span></div>
+<div class="note">引导安装弹窗与<span class="chg">顶部横幅 / 底部安装浮层</span>交互逻辑完全一致，仅入口形式不同。<span class="chg">系统不判断用户是否已完成安装（PWA / APK 均不做已安装判定），引导安装弹窗与底部安装浮层按配置持续弹出，不因"已安装"而停止；仅顶部横幅保持可见，用户可点击「×」手动关闭（与 3.2 节口径一致）。</span></div>
 
 <h3 id="f-ios">3.5 iOS 安装流程</h3>
 <p>iOS 设备点击安装按钮（顶部横幅 / 底部安装浮层 / <span class="chg">引导安装弹窗</span>）后，根据后台配置的苹果安装类型进入对应流程。</p>
@@ -306,7 +315,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p><strong>链接组成规则</strong>：链接来源于系统管理 → 域名管理中，落地页类型为「防封苹果页」的域名 + 固定后缀（后缀因域名类型不同而不同）。若配置了多个防封苹果页域名，每次点击安装时随机选取其一。用户打开链接后进入的仿苹果商店页，样式读取该域名在域名管理中配置的仿苹果商店页模板，详见《仿应用商店模块 PRD》。</p>
 
 <div class="info">从顶部横幅点击安装按钮触发本弹框时，顶部横幅保持可见，不隐藏。</div>
-<div class="info"><span class="chg">区别说明：本节（下载按钮 / 底部浮层）为「点击安装时」弹出复制链接弹框；而经下载页（仿苹果页）进入时，iOS 非 Safari 为「页面加载时即同步弹出」。二者按各自入口场景区分，详见《仿应用商店模块 PRD》。</span></div>
+<div class="info"><span class="chg">区别说明：本节（顶部横幅 / 底部安装浮层）为「点击安装时」弹出复制链接弹框；而经下载页（仿苹果页）进入时，iOS 非 Safari 为「页面加载时即同步弹出」。二者按各自入口场景区分，详见《仿应用商店模块 PRD》。</span></div>
 
 <h4>3.5.3 保存桌面 — Safari 浏览器</h4>
 <p>iOS 设备检测到当前浏览器为 Safari 时，点击安装按钮隐藏顶部横幅并<span class="chg">整页进入《仿应用商店模块》的仿苹果页（完整页，含数据安全、评分与评价、更新内容、相似游戏、底部等区块）</span>。仿苹果页的页面内容与样式来源详见《仿应用商店模块 PRD》。<span class="chg">下方 ②③④ 弹框/浮层与仿应用商店模块为同一套共用组件。</span></p>
@@ -328,7 +337,7 @@ td:first-child{white-space:nowrap;font-weight:500}
 <p>以下为安装引导模块前台展示完整决策流程。安卓详细分支见 3.4 节。<span class="chg">本次调整：安卓点击安装后先判浏览器（Chrome / 非 Chrome）再路由——Chrome 新标签跳「防封谷歌页」域名商店页完成安装，非 Chrome 唤起 Chrome（支持则手机自带跳转确认，不支持则就地下载）；iOS 分支维持原逻辑，不在本次范围。</span></p>
 
 <div class="flow-wrap">
-<svg viewBox="-500 0 1320 1000" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1100px;font-family:-apple-system,'PingFang SC',sans-serif;font-size:12px">
+<svg viewBox="-500 0 1350 1000" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1100px;font-family:-apple-system,'PingFang SC',sans-serif;font-size:12px">
   <!-- 样式定义 -->
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -364,29 +373,31 @@ td:first-child{white-space:nowrap;font-weight:500}
   <line x1="410" y1="130" x2="410" y2="158" stroke="#0961BD" stroke-width="1.5" marker-end="url(#arr)"/>
   <text x="425" y="148" fill="#003a8c" font-size="11">H5页类</text>
 
-  <!-- 判断：下载按钮是否开启 -->
+  <!-- 判断：顶部横幅是否开启 -->
   <polygon points="410,160 540,190 410,220 280,190" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
-  <text x="410" y="186" text-anchor="middle" fill="#003a8c" font-weight="600">下载按钮</text>
+  <text x="410" y="186" text-anchor="middle" fill="#003a8c" font-weight="600">顶部横幅</text>
   <text x="410" y="203" text-anchor="middle" fill="#003a8c" font-size="11">是否开启？</text>
 
   <!-- 开启 → 显示顶部横幅 -->
   <line x1="540" y1="190" x2="680" y2="190" stroke="#0961BD" stroke-width="1.5" marker-end="url(#arr)"/>
   <text x="607" y="183" text-anchor="middle" fill="#003a8c" font-size="11">开启</text>
-  <rect x="680" y="172" width="130" height="36" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
-  <text x="745" y="195" text-anchor="middle" fill="#135200">显示顶部横幅</text>
+  <rect x="680" y="172" width="150" height="36" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
+  <text x="755" y="189" text-anchor="middle" fill="#135200" font-size="12" font-weight="600">显示顶部横幅</text>
+  <text x="755" y="202" text-anchor="middle" fill="#135200" font-size="10">常驻，不限登录状态</text>
 
-  <!-- 未开启继续 ↓ -->
+  <!-- 两开关独立，继续判断浮层 ↓ -->
   <line x1="410" y1="220" x2="410" y2="248" stroke="#0961BD" stroke-width="1.5" marker-end="url(#arr)"/>
-  <text x="425" y="238" fill="#003a8c" font-size="11">关闭</text>
+  <text x="425" y="234" fill="#003a8c" font-size="10">两开关独立，</text>
+  <text x="425" y="245" fill="#003a8c" font-size="10">继续判断浮层</text>
 
-  <!-- 判断：引导安装是否开启 -->
-  <polygon points="410,250 540,280 410,310 280,280" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
-  <text x="410" y="276" text-anchor="middle" fill="#003a8c" font-weight="600">引导安装</text>
+  <!-- 判断：底部安装浮层是否开启 -->
+  <polygon points="410,250 560,280 410,310 260,280" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
+  <text x="410" y="276" text-anchor="middle" fill="#003a8c" font-weight="600">底部安装浮层</text>
   <text x="410" y="293" text-anchor="middle" fill="#003a8c" font-size="11">是否开启？</text>
 
   <!-- 关闭 → 结束 -->
-  <line x1="280" y1="280" x2="150" y2="280" stroke="#888" stroke-width="1.5" marker-end="url(#arr-gray)"/>
-  <text x="215" y="273" text-anchor="middle" fill="#888" font-size="11">关闭</text>
+  <line x1="260" y1="280" x2="150" y2="280" stroke="#888" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+  <text x="205" y="273" text-anchor="middle" fill="#888" font-size="11">关闭</text>
   <rect x="30" y="262" width="120" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
   <text x="90" y="285" text-anchor="middle" fill="#595959">不弹出浮层</text>
 
@@ -394,38 +405,37 @@ td:first-child{white-space:nowrap;font-weight:500}
   <line x1="410" y1="310" x2="410" y2="338" stroke="#0961BD" stroke-width="1.5" marker-end="url(#arr)"/>
   <text x="425" y="328" fill="#003a8c" font-size="11">开启</text>
 
-  <!-- 判断：首页是否有其他弹窗 -->
+  <!-- 判断：用户是否已登录 -->
   <polygon points="410,340 560,375 410,410 260,375" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
-  <text x="410" y="369" text-anchor="middle" fill="#003a8c" font-weight="600">首页是否有</text>
-  <text x="410" y="386" text-anchor="middle" fill="#003a8c" font-size="11">其他弹窗？</text>
+  <text x="410" y="380" text-anchor="middle" fill="#003a8c" font-weight="600">用户是否已登录？</text>
 
-  <!-- 有弹窗 → 仅显示横幅 -->
+  <!-- 已登录 → 不弹 -->
   <line x1="560" y1="375" x2="680" y2="375" stroke="#888" stroke-width="1.5" marker-end="url(#arr-gray)"/>
-  <text x="617" y="368" text-anchor="middle" fill="#888" font-size="11">有</text>
-  <rect x="680" y="357" width="130" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
-  <text x="745" y="375" text-anchor="middle" fill="#595959" font-size="11">不显示底部浮层</text>
-  <text x="745" y="388" text-anchor="middle" fill="#595959" font-size="11">（仅展示顶部横幅）</text>
+  <text x="617" y="368" text-anchor="middle" fill="#888" font-size="11">已登录</text>
+  <rect x="680" y="357" width="150" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="755" y="375" text-anchor="middle" fill="#595959" font-size="11">不弹出底部浮层</text>
+  <text x="755" y="388" text-anchor="middle" fill="#595959" font-size="10">（浮层为未登录专属）</text>
 
-  <!-- 无弹窗 ↓ -->
+  <!-- 未登录 ↓ -->
   <line x1="410" y1="410" x2="410" y2="438" stroke="#0961BD" stroke-width="1.5" marker-end="url(#arr)"/>
-  <text x="425" y="428" fill="#003a8c" font-size="11">无</text>
+  <text x="425" y="428" fill="#003a8c" font-size="11">未登录</text>
 
-  <!-- 判断：特殊情况 -->
+  <!-- 判断：首页是否有其他弹窗 -->
   <polygon points="410,440 570,478 410,516 250,478" fill="#e6f4ff" stroke="#91caff" stroke-width="1.5"/>
-  <text x="410" y="465" text-anchor="middle" fill="#003a8c" font-weight="600">两者同时开启 且</text>
-  <text x="410" y="481" text-anchor="middle" fill="#003a8c" font-size="11">弹框时间点=访问主页</text>
-  <text x="410" y="497" text-anchor="middle" fill="#003a8c" font-size="11">且用户未登录？</text>
+  <text x="410" y="472" text-anchor="middle" fill="#003a8c" font-weight="600">首页是否有</text>
+  <text x="410" y="489" text-anchor="middle" fill="#003a8c" font-size="11">其他弹窗？</text>
 
-  <!-- 是 → 仅横幅 -->
+  <!-- 有 → 让位 -->
   <line x1="570" y1="478" x2="680" y2="478" stroke="#888" stroke-width="1.5" marker-end="url(#arr-gray)"/>
-  <text x="622" y="471" text-anchor="middle" fill="#888" font-size="11">是</text>
-  <rect x="680" y="460" width="130" height="36" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
-  <text x="745" y="478" text-anchor="middle" fill="#595959" font-size="11">不显示底部浮层</text>
-  <text x="745" y="491" text-anchor="middle" fill="#595959" font-size="11">（仅展示顶部横幅）</text>
+  <text x="622" y="471" text-anchor="middle" fill="#888" font-size="11">有</text>
+  <rect x="680" y="455" width="150" height="46" rx="6" fill="#fafafa" stroke="#d9d9d9"/>
+  <text x="755" y="470" text-anchor="middle" fill="#595959" font-size="11">浮层让位不弹</text>
+  <text x="755" y="483" text-anchor="middle" fill="#595959" font-size="10">（仅展示顶部横幅）</text>
+  <text x="755" y="495" text-anchor="middle" fill="#595959" font-size="10">本次访问不补弹</text>
 
-  <!-- 否 ↓ -->
+  <!-- 无 ↓ -->
   <line x1="410" y1="516" x2="410" y2="544" stroke="#0961BD" stroke-width="1.5" marker-end="url(#arr)"/>
-  <text x="425" y="534" fill="#003a8c" font-size="11">否</text>
+  <text x="425" y="534" fill="#003a8c" font-size="11">无</text>
 
   <!-- 显示底部安装浮层 -->
   <rect x="290" y="546" width="240" height="36" rx="6" fill="#f6ffed" stroke="#b7eb8f"/>
@@ -597,7 +607,15 @@ td:first-child{white-space:nowrap;font-weight:500}
   <tr><td>R$[金额] 已到账，可在您的账户中使用。</td><td>O valor de R$[金额] já está disponível na sua conta.</td><td>充值确认区块说明文案（[金额]为最近一次成功充值金额，格式 R$ 50,00）</td></tr>
 </table>
 
-<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v1.9 · 2026-10-13</p>
+</div>
+
+<div class="section-card" id="rev">
+<h2><span class="upd">六、修订记录</span></h2>
+<table>
+  <tr><th>版本</th><th>日期</th><th>作者</th><th>修订内容</th></tr>
+  <tr><td>v2.1</td><td>2026-11-14</td><td>Laura</td><td>2.3「安装pwa/App赠送」去掉「暂不上线生效」，明确本配置适用于无注册渠道的会员（官方渠道）、安卓与 iOS 共用；补充「赠送金额」「打码倍数」输入规则与稽核口径。完整发放规则见《安装PWA/APP奖励配置 PRD》。</td></tr>
+</table>
+<p style="text-align:center;color:#bbb;font-size:12px;margin-top:32px;padding-bottom:20px">安装引导模块 PRD v2.1 · 2026-11-14</p>
 </div>
 </div>
 </body>
