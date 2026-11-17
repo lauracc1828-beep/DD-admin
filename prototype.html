@@ -2675,6 +2675,8 @@ select.fs.ph{color:#bfbfbf}
 #pg-cashback td{padding:12px 14px;border-bottom:1px solid #f5f5f5;text-align:center;vertical-align:middle;color:#333}
 #pg-cashback tbody tr:hover td{background:#fafcff}
 #pg-cashback .cb-empty{color:#bfbfbf;padding:40px 0}
+#pg-cashback .cb-note{background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:8px 14px;font-size:13px;color:#ad6800;line-height:20px;margin-bottom:10px}
+#pg-cashback .cb-off{display:block;font-size:12px;color:#bfbfbf;margin-top:4px;line-height:16px}
 /* 弹窗：复刻 UAT 后台公共弹窗（Ant Design Modal）样式，取值于 UAT「会员存款返现设置」弹窗实测 */
 .ub-ov .ub-modal{background:#fff;border-radius:2px;box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);max-height:90vh;display:flex;flex-direction:column;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:14px;line-height:22px;color:rgba(0,0,0,.85)}
@@ -2723,10 +2725,11 @@ select.fs.ph{color:#bfbfbf}
       <div class="ub-item"><label class="ub-lb req" id="cb-aud-l">提现稽核倍数</label><div class="ub-ctl"><input class="ub-in" id="cb-aud" placeholder="请输入" oninput="cbFilter(this)" onblur="cbCheck('aud')"><div class="ub-err" id="cb-aud-h" style="display:none"></div></div></div>
       <div class="ub-tips">
         <div class="ub-tips-k">温馨提示：</div>
-        <p>1、“返现百分比（%）”与“每日最高优惠”为必填项，必须同时填写</p>
-        <p>2、“返现百分比（%）”的输入区间“0.001~100.000”</p>
-        <p>3、“每日最高优惠”的输入区间“0.01~1000000.00”</p>
+        <p>1、“返现百分比（%）”与“每日最高优惠”默认为0，清空后按0保存</p>
+        <p>2、“返现百分比（%）”的输入区间“0~100.000”</p>
+        <p>3、“每日最高优惠”的输入区间“0~1000000.00”</p>
         <p>4、“提现稽核倍数”为必填项，默认为0，只能填写0或正整数；为0时加赠金额部分不参与提现流水稽核计算</p>
+        <p id="cb-tip5">5、“返现百分比（%）”或“每日最高优惠”任一为0时，该存款方式不发放返现，即使赠送状态为开启也不生效</p>
       </div>
     </div>
     <div class="ub-ft"><button class="ub-btn pri" onclick="cbSave()">保 存</button><button class="ub-btn" onclick="cbReset()">重 置</button></div>
@@ -2739,6 +2742,15 @@ select.fs.ph{color:#bfbfbf}
     <div class="ub-hd"><span class="ub-title">删除确认</span><span class="ub-ico" title="关闭" onclick="cbDelClose()">✕</span></div>
     <div class="ub-bd" style="padding:14px 16px 24px" id="cb-del-msg"></div>
     <div class="ub-ft"><button class="ub-btn pri" onclick="cbDelOk()">确 定</button><button class="ub-btn" onclick="cbDelClose()">取 消</button></div>
+  </div>
+</div>
+
+<!-- MODAL: 充值返现 / 提款返现 · 开启赠送状态二次确认（同 UAT 公共弹窗样式） -->
+<div class="overlay ub-ov" id="cb-on">
+  <div class="ub-modal" style="width:416px">
+    <div class="ub-hd"><span class="ub-title" id="cb-on-title">开启确认</span><span class="ub-ico" title="关闭" onclick="cbOnClose()">✕</span></div>
+    <div class="ub-bd" style="padding:14px 16px 24px" id="cb-on-msg"></div>
+    <div class="ub-ft"><button class="ub-btn pri" onclick="cbOnOk()">确 定</button><button class="ub-btn" onclick="cbOnClose()">取 消</button></div>
   </div>
 </div>
 
@@ -9123,14 +9135,15 @@ function rtLinkSave(){
 (function(){
   // 充值返现、提款返现均不自动同步，只展示手动新增的存款方式 / 提款通道，支持删除
   var CB = {
-    // 演示数据：已添加 3 条
-    dep:{label:'存款方式', title:'会员存款返现设置', biz:'充值返现', rows:[
+    // 演示数据：已添加 4 条（OKPay 为开启但每日最高优惠为 0 → 不生效）
+    dep:{label:'存款方式', title:'会员存款返现设置', biz:'充值返现', obj:'该存款方式', rows:[
       {name:'u2cpay', pct:1.326, cap:10, aud:1, on:true,  t:'2026-10-28 04:01:47', op:'admin001'},
       {name:'NewGPay',pct:2.5,   cap:20, aud:1, on:true,  t:'2026-10-27 02:30:41', op:'admin002'},
-      {name:'pix',    pct:1,     cap:8,  aud:0, on:false, t:'2026-10-25 09:58:48', op:'admin003'}
+      {name:'pix',    pct:1,     cap:8,  aud:0, on:false, t:'2026-10-25 09:58:48', op:'admin003'},
+      {name:'OKPay',  pct:3,     cap:0,  aud:0, on:true,  t:'2026-10-24 07:06:11', op:'admin002'}
     ]},
     // 演示数据：已添加 2 条
-    wd:{label:'提款通道', title:'会员提款返现设置', biz:'提款返现', rows:[
+    wd:{label:'提款通道', title:'会员提款返现设置', biz:'提款返现', obj:'该提款通道', rows:[
       {name:'NewGPay',pct:1.5, cap:50, aud:1, on:true,  t:'2026-10-29 05:42:10', op:'admin001'},
       {name:'pix',    pct:0.5, cap:10, aud:0, on:true,  t:'2026-10-29 05:40:33', op:'admin001'}
     ]}
@@ -9143,7 +9156,10 @@ function rtLinkSave(){
   };
   var SRC_ALL = {dep:'全部存款方式均已添加', wd:'全部提现通道均已添加'};
   function added(k,n){ return CB[k].rows.some(function(r){ return r.name===n; }); }
+  // 返现百分比或每日最高优惠任一为 0 时，即使赠送状态开启也不发放返现
+  function zero(r){ return !(r.pct>0 && r.cap>0); }
   var del = {k:'', i:-1};
+  var onRow = {k:'', i:-1};
   var cur = {k:'dep', i:-1};
   var flt = {dep:{}, wd:{}};
   function trim0(v){ return String(+v); }  // 去除末尾无意义的 0
@@ -9162,8 +9178,9 @@ function rtLinkSave(){
     '</div>'+
     '<div class="cb-tools"><button class="btn btn-blue" id="cb-'+k+'-add" onclick="cbAdd(\''+k+'\')">新 增</button>'+
       '<span title="刷新" onclick="cbRender();toast(\'已刷新\')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>'+
+    '<div class="cb-note">说明：会员'+(k==='dep'?'充值':'取款')+'成功后，平台按此处配置派发返现奖励。</div>'+
     '<div class="table-wrap"><div class="table-scroll"><table><thead><tr>'+
-      '<th>'+c.label+'</th><th>返现方式</th><th>返现百分比例(%)</th><th>每日最高优惠(元)</th><th>状态</th><th>最近操作时间</th><th>操作人</th><th>操作</th>'+
+      '<th>'+c.label+'</th><th>返现方式</th><th>返现百分比例(%)</th><th>每日最高优惠(元)</th><th>赠送状态</th><th>最近操作时间</th><th>操作人</th><th>操作</th>'+
     '</tr></thead><tbody id="cb-'+k+'-tb"></tbody></table></div></div>'+
     '<div class="pagination"><div class="pg-info">共 <b id="cb-'+k+'-n">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select></div></div>';
   }
@@ -9183,7 +9200,8 @@ function rtLinkSave(){
     document.getElementById('cb-'+k+'-tb').innerHTML = list.length ? list.map(function(o){
       var r=o.r;
       return '<tr><td>'+r.name+'</td><td>比例金额</td><td>'+trim0(r.pct)+'</td><td>'+trim0(r.cap)+'</td>'+
-        '<td><span class="sw"><input type="checkbox" class="sw-input" '+(r.on?'checked':'')+' disabled><span class="sw-track" onclick="cbToggle(\''+k+'\','+o.i+')"></span><span class="sw-knob"></span></span></td>'+
+        '<td><span class="sw"><input type="checkbox" class="sw-input" '+(r.on?'checked':'')+' disabled><span class="sw-track" onclick="cbToggle(\''+k+'\','+o.i+')"></span><span class="sw-knob"></span></span>'+
+        (r.on&&zero(r)?'<span class="cb-off">配置为 0，不生效</span>':'')+'</td>'+
         '<td>'+(r.t?r.t+'<br>(UTC-3)':'')+'</td><td>'+(r.op||'')+'</td>'+
         '<td><span class="cb-ops"><button class="btn btn-blue btn-sm" onclick="cbOpen(\''+k+'\','+o.i+')">编 辑</button>'+
         '<button class="btn btn-del btn-sm" onclick="cbDel(\''+k+'\','+o.i+')">删 除</button></span></td></tr>';
@@ -9217,14 +9235,24 @@ function rtLinkSave(){
     document.getElementById('cb-'+k+'-m').value=''; document.getElementById('cb-'+k+'-o').value='';
     flt[k]={}; renderTab(k);
   };
-  // 状态开关：行内即时生效，不弹二次确认，与配置值相互独立
-  window.cbToggle=function(k,i){
-    var r=CB[k].rows[i]; r.on=!r.on; r.t=nowStr(); r.op='admin001';
+  // 赠送状态开关：开启需二次确认，关闭即时生效；与配置值相互独立
+  function setOn(k,i,on){
+    var r=CB[k].rows[i]; r.on=on; r.t=nowStr(); r.op='admin001';
     renderTab(k); toast('操作成功');
+  }
+  window.cbToggle=function(k,i){
+    var c=CB[k], r=c.rows[i];
+    if(r.on){ setOn(k,i,false); return; }
+    onRow={k:k,i:i};
+    document.getElementById('cb-on-msg').textContent='确认开启「'+r.name+'」的'+c.biz+'赠送活动？';
+    document.getElementById('cb-on').classList.add('show');
   };
+  window.cbOnClose=function(){ document.getElementById('cb-on').classList.remove('show'); onRow={k:'',i:-1}; };
+  window.cbOnOk=function(){ var o=onRow; cbOnClose(); setOn(o.k,o.i,true); };
   function cbMode(add){   // 新增：存款方式 / 提款通道为必填下拉；编辑：纯文本只读
     document.getElementById('cb-name-row').style.display=add?'none':'';
     document.getElementById('cb-ch-row').style.display=add?'':'none';
+    document.getElementById('cb-tip5').textContent='5、“返现百分比（%）”或“每日最高优惠”任一为0时，'+CB[cur.k].obj+'不发放返现，即使赠送状态为开启也不生效';
   }
   window.cbOpen=function(k,i){
     cur={k:k,i:i};
@@ -9266,14 +9294,14 @@ function rtLinkSave(){
   window.cbClose=function(){ document.getElementById('cb-edit').classList.remove('show'); };
   // 重置 = 还原为本次打开弹窗时的已保存值（非清空）
   window.cbReset=function(){
-    if(cur.i<0){   // 新增：清空全部输入
+    if(cur.i<0){   // 新增：存款方式回到未选，三项默认填入 0
       document.getElementById('cb-ch').value='';
-      document.getElementById('cb-pct').value=''; document.getElementById('cb-cap').value=''; document.getElementById('cb-aud').value='0';
+      document.getElementById('cb-pct').value='0'; document.getElementById('cb-cap').value='0'; document.getElementById('cb-aud').value='0';
       cbClrCh(); ['pct','cap','aud'].forEach(cbClr); return;
     }
     var r=CB[cur.k].rows[cur.i];
-    document.getElementById('cb-pct').value = r.pct ? r.pct.toFixed(3) : '';
-    document.getElementById('cb-cap').value = r.cap ? r.cap.toFixed(2) : '';
+    document.getElementById('cb-pct').value = r.pct.toFixed(3);
+    document.getElementById('cb-cap').value = r.cap.toFixed(2);
     document.getElementById('cb-aud').value = r.aud ? String(r.aud) : '0';
     ['pct','cap','aud'].forEach(cbClr);
   };
@@ -9286,8 +9314,8 @@ function rtLinkSave(){
     var el=document.getElementById('cb-'+f), h=document.getElementById('cb-'+f+'-h');
     el.classList.add('err'); h.textContent=m; h.style.display='block'; el.closest('.ub-item').classList.add('has-err'); return false;
   }
-  // 与 UAT 一致：越界 / 超位数在失焦时自动修正为合法值（不标红）；仅必填为空时报「请输入{字段名}」
-  var CB_RULE={ pct:{min:0.001,max:100,dp:3,req:'请输入返现百分比(%)'}, cap:{min:0.01,max:1000000,dp:2,req:'请输入每日最高优惠'} };
+  // 与 UAT 一致：越界 / 超位数在失焦时自动修正为合法值（不标红）；返现百分比、每日最高优惠为空时按 0 处理
+  var CB_RULE={ pct:{min:0,max:100,dp:3}, cap:{min:0,max:1000000,dp:2} };
   window.cbCheck=function(f){
     var el=document.getElementById('cb-'+f), v=el.value.trim();
     cbClr(f);
@@ -9297,7 +9325,7 @@ function rtLinkSave(){
       el.value=String(+v); return true;
     }
     var r=CB_RULE[f];
-    if(v==='' || isNaN(+v)) return cbErr(f,r.req);
+    if(v==='' || isNaN(+v)) v='0';   // 返现百分比、每日最高优惠清空后按默认值 0 保存
     el.value=Math.min(r.max,Math.max(r.min,+v)).toFixed(r.dp);
     return true;
   };
