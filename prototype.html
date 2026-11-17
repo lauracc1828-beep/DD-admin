@@ -9177,7 +9177,7 @@ function rtLinkSave(){
     '</div>'+
     '<div class="cb-tools"><button class="btn btn-blue" id="cb-'+k+'-add" onclick="cbAdd(\''+k+'\')">新 增</button>'+
       '<span title="刷新" onclick="cbRender();toast(\'已刷新\')">⟳</span><span title="密度">⇕</span><span title="列设置">⚙</span></div>'+
-    '<div class="cb-note">说明：会员'+(k==='dep'?'充值':'取款')+'成功后，平台按此处配置派发返现奖励。</div>'+
+    '<div class="cb-note">说明：赠送状态开启后，会员通过对应'+c.label+(k==='dep'?'充值':'取款')+'成功，平台按返现百分比派发返现奖励，每日不超过每日最高优惠。</div>'+
     '<div class="table-wrap"><div class="table-scroll"><table><thead><tr>'+
       '<th>'+c.label+'</th><th>返现方式</th><th>返现百分比例(%)</th><th>每日最高优惠(元)</th><th>赠送状态</th><th>最近操作时间</th><th>操作人</th><th>操作</th>'+
     '</tr></thead><tbody id="cb-'+k+'-tb"></tbody></table></div></div>'+
