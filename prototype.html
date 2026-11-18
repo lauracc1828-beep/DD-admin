@@ -702,7 +702,7 @@ select.fs.ph{color:#bfbfbf}
 .an-lvitem input{accent-color:#0961BD}
 .an-dt{height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;font-size:13px;width:240px;outline:none;color:#333;background:#fff}
 .an-dt:focus{border-color:#0961BD}
-.an-hintred{color:#ff4d4f;font-size:12px;white-space:nowrap}
+.an-hintred{color:#ff4d4f;font-size:12px;white-space:normal;line-height:1.6}
 .an-rt.an-ro{background:#f5f5f5}
 .an-basethumb{width:60px;aspect-ratio:700/760;background:linear-gradient(180deg,#a9c7e6,#e8c98d 45%,#2f3a24);border-radius:4px;margin-top:10px;cursor:pointer;border:1px solid #d9d9d9}
 .an-lb{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:2000;display:none;align-items:center;justify-content:center}
@@ -750,7 +750,7 @@ select.fs.ph{color:#bfbfbf}
     <div class="submenu-item disabled">账变记录</div>
     <div class="submenu-item" id="si-mlist" onclick="switchPage('mlist',this)">会员列表</div>
     <div class="submenu-item disabled">会员层级</div>
-    <div class="submenu-item disabled">会员详情</div>
+    <div class="submenu-item" id="si-emdet" onclick="switchPage('emdet',this)">会员详情</div>
     <div class="submenu-item disabled">会员财务管理</div>
     <div class="submenu-item disabled">会员注册记录</div>
     <div class="submenu-item disabled">会员登录信息</div>
@@ -1137,53 +1137,81 @@ select.fs.ph{color:#bfbfbf}
       </div>
     </div>
 
-    <!-- ===== NewGPay 钱包（本期新增）：会员个人资料 / 钱包列表 / 删除确认 ===== -->
+    <!-- ===== 会员个人资料弹窗（结构照 UAT） / 订单明细 ===== -->
     <div class="overlay" id="m-ng-profile">
-      <div class="modal modal-lg" style="width:820px">
+      <div class="modal modal-lg" style="width:846px">
         <div class="mh"><span class="mt">个人资料</span><span class="mc" onclick="closeM('m-ng-profile')">×</span></div>
+        <div style="max-height:72vh;overflow-y:auto">
         <div class="ngp-head" id="ngp-head"></div>
         <table class="ngp-table"><tbody id="ngp-body"></tbody></table>
-        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-profile')">关 闭</button></div>
-      </div>
-    </div>
-    <div class="overlay" id="m-ng-wallet">
-      <div class="modal modal-lg" style="width:900px">
-        <div class="mh"><span class="mt">NewGPay 钱包</span><span class="mc" onclick="closeM('m-ng-wallet')">×</span></div>
-        <div class="ngw-sum" id="ngw-sum"></div>
-        <div class="ngw-wrap"><table class="ngw-table">
-          <thead><tr><th style="width:56px">序号</th><th>钱包地址</th><th>类型</th><th>绑定时间</th><th style="width:90px">操作</th></tr></thead>
-          <tbody id="ngw-tbody"></tbody>
-        </table></div>
-        <div class="ngw-rule">默认钱包由系统开通，不可删除；用户绑定的钱包可删除（含正在使用的），如会员正在使用被删除的钱包，删除后恢复使用默认钱包。<br>未达绑定上限时可新增钱包，新增的钱包标记为「用户绑定」，不改变会员当前使用的钱包。钱包列表与前台充值页、提款页同步（充值和提款共用，不区分充值钱包、提款钱包），新增、删除均写入「会员信息变更记录」。</div>
-        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-wallet')">关 闭</button></div>
-      </div>
-    </div>
-    <div class="overlay" id="m-ng-del">
-      <div class="modal modal-sm" style="width:440px">
-        <div class="mh"><span class="mt">删除钱包</span><span class="mc" onclick="closeM('m-ng-del')">×</span></div>
-        <div class="confirm-body" id="ng-del-text"></div>
-        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-del')">取消</button><button class="btn btn-danger" onclick="ngDoDel()">确定删除</button></div>
+        <!-- 以下两块结构照 UAT，非本次范围 -->
+        <div class="em-psec">开启游戏</div>
+        <table class="ngp-table em-game"><tbody>
+          <tr><td>游戏类型</td><td colspan="2">游戏场馆</td></tr>
+          <tr><td>真人</td><td colspan="2"><label><input type="checkbox" checked> EVO真人</label></td></tr>
+          <tr><td>电游</td><td colspan="2" class="em-games"><label><input type="checkbox" checked> CQ9电子</label><label><input type="checkbox" checked> JDB电子</label><label><input type="checkbox" checked> MG电子</label><label><input type="checkbox" checked> PG电子</label><label><input type="checkbox" checked> PP电子</label><label><input type="checkbox" checked> FC电子</label><label><input type="checkbox" checked> Spribe 电子</label><label><input type="checkbox" checked> Playson 电子</label></td></tr>
+        </tbody></table>
+        <div style="margin:0 20px 8px"><label style="font-size:13px"><input type="checkbox" checked> 选择全部</label></div>
+        <div style="text-align:center;margin-bottom:12px"><button class="btn btn-blue" onclick="toast('保存成功')">保 存</button></div>
+        <div class="em-psec">登录信息</div>
+        <table class="ngp-table em-login"><thead><tr><th>序号</th><th>访问时间</th><th>登录状态</th><th>访问地区</th><th>登录IP</th><th>终端设备</th><th>终端设备号</th></tr></thead>
+          <tbody><tr><td>1</td><td>2026-11-18 05:09:04</td><td><span class="wbadge wb-ok">成功</span></td><td>巴西</td><td>47.250.110.145</td><td>电脑系统</td><td>a2f1730e04a59218ae0e4b07f838a322</td></tr></tbody></table>
+        <div style="text-align:right;font-size:12px;color:#595959;margin:0 20px 12px">共 1 条数据</div>
+        </div>
       </div>
     </div>
     <div class="overlay" id="m-ng-order">
       <div class="modal modal-lg" style="width:960px">
         <div class="mh"><span class="mt">订单明细</span><span class="mc" onclick="closeM('m-ng-order')">×</span></div>
         <div class="ngo-body" id="ngo-body"></div>
-        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-order')">关 闭</button></div>
+        <div class="mf" id="ngo-foot"><button class="btn btn-white" onclick="closeM('m-ng-order')">关 闭</button></div>
       </div>
     </div>
-    <div class="overlay" id="m-ng-add">
-      <div class="modal modal-sm" style="width:520px">
-        <div class="mh"><span class="mt">新增钱包</span><span class="mc" onclick="closeM('m-ng-add')">×</span></div>
+    <!-- 待审核审核弹窗的二级弹窗（结构照 UAT）：人工完成 / 拒绝 / 罚没 共用备注弹窗；代付选渠道 -->
+    <div class="overlay" id="m-em-act">
+      <div class="modal modal-sm" style="width:440px">
+        <div class="mh"><span class="mt" id="em-act-title">人工完成</span><span class="mc" onclick="closeM('m-em-act')">×</span></div>
         <div class="mb">
-          <div class="fi"><div class="fl" style="width:110px">会员ID：</div><div class="fc" style="line-height:32px" id="ng-add-mid"></div></div>
-          <div class="fi"><div class="fl req" style="width:110px">钱包地址：</div><div class="fc">
-            <input class="fin" id="ng-add-addr" style="width:100%" maxlength="16" placeholder="请输入 16 位 NewGPay 钱包地址" oninput="document.getElementById('ng-add-hint').style.display='none'">
-            <div class="hint" id="ng-add-hint" style="display:none"></div>
-          </div></div>
-          <div class="ngw-rule" style="margin:0 0 0 110px">新增后标记为「用户绑定」，同步到会员前台充值页、提款页的钱包列表，不改变会员当前使用的钱包。</div>
+          <div style="font-size:13px;margin-bottom:6px" id="em-act-l1">操作备注（罚没/异常处理必填，会员可见：邮件+提款详情）</div>
+          <textarea class="fin" id="em-act-n1" style="width:100%;height:64px;resize:vertical"></textarea>
+          <div style="font-size:13px;margin:12px 0 6px">订单备注（罚没/异常处理必填，仅后台可见）</div>
+          <textarea class="fin" id="em-act-n2" style="width:100%;height:64px;resize:vertical"></textarea>
         </div>
-        <div class="mf"><button class="btn btn-white" onclick="closeM('m-ng-add')">取消</button><button class="btn btn-blue" onclick="ngDoAdd()">确定</button></div>
+        <div class="mf"><button class="btn btn-white" onclick="closeM('m-em-act')">取 消</button><button class="btn btn-blue" onclick="emActOk()">确 认</button></div>
+      </div>
+    </div>
+    <div class="overlay" id="m-em-pay">
+      <div class="modal modal-sm" style="width:440px">
+        <div class="mh"><span class="mt">代付</span><span class="mc" onclick="closeM('m-em-pay')">×</span></div>
+        <div class="mb" style="font-size:13px">
+          <div style="margin-bottom:8px"><span style="color:#cf1322">*</span> 代付渠道（必选，显示实时余额，提交时逐笔校验）</div>
+          <label style="display:block;margin:6px 0"><input type="radio" name="em-pay"> bestpay代付【bestpay代付】（余额：6.24 BRL）</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="em-pay"> bix【bestpay代付】（余额：6.24 BRL）</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="em-pay"> NewGPay代付【NewGPay】（余额：-）</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="em-pay"> U2CPAY代付【U2CPAY代付】（余额：-）</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="em-pay"> WINWINPAY代付【WINWINPAY代付】（余额：0.46 BRL）</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="em-pay"> PAY4Z代付【PAY4Z代付】（余额：-）</label>
+        </div>
+        <div class="mf"><button class="btn btn-white" onclick="closeM('m-em-pay')">取 消</button><button class="btn btn-blue" onclick="emPayOk()">提交代付</button></div>
+      </div>
+    </div>
+    <!-- 《增加Email提款方式 PRD》7.1：会员详情 → 提现账户弹窗（邮箱 = 提现邮箱） -->
+    <div class="overlay" id="m-em-acct">
+      <div class="modal modal-sm" style="width:520px">
+        <div class="mh"><span class="mt">提现账户</span><span class="mc" onclick="closeM('m-em-acct')">×</span></div>
+        <div class="mb">
+          <div style="font-weight:600;margin:0 0 12px 4px">PIX</div>
+          <div class="fi"><div class="fl req" style="width:90px">真实姓名：</div><div class="fc"><input class="fin" id="em-a-name" style="width:100%" placeholder="请输入真实姓名"></div></div>
+          <div class="fi"><div class="fl req" style="width:90px">CPF：</div><div class="fc"><input class="fin" id="em-a-cpf" style="width:100%" placeholder="请输入CPF"></div></div>
+          <div class="fi"><div class="fl" style="width:90px">CNPJ：</div><div class="fc"><input class="fin" id="em-a-cnpj" style="width:100%" placeholder="请输入CNPJ"></div></div>
+          <div class="fi"><div class="fl" style="width:90px">EVP：</div><div class="fc"><input class="fin" id="em-a-evp" style="width:100%" placeholder="请输入EVP"></div></div>
+          <div class="fi"><div class="fl" style="width:90px">手机号：</div><div class="fc"><div class="em-ph"><span>+55</span><input class="fin" id="em-a-phone" maxlength="11" placeholder="请输入手机号"></div></div></div>
+          <div class="fi"><div class="fl" style="width:90px">邮箱：</div><div class="fc">
+            <input class="fin" id="em-a-mail" style="width:100%" maxlength="64" placeholder="请输入邮箱地址" oninput="emAcctHint('')">
+            <div class="hint" id="em-a-hint" style="display:none"></div>
+          </div></div>
+        </div>
+        <div class="mf"><button class="btn btn-white" onclick="closeM('m-em-acct')">取 消</button><button class="btn btn-blue" onclick="emAcctSave()">确 认</button></div>
       </div>
     </div>
 
@@ -1669,7 +1697,7 @@ select.fs.ph{color:#bfbfbf}
           </table>
         </div></div>
         <div class="pagination">
-          <div class="pg-info">共 <b>2</b> 条数据</div>
+          <div class="pg-info">共 <b>3</b> 条数据</div>
           <div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option><option>20 条/页</option><option>100 条/页</option></select></div>
         </div>
       </div>
@@ -1688,27 +1716,7 @@ select.fs.ph{color:#bfbfbf}
               <div class="hint" id="wo-bindnum-hint" style="display:none">请输入不小于0的整数</div>
             </div>
           </div>
-          <div class="wo-hint">仅对 CPF / PHONE 生效；0 表示不限制。</div>
-          <!-- 本期新增：NewGPay 钱包绑定规则 -->
-          <div class="wo-ng">
-            <div class="wo-ng-title">NewGPay 钱包绑定</div>
-            <div class="wo-row">
-              <span class="wo-label"><i class="wo-req">*</i>同一 NewGPay 钱包地址可绑定会员数量：</span>
-              <div class="wo-num-col">
-                <input class="fin wo-num" id="wo-ng-addr" type="number" min="0" step="1" value="1" oninput="woNgCheck('wo-ng-addr',0)" onblur="woNgCheck('wo-ng-addr',0)">
-                <div class="hint" id="wo-ng-addr-hint" style="display:none">请输入不小于0的整数</div>
-              </div>
-            </div>
-            <div class="wo-hint">一个钱包地址最多可被多少个会员绑定；0 表示不限制。默认 1。</div>
-            <div class="wo-row">
-              <span class="wo-label"><i class="wo-req">*</i>单个会员可绑定 NewGPay 钱包数量：</span>
-              <div class="wo-num-col">
-                <input class="fin wo-num" id="wo-ng-mem" type="number" min="1" step="1" value="3" oninput="woNgCheck('wo-ng-mem',1)" onblur="woNgCheck('wo-ng-mem',1)">
-                <div class="hint" id="wo-ng-mem-hint" style="display:none">请输入不小于1的整数</div>
-              </div>
-            </div>
-            <div class="wo-hint">含系统开通的默认钱包。默认 3。<br>修改后只对之后的绑定生效：已绑定数量超过新上限的会员，原有钱包保留，删除到上限以下后才能再绑定。</div>
-          </div>
+          <div class="wo-hint">仅对 CPF / PHONE / <span class="em-new">EMAIL</span> 生效；0 表示不限制。</div>
           <div class="wo-actions">
             <button class="btn btn-blue" onclick="woBindSave()">保 存</button>
             <button class="btn btn-white" onclick="woBindReset()">重 置</button>
@@ -1946,242 +1954,101 @@ select.fs.ph{color:#bfbfbf}
 
     <!-- PAGE: 待审核出款订单 -->
     <div id="pg-maudit" style="display:none">
-      <div class="sec-tabs-bar" style="border-radius:6px 6px 0 0;margin-bottom:12px">
-        <div class="sec-tab active" onclick="mauditTab(this)">一审</div>
-        <div class="sec-tab" onclick="mauditTab(this)">二审</div>
-        <div class="sec-tab" onclick="mauditTab(this)">待出款</div>
-      </div>
+      <!-- 结构照 UAT（2026-11-18）：筛选项、工具栏、列顺序、右侧固定操作列；数据由 emWdRender() 渲染 -->
       <div class="filter-area">
         <div class="filter-row">
-          <div class="filter-item"><span class="filter-label">申请时间：</span><input class="f-input" placeholder="申请时间(开始)" style="min-width:120px"><span style="margin:0 4px">→</span><input class="f-input" placeholder="申请时间(结束)" style="min-width:120px"></div>
-          <div class="filter-item"><span class="filter-label">订单号：</span><input class="f-input" placeholder="订单号" style="min-width:170px"></div>
-          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
-          <div class="filter-item"><span class="filter-label">大额提款：</span><select class="f-select"><option>大额提款</option></select></div>
+          <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西站-测试</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>888</option></select></div>
+          <div class="filter-item"><span class="filter-label">注册渠道：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">会员层级：</span><select class="f-select"><option>全部</option></select></div>
         </div>
         <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option><option>手机号(会员账号)</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
+          <div class="filter-item"><span class="filter-label">订单号：</span><input class="f-input" placeholder="订单号" style="min-width:160px"></div>
+          <div class="filter-item"><span class="filter-label">外部订单号：</span><input class="f-input" placeholder="外部订单号" style="min-width:160px"></div>
+          <div class="filter-item"><span class="filter-label">订单状态：</span><select class="f-select"><option>全部</option><option>待审核</option><option>审核中</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">出款类型：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">代付平台：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">代付渠道：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">提款方式：</span><select class="f-select"><option>全部</option><option>PIX</option><option>电子钱包</option><option>银行卡</option><option>虚拟币</option><option>支付宝</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">账户类型：</span><select class="f-select em-acct-sel"><option>全部</option><option>CPF</option><option>PHONE</option><option>EMAIL</option></select></div>
+          <div class="filter-item"><span class="filter-label">审核类型：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">审核原因：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">大额提款：</span><select class="f-select"><option>全部</option><option>是</option><option>否</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">提款类型：</span><select class="f-select"><option>全部</option><option>即时提款</option></select></div>
           <div class="filter-item"><span class="filter-label">提款金额：</span><input class="f-input" placeholder="提款金额(最小)" style="min-width:110px"><span style="margin:0 4px">~</span><input class="f-input" placeholder="提款金额(最大)" style="min-width:110px"></div>
-          <div class="filter-item"><span class="filter-label">审核状态：</span><select class="f-select"><option>审核状态</option><option>待审核</option><option>审核通过</option><option>审核拒绝</option></select></div>
-          <div class="filter-item"><span class="filter-label">提款类型：</span><select class="f-select"><option>提款类型</option><option>即时提款</option></select></div>
-          <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button></div>
+          <div class="filter-item"><span class="filter-label">申请时间：</span><input class="f-input" value="2026-11-18 00:00:00" style="min-width:150px"><span style="margin:0 4px">→</span><input class="f-input" value="2026-11-18 23:59:59" style="min-width:150px"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button><span style="color:#0961BD;margin-left:12px;font-size:13px">收起 ⌃</span></div>
         </div>
       </div>
-      <div style="color:#cf1322;font-size:12px;margin:8px 2px 10px">数据更新时间：2026-09-05 07:07:22 (UTC-3)</div>
-      <div class="table-wrap"><div class="table-scroll">
-        <table>
-          <thead><tr>
-            <th>锁单</th><th>操作</th><th>会员ID</th><th>手机号(会员账号)/姓名</th><th>订单号</th><th>提款方式</th><th style="min-width:210px">提款信息</th><th>提款金额</th><th>提款类型</th><th>申请时间</th><th>审核状态</th><th>审核人</th>
-          </tr></thead>
-          <tbody>
-            <!-- 示例：电子钱包（NewGPay）提款，「提款信息」照 UAT 现状（账户类型、提款卡号为 -），钱包地址在订单明细「提现账号信息」 -->
-            <tr>
-              <td><input type="checkbox"></td>
-              <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('W1')">查 看</button></td>
-              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000002')">80000002</a></td>
-              <td>11900000002 / -</td>
-              <td>5392790011200000003</td>
-              <td>电子钱包</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：80 <span class="copy-icon">⧉</span></div>
-                <div>提现方式：电子钱包</div>
-                <div>账户类型：-</div>
-                <div>提款卡号：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>80(BRL) <span class="copy-icon">⧉</span></td>
-              <td>即时提款</td>
-              <td>2026-10-30 15:02:41 (UTC-3)</td>
-              <td><span class="wbadge wb-wait">待审核</span></td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox"></td>
-              <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('PIX',this)">查 看</button></td>
-              <td><a style="color:#0961BD;cursor:pointer">83491174</a></td>
-              <td>55900000000 / -</td>
-              <td>5392762640869367808</td>
-              <td>PIX</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：16 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：- <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：PIX提款</div>
-                <div class="pinfo-new">账户类型：CPF</div>
-                <div>提款卡号：11122233344 <span class="copy-icon">⧉</span></div>
-                <div>持卡人：- <span class="copy-icon">⧉</span></div>
-                <div>开户地址：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>16(BRL) <span class="copy-icon">⧉</span></td>
-              <td>即时提款</td>
-              <td>2026-08-31 23:28:20 (UTC-3)</td>
-              <td><span class="wbadge wb-wait">待审核</span></td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox"></td>
-              <td><button class="btn btn-white btn-sm" onclick="ngOpenOrder('PIX',this)">查 看</button></td>
-              <td><a style="color:#0961BD;cursor:pointer">83491180</a></td>
-              <td>55911112222 / -</td>
-              <td>5392762640869399999</td>
-              <td>PIX</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：20 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：- <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：PIX提款</div>
-                <div class="pinfo-new">账户类型：PHONE</div>
-                <div>提款卡号：22233344455 <span class="copy-icon">⧉</span></div>
-                <div class="pinfo-new">手机号：11988880000 <span class="copy-icon">⧉</span></div>
-                <div>持卡人：- <span class="copy-icon">⧉</span></div>
-                <div>开户地址：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>20(BRL) <span class="copy-icon">⧉</span></td>
-              <td>即时提款</td>
-              <td>2026-08-31 22:10:05 (UTC-3)</td>
-              <td><span class="wbadge wb-wait">待审核</span></td>
-              <td>-</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="em-toolbar">
+        <span style="color:#cf1322">数据更新时间：2026-11-18 05:20:11</span>
+        <span>页面刷新：<select class="f-select" style="min-width:80px"><option>不刷新</option></select></span>
+        <label><input type="checkbox"> 查看全部</label>
+        <label><input type="checkbox"> 查看自动代付锁定订单</label>
+        <span style="margin-left:auto;display:flex;gap:6px">
+          <button class="btn btn-blue btn-sm">批量锁定</button><button class="btn btn-blue btn-sm">批量解锁</button><button class="btn btn-blue btn-sm">批量拒绝</button><button class="btn btn-blue btn-sm">批量罚没</button><button class="btn btn-blue btn-sm">批量代付</button><button class="btn btn-blue btn-sm">批量异常处理</button>
+        </span>
+      </div>
+      <div class="table-wrap"><div class="table-scroll em-fix">
+        <table><thead id="em-ma-head"></thead><tbody id="em-ma-body"></tbody></table>
       </div></div>
-      <div class="pagination"><div class="pg-info">共 <b>3</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="pagination"><div class="pg-info">共 <b id="em-ma-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
     </div>
 
-    <!-- PAGE: 已审核出款订单 -->
+    <!-- PAGE: 已审核出款订单（结构照 UAT 2026-11-18；数据由 emWdRender() 渲染） -->
     <div id="pg-warec" style="display:none">
       <div class="filter-area">
         <div class="filter-row">
-          <div class="filter-item"><span class="filter-label">申请时间：</span><input class="f-input" placeholder="申请时间(开始)" style="min-width:120px"><span style="margin:0 4px">→</span><input class="f-input" placeholder="申请时间(结束)" style="min-width:120px"></div>
-          <div class="filter-item"><span class="filter-label">订单号：</span><input class="f-input" placeholder="订单号" style="min-width:160px"></div>
-          <div class="filter-item"><span class="filter-label">三方订单号：</span><input class="f-input" placeholder="三方订单号" style="min-width:160px"></div>
-          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
+          <div class="filter-item"><span class="filter-label">地区：</span><select class="f-select"><option>巴西站-测试</option></select></div>
+          <div class="filter-item"><span class="filter-label">商户：</span><select class="f-select"><option>888</option></select></div>
+          <div class="filter-item"><span class="filter-label">注册渠道：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">会员层级：</span><select class="f-select"><option>全部</option></select></div>
         </div>
         <div class="filter-row">
-          <div class="filter-item"><span class="filter-label">订单状态：</span><select class="f-select"><option>订单状态</option><option>审核完成</option><option>待审核</option></select></div>
+          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option><option>手机号(会员账号)</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
+          <div class="filter-item"><span class="filter-label">订单号：</span><input class="f-input" placeholder="订单号" style="min-width:160px"></div>
+          <div class="filter-item"><span class="filter-label">订单状态：</span><select class="f-select"><option>全部</option><option>已完成</option><option>拒绝</option><option>罚没</option></select></div>
+          <div class="filter-item"><span class="filter-label">外部订单号：</span><input class="f-input" placeholder="外部订单号" style="min-width:160px"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">出款类型：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">代付平台：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">代付渠道：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">提款方式：</span><select class="f-select"><option>全部</option><option>PIX</option><option>电子钱包</option><option>银行卡</option><option>虚拟币</option><option>支付宝</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">账户类型：</span><select class="f-select em-acct-sel"><option>全部</option><option>CPF</option><option>PHONE</option><option>EMAIL</option></select></div>
+          <div class="filter-item"><span class="filter-label">审核类型：</span><select class="f-select"><option>全部</option></select></div>
+          <div class="filter-item"><span class="filter-label">大额提款：</span><select class="f-select"><option>全部</option><option>是</option><option>否</option></select></div>
           <div class="filter-item"><span class="filter-label">提现金额：</span><input class="f-input" placeholder="提现金额(最小)" style="min-width:110px"><span style="margin:0 4px">~</span><input class="f-input" placeholder="提现金额(最大)" style="min-width:110px"></div>
-          <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">操作人：</span><input class="f-input" placeholder="操作人" style="min-width:140px"></div>
+          <div class="filter-item"><span class="filter-label">提款类型：</span><select class="f-select"><option>全部</option><option>即时提款</option></select></div>
+          <div class="filter-item"><select class="f-select" style="min-width:90px"><option>完成时间</option><option>申请时间</option></select><input class="f-input" value="2026-11-01 00:00:00" style="min-width:150px;margin-left:6px"><span style="margin:0 4px">→</span><input class="f-input" value="2026-11-18 23:59:59" style="min-width:150px"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><button class="btn btn-white btn-sm">今 天</button><button class="btn btn-white btn-sm">昨 天</button><button class="btn btn-white btn-sm">本 周</button><button class="btn btn-white btn-sm">上 周</button><button class="btn btn-query btn-sm">本 月</button><button class="btn btn-white btn-sm">上 月</button><button class="btn btn-white" style="margin-left:8px" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:8px" onclick="toast('查询中...')">查 询</button><span style="color:#0961BD;margin-left:12px;font-size:13px">收起 ⌃</span></div>
         </div>
       </div>
-      <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出中...')">导 出</button></div>
-      <div class="table-wrap"><div class="table-scroll">
-        <table>
-          <thead><tr>
-            <th>会员ID</th><th>手机号(会员账号)</th><th>订单号</th><th class="col-new">三方订单号</th><th>订单状态</th><th>大额提款</th><th>提款方式</th><th>提现金额</th><th>申请时间</th><th>审核人</th><th>审核时间</th><th>审核用时</th><th>备注</th><th>操作</th>
-          </tr></thead>
-          <tbody>
-            <!-- 示例：电子钱包（NewGPay）提款订单 -->
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a> <span class="copy-icon">⧉</span></td>
-              <td>11900000001</td>
-              <td>5392790011200000001 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">-</td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>否</td>
-              <td>电子钱包</td>
-              <td>100(BRL)</td>
-              <td>2026-10-29 14:20:05 (UTC-3)</td>
-              <td>一审：admin002</td>
-              <td>一审：2026-10-29 14:20:08 (UTC-3)</td>
-              <td>一审：0分钟</td>
-              <td>一审：-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('W4')">明细</span></td>
-            </tr>
-            <!-- 本期示例：提交时使用的钱包之后已被删除，订单仍保留当时的地址 -->
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000003')">80000003</a> <span class="copy-icon">⧉</span></td>
-              <td>11900000003</td>
-              <td>5392790011200000004 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">-</td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>否</td>
-              <td>电子钱包</td>
-              <td>30(BRL)</td>
-              <td>2026-10-20 09:12:33 (UTC-3)</td>
-              <td>一审：admin002</td>
-              <td>一审：2026-10-20 09:15:02 (UTC-3)</td>
-              <td>一审：2分钟</td>
-              <td>一审：-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('W5')">明细</span></td>
-            </tr>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">94042764</a> <span class="copy-icon">⧉</span></td>
-              <td>11978967896</td>
-              <td>5402426417334624256 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">5402426417334624256 <span class="copy-icon">⧉</span></td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>否</td>
-              <td>PIX</td>
-              <td>20(BRL)</td>
-              <td>2026-09-07 11:43:27 (UTC-3)</td>
-              <td>-</td><td>-</td><td>-</td><td>-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
-            </tr>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">63098767</a> <span class="copy-icon">⧉</span></td>
-              <td>11998769876</td>
-              <td>5402421280553738240 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">5402421280553738240 <span class="copy-icon">⧉</span></td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>否</td>
-              <td>PIX</td>
-              <td>15(BRL)</td>
-              <td>2026-09-07 11:38:26 (UTC-3)</td>
-              <td>-</td><td>-</td><td>-</td><td>-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
-            </tr>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">52657084</a> <span class="copy-icon">⧉</span></td>
-              <td>11967896789</td>
-              <td>5402287363473449960 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">5402287363473449960 <span class="copy-icon">⧉</span></td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>否</td>
-              <td>PIX</td>
-              <td>50(BRL)</td>
-              <td>2026-09-07 09:28:31 (UTC-3)</td>
-              <td>-</td><td>-</td><td>-</td><td>-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
-            </tr>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">65563340</a> <span class="copy-icon">⧉</span></td>
-              <td>11988088080</td>
-              <td>5402067461147713536 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">-</td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>是</td>
-              <td>PIX</td>
-              <td>10(BRL)</td>
-              <td>2026-09-07 05:55:12 (UTC-3)</td>
-              <td>一审：bxspencer01</td>
-              <td>一审：2026-09-07 05:55:39 (UTC-3)</td>
-              <td>一审：0分钟</td>
-              <td>一审：-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
-            </tr>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">99828722</a> <span class="copy-icon">⧉</span></td>
-              <td>11900100201</td>
-              <td>5338398745630466048 <span class="copy-icon">⧉</span></td>
-              <td class="col-new">-</td>
-              <td><span class="wbadge wb-ok">审核完成</span></td>
-              <td>是</td>
-              <td>PIX</td>
-              <td>500(BRL)</td>
-              <td>2026-07-26 08:28:24 (UTC-3)</td>
-              <td>一审：bxspencer01</td>
-              <td>一审：2026-08-08 03:36:43 (UTC-3)</td>
-              <td>一审：2884分钟</td>
-              <td>一审：-</td>
-              <td><span class="ng-lk" onclick="ngOpenOrder('PIX',this)">明细</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="table-wrap" style="margin-bottom:12px"><div class="table-scroll">
+        <table><thead><tr><th>开始时间</th><th>结束时间</th><th>总人数</th><th>总订单数</th><th>总成功订单数</th><th>总提现金额</th><th>总手续费</th><th>实际出款金额</th></tr></thead>
+          <tbody><tr><td>2026-11-01 00:00:00</td><td>2026-11-18 23:59:59</td><td id="em-wr-p">0</td><td id="em-wr-n">0</td><td id="em-wr-ok">0</td><td id="em-wr-amt">0.00(BRL)</td><td>0.00(BRL)</td><td id="em-wr-out">0.00(BRL)</td></tr></tbody></table>
       </div></div>
-      <div class="pagination"><div class="pg-info">共 <b>7</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出中...')">导 出</button></div>
+      <div class="table-wrap"><div class="table-scroll em-fix">
+        <table><thead id="em-wr-head"></thead><tbody id="em-wr-body"></tbody></table>
+      </div></div>
+      <div class="pagination"><div class="pg-info">共 <b id="em-wr-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
     </div>
 
     <!-- PAGE: 总出款记录 -->
@@ -2191,7 +2058,7 @@ select.fs.ph{color:#bfbfbf}
           <div class="filter-item"><span class="filter-label">申请时间：</span><input class="f-input" placeholder="申请时间(开始)" style="min-width:120px"><span style="margin:0 4px">→</span><input class="f-input" placeholder="申请时间(结束)" style="min-width:120px"></div>
           <div class="filter-item"><span class="filter-label">出款时间：</span><input class="f-input" placeholder="出款时间(开始)" style="min-width:120px"><span style="margin:0 4px">→</span><input class="f-input" placeholder="出款时间(结束)" style="min-width:120px"></div>
           <div class="filter-item"><span class="filter-label">订单号：</span><input class="f-input" placeholder="订单号" style="min-width:150px"></div>
-          <div class="filter-item"><span class="filter-label">三方订单号：</span><input class="f-input" placeholder="三方订单号" style="min-width:150px"></div>
+          <div class="filter-item"><span class="filter-label">外部订单号：</span><input class="f-input" placeholder="外部订单号" style="min-width:150px"></div>
           <div class="filter-item"><span class="filter-label">钱包币种：</span><select class="f-select"><option>钱包币种</option><option>BRL</option></select></div>
         </div>
         <div class="filter-row">
@@ -2202,7 +2069,7 @@ select.fs.ph{color:#bfbfbf}
         </div>
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">提款IP：</span><input class="f-input" placeholder="提款IP" style="min-width:130px"></div>
-          <div class="filter-item"><span class="filter-label">提款方式：</span><select class="f-select" id="wo-method" onchange="woMethodChange()"><option value="all">全部</option><option value="pix">PIX</option><option value="ngc">电子钱包</option><option value="ngd">NewGPay 直提</option></select></div>
+          <div class="filter-item"><span class="filter-label">提款方式：</span><select class="f-select" id="wo-method" onchange="woMethodChange()"><option value="all">全部</option><option value="pix">PIX</option><option value="ngc">电子钱包</option></select></div>
           <div class="filter-item"><span class="filter-label">账户类型：</span>
             <div class="acct-dd" id="wo-acct-dd">
               <div class="acct-dd-field" onclick="woAcctToggle(event)">
@@ -2213,7 +2080,7 @@ select.fs.ph{color:#bfbfbf}
             </div>
           </div>
           <div class="filter-item"><span class="filter-label">出款方式：</span><select class="f-select"><option>出款方式</option><option>人工出款</option><option>三方出款</option></select></div>
-          <div class="filter-item"><span class="filter-label">三方平台/充值通道：</span><select class="f-select"><option>三方平台/充值通道</option></select></div>
+          <div class="filter-item"><span class="filter-label">代付平台/代付渠道：</span><select class="f-select"><option>代付平台/代付渠道</option></select></div>
         </div>
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
@@ -2224,174 +2091,9 @@ select.fs.ph{color:#bfbfbf}
       </div>
       <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出中...')">导 出</button></div>
       <div class="table-wrap"><div class="table-scroll">
-        <table>
-          <thead><tr>
-            <th>会员ID</th><th>手机号(会员账号)</th><th>提款订单号</th><th class="col-new">三方订单号</th><th>提款金额</th><th>手续费</th><th>出款金额</th><th>订单状态</th><th>客户端状态</th><th>后台备注</th><th>客户端备注</th><th>提款人姓名</th><th>提款方式</th><th class="col-new">账户类型</th><th class="col-new">CPF ID</th><th>提款账号</th><th>返现比例</th><th>返现金额</th><th style="min-width:200px">提款信息</th><th>提款IP</th><th>出款方式</th><th>三方平台/提现通道</th><th>订单来源</th><th>申请时间</th><th>出款时间</th><th>账号状态</th><th>出款管理员</th>
-          </tr></thead>
-          <tbody>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">83491174</a></td>
-              <td>55900000000</td>
-              <td>5392762640869367808</td>
-              <td class="col-new">-</td>
-              <td>16(BRL)</td>
-              <td>0</td>
-              <td>16(BRL)</td>
-              <td><span class="wbadge wb-wait">待审核</span></td>
-              <td><span class="wbadge wb-proc">处理中</span></td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>PIX</td>
-              <td class="col-new">CPF</td>
-              <td class="col-new">11122233344</td>
-              <td>11122233344</td>
-              <td>-</td>
-              <td>-</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：16 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：- <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：PIX提款</div>
-                <div class="pinfo-new">账户类型：CPF</div>
-                <div>提款卡号：11122233344 <span class="copy-icon">⧉</span></div>
-                <div>持卡人：- <span class="copy-icon">⧉</span></div>
-                <div>开户地址：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>10.0.0.147</td>
-              <td>人工出款</td>
-              <td>- / -</td>
-              <td>IOS_H5</td>
-              <td>2026-08-31 23:28:20 (UTC-3)</td>
-              <td>-</td>
-              <td><span class="wbadge wb-ok">正常</span></td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer">83491180</a></td>
-              <td>55911112222</td>
-              <td>5392742007600603136</td>
-              <td class="col-new">5392742007600603136 <span class="copy-icon">⧉</span></td>
-              <td>15(BRL)</td>
-              <td>0</td>
-              <td>15(BRL)</td>
-              <td><span class="wbadge wb-ok">已出款</span></td>
-              <td><span class="wbadge wb-ok">成功</span></td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>PIX</td>
-              <td class="col-new">PHONE</td>
-              <td class="col-new">22233344455</td>
-              <td>11988880000</td>
-              <td>-</td>
-              <td>-</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：15 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：PIX <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：PIX提款</div>
-                <div class="pinfo-new">账户类型：PHONE</div>
-                <div>提款卡号：22233344455 <span class="copy-icon">⧉</span></div>
-                <div class="pinfo-new">手机号：11988880000 <span class="copy-icon">⧉</span></div>
-                <div>持卡人：- <span class="copy-icon">⧉</span></div>
-                <div>开户地址：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>10.0.0.147</td>
-              <td>三方出款</td>
-              <td>bestpay代付 / PIX</td>
-              <td>IOS_H5</td>
-              <td>2026-08-31 23:08:19 (UTC-3)</td>
-              <td>2026-08-31 23:08:23 (UTC-3)</td>
-              <td><span class="wbadge wb-ok">正常</span></td>
-              <td>-</td>
-            </tr>
-            <!-- 示例：电子钱包（NewGPay）提款，钱包地址显示在原有「提款账号」字段 -->
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000001')">80000001</a></td>
-              <td>11900000001</td>
-              <td>5392790011200000001</td>
-              <td class="col-new">-</td>
-              <td>100(BRL)</td>
-              <td>0</td>
-              <td>100(BRL)</td>
-              <td><span class="wbadge wb-ok">已出款</span></td>
-              <td><span class="wbadge wb-ok">成功</span></td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>电子钱包</td>
-              <td class="col-new">NewGPay</td>
-              <td class="col-new">-</td>
-              <td class="ng-new">8a4*****3f6</td>
-              <td>-</td>
-              <td>-</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：100 <span class="copy-icon">⧉</span></div>
-                <div>提现方式：电子钱包</div>
-                <div>账户类型：-</div>
-                <div>提款卡号：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>10.0.0.150</td>
-              <td>三方出款</td>
-              <td>NewGPay / NewGPay代付</td>
-              <td>Android_H5</td>
-              <td>2026-10-29 14:20:05 (UTC-3)</td>
-              <td>2026-10-29 14:20:09 (UTC-3)</td>
-              <td><span class="wbadge wb-ok">正常</span></td>
-              <td>-</td>
-            </tr>
-            <!-- 本期示例：NewGPay 直提（流程同 BESTPAY，PIX 到账，不经过钱包） -->
-            <tr>
-              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000002')">80000002</a></td>
-              <td>11900000002</td>
-              <td>5392790011200000002</td>
-              <td class="col-new">5392790011200000002 <span class="copy-icon">⧉</span></td>
-              <td>50(BRL)</td>
-              <td>0</td>
-              <td>50(BRL)</td>
-              <td><span class="wbadge wb-wait">待审核</span></td>
-              <td><span class="wbadge wb-proc">处理中</span></td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
-              <td>NewGPay 直提</td>
-              <td class="col-new">CPF</td>
-              <td class="col-new">32300000023</td>
-              <td>32300000023</td>
-              <td>-</td>
-              <td>-</td>
-              <td><div class="pinfo">
-                <div>提款类型：即时提款</div>
-                <div>提现金额：50 <span class="copy-icon">⧉</span></div>
-                <div>提现通道：NewGPay 直提 <span class="copy-icon">⧉</span></div>
-                <div>提现币种：BRL</div>
-                <div>提现方式：PIX提款</div>
-                <div class="pinfo-new">账户类型：CPF</div>
-                <div>提款卡号：32300000023 <span class="copy-icon">⧉</span></div>
-                <div>持卡人：- <span class="copy-icon">⧉</span></div>
-                <div>开户地址：- <span class="copy-icon">⧉</span></div>
-                <div style="color:#cf1322;cursor:pointer;margin-top:2px">一键复制</div>
-              </div></td>
-              <td>10.0.0.151</td>
-              <td>三方出款</td>
-              <td>NewGPay直提代付 / NewGPay</td>
-              <td>IOS_H5</td>
-              <td>2026-10-29 15:02:40 (UTC-3)</td>
-              <td>-</td>
-              <td><span class="wbadge wb-ok">正常</span></td>
-              <td>-</td>
-            </tr>
-          </tbody>
-        </table>
+        <table><thead id="em-wo-head"></thead><tbody id="em-wo-body"></tbody></table>
       </div></div>
-      <div class="pagination"><div class="pg-info">共 <b>4</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="pagination"><div class="pg-info">共 <b id="em-wo-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
     </div>
 
     <!-- PAGE: 充值订单记录 -->
@@ -2403,7 +2105,7 @@ select.fs.ph{color:#bfbfbf}
           <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
         </div>
         <div class="filter-row">
-          <div class="filter-item"><span class="filter-label">支付方式：</span><select class="f-select"><option>全部</option><option>bestpay</option><option>NewGPay</option><option>NewGPay 扫码</option></select></div>
+          <div class="filter-item"><span class="filter-label">支付方式：</span><select class="f-select"><option>全部</option><option>bestpay</option><option>NewGPay</option></select></div>
           <div class="filter-item"><span class="filter-label">订单状态：</span><select class="f-select"><option>订单状态</option><option>待支付</option><option>已支付</option><option>已失效</option></select></div>
           <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button></div>
         </div>
@@ -2421,11 +2123,6 @@ select.fs.ph{color:#bfbfbf}
               <td>Android_H5</td><td>2026-10-29 14:02:11 (UTC-3)</td><td>2026-10-29 14:02:13 (UTC-3)</td>
             </tr>
             <tr>
-              <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000003')">80000003</a></td><td>11900000003</td><td>D2610291430000002</td><td>100(BRL)</td><td>-</td>
-              <td><span class="wbadge wb-wait">待支付</span></td><td>NewGPay 扫码</td><td>NewGPay / NewGPay扫码代收</td>
-              <td>IOS_H5</td><td>2026-10-29 14:30:47 (UTC-3)</td><td>-</td>
-            </tr>
-            <tr>
               <td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile('80000004')">80000004</a></td><td>11900000004</td><td>D2610291501000003</td><td>50(BRL)</td><td>50(BRL)</td>
               <td><span class="wbadge wb-ok">已支付</span></td><td>bestpay</td><td>bestpay / bestpay支付</td>
               <td>IOS_H5</td><td>2026-10-29 15:01:02 (UTC-3)</td><td>2026-10-29 15:01:40 (UTC-3)</td>
@@ -2433,33 +2130,112 @@ select.fs.ph{color:#bfbfbf}
           </tbody>
         </table>
       </div></div>
-      <div class="pagination"><div class="pg-info">共 <b>3</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
+      <div class="pagination"><div class="pg-info">共 <b>2</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
     </div>
 
-    <!-- PAGE: 会员列表（本期仅为进入「个人资料」演示，列表本身非本次范围） -->
+    <!-- PAGE: 会员列表（结构照 UAT 2026-11-18；点会员ID打开「个人资料」；会员查询新增「提现邮箱」见《增加Email提款方式 PRD》7.2） -->
     <div id="pg-mlist" style="display:none">
+      <div class="em-mtabs"><div class="em-mtab on">全部会员</div><div class="em-mtab">今日新增</div></div>
       <div class="filter-area">
         <div class="filter-row">
-          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" placeholder="请输入会员ID" style="min-width:140px"></div>
-          <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button></div>
+          <div class="filter-item"><span class="filter-label">注册时间：</span><input class="f-input" placeholder="注册开始时间"><span style="margin:0 4px">→</span><input class="f-input" placeholder="注册结束时间"></div>
+          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" id="em-ml-kt" onchange="emMlKt()"><option>会员昵称</option><option>手机号(会员账号)</option><option selected>会员ID</option><option>姓名</option><option>提现手机号</option><option>CPF</option><option class="em-new">提现邮箱</option></select><input class="f-input" id="em-ml-kw" placeholder="请输入会员ID"></div>
+          <div class="filter-item"><span class="filter-label">代理查询：</span><select class="f-select"><option>邀请ID</option><option>代理ID</option><option>顶级ID</option></select><input class="f-input" placeholder="请输入邀请ID"></div>
+          <div class="filter-item"><span class="filter-label">注册渠道：</span><select class="f-select"><option>最新渠道</option></select></div>
         </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">注册方式：</span><select class="f-select"><option>注册方式</option><option>官网注册</option><option>分享注册</option><option>代理注册</option><option>后台注册</option></select></div>
+          <div class="filter-item"><span class="filter-label">注册站点：</span><select class="f-select" disabled><option>巴西站-测试</option></select></div>
+          <div class="filter-item"><span class="filter-label">会员等级：</span><select class="f-select"><option>会员等级</option></select></div>
+          <div class="filter-item"><span class="filter-label">会员层级：</span><select class="f-select"><option>全部</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">账号类型：</span><select class="f-select"><option>帐号类型</option><option>正式</option><option>试玩</option><option>测试</option><option>内部</option><option>带单</option></select></div>
+          <div class="filter-item"><span class="filter-label">账号状态：</span><select class="f-select"><option>帐号状态</option><option>登录锁定</option><option>游戏锁定</option><option>充提锁定</option><option>正常</option></select></div>
+          <div class="filter-item"><span class="filter-label">注册终端：</span><select class="f-select"><option>注册终端</option><option>苹果H5</option><option>安卓H5</option><option>PWA</option><option>APK</option><option>苹果包</option><option>苹果书签</option><option>APK上架包</option><option>电脑系统</option></select></div>
+          <div class="filter-item"><span class="filter-label">离线天数：</span><select class="f-select"><option>离线天数</option><option>超过3天</option><option>超过5天</option><option>超过7天</option><option>超过15天</option><option>超过30天</option><option>超过60天</option><option>超过90天</option></select></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">最后登录时间：</span><input class="f-input" placeholder="最后登录开始时间"><span style="margin:0 4px">→</span><input class="f-input" placeholder="最后登录结束时间"></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item em-range"><span class="filter-label">金币：</span><select class="f-select"><option>全部</option><option>当日充值</option><option>首充金额</option><option>当日有效投注</option><option>当日输赢</option><option>当日优惠</option><option>历史充值</option><option>历史有效投注</option><option>历史输赢</option><option>历史优惠</option></select><input class="f-input" placeholder="最小" disabled><input class="f-input" placeholder="最大" disabled></div>
+          <div class="filter-item em-range"><select class="f-select"><option>全部</option><option>当日充值</option><option>首充金额</option><option>当日有效投注</option><option>当日输赢</option><option>当日优惠</option><option>历史充值</option><option>历史有效投注</option><option>历史输赢</option><option>历史优惠</option></select><input class="f-input" placeholder="最小" disabled><input class="f-input" placeholder="最大" disabled></div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-item"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="toast('查询中...')">查 询</button><span style="color:#0961BD;margin-left:12px;font-size:13px">收起 ⌃</span></div>
+        </div>
+      </div>
+      <div class="em-toolbar">
+        <button class="btn btn-blue btn-sm">今日新增</button><button class="btn btn-blue btn-sm">昨日新增</button><button class="btn btn-blue btn-sm">三日新增</button><button class="btn btn-blue btn-sm">七日新增</button>
+        <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <button class="btn btn-blue btn-sm" onclick="toast('演示：批量操作')">批量操作</button><button class="btn btn-blue btn-sm" onclick="toast('演示：添加会员')">添加会员</button><button class="btn btn-blue btn-sm" onclick="toast('导出中...')">导 出</button>
+          <span style="color:#595959">⟳ ⇕ ⚙</span>
+        </span>
       </div>
       <div class="table-wrap"><div class="table-scroll">
         <table>
-          <thead><tr><th>序号</th><th>会员ID</th><th>手机号(会员账号)</th><th>VIP等级</th><th>金币余额</th><th>注册时间</th></tr></thead>
+          <thead id="ng-ml-thead"></thead>
           <tbody id="ng-ml-tbody"></tbody>
         </table>
       </div></div>
+      <div class="pagination"><div class="pg-info">共 <b id="ng-ml-cnt">0</b> 条数据</div><div class="pg-controls"><div class="pg-btn active">1</div><select class="pg-size"><option>50 条/页</option></select></div></div>
     </div>
 
-    <!-- PAGE: 会员信息变更记录（本期：变更类型新增「NewGPay 钱包」） -->
+    <!-- PAGE: 会员详情（《增加Email提款方式 PRD》7.1；本期只做「财务信息」页签的「提现账号」区块，其余为占位） -->
+    <div id="pg-emdet" style="display:none">
+      <style>
+        #pg-emdet .em-card{background:#fff;border-radius:6px;padding:16px 20px;margin-bottom:12px}
+        #pg-emdet .em-tabs{display:flex;gap:28px;border-bottom:1px solid #f0f0f0;margin-bottom:14px}
+        #pg-emdet .em-tab{padding:10px 0;font-size:14px;color:rgba(0,0,0,.65);border-bottom:2px solid transparent}
+        #pg-emdet .em-tab.on{color:#0961BD;border-bottom-color:#0961BD}
+        #pg-emdet .em-sec{font-weight:600;font-size:14px;margin:14px 0 8px 76px}
+        #pg-emdet .em-kv{display:flex;flex-wrap:wrap;gap:6px 36px;font-size:13px;color:rgba(0,0,0,.85);padding-left:20px}
+        #pg-emdet .em-ph-box{color:#8c8c8c;font-size:13px;padding:6px 20px}
+        #pg-emdet .em-lk{color:#0961BD;cursor:pointer;margin-left:24px}
+        #pg-emdet .em-demo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#8c8c8c;margin-top:12px;padding-top:10px;border-top:1px dashed #e8e8e8}
+        #pg-emdet .em-demo button{border:1px solid #d9d9d9;background:#fff;border-radius:4px;padding:2px 10px;font-size:12px;cursor:pointer}
+        #pg-emdet .em-demo button.on{border-color:#0961BD;color:#0961BD}
+      </style>
+      <div class="filter-area">
+        <div class="filter-row">
+          <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" value="80000006" style="min-width:200px"></div>
+          <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="toast('已重置')">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="emDetRender()">查 询</button></div>
+        </div>
+      </div>
+      <div class="em-card">
+        <div class="em-tabs"><div class="em-tab">基本信息</div><div class="em-tab on">财务信息</div><div class="em-tab">登录信息</div><div class="em-tab">开启游戏</div></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px">⟳ 账号操作
+          <button class="btn btn-blue btn-sm">账号状态</button><button class="btn btn-blue btn-sm">重置资金密码</button><button class="btn btn-blue btn-sm">修改密码</button><button class="btn btn-blue btn-sm">会员标签</button><button class="btn btn-blue btn-sm">账号类型</button><button class="btn btn-blue btn-sm">出生日期</button><button class="btn btn-blue btn-sm">真实姓名</button>
+        </div>
+        <div class="em-sec">财务信息</div>
+        <div class="em-kv"><span>会员资产 ⟳</span><span>总资产：589.27</span><span>提现冻结余额：0.00</span><div style="flex-basis:100%;height:0"></div>
+          <span>今日/累计充值：0.00(0次)/321.00(4次)</span><span>今日/累计提现：0.00(0次)/20.00(1次)</span><span>今日/累计充提差：0.00/301.00</span></div>
+        <div class="em-sec">存提信息</div>
+        <div class="em-kv"><span>历史存款笔数：5</span><span>近一笔存款时间：2026-11-16 10:44:10</span><div style="flex-basis:100%;height:0"></div>
+          <span>历史取款笔数：1</span><span>近一笔提款时间：2026-11-18 05:10:12</span></div>
+        <div class="em-sec">提现账号</div>
+        <div style="padding-left:20px;font-size:13px;margin-bottom:6px">PIX</div>
+        <div class="em-kv" id="em-det-kv"></div>
+        <div class="em-demo">原型演示：
+          <button data-v="ok" class="on" onclick="emDemo(this)">正常保存</button>
+          <button data-v="limit" onclick="emDemo(this)">提现邮箱达上限</button>
+          <button data-v="audit" onclick="emDemo(this)">本人有审核中提款</button>
+        </div>
+        <div class="em-sec">登录信息</div>
+        <table class="ngp-table em-login" style="width:100%;margin:0"><thead><tr><th>序号</th><th>访问时间</th><th>登录状态</th><th>访问地区</th><th>登录IP</th><th>终端设备</th><th>终端设备号</th></tr></thead>
+          <tbody><tr><td>1</td><td>2026-11-18 05:09:04</td><td><span class="wbadge wb-ok">成功</span></td><td>巴西</td><td>47.250.110.145</td><td>电脑系统</td><td>a2f1730e04a59218ae0e4b07f838a322</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <!-- PAGE: 会员信息变更记录 -->
     <div id="pg-mlog" style="display:none">
       <div class="filter-area">
         <div class="filter-row">
           <div class="filter-item"><span class="filter-label">操作时间：</span><input class="f-input" placeholder="操作时间(开始)" style="min-width:120px"><span style="margin:0 4px">→</span><input class="f-input" placeholder="操作时间(结束)" style="min-width:120px"></div>
           <div class="filter-item"><span class="filter-label">会员查询：</span><select class="f-select" style="min-width:88px"><option>会员ID</option></select><input class="f-input" id="ng-log-mid" placeholder="请输入会员ID" style="min-width:140px"></div>
           <div class="filter-item"><span class="filter-label">变更类型：</span><select class="f-select" id="ng-log-type" onchange="ngLogRender()">
-            <option value="">全部</option><option>账号状态</option><option>投注状态</option><option>会员标签</option><option>出生日期</option><option>手机号码</option><option>真实姓名</option><option>邮箱地址</option><option>账号备注</option><option>玩家类型</option><option>提现密码</option><option>登录密码</option><option value="NewGPay 钱包">NewGPay 钱包（本期新增）</option>
+            <option value="">全部</option><option>账号状态</option><option>投注状态</option><option>会员标签</option><option>出生日期</option><option>手机号码</option><option>真实姓名</option><option>邮箱地址</option><option>账号备注</option><option>玩家类型</option><option>提现密码</option><option>登录密码</option>
           </select></div>
           <div class="filter-item"><span class="filter-label">操作人：</span><input class="f-input" placeholder="操作人" style="min-width:120px"></div>
           <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="document.getElementById('ng-log-type').value='';document.getElementById('ng-log-mid').value='';ngLogRender()">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="ngLogRender()">查 询</button></div>
@@ -2525,14 +2301,14 @@ select.fs.ph{color:#bfbfbf}
 
 <!-- 提现审核/订单记录 · scoped styles -->
 <style>
-#pg-maudit td,#pg-maudit th{vertical-align:top}
+#pg-maudit td,#pg-maudit th{vertical-align:middle}
 #pg-maudit .pinfo,#pg-worder .pinfo{font-size:12px;line-height:1.75;text-align:left;min-width:190px;white-space:normal}
 
 .wbadge{display:inline-block;padding:1px 8px;border-radius:3px;font-size:12px;white-space:nowrap;font-weight:500}
 .wb-wait{background:#e6f4ff;color:#0961BD;border:1px solid #91caff}
 .wb-proc{background:#fff7e6;color:#d46b08;border:1px solid #ffd591}
 .wb-ok{background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f}
-#pg-worder th,#pg-worder td{white-space:nowrap;vertical-align:top}
+#pg-worder th,#pg-worder td{white-space:nowrap;vertical-align:middle}
 #pg-worder .pinfo{white-space:normal}
 
 #pg-worder .acct-dd{position:relative;display:inline-block}
@@ -2595,7 +2371,7 @@ select.fs.ph{color:#bfbfbf}
 .ngp-table{width:calc(100% - 40px);margin:0 20px 8px;border-collapse:collapse;font-size:13px}
 .ngp-table td{border:1px solid #f0f0f0;padding:9px 12px;vertical-align:top}
 .ngp-table td:first-child{width:150px;background:#fafafa;text-align:right;color:#333}
-.ngp-table td:last-child{width:150px}
+.ngp-table td:last-child{width:250px}
 .ngp-table .lk{color:#0961BD;cursor:pointer;margin-right:10px}
 .ngp-table tr.ng-row td{background:#e6f4ff}
 .ngp-table tr.ng-row td:first-child{background:#d6ebff;font-weight:600}
@@ -5602,7 +5378,7 @@ function apkMethod(radioEl, actId, addrId, nameId){
 const _origSwitchPage = switchPage;
 function switchPage(page, el){
   // hide all pages
-  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox','pg-mlist','pg-mlog','pg-dorder','pg-sharemoney','pg-ufb','pg-paymethod','pg-sitecfg'].forEach(function(id){
+  ['pg-channel','pg-effect','pg-guide','pg-activity-list','pg-appstore','pg-account','pg-mafia','pg-withdraw','pg-cashback','pg-maudit','pg-worder','pg-warec','pg-announce','pg-inbox','pg-mlist','pg-mlog','pg-dorder','pg-sharemoney','pg-ufb','pg-paymethod','pg-sitecfg','pg-emdet'].forEach(function(id){
     var p=document.getElementById(id); if(p) p.style.display='none';
   });
   // show requested
@@ -5635,9 +5411,10 @@ function switchPage(page, el){
     'sharemoney':'福利中心 / 推荐好友领彩金',
     'ufb':'消息管理 / 用户反馈',
     'paymethod':'商户财务配置 / 支付方式管理',
-    'sitecfg':'系统管理 / 系统设置'
+    'sitecfg':'系统管理 / 系统设置',
+    'emdet':'会员管理 / 会员详情'
   };
-  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理','mlist':'DD后台管理','mlog':'DD后台管理','dorder':'DD后台管理','sharemoney':'DD后台管理','ufb':'DD后台管理','paymethod':'DD后台管理','sitecfg':'DD后台管理'};
+  const bcSec = {'channel':'DD后台管理','effect':'DD后台管理','guide':'DD后台管理','activity-list':'DD后台管理','appstore':'DD后台管理','account':'DD后台管理','mafia':'DD后台管理','withdraw':'DD后台管理','cashback':'DD后台管理','maudit':'DD后台管理','worder':'DD后台管理','warec':'DD后台管理','announce':'DD后台管理','inbox':'DD后台管理','mlist':'DD后台管理','mlog':'DD后台管理','dorder':'DD后台管理','sharemoney':'DD后台管理','ufb':'DD后台管理','paymethod':'DD后台管理','sitecfg':'DD后台管理','emdet':'DD后台管理'};
   const bcEl = document.getElementById('breadcrumb');
   if(bcEl){
     const txt = document.getElementById('bc-text');
@@ -5650,6 +5427,7 @@ function switchPage(page, el){
   if(page==='withdraw') wmRender();
   if(page==='mlist') ngMlRender();
   if(page==='mlog') ngLogRender();
+  if(page==='emdet') emDetRender();
   if(page==='cashback') cbRender();
   if(page==='sharemoney') smRender();
   if(page==='ufb') ufbRender();
@@ -6225,7 +6003,7 @@ function acctConfirmDel(){
   toast('删除成功');
 }
 
-// ─── NewGPay 钱包（本期新增）：绑定规则 / 会员钱包查看与删除 / 变更记录 ───
+// ─── 会员演示数据（会员列表 / 个人资料 / 订单明细共用） ───
 // 绑定上限取自「提现管理 → 其他提现配置」，保存后同步到这里
 var NG_CFG = { addr:1, mem:3 };
 // 演示数据（会员ID、手机号均为虚构）；wallets[0] 为系统开通的默认钱包；钱包列表与前台充值页、提款页同步，后台不区分充值 / 提款钱包；dep / wd 仅用于演示删除后恢复默认钱包，不在后台展示
@@ -6243,11 +6021,21 @@ var NG_MEMBERS = [
     wallets:[ {addr:'5a0c8e2f71d94b36', sys:true, t:'2026-10-02 13:20:11'} ],
     dep:'5a0c8e2f71d94b36', wd:'5a0c8e2f71d94b36' },
   { id:'80000004', phone:'11900000004', vip:'VIP0', bal:'50.00', reg:'2026-10-28 22:10:07', wdAcct:'',
-    wallets:[], dep:'', wd:'' }   /* 从未进入 NewGPay，系统尚未开通钱包 */
+    wallets:[], dep:'', wd:'' },   /* 从未进入 NewGPay，系统尚未开通钱包 */
+  /* 《增加Email提款方式 PRD》演示会员：提现账号含提现邮箱 */
+  { id:'80000005', phone:'11900000005', vip:'VIP3', bal:'589.27', reg:'2026-11-06 03:51:03', wdAcct:'',
+    wallets:[], dep:'', wd:'' }
 ];
+/* 提现账号（PIX）：字段同「提现账户」弹窗；邮箱即提现邮箱 */
+(function(){
+  var P = {
+    '80000001':{ name:'Ana Souza',     cpf:'32345678923', cnpj:'', evp:'', phone:'',            mail:'' },
+    '80000002':{ name:'Bruno Lima',    cpf:'41234567811', cnpj:'', evp:'', phone:'11912345611', mail:'' },
+    '80000005':{ name:'QA Email Test', cpf:'12345678909', cnpj:'', evp:'', phone:'',            mail:'qatest@gmail.com' }
+  };
+  NG_MEMBERS.forEach(function(m){ m.pix = P[m.id] || null; });
+})();
 var NG_LOGS = [
-  { id:'80000002', t:'2026-10-26 21:47:02', type:'NewGPay 钱包', before:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）', after:'b7d2e1a09c44f3e8（默认钱包）\nc7d2e9f0a1b4e88c（用户绑定）\ne19a7c3d55b20f61（用户绑定）', note:'-', op:'admin002' },
-  { id:'80000001', t:'2026-10-28 16:12:45', type:'NewGPay 钱包', before:'3fe693197d515711（默认钱包）', after:'3fe693197d515711（默认钱包）\n8a41c02e5b97d3f6（用户绑定）', note:'-', op:'admin002' },
   { id:'80000003', t:'2026-10-29 17:40:22', type:'登录密码', before:'******', after:'******', note:'重置登录密码', op:'admin001' }
 ];
 var ngCur = null, ngDelAddr = null;
@@ -6257,99 +6045,87 @@ function ngNow(){ var d = new Date(), p = function(n){ return (n < 10 ? '0' : ''
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()); }
 function ngCopy(a){ try{ navigator.clipboard.writeText(a); }catch(e){} toast('复制成功'); }
 
+/* 会员列表：列照 UAT（31 列）；金额类为演示数据 */
+var EM_ML_COLS = ['','序号','会员ID','手机号(会员账号)','邀请ID','代理ID','姓名','金币余额','首充金额','当日充值','当日提现','当日有效投注','当日输赢','当日优惠',
+  '历史充值','历史提现','历史有效投注','历史输赢','历史优惠','出款方式','账号状态','会员等级','会员层级','是否在线','注册日期','最后登录时间','登录IP注册IP','账号类型','注册渠道名','注册终端','离线天数'];
+var EM_ML_SORT = { '金币余额':1,'首充金额':1,'当日充值':1,'当日提现':1,'当日有效投注':1,'当日输赢':1,'当日优惠':1,'历史充值':1,'历史提现':1,'历史有效投注':1,'历史输赢':1,'历史优惠':1 };
 function ngMlRender(){
+  var th = document.getElementById('ng-ml-thead');
+  if (th) th.innerHTML = '<tr>' + EM_ML_COLS.map(function(c, i){
+    return '<th>' + (i === 0 ? '<input type="checkbox">' : c + (EM_ML_SORT[c] ? ' <span style="color:#bfbfbf;font-size:10px">⇅</span>' : '')) + '</th>'; }).join('') + '</tr>';
   document.getElementById('ng-ml-tbody').innerHTML = NG_MEMBERS.map(function(m, i){
-    return '<tr><td>'+(i+1)+'</td><td><a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile(\''+m.id+'\')">'+m.id+'</a></td>'
-      + '<td>'+m.phone+'</td><td>'+m.vip+'</td><td>'+m.bal+'</td><td>'+m.reg+' (UTC-3)</td></tr>';
+    var name = m.pix && m.pix.name ? m.pix.name : '-';
+    var dep = (50 * (i + 1)).toFixed(2);
+    var cells = ['<input type="checkbox">', i + 1,
+      '<a style="color:#0961BD;cursor:pointer" onclick="ngOpenProfile(\''+m.id+'\')">'+m.id+'</a> <span class="copy-icon">⧉</span>',
+      m.phone + ' <span class="copy-icon">⧉</span>', '-', '<a style="color:#0961BD">'+m.id+'</a>', name,
+      '<a style="color:#0961BD;cursor:pointer">'+m.bal+'</a>', dep, '0.00', '0.00', '0.00', '0.00', '0.00',
+      dep, '0.00', '0.00', '0.00', '0.00', '自动出款', '正常', m.vip, '默认层级', i % 2 ? '离线' : '在线',
+      m.reg, m.reg, '47.250.110.145 / 47.250.110.145', '正式', '官方渠道', '电脑系统', '0'];
+    return '<tr>' + cells.map(function(c){ return '<td>' + c + '</td>'; }).join('') + '</tr>';
   }).join('');
+  var cnt = document.getElementById('ng-ml-cnt'); if (cnt) cnt.textContent = NG_MEMBERS.length;
 }
 function ngOpenProfile(id){
   var m = ngMember(id); if (!m){ toast('演示数据中无该会员'); return; }
   ngCur = m; ngRenderProfile(); openM('m-ng-profile');
 }
+/* 个人资料弹窗：结构照 UAT（会员列表点会员ID打开），本期只改「提现账号」行（新增显示提现邮箱） */
+function emPixLine(p){
+  if (!p || !(p.name || p.cpf)) return '未绑定';
+  var it = [];
+  if (p.cpf)   it.push('CPF：'+p.cpf);
+  if (p.cnpj)  it.push('CNPJ：'+p.cnpj);
+  if (p.evp)   it.push('EVP：'+p.evp);
+  if (p.phone) it.push('手机号：55'+p.phone);
+  if (p.mail)  it.push('<span class="em-new">邮箱：'+p.mail+'</span>');
+  if (p.name)  it.push('真实姓名：'+p.name);
+  return '<div>PIX：</div><div>'+it.join('&nbsp;&nbsp;')+'</div>';
+}
 function ngRenderProfile(){
-  var m = ngCur;
-  document.getElementById('ngp-head').innerHTML = '<span>会员账号：<b>'+m.phone+'</b></span><span>会员ID：<b>'+m.id+'</b></span><span>注册方式：手机号</span><span>所属地区：巴西(BRL)</span>';
-  var ng;
-  if (!m.wallets.length) ng = '<td>未开通<div class="ng-sub">会员首次进入 NewGPay 时系统自动开通默认钱包</div></td><td>-</td>';
-  else ng = '<td>已绑定 '+m.wallets.length+'/'+NG_CFG.mem+'</td>'
-      + '<td><span class="lk" onclick="ngOpenWallet()">查看</span>'
-      + (m.wallets.length < NG_CFG.mem ? '<span class="lk" onclick="ngOpenAdd()">新增</span>' : '<span class="ngw-dis" title="已达绑定上限">新增</span>')
-      + '</td>';
+  var m = ngCur, lk = function(a){ return a.map(function(t){ return '<span class="lk">'+t+'</span>'; }).join(''); };
+  var red = function(a){ return a.map(function(t){ return '<span class="lk" style="color:#cf1322">'+t+'</span>'; }).join(''); };
+  document.getElementById('ngp-head').innerHTML = '<span>会员账号：<b>'+m.phone+'</b> <span class="copy-icon">⧉</span></span><span>会员ID：<b>'+m.id+'</b> <span class="copy-icon">⧉</span></span><span>注册方式：手机号</span><span>所属地区：巴西(BRL)</span><span>所属商户：888</span>';
+  var dev = 'a2f1730e04a59218ae0e4b07f838a322';
   var rows = [
-    ['账号状态','正式 / 正常','<span class="lk">修改密码</span>'],
+    ['账号状态','正式 / 正常', red(['加入黑名单','禁止投注','踢到大厅']) + lk(['修改密码','修改资金密码','重置资金密码'])],
+    ['上级代理','账号：无 ID：无 同上级会员人数 (0)', lk(['代理拉线'])],
+    ['真实姓名',(m.pix && m.pix.name ? m.pix.name : '-')+' 同名会员人数 (0)', lk(['实名关联'])],
     ['VIP等级', m.vip, ''],
-    ['账户余额', m.bal+' (可用 '+m.bal+')','<span class="lk">账变记录</span>'],
-    ['今日/累计充值','0.00 (0次) / 50.00 (1次)','<span class="lk">充值记录</span>'],
-    ['今日/累计提现','0.00 (0次) / 0.00 (0次)','<span class="lk">提现记录</span>'],
-    ['提现账号', m.wdAcct || '未绑定','<span class="lk">修改</span>']
+    ['会员层级','默认层级', lk(['修改层级'])],
+    ['账户余额', m.bal+' (可用 '+m.bal+' + 余额宝 0.00 + 冻结 0.00)', lk(['刷新','人工提存','帐变记录'])],
+    ['今日/累计充值','0.00 (0次) / 50.00 (1次)', lk(['充值记录'])],
+    ['今日/累计提现','0.00 (0次) / 0.00 (0次)', lk(['提现记录','稽核详情'])],
+    ['今日/累计充提差','0.00/ 50.00',''],
+    ['今日/累计有效投注','0.00 / 0.00', lk(['投注记录']) + '<span class="lk" style="color:#bfbfbf;cursor:default">体育投注记录</span>'],
+    ['今日/累计输赢','0.00 / 0.00', lk(['输赢总览','输赢统计'])],
+    ['今日/累计活动优惠','0.00 / 0.00', lk(['优惠记录'])],
+    ['今日/累计结算佣金','0.00 / 0.00','']
   ];
-  document.getElementById('ngp-body').innerHTML = rows.map(function(r){ return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'; }).join('')
-    + '<tr class="ng-row"><td>NewGPay 钱包</td>'+ng+'</tr>'
-    + '<tr><td>最后登录</td><td>2026-10-29 21:03:44 (UTC-3)</td><td><span class="lk">IP关联</span></td></tr>';
-}
-function ngOpenWallet(){ ngRenderWallet(); openM('m-ng-wallet'); }
-function ngRenderWallet(){
-  var m = ngCur;
-  var full = m.wallets.length >= NG_CFG.mem;
-  document.getElementById('ngw-sum').innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between"><div>会员ID：<b>'+m.id+'</b>　　已绑定 <b>'+m.wallets.length+'/'+NG_CFG.mem+'</b>'
-    + '<span class="lim">上限取自「提现管理 → 其他提现配置 → 单个会员可绑定 NewGPay 钱包数量」</span></div>'
-    + '<button class="btn btn-blue btn-sm"'+(full ? ' disabled title="已达绑定上限，需先删除用户绑定的钱包" style="opacity:.45;cursor:not-allowed"' : ' onclick="ngOpenAdd()"')+'>+ 新增钱包</button></div>';
-  document.getElementById('ngw-tbody').innerHTML = m.wallets.map(function(w, i){
-    var op = w.sys ? '<span class="ngw-dis" title="默认钱包不可删除">删除</span>'
-                   : '<span class="ngw-del" onclick="ngAskDel(\''+w.addr+'\')">删除</span>';
-    return '<tr><td>'+(i+1)+'</td>'
-      + '<td><span class="ng-addr">'+w.addr+'</span> <span class="copy-icon" onclick="ngCopy(\''+w.addr+'\')">⧉</span></td>'
-      + '<td><span class="ngw-tag '+(w.sys?'sys':'usr')+'">'+(w.sys?'默认钱包':'用户绑定')+'</span></td>'
-      + '<td>'+w.t+' (UTC-3)</td><td>'+op+'</td></tr>';
-  }).join('');
-}
-function ngAskDel(addr){
-  var m = ngCur;
-  ngDelAddr = addr;
-  document.getElementById('ng-del-text').innerHTML = '确认删除会员 <strong>'+m.id+'</strong> 的钱包 <strong class="ng-addr">'+addr+'</strong> 吗？'
-    + '<br><br>删除后会员前台充值页、提款页同步移除该钱包；如会员正在使用该钱包，将恢复使用默认钱包。';
-  openM('m-ng-del');
-}
-function ngOpenAdd(){
-  var m = ngCur;
-  if (m.wallets.length >= NG_CFG.mem){ toast('已达绑定上限'); return; }
-  document.getElementById('ng-add-mid').textContent = m.id;
-  document.getElementById('ng-add-addr').value = '';
-  document.getElementById('ng-add-hint').style.display = 'none';
-  openM('m-ng-add');
-}
-function ngDoAdd(){
-  var m = ngCur, inp = document.getElementById('ng-add-addr'), hint = document.getElementById('ng-add-hint');
-  var addr = inp.value.trim().toLowerCase(), err = '';
-  var used = NG_MEMBERS.filter(function(x){ return x.wallets.some(function(w){ return w.addr === addr; }); });
-  if (!addr) err = '请输入钱包地址';
-  else if (!/^[0-9a-f]{16}$/.test(addr)) err = '钱包地址格式不正确，应为 16 位字母或数字';
-  else if (used.indexOf(m) >= 0) err = '该会员已绑定此钱包';
-  else if (NG_CFG.addr > 0 && used.length >= NG_CFG.addr) err = '该钱包已被其他会员绑定，已达「同一钱包地址可绑定会员数量」上限';
-  else if (m.wallets.length >= NG_CFG.mem) err = '已达绑定上限';
-  if (err){ hint.textContent = err; hint.style.display = ''; return; }
-  var before = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  m.wallets.push({ addr:addr, sys:false, t:ngNow() });
-  var after = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'-', op:'admin001' });
-  closeM('m-ng-add'); ngRenderWallet(); ngRenderProfile();
-  toast('新增成功');
-}
-function ngDoDel(){
-  var m = ngCur, addr = ngDelAddr, def = m.wallets.filter(function(w){ return w.sys; })[0].addr;
-  var before = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  m.wallets = m.wallets.filter(function(w){ return w.addr !== addr; });
-  if (m.dep === addr) m.dep = def;
-  if (m.wd === addr) m.wd = def;
-  var after = m.wallets.map(function(w){ return w.addr+'（'+(w.sys?'默认钱包':'用户绑定')+'）'; }).join('\n');
-  NG_LOGS.push({ id:m.id, t:ngNow(), type:'NewGPay 钱包', before:before, after:after, note:'-', op:'admin001' });
-  closeM('m-ng-del'); ngRenderWallet(); ngRenderProfile();
-  toast('删除成功');
+  var rows2 = [
+    ['最后登录','47.250.110.145(国家:巴西, 运营商:-)<br>'+dev+'(设备号)<br>(PC)<br>同IP登录人数 (1)<br>同设备登录人数 (1)<br>最后登录时间 (2026-11-18 05:09:04)', lk(['IP关联','设备关联'])],
+    ['注册IP','47.250.110.145(国家:巴西, 运营商:-)<br>'+dev+'(设备号)<br>(PC)<br>同IP注册人数 (1)<br>同设备注册人数 (1)<br>注册时间 ('+m.reg+')', lk(['IP关联','设备关联'])],
+    ['注册指纹ID','无',''],
+    ['登录类型','电脑系统',''],
+    ['注册渠道','官方渠道',''],
+    ['裂变来源','-',''],
+    ['验证方式','手机：'+m.phone+' 邮箱： Telegram：', lk(['修改手机号','修改邮箱','解绑Telegram'])],
+    ['备注','-', lk(['修改'])]
+  ];
+  var tr = function(r){ return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'; };
+  document.getElementById('ngp-body').innerHTML = rows.map(tr).join('')
+    + '<tr class="em-prow"><td>提现账号</td><td>'+emPixLine(m.pix)+'</td><td><span class="lk" onclick="emAcctOpen(\''+m.id+'\')">修改</span></td></tr>'
+    + rows2.map(tr).join('');
 }
 // 订单明细（待审核 / 已审核出款订单）：结构照 UAT，不新增字段
 // 电子钱包（NewGPay）订单的钱包地址沿用原有「提现账号信息」显示（脱敏 + 虚拟币钱包），wallet 为提交订单时使用的钱包
 var NG_ORDERS = {
+  // 《增加Email提款方式 PRD》6.4：EMAIL 订单「提现账号信息」= 提现邮箱脱敏, BRL, CPF 脱敏
+  E1:{ mid:'80000006', phone:'11900000006', no:'5392790011200000006', amt:'20.00', method:'PIX', wallet:'', em:true, t:'2026-11-18 05:10:12',
+       acc:'qat*****@gmail.com, BRL, 123*****909', audit:['自动代付条件不符','超出自动代付金额范围'], logs:[] },
+  E2:{ mid:'80000006', phone:'11900000006', no:'5392790011200000006', amt:'20.00', method:'PIX', wallet:'', em:true, t:'2026-11-18 05:10:12',
+       acc:'qat*****@gmail.com, BRL, 123*****909', audit:['自动代付条件不符','超出自动代付金额范围'],
+       logs:[['2026-11-18 05:12:40','admin001','人工完成','审核中','已完成','-'],['2026-11-18 05:11:02','admin001','锁定','待审核','审核中','-']] },
   W1:{ mid:'80000002', phone:'11900000002', no:'5392790011200000003', amt:80,  method:'电子钱包', wallet:'c7d2e9f0a1b4e88c', t:'2026-10-30 15:02:41',
        audit:['自动代付条件不符','超出自动代付金额范围'], logs:[] },
   W4:{ mid:'80000001', phone:'11900000001', no:'5392790011200000001', amt:100, method:'电子钱包', wallet:'8a41c02e5b97d3f6', t:'2026-10-29 14:20:05',
@@ -6369,12 +6145,12 @@ function ngOpenOrder(key, el){
   var kv = function(rows){ return '<table class="ngo-kv">'+rows.map(function(r){
     var out = '<tr>'; for (var i = 0; i < r.length; i += 2){
       var last = i === r.length - 2, span = (last && r.length < 6 ? ' colspan="'+(7 - r.length)+'"' : '');
-      var ng = r[i] === '提现账号信息' && o.wallet;   // 电子钱包订单：地址在原有字段显示，仅原型标色
+      var ng = false;   // 正式样式显示，不做标色
       out += '<td class="k">'+r[i]+'</td><td'+(ng?' class="ng-new"':'')+span+'>'+r[i+1]+'</td>'; }
     return out + '</tr>'; }).join('')+'</table>'; };
   // 照 UAT：待审核订单的明细没有审核类型/审核原因和处理记录；已审核订单有
-  var pending = key === 'W1' || !!(el && el.closest('#pg-maudit'));
-  var acc = o.wallet ? ngMask(o.wallet)+', 虚拟币钱包 <span class="copy-icon">⧉</span>' : 'CPF · 111******44';
+  var pending = key === 'W1' || key === 'E1' || !!(el && el.closest('#pg-maudit'));
+  var acc = o.acc ? o.acc+' <span class="copy-icon" onclick="emCopy(\''+o.acc+'\')">⧉</span>' : o.wallet ? ngMask(o.wallet)+', 虚拟币钱包 <span class="copy-icon">⧉</span>' : 'CPF · 111******44';
   var note = '<div class="ngo-note">1.备注内容最多60个字<br>2.备注内容最多60个字<br>3.备注内容最多60个字</div>';
   var html = kv([
       ['会员账号', o.phone, '会员姓名', '', '等级', 'VIP0'],
@@ -8731,10 +8507,11 @@ function woMethodChange(){
   var panel=document.getElementById('wo-acct-panel');
   var txt=document.getElementById('wo-acct-text');
   txt.textContent='请选择'; txt.classList.add('placeholder');
-  if(m==='pix' || m==='ngd'){   // NewGPay 直提与 PIX 相同，收款信息为 CPF / PHONE
+  if(m==='pix'){
     panel.innerHTML='<div class="acct-opt" onclick="woAcctPick(\'全部\')">全部</div>'+
       '<div class="acct-opt" onclick="woAcctPick(\'CPF\')">CPF</div>'+
-      '<div class="acct-opt" onclick="woAcctPick(\'PHONE\')">PHONE</div>';
+      '<div class="acct-opt" onclick="woAcctPick(\'PHONE\')">PHONE</div>'+
+      '<div class="acct-opt em-new" onclick="woAcctPick(\'EMAIL\')">EMAIL</div>';
   } else {
     panel.innerHTML='<div class="acct-empty">'+
       '<svg width="46" height="38" viewBox="0 0 72 58" fill="none">'+
@@ -8749,25 +8526,12 @@ function woBindCheck(){
   if(v==='' || !/^\d+$/.test(v)){ inp.classList.add('err'); hint.style.display='block'; return false; }
   inp.classList.remove('err'); hint.style.display='none'; return true;
 }
-/* NewGPay 钱包绑定规则：min 为该项允许的最小值 */
-function woNgCheck(id, min){
-  var inp=document.getElementById(id), hint=document.getElementById(id+'-hint');
-  var v=inp.value.trim();
-  if(v==='' || !/^\d+$/.test(v) || +v<min){ inp.classList.add('err'); hint.style.display='block'; return false; }
-  inp.classList.remove('err'); hint.style.display='none'; return true;
-}
 function woBindSave(){
-  var ok1=woBindCheck(), ok2=woNgCheck('wo-ng-addr',0), ok3=woNgCheck('wo-ng-mem',1);
-  if(!ok1||!ok2||!ok3){ toast('请检查标红的配置项',true); return; }
-  NG_CFG.addr=+document.getElementById('wo-ng-addr').value;
-  NG_CFG.mem=+document.getElementById('wo-ng-mem').value;
+  if(!woBindCheck()){ toast('请检查标红的配置项',true); return; }
   toast('保存成功');
 }
 function woBindReset(){
   var i=document.getElementById('wo-bindnum'); i.value='1'; i.classList.remove('err'); document.getElementById('wo-bindnum-hint').style.display='none';
-  [['wo-ng-addr',NG_CFG.addr],['wo-ng-mem',NG_CFG.mem]].forEach(function(p){
-    var e=document.getElementById(p[0]); e.value=p[1]; e.classList.remove('err'); document.getElementById(p[0]+'-hint').style.display='none';
-  });
   toast('已重置');
 }
 function woAcctToggle(e){ if(e)e.stopPropagation(); document.getElementById('wo-acct-dd').classList.toggle('open'); }
@@ -8789,7 +8553,8 @@ if(document.getElementById('wo-acct-panel')) woMethodChange();
   // 初始默认：解锁条件=不限制，排序=0；CPF 为固定兜底方式（状态锁定开启、解锁条件锁定不限制）
   let wm=[
     {name:'CPF',code:'CPF',status:true,cond:'none',accum:'',sort:0,locked:true},
-    {name:'PHONE',code:'PHONE',status:true,cond:'none',accum:'',sort:0,locked:false}
+    {name:'手机号',code:'PHONE',status:true,cond:'none',accum:'',sort:0,locked:false},   // 名称照 UAT
+    {name:'邮箱',code:'EMAIL',status:false,cond:'none',accum:'',sort:0,locked:false}   // Email 提款新增：初始关闭
   ];
   let idx=-1;
   window.wmRender=function(){
@@ -9770,6 +9535,232 @@ function rtLinkSave(){
 
   rbWcRender();
 })();
+
+// ─── 增加Email提款方式（em- 前缀） ───
+(function(){
+  var st = document.createElement('style');
+  /* 本次新增内容按正式样式显示，不做标色（.em-new / .em-row / .em-prow 仅作标识，无样式） */
+  st.textContent = ''
+    + '.em-ph{display:flex;border:1px solid #d9d9d9;border-radius:4px;overflow:hidden}'
+    + '.em-ph span{background:#fafafa;border-right:1px solid #d9d9d9;padding:0 10px;line-height:30px;color:rgba(0,0,0,.65)}'
+    + '.em-ph .fin{border:none;flex:1;min-width:0}'
+    + '.em-psec{font-weight:600;font-size:14px;margin:14px 20px 8px}'
+    + '.ngp-table.em-game td:first-child,.ngp-table.em-login td:first-child{width:auto}'
+    + '.ngp-table.em-game td:first-child{width:150px}'
+    + '.ngp-table.em-login th{background:#fafafa;border:1px solid #f0f0f0;padding:8px 10px;font-weight:600;text-align:left}'
+    + '.ngp-table.em-login td,.ngp-table.em-login td:first-child{background:#fff;text-align:left;width:auto}'
+    + '.em-games{display:flex;flex-wrap:wrap;gap:6px 18px}'
+    + '';
+  document.head.appendChild(st);
+})();
+// ─── 出款订单三页（待审核 / 已审核 / 总出款记录）：结构照 UAT 2026-11-18 ───
+(function(){
+  var st = document.createElement('style');
+  st.textContent = '.em-toolbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;margin:10px 0}'
+    + '.em-fix th:last-child,.em-fix td:last-child{position:sticky;right:0;background:#fff;box-shadow:-4px 0 6px rgba(0,0,0,.06);z-index:2;min-width:150px;text-align:center}'
+    + '.em-fix thead th:last-child{background:#fafafa}'
+    + '.em-ops{display:inline-flex;gap:10px;font-size:15px}'
+    + '.em-ops span{cursor:pointer;color:#0961BD}.em-ops span.r{color:#cf1322}'
+    + '#pg-maudit td,#pg-warec td,#pg-worder td{white-space:nowrap;vertical-align:middle}'
+    + '#pg-maudit td.em-pi,#pg-worder td.em-pi{white-space:normal;min-width:190px}'
+    /* 筛选区：照 UAT 四列网格，标签右对齐、控件等宽 */
+    + '#pg-maudit .filter-row,#pg-warec .filter-row,#pg-worder .filter-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 16px;margin-bottom:10px}'
+    + '#pg-maudit .filter-item,#pg-warec .filter-item,#pg-worder .filter-item{display:flex;align-items:center;min-width:0;margin:0}'
+    + '#pg-maudit .filter-label,#pg-warec .filter-label,#pg-worder .filter-label{flex:0 0 96px;text-align:right;white-space:nowrap}'
+    + '#pg-maudit .filter-item .f-select,#pg-maudit .filter-item .f-input,#pg-warec .filter-item .f-select,#pg-warec .filter-item .f-input,#pg-worder .filter-item .f-select,#pg-worder .filter-item .f-input,#pg-worder .acct-dd{flex:1;min-width:0!important;width:auto}'
+    + '#pg-maudit .filter-item .f-select+.f-input,#pg-warec .filter-item .f-select+.f-input,#pg-worder .filter-item .f-select+.f-input{flex:2}'
+    + '#pg-maudit .filter-item:has(>span[style*="margin:0 4px"]),#pg-warec .filter-item:has(>span[style*="margin:0 4px"]),#pg-worder .filter-item:has(>span[style*="margin:0 4px"]){grid-column:span 2}'
+    + '#pg-maudit .filter-row:last-child,#pg-warec .filter-row:last-child{display:flex}'
+    + '#pg-maudit .filter-item>.f-select:has(+.f-input),#pg-warec .filter-item>.f-select:has(+.f-input),#pg-worder .filter-item>.f-select:has(+.f-input){flex:0 0 88px}'
+    + '#pg-worder .filter-item[style*="margin-left:auto"]{grid-column:1/-1;justify-content:flex-start;margin-left:0!important}'
+    /* 会员列表：同一套四列网格 */
+    + '#pg-mlist .filter-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 16px;margin-bottom:10px}'
+    + '#pg-mlist .filter-item{display:flex;align-items:center;min-width:0;margin:0;gap:6px}'
+    + '#pg-mlist .filter-label{flex:0 0 96px;text-align:right;white-space:nowrap}'
+    + '#pg-mlist .filter-item .f-select,#pg-mlist .filter-item .f-input{flex:1;min-width:0!important;width:auto}'
+    + '#pg-mlist .filter-item>.f-select:has(+.f-input){flex:0 0 84px}'
+    + '#pg-mlist .filter-item.em-range{grid-column:span 2}'
+    + '#pg-mlist .filter-item.em-range:not(:has(.filter-label)){padding-left:0}'
+    + '#pg-mlist .filter-row:last-child{display:flex}'
+    + '#pg-mlist td{white-space:nowrap;vertical-align:middle}'
+    + '.em-mtabs{display:flex;gap:2px;margin-bottom:12px}'
+    + '.em-mtab{padding:8px 16px;font-size:14px;background:#fafafa;border:1px solid #f0f0f0;border-bottom:none;border-radius:4px 4px 0 0;color:rgba(0,0,0,.45)}'
+    + '.em-mtab.on{background:#fff;color:#0961BD}';
+  document.head.appendChild(st);
+})();
+var EM_WD = [
+  // 待审核出款订单
+  { k:'W1', pg:'ma', mid:'80000002', phone:'11900000002', no:'5392790011200000003', method:'电子钱包', acct:'-', card:'-', cpf:'-', payee:'-', amt:'80.00', t:'2026-10-30 15:02:41', at:'人工审核', first:'否' },
+  { k:'P1', pg:'ma', mid:'83491174', phone:'55900000000', no:'5392762640869367808', method:'PIX', acct:'CPF', card:'111*****344', cpf:'111*****344', payee:'Lucas Pereira', amt:'16.00', t:'2026-08-31 23:28:20', at:'自动代付条件不符', first:'是', acc:'111*****344, BRL, 111*****344' },
+  { k:'P2', pg:'ma', mid:'83491180', phone:'55911112222', no:'5392762640869399999', method:'PIX', acct:'PHONE', card:'222*****455', cpf:'222*****455', payee:'Carla Mendes', amt:'20.00', t:'2026-08-31 22:10:05', at:'自动代付条件不符', first:'否', acc:'551*****000, BRL, 222*****455' },
+  { k:'E1', pg:'ma', mid:'80000006', phone:'11900000006', no:'5392790011200000006', method:'PIX', acct:'EMAIL', card:'123*****909', cpf:'123*****909', payee:'QA Email Test', amt:'20.00', t:'2026-11-18 05:10:12', at:'自动代付条件不符', first:'否', em:true },
+  // 已审核出款订单
+  { k:'W4', pg:'wr', mid:'80000001', phone:'11900000001', no:'5392790011200000001', method:'电子钱包', acct:'-', cpf:'-', payee:'-', amt:'100.00', t:'2026-10-29 14:20:05', done:'2026-10-29 14:20:08', dur:'0分钟', op:'admin002', at:'人工审核', first:'是', pay:'-' },
+  { k:'W5', pg:'wr', mid:'80000003', phone:'11900000003', no:'5392790011200000004', method:'电子钱包', acct:'-', cpf:'-', payee:'-', amt:'30.00', t:'2026-10-20 09:12:33', done:'2026-10-20 09:15:02', dur:'2分钟', op:'admin002', at:'人工审核', first:'是', pay:'-' },
+  { k:'P3', pg:'wr', mid:'94042764', phone:'11978967896', no:'5402426417334624256', method:'PIX', acct:'CPF', cpf:'427*****215', payee:'Rafael Costa', amt:'20.00', t:'2026-09-07 11:43:27', done:'2026-09-07 11:43:30', dur:'0分钟', op:'system', at:'-', first:'是', pay:'2256161665559125', ch:'bestpay代付', acc:'427*****215, BRL, 427*****215' },
+  { k:'P4', pg:'wr', mid:'63098767', phone:'11998769876', no:'5402421280553738240', method:'PIX', acct:'PHONE', cpf:'318*****604', payee:'Julia Alves', amt:'15.00', t:'2026-09-07 11:38:26', done:'2026-09-07 11:38:29', dur:'0分钟', op:'system', at:'-', first:'否', pay:'2256161665559126', ch:'bestpay代付', acc:'551*****876, BRL, 318*****604' },
+  { k:'P5', pg:'wr', mid:'65563340', phone:'11988088080', no:'5402067461147713536', method:'PIX', acct:'CPF', cpf:'205*****881', payee:'Pedro Rocha', amt:'10.00', t:'2026-09-07 05:55:12', done:'2026-09-07 05:55:39', dur:'0分钟', op:'bxspencer01', at:'人工审核', first:'否', big:'是', pay:'-', acc:'205*****881, BRL, 205*****881' },
+  { k:'E2', pg:'wr', mid:'80000006', phone:'11900000006', no:'5392790011200000006', method:'PIX', acct:'EMAIL', cpf:'123*****909', payee:'QA Email Test', amt:'20.00', t:'2026-11-18 05:10:12', done:'2026-11-18 05:12:40', dur:'2分钟', op:'admin001', at:'自动代付条件不符', first:'否', pay:'-', note:'QA test', em:true },
+  // 总出款记录
+  { k:'O1', pg:'wo', mid:'83491174', phone:'55900000000', no:'5392762640869367808', method:'PIX', acct:'CPF', card:'111*****344', cpf:'111*****344', acctNo:'111*****344', payee:'Lucas Pereira', amt:'16.00', t:'2026-08-31 23:28:20', os:['待审核','wb-wait'], cs:['处理中','wb-wait'], way:'-', plat:'- / -', src:'IOS_H5', ip:'10.0.0.147', out:'-', op:'-', pay:'-' },
+  { k:'O2', pg:'wo', mid:'83491180', phone:'55911112222', no:'5392742007600603136', method:'PIX', acct:'PHONE', card:'222*****455', cpf:'222*****455', acctNo:'+551*****000', payee:'Carla Mendes', amt:'15.00', t:'2026-08-31 23:08:19', os:['已完成','wb-ok'], cs:['成功','wb-ok'], way:'三方出款', plat:'bestpay代付 / PIX', src:'IOS_H5', ip:'10.0.0.147', out:'2026-08-31 23:08:23', op:'system', pay:'2256161665559120' },
+  { k:'O3', pg:'wo', mid:'80000001', phone:'11900000001', no:'5392790011200000001', method:'电子钱包', acct:'NewGPay', card:'-', cpf:'-', acctNo:'8a4*****3f6', payee:'-', amt:'100.00', t:'2026-10-29 14:20:05', os:['已完成','wb-ok'], cs:['成功','wb-ok'], way:'三方出款', plat:'NewGPay / NewGPay代付', src:'Android_H5', ip:'10.0.0.150', out:'2026-10-29 14:20:09', op:'admin002', pay:'-', ng:true },
+  { k:'O5', pg:'wo', mid:'80000006', phone:'11900000006', no:'5392790011200000006', method:'PIX', acct:'EMAIL', card:'123*****909', cpf:'123*****909', acctNo:'qat*****@gmail.com', payee:'QA Email Test', amt:'20.00', t:'2026-11-18 05:10:12', os:['已完成','wb-ok'], cs:['成功','wb-ok'], way:'人工出款', plat:'- / -', src:'PC', ip:'47.250.110.145', out:'2026-11-18 05:12:40', op:'admin001', pay:'-', note:'QA test', em:true }
+];
+var EM_LOCK = {};   /* 待审核：锁定后状态为审核中 */
+function emPinfo(r){
+  var c = ' <span class="copy-icon">⧉</span>';
+  return '<div class="pinfo"><div>提款类型：即时提款</div><div>提现金额：'+r.amt+c+'</div><div>提现方式：'+r.method+'</div>'
+    + '<div'+(r.em?' class="em-new"':'')+'>账户类型：'+r.acct+'</div><div>提款卡号：'+(r.card||'-')+(r.card&&r.card!=='-'?c:'')+'</div>'
+    + '<div style="color:#cf1322;cursor:pointer;margin-top:2px" onclick="emCopyInfo(this)">一键复制'+c+'</div></div>';
+}
+function emMid(r){ var p = ngMember(r.mid); return '<a style="color:#0961BD;cursor:pointer"'+(p?' onclick="ngOpenProfile(\''+r.mid+'\')"':'')+'>'+r.mid+'</a> <span class="copy-icon">⧉</span>'; }
+function emBadge(t, c){ return '<span class="wbadge '+c+'">'+t+'</span>'; }
+function emReg(r){   /* 订单明细复用 ngOpenOrder：未登记的订单按行数据登记 */
+  if (!NG_ORDERS[r.k]) NG_ORDERS[r.k] = { mid:r.mid, phone:r.phone, no:r.no, amt:r.amt, method:r.method, wallet:'', em:!!r.em, t:r.t,
+    acc:r.acc || '', audit:[r.at||'-','-'], logs: r.pg==='wr' ? [[r.done,r.op,'人工完成','审核中','已完成','-'],[r.t,r.op,'锁定','待审核','审核中','-']] : [] };
+}
+var EM_COLS = {
+  ma:[ ['', function(r){ return '<input type="checkbox">'; }],
+    ['会员ID', emMid], ['手机号(会员账号)/姓名', function(r){ return r.phone+' / -'; }], ['订单号', function(r){ return r.no+' <span class="copy-icon">⧉</span>'; }],
+    ['提款方式', function(r){ return r.method; }], ['提款信息', emPinfo, 'em-pi'], ['提款金额', function(r){ return r.amt+'(BRL) <span class="copy-icon">⧉</span>'; }],
+    ['提款类型', function(){ return '即时提款'; }], ['申请时间', function(r){ return r.t; }],
+    ['订单状态', function(r){ return EM_LOCK[r.k] ? emBadge('审核中','wb-wait') : emBadge('待审核','wb-wait'); }],
+    ['操作人', function(r){ return EM_LOCK[r.k] ? 'admin001' : ''; }], ['手续费', function(){ return '0.00'; }], ['实际出款', function(r){ return r.amt+'(BRL)'; }],
+    ['提款人姓名', function(r){ return r.payee; }], ['CPF ID', function(r){ return r.cpf; }], ['注册渠道', function(){ return '-'; }], ['会员层级', function(){ return '默认层级'; }],
+    ['账号备注', function(){ return '-'; }], ['邀请ID', function(){ return '-'; }], ['代付订单号', function(){ return '-'; }], ['账号类型', function(){ return '正式'; }],
+    ['出款类型', function(){ return '用户提现'; }], ['大额提款', function(){ return '否'; }], ['代付渠道', function(){ return '-'; }], ['是否首次出款', function(r){ return r.first; }],
+    ['审核类型', function(r){ return r.at; }], ['操作备注', function(){ return '-'; }],
+    ['操作', function(r){ var o = 'emOrd(\''+r.k+'\',this)';
+      return EM_LOCK[r.k]
+        ? '<span class="em-ops"><span title="详情" onclick="'+o+'">☰</span><span title="解锁" onclick="emLock(\''+r.k+'\',0)">🔓</span><span title="审核" onclick="emAudit(\''+r.k+'\',this)">✎</span><span class="r" title="拒绝" onclick="EM_CUR_K=\''+r.k+'\';emAct(\'拒绝\')">⊗</span><span class="r" title="罚没" onclick="EM_CUR_K=\''+r.k+'\';emAct(\'罚没\')">⊘</span><span title="代付" onclick="EM_CUR_K=\''+r.k+'\';openM(\'m-em-pay\')">¥</span></span>'
+        : '<span class="em-ops"><span title="详情" onclick="'+o+'">☰</span><span title="锁定" onclick="emLock(\''+r.k+'\',1)">🔒</span></span>'; }] ],
+  wr:[ ['会员ID', emMid], ['手机号(会员账号)', function(r){ return r.phone; }], ['订单号', function(r){ return r.no+' <span class="copy-icon">⧉</span>'; }],
+    ['代付订单号', function(r){ return r.pay; }], ['订单状态', function(){ return emBadge('已完成','wb-ok'); }], ['大额提款', function(r){ return r.big||'否'; }],
+    ['提现金额', function(r){ return r.amt+'(BRL)'; }], ['申请时间', function(r){ return r.t; }], ['操作人', function(r){ return r.op; }], ['完成时间', function(r){ return r.done; }],
+    ['处理用时', function(r){ return r.dur; }], ['操作备注', function(){ return '-'; }], ['手续费', function(){ return '0.00'; }], ['实际出款', function(r){ return r.amt; }],
+    ['提款人姓名', function(r){ return r.payee; }], ['CPF ID', function(r){ return r.cpf; }], ['注册渠道', function(){ return '-'; }], ['会员层级', function(){ return '默认层级'; }],
+    ['账号备注', function(){ return '-'; }], ['邀请ID', function(){ return '-'; }], ['提款方式', function(r){ return r.method; }], ['账号类型', function(){ return '正式'; }],
+    ['出款类型', function(){ return '用户提现'; }], ['提款类型', function(){ return '即时提款'; }], ['代付渠道', function(r){ return r.ch||'-'; }], ['是否首次出款', function(r){ return r.first; }],
+    ['审核类型', function(r){ return r.at; }], ['订单备注', function(r){ return r.note||'-'; }],
+    ['操作', function(r){ return '<span class="em-ops"><span title="详情" onclick="emOrd(\''+r.k+'\',this)">☰</span></span>'; }] ],
+  wo:[ ['会员ID', emMid], ['手机号(会员账号)', function(r){ return r.phone; }], ['提款订单号', function(r){ return r.no+' <span class="copy-icon">⧉</span>'; }],
+    ['代付订单号', function(r){ return r.pay; }], ['提款金额', function(r){ return r.amt+'(BRL)'; }], ['手续费', function(){ return '0.00'; }], ['出款金额', function(r){ return r.amt+'(BRL)'; }],
+    ['订单状态', function(r){ return emBadge(r.os[0], r.os[1]); }], ['客户端状态', function(r){ return emBadge(r.cs[0], r.cs[1]); }], ['订单备注', function(r){ return r.note||'-'; }],
+    ['操作备注', function(){ return '-'; }], ['提款人姓名', function(r){ return r.payee; }], ['提款方式', function(r){ return r.method; }],
+    ['账户类型', function(r){ return r.em ? '<span class="em-new">EMAIL</span>' : r.acct; }], ['CPF ID', function(r){ return r.cpf; }],
+    ['提款账号', function(r){ return r.em ? '<span class="em-new">'+r.acctNo+'</span>' : r.acctNo; }], ['返现比例', function(){ return '-'; }], ['返现金额', function(){ return '-'; }],
+    ['提款信息', emPinfo, 'em-pi'], ['提款IP', function(r){ return r.ip; }], ['出款方式', function(r){ return r.way; }], ['代付平台/代付渠道', function(r){ return r.plat; }],
+    ['订单来源', function(r){ return r.src; }], ['申请时间', function(r){ return r.t; }], ['出款时间', function(r){ return r.out; }], ['账号状态', function(){ return emBadge('正常','wb-ok'); }],
+    ['操作人', function(r){ return r.op; }] ]
+};
+function emWdRender(pg){
+  var map = { ma:'em-ma', wr:'em-wr', wo:'em-wo' }, cols = EM_COLS[pg], rows = EM_WD.filter(function(r){ return r.pg === pg; });
+  var h = document.getElementById(map[pg]+'-head'); if (!h) return;
+  h.innerHTML = '<tr>'+cols.map(function(c){ return '<th>'+c[0]+'</th>'; }).join('')+'</tr>';
+  document.getElementById(map[pg]+'-body').innerHTML = rows.map(function(r){
+    emReg(r);
+    return '<tr'+(r.em?' class="em-row"':'')+'>'+cols.map(function(c){ return '<td'+(c[2]?' class="'+c[2]+'"':'')+'>'+c[1](r)+'</td>'; }).join('')+'</tr>';
+  }).join('');
+  document.getElementById(map[pg]+'-cnt').textContent = rows.length;
+  if (pg === 'wr'){
+    var sum = rows.reduce(function(s, r){ return s + parseFloat(r.amt); }, 0).toFixed(2);
+    document.getElementById('em-wr-p').textContent = rows.map(function(r){ return r.mid; }).filter(function(v,i,a){ return a.indexOf(v) === i; }).length;
+    document.getElementById('em-wr-n').textContent = rows.length; document.getElementById('em-wr-ok').textContent = rows.length;
+    document.getElementById('em-wr-amt').textContent = sum+'(BRL)'; document.getElementById('em-wr-out').textContent = sum+'(BRL)';
+  }
+}
+var EM_FOOT_CLOSE = '<button class="btn btn-white" onclick="closeM(\'m-ng-order\')">关 闭</button>';
+function emOrd(k, el){ var r = EM_WD.filter(function(x){ return x.k === k; })[0]; emReg(r); ngOpenOrder(k, el); var f = document.getElementById('ngo-foot'); f.innerHTML = EM_FOOT_CLOSE; f.style.justifyContent = ''; f.style.textAlign = ''; }
+/* 审核弹窗（锁定后点铅笔图标）：订单明细 + 操作备注 / 订单备注 + 拒绝 / 罚没 / 人工完成 / 代付，结构照 UAT */
+var EM_CUR_K = null;
+function emAudit(k, el){
+  emOrd(k, el); EM_CUR_K = k;
+  var b = document.getElementById('ngo-body');
+  b.insertAdjacentHTML('beforeend',
+    '<div style="font-size:13px;margin:14px 0 6px">操作备注（会员可见：邮件+提款详情）</div><textarea class="fin" style="width:100%;height:56px;resize:vertical"></textarea>'
+    + '<div style="font-size:13px;margin:12px 0 6px">订单备注（仅后台可见）</div><textarea class="fin" style="width:100%;height:56px;resize:vertical"></textarea>');
+  var f = document.getElementById('ngo-foot'); f.style.justifyContent = 'flex-end'; f.style.textAlign = 'right';
+  f.innerHTML =
+    '<button class="btn btn-danger" onclick="emAct(\'拒绝\')">拒 绝</button>'
+    + '<button class="btn btn-danger" onclick="emAct(\'罚没\')">罚 没</button>'
+    + '<button class="btn" style="background:#52c41a;color:#fff;border-color:#52c41a" onclick="emAct(\'人工完成\')">人工完成</button>'
+    + '<button class="btn btn-blue" onclick="openM(\'m-em-pay\')">代 付</button>';
+}
+var EM_ACT = '';
+function emAct(t){
+  EM_ACT = t; document.getElementById('em-act-title').textContent = t;
+  document.getElementById('em-act-n1').value = ''; document.getElementById('em-act-n2').value = '';
+  openM('m-em-act');
+}
+function emActOk(){
+  if (EM_ACT === '罚没' && (!document.getElementById('em-act-n1').value.trim() || !document.getElementById('em-act-n2').value.trim())){ toast('罚没需填写操作备注和订单备注', true); return; }
+  closeM('m-em-act'); closeM('m-ng-order'); emDoneRow(EM_ACT);
+}
+function emPayOk(){
+  if (!document.querySelector('input[name="em-pay"]:checked')){ toast('请选择代付渠道', true); return; }
+  closeM('m-em-pay'); closeM('m-ng-order'); emDoneRow('代付');
+}
+/* 演示：处理后订单从待审核列表移除（进入已审核 / 代付中） */
+function emDoneRow(t){
+  EM_WD = EM_WD.filter(function(x){ return !(x.k === EM_CUR_K && x.pg === 'ma'); });
+  delete EM_LOCK[EM_CUR_K]; emWdRender('ma'); toast(t + '成功');
+}
+function emLock(k, on){ EM_LOCK[k] = !!on; emWdRender('ma'); toast(on ? '锁定成功' : '解锁成功'); }
+['ma','wr','wo'].forEach(emWdRender);
+
+// 提现邮箱格式：不含空格；有且只有一个 @，前后均不为空；@ 后至少一个「.」且不在域名首尾
+function emMailOk(v){
+  if (/\s/.test(v)) return false;
+  var p = v.split('@'); if (p.length !== 2 || !p[0] || !p[1]) return false;
+  var d = p[1]; return d.indexOf('.') > 0 && d.charAt(d.length-1) !== '.';
+}
+// 脱敏：@ 前保留前 3 位（不足 3 位全部保留）+ ***** + @域名
+function emMask(v){ var i = v.indexOf('@'); return i < 0 ? v : v.slice(0, Math.min(3, i)) + '*****' + v.slice(i); }
+function emCopy(t){ toast('已复制：' + t); }
+function emCopyInfo(el){
+  var lines = [].slice.call(el.parentNode.children, 0, -1).map(function(d){ return d.textContent.replace(/⧉/g,'').replace(/\s+/g,''); });
+  toast('已复制：' + lines.join(' / '));
+}
+function emMlKt(){
+  var kt = document.getElementById('em-ml-kt').value;
+  document.getElementById('em-ml-kw').placeholder = '请输入' + kt;
+}
+var EM_MEM = { name:'QA Email Test', cpf:'12345678909', cnpj:'', evp:'', phone:'11900001234', mail:'qatest@gmail.com' };
+var EM_DEMO = 'ok';
+function emDemo(b){
+  b.parentNode.querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); });
+  b.classList.add('on'); EM_DEMO = b.getAttribute('data-v');
+}
+var EM_EDIT = 'det';   /* 'det' = 会员详情页；其余为个人资料弹窗里的会员ID */
+function emDetRender(){
+  var m = EM_MEM, d = function(v){ return v || '-'; };
+  document.getElementById('em-det-kv').innerHTML =
+    '<span>真实姓名：'+d(m.name)+'</span><span>CPF：'+d(m.cpf)+'</span><span>CNPJ：'+d(m.cnpj)+'</span>'
+    + '<span class="em-lk" onclick="emAcctOpen()">修改</span><div style="flex-basis:100%;height:0"></div>'
+    + '<span>EVP：'+d(m.evp)+'</span><span>手机号：'+(m.phone?'+55 '+m.phone:'-')+'</span><span class="em-new">邮箱：'+d(m.mail)+'</span>';
+}
+function emAcctHint(t){ var h = document.getElementById('em-a-hint'); h.textContent = t; h.style.display = t ? 'block' : 'none'; }
+function emAcctOpen(id){
+  EM_EDIT = id || 'det';
+  var mem = id ? ngMember(id) : null;
+  var m = id ? (mem.pix || {}) : EM_MEM;
+  [['name','name'],['cpf','cpf'],['cnpj','cnpj'],['evp','evp'],['phone','phone'],['mail','mail']].forEach(function(p){ document.getElementById('em-a-'+p[0]).value = m[p[1]] || ''; });
+  emAcctHint(''); openM('m-em-acct');
+}
+function emAcctSave(){
+  var g = function(id){ return document.getElementById('em-a-'+id).value.trim(); };
+  var mail = g('mail');
+  document.getElementById('em-a-mail').value = mail;   // 保存前去除首尾空格
+  if (mail && !emMailOk(mail)) { emAcctHint('请输入正确的邮箱'); return; }
+  if (EM_DEMO === 'audit') { toast('提款审核中，暂时无法保存', true); return; }
+  if (EM_DEMO === 'limit' && mail) { toast('该 CPF / 手机号 / 邮箱绑定次数已达上限', true); return; }
+  var v = { name:g('name'), cpf:g('cpf'), cnpj:g('cnpj'), evp:g('evp'), phone:g('phone'), mail:mail };
+  if (!v.name || !v.cpf){ toast('请填写真实姓名和CPF', true); return; }
+  if (EM_EDIT === 'det'){ EM_MEM = v; emDetRender(); }
+  else { ngMember(EM_EDIT).pix = v; ngRenderProfile(); }
+  closeM('m-em-acct'); toast('保存成功');
+}
 
 </script>
 </body>
