@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>增加Email提款方式 PRD v1.3</title>
+<title>增加Email提款方式 PRD v1.4</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -35,7 +35,7 @@ b,strong{color:#1a1a2e}
 .path{font-size:13px;color:#555;background:#f4f8fd;border:1px solid #dbe8f6;border-radius:6px;padding:6px 12px;margin:0 0 10px}
 table.chg thead tr{background:#fff4e6}
 table.chg td:first-child,table.chg th:first-child{min-width:130px}
-table.chg td:nth-child(2),table.chg th:nth-child(2){min-width:180px}
+.keep{font-size:13px;color:#555;margin:6px 0 4px;padding-left:10px;border-left:3px solid #d6dee8}
 table.chg th{color:#8a4b00}
 .sub{font-weight:600;color:#0b3f78;margin:14px 0 6px}
 </style>
@@ -46,7 +46,7 @@ table.chg th{color:#8a4b00}
 <div class="cover">
   <div class="cover-title">增加Email提款方式</div>
   <div class="cover-sub">PRD 产品需求文档 · 提款方式配置 / H5 收款信息 / 出款报表 / 会员资料</div>
-  <div class="cover-meta"><span>版本：v1.3</span><span>作者：Laura</span><span>更新日期：2026-11-18</span></div>
+  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-18</span></div>
 </div>
 
 <div class="toc">
@@ -177,36 +177,29 @@ table.chg th{color:#8a4b00}
   <h2 id="s41">4.1 提款方式配置</h2>
   <p class="path">入口：商户财务配置 → 提现管理 → 提款方式配置</p>
   <table class="chg">
-    <thead><tr><th style="width:150px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:160px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>列表</td><td>2 条：CPF、手机号 / PHONE</td><td>新增 1 条：提款方式「邮箱」、CODE「EMAIL」，初始为关闭、不限制、排序 0</td></tr>
-      <tr><td>编辑弹窗</td><td>CPF 锁定；PHONE 可编辑状态、解锁条件、排序</td><td>EMAIL 与 PHONE 相同，三项均可编辑</td></tr>
+      <tr><td>列表</td><td>新增 1 条：提款方式「邮箱」、CODE「EMAIL」，初始为关闭、不限制、排序 0</td></tr>
+      <tr><td>编辑弹窗</td><td>EMAIL 可编辑状态、解锁条件、排序，规则与 PHONE 相同</td></tr>
     </tbody>
   </table>
+  <p class="keep">列表字段、编辑弹窗及 CPF、PHONE 的配置保持不变。</p>
   <p class="sub">补充说明</p>
   <ul>
-    <li>列表字段、编辑弹窗字段、解锁条件选项与校验规则沿用《增加Phone提款方式 PRD》4.2～4.5 节。</li>
-    <li>解锁条件选项同 PHONE：不限制 / 首充 / 充值2次 / 充值3次 / CPF首提成功 / 已累计充值。</li>
-    <li>排序数值越大越靠前；排序值相同时按 CPF、PHONE、EMAIL 的默认顺序展示。</li>
-    <li>EMAIL 开启后，H5 收款信息弹窗按解锁条件判定是否展示 EMAIL。</li>
+    <li>EMAIL 的解锁条件选项、校验规则同 PHONE，见《增加Phone提款方式 PRD》4.3～4.5 节。</li>
+    <li>排序值相同时按 CPF、PHONE、EMAIL 的顺序展示。</li>
   </ul>
 
   <h2 id="s42">4.2 其他提现配置</h2>
   <p class="path">入口：商户财务配置 → 提现管理 → 其他提现配置</p>
   <table class="chg">
-    <thead><tr><th style="width:150px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:160px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>相同提现资料可同时绑定会员数量</td><td>只对 CPF / PHONE 生效</td><td>提现邮箱也纳入统计，三类资料分别统计</td></tr>
-      <tr><td>字段说明文案</td><td>仅对 CPF / PHONE 生效；0 表示不限制。</td><td>仅对 CPF / PHONE / EMAIL 生效；0 表示不限制。</td></tr>
+      <tr><td>相同提现资料可同时绑定会员数量</td><td>统计范围增加提现邮箱，与 CPF、手机号分别统计</td></tr>
+      <tr><td>字段说明文案</td><td>改为「仅对 CPF / PHONE / EMAIL 生效；0 表示不限制。」</td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <table>
-    <thead><tr><th style="width:190px">字段</th><th>含义</th><th style="width:90px">控件</th><th style="width:60px">必填</th><th>输入要求</th></tr></thead>
-    <tbody>
-      <tr><td>相同提现资料可同时绑定会员数量</td><td>同一 CPF / 手机号 / 提现邮箱最多可绑定的会员数量上限。</td><td>数字输入框</td><td>是</td><td>非负整数；0 表示不限制。其余规格不变，统计口径见第八章。</td></tr>
-    </tbody>
-  </table>
+  <p class="keep">字段的控件、取值范围与校验保持不变；统计口径见第八章。</p>
 </div>
 
 <!-- 五 -->
@@ -216,27 +209,15 @@ table.chg th{color:#8a4b00}
   <h2 id="s51">5.1 取款页 · 收款信息弹窗</h2>
   <p class="path">入口：钱包 → 取款 → 收款信息区「添加收款信息」或已保存卡片的「修改」</p>
   <table class="chg">
-    <thead><tr><th style="width:150px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:160px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>提款方式按钮</td><td>CPF / PHONE</td><td>新增 <b>EMAIL</b>，按后台排序与解锁判定展示</td></tr>
-      <tr><td>字段（选中 EMAIL 时）</td><td>—</td><td>姓名 / <b>邮箱</b> / CPF ID，全部必填</td></tr>
-      <tr><td>邮箱输入框</td><td>—</td><td>占位「请输入邮箱」；最多 64 位；失焦和保存时校验，为空提示「请输入邮箱」，格式不符提示「邮箱无效」</td></tr>
-      <tr><td>提交拦截</td><td>CPF / 手机号达上限时拦截</td><td>提现邮箱达上限时拦截，提示「该邮箱绑定次数已达上限」</td></tr>
+      <tr><td>提款方式按钮</td><td>新增 <b>EMAIL</b>，按后台排序与解锁判定展示</td></tr>
+      <tr><td>字段（选中 EMAIL 时）</td><td>姓名 / <b>邮箱</b> / CPF ID，全部必填</td></tr>
+      <tr><td>邮箱输入框</td><td>占位「请输入邮箱」，输入与校验规则见 5.2 节</td></tr>
+      <tr><td>提交拦截</td><td>提现邮箱占用数达上限时拦截，提示「该邮箱绑定次数已达上限」</td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <table>
-    <thead><tr><th style="width:110px">字段</th><th>占位文案</th><th>规则</th></tr></thead>
-    <tbody>
-      <tr><td>姓名</td><td>请输入您的姓名</td><td>沿用现有姓名规则。</td></tr>
-      <tr><td>邮箱</td><td>请输入邮箱</td><td>见 5.2 节。</td></tr>
-      <tr><td>CPF ID</td><td>请输入您的CPF(巴西税务识别号码)</td><td>沿用现有 CPF 规则。</td></tr>
-    </tbody>
-  </table>
-  <ul>
-    <li>切换提款方式时，已填写的姓名、CPF ID 保留，不随切换清空。</li>
-    <li>保存与回填规则见 5.3 节。</li>
-  </ul>
+  <p class="keep">CPF、PHONE 方式及姓名、CPF ID 字段的规则保持不变；切换提款方式时已填写的姓名、CPF ID 保留。</p>
 
   <h2 id="s52">5.2 提现邮箱输入与校验</h2>
   <table>
@@ -251,104 +232,73 @@ table.chg th{color:#8a4b00}
   </table>
 
   <h2 id="s53">5.3 保存与回填</h2>
-  <p>沿用《增加Phone提款方式 PRD》5.2 节规则，提现邮箱与手机号同等处理：</p>
-  <ul>
-    <li>在收款信息弹窗点击「保存」只在当前取款页生效，用于本次提交提款；刷新或离开取款页后，未提款成功的信息不保留，需重新填写。</li>
-    <li>会员此前未保存提款信息时，以 EMAIL 方式提款成功后，本次填写的姓名、提现邮箱、CPF ID 写入会员提现账号并锁定；订单在审核中、被拒绝或罚没时均不保存。</li>
-    <li>会员此前已保存姓名、CPF ID 时，选择 EMAIL 自动带入并锁定，只需填写邮箱；提款成功后提现邮箱一并保存并锁定。</li>
-    <li>已保存提现邮箱的会员再次选择 EMAIL 时，邮箱自动带入且不可修改。</li>
-  </ul>
+  <p>提现邮箱的保存与回填规则与手机号一致，见《增加Phone提款方式 PRD》5.2 节：以 EMAIL 方式提款成功后，提现邮箱写入会员提现账号并锁定；订单审核中、被拒绝或罚没时不保存。已保存提现邮箱的会员再次选择 EMAIL 时，邮箱自动带入且不可修改。</p>
 
   <h2 id="s54">5.4 取款页 · 已保存收款信息卡片</h2>
   <table class="chg">
-    <thead><tr><th style="width:150px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:160px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>卡片内容</td><td>CPF / PHONE 标签 + 姓名 + 脱敏账号</td><td>当前方式为 EMAIL 时：<span class="tag">EMAIL</span>标签 + 姓名 + 提现邮箱脱敏（如 <code>qat*****@gmail.com</code>）</td></tr>
+      <tr><td>卡片内容</td><td>当前方式为 EMAIL 时显示：<span class="tag">EMAIL</span>标签 + 姓名 + 提现邮箱脱敏（如 <code>qat*****@gmail.com</code>）</td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <ul><li>右侧「修改」入口沿用现有交互；脱敏规则见 9.1 节。</li></ul>
+  <p class="keep">卡片样式与「修改」入口保持不变；脱敏规则见 9.1 节。</p>
 
   <h2 id="s55">5.5 安全中心 → 提现账号管理</h2>
-  <p class="path">入口：我的 → 安全中心 → 提现账号管理 → 安全验证（输入提现密码）→ 提现账号管理页；入口与安全验证不变</p>
+  <p class="path">入口：我的 → 安全中心 → 提现账号管理 → 安全验证（输入提现密码）→ 提现账号管理页</p>
   <table class="chg">
-    <thead><tr><th style="width:150px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:160px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>展示字段</td><td>姓名 / CPF ID / 手机号码，固定展示</td><td>在手机号码下方新增 <b>邮箱</b>，与手机号码一样固定展示</td></tr>
-      <tr><td>邮箱 · 已保存</td><td>—</td><td>只读，显示提现邮箱脱敏，如 <code>qat*****@gmail.com</code></td></tr>
-      <tr><td>邮箱 · 未保存</td><td>—</td><td>可填写，占位「请输入邮箱」，输入规则同 5.2 节</td></tr>
-      <tr><td>保存校验</td><td>按《增加Phone提款方式 PRD》第七章校验 CPF / 手机号绑定上限、本人审核中提款</td><td>提现邮箱纳入绑定上限校验，提示「该 CPF / 手机号 / 邮箱绑定次数已达上限」</td></tr>
+      <tr><td>表单字段</td><td>在手机号码下方新增 <b>邮箱</b>，与手机号码一样固定展示，不随后台提款方式开关显隐</td></tr>
+      <tr><td>邮箱 · 已保存</td><td>只读，显示提现邮箱脱敏，如 <code>qat*****@gmail.com</code></td></tr>
+      <tr><td>邮箱 · 未保存</td><td>可填写，占位「请输入邮箱」，输入规则同 5.2 节</td></tr>
+      <tr><td>保存校验</td><td>提现邮箱纳入第八章的绑定上限校验，提示「该 CPF / 手机号 / 邮箱绑定次数已达上限」</td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <ul>
-    <li>四个字段的显示与后台「提款方式配置」中各方式的状态、解锁条件无关。</li>
-    <li>已保存的字段只读：姓名完整显示；CPF ID、手机号码沿用现网脱敏（前 3 位 + 6 个 * + 后 2 位，手机号码前带 +55）；邮箱按 9.1 节。</li>
-    <li>未保存的字段可填写；姓名与 CPF ID 同时未保存时一起填写。存在未保存字段时页面底部显示「保存」，全部已保存时不显示。</li>
-    <li>点击「保存」先做字段格式校验，再按第八章校验本人审核中提款与绑定占用上限，拦截时分别提示「提款审核中，暂时无法保存」「该 CPF / 手机号 / 邮箱绑定次数已达上限」；保存成功后字段转为只读并提示「保存成功」。</li>
-    <li>姓名与 CPF ID 已保存时，页面底部提示「如需修改提现账号，联系客服」，「联系客服」可点击跳转客服。</li>
-    <li>安全中心「提现账号管理」右侧：未保存提现账号时显示「未设置」，已保存时显示「已设置」。</li>
-  </ul>
+  <p class="keep">入口、安全验证、页面其余字段、保存按钮与「联系客服」提示的逻辑保持不变。</p>
 </div>
 
 <!-- 六 -->
 <div class="section" id="s6">
   <h1>六、出款报表</h1>
-  <p>涉及「商户财务管理」下三个页面。各页面现有列、筛选与 CPF / PHONE 订单的显示均不变，下表只列 EMAIL 带来的改动。</p>
+  <p>涉及「商户财务管理」下三个页面，以下只列 EMAIL 订单的显示与新增项。</p>
 
   <h2 id="s61">6.1 待审核出款订单</h2>
   <table class="chg">
-    <thead><tr><th style="width:170px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:200px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>列表 · 提款信息栏</td><td>账户类型：CPF / PHONE；提款卡号：CPF 脱敏</td><td>EMAIL 单：账户类型：<b>EMAIL</b>；提款卡号：CPF 脱敏（同 PHONE 单）</td></tr>
-      <tr><td>列表 · 一键复制</td><td>复制提款信息栏 5 行</td><td>EMAIL 单同样复制 5 行，账户类型为 EMAIL；不含邮箱</td></tr>
-      <tr><td>订单明细 / 审核弹窗 · 提现账号信息</td><td>{CPF 或手机号脱敏}, BRL, {CPF 脱敏}</td><td>EMAIL 单：<code>qat*****@gmail.com, BRL, 123*****909</code>，复制按钮复制整串</td></tr>
-      <tr><td>筛选 · 账户类型</td><td>提款方式 = PIX 时可选 CPF / PHONE</td><td>新增选项 <b>EMAIL</b></td></tr>
+      <tr><td>列表 · 提款信息栏</td><td>EMAIL 单：账户类型显示 <b>EMAIL</b>，提款卡号显示 CPF 脱敏</td></tr>
+      <tr><td>列表 · 一键复制</td><td>EMAIL 单复制内容中的账户类型为 EMAIL</td></tr>
+      <tr><td>订单明细 / 审核弹窗 · 提现账号信息</td><td>EMAIL 单显示 <code>qat*****@gmail.com, BRL, 123*****909</code>，取值见 6.4 节</td></tr>
+      <tr><td>筛选 · 账户类型</td><td>新增选项 <b>EMAIL</b></td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <ul>
-    <li>列表不新增列。</li>
-    <li>订单明细由操作列「详情」图标打开；审核弹窗为锁定后点「审核」图标打开，内容同订单明细，拒绝 / 罚没 / 人工完成 / 代付操作不变。</li>
-    <li>「提现账号信息」取值见 6.4 节；筛选选 EMAIL 时只显示账户类型为 EMAIL 的订单。</li>
-  </ul>
+  <p class="keep">列表不新增列；其余列、筛选、操作与 CPF、PHONE 订单的显示保持不变。</p>
 
   <h2 id="s62">6.2 已审核出款订单</h2>
   <table class="chg">
-    <thead><tr><th style="width:170px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:200px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>订单明细 · 提现账号信息</td><td>{CPF 或手机号脱敏}, BRL, {CPF 脱敏}</td><td>EMAIL 单：<code>qat*****@gmail.com, BRL, 123*****909</code></td></tr>
-      <tr><td>筛选 · 账户类型</td><td>可选 CPF / PHONE</td><td>新增选项 <b>EMAIL</b></td></tr>
+      <tr><td>订单明细 · 提现账号信息</td><td>EMAIL 单显示 <code>qat*****@gmail.com, BRL, 123*****909</code>，取值见 6.4 节</td></tr>
+      <tr><td>筛选 · 账户类型</td><td>新增选项 <b>EMAIL</b></td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <ul><li>列表不新增列；订单明细由操作列「详情」图标打开，取值见 6.4 节。</li></ul>
+  <p class="keep">列表不新增列；其余内容保持不变。</p>
 
   <h2 id="s63">6.3 总出款记录</h2>
   <table class="chg">
-    <thead><tr><th style="width:170px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:200px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>列表 · 账户类型列</td><td>CPF / PHONE</td><td>EMAIL 单显示 <b>EMAIL</b></td></tr>
-      <tr><td>列表 · 提款账号列</td><td>CPF 单显示 CPF 脱敏；PHONE 单显示手机号脱敏（如 +551*****771）</td><td>EMAIL 单显示提现邮箱脱敏，如 <code>qat*****@gmail.com</code></td></tr>
-      <tr><td>列表 · CPF ID 列</td><td>CPF 脱敏</td><td>EMAIL 单同样显示 CPF 脱敏</td></tr>
-      <tr><td>列表 · 提款信息栏 / 一键复制</td><td>同 6.1</td><td>同 6.1</td></tr>
-      <tr><td>筛选 · 账户类型</td><td>提款方式 = PIX 时可选 CPF / PHONE</td><td>新增选项 <b>EMAIL</b></td></tr>
-      <tr><td>筛选 · 提款账号</td><td>按 CPF / 手机号精确搜索</td><td>支持输入完整提现邮箱搜索</td></tr>
+      <tr><td>列表 · 账户类型列</td><td>EMAIL 单显示 <b>EMAIL</b></td></tr>
+      <tr><td>列表 · 提款账号列</td><td>EMAIL 单显示提现邮箱脱敏，如 <code>qat*****@gmail.com</code></td></tr>
+      <tr><td>列表 · 提款信息栏 / 一键复制</td><td>同 6.1</td></tr>
+      <tr><td>筛选 · 账户类型</td><td>新增选项 <b>EMAIL</b></td></tr>
+      <tr><td>筛选 · 提款账号</td><td>支持输入完整提现邮箱搜索，匹配规则见 9.2 节</td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <ul><li>提款账号搜索的匹配规则见 9.2 节；导出见第十章。</li></ul>
+  <p class="keep">其余列与筛选保持不变；EMAIL 单的 CPF ID 列显示 CPF 脱敏。</p>
 
   <h2 id="s64">6.4 订单明细「提现账号信息」取值</h2>
-  <p>格式为「{PIX Key 脱敏}, {币种}, {CPF 脱敏}」，第一段按账户类型取值：</p>
-  <table>
-    <thead><tr><th style="width:120px">账户类型</th><th style="width:200px">第一段</th><th>示例</th></tr></thead>
-    <tbody>
-      <tr><td>CPF</td><td>CPF 脱敏</td><td><code>428*****810, BRL, 428*****810</code></td></tr>
-      <tr><td>PHONE</td><td>手机号（含 55）脱敏</td><td><code>551*****771, BRL, 123*****909</code></td></tr>
-      <tr><td>EMAIL</td><td>提现邮箱脱敏</td><td><code>qat*****@gmail.com, BRL, 123*****909</code></td></tr>
-    </tbody>
-  </table>
+  <p>EMAIL 订单按现有格式「{PIX Key 脱敏}, {币种}, {CPF 脱敏}」显示，第一段为提现邮箱脱敏，例如 <code>qat*****@gmail.com, BRL, 123*****909</code>。CPF、PHONE 订单的取值保持不变。</p>
 </div>
 
 <!-- 七 -->
@@ -358,38 +308,33 @@ table.chg th{color:#8a4b00}
   <h2 id="s71">7.1 会员详情 / 个人资料 → 提现账号</h2>
   <p class="path">入口：会员管理 → 会员详情 → 财务信息 → 提现账号；会员列表等页面点会员ID 打开「个人资料」弹窗 → 提现账号行</p>
   <table class="chg">
-    <thead><tr><th style="width:170px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:200px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>会员详情 · 提现账号</td><td>已有「邮箱」字段</td><td>不改，「邮箱」即提现邮箱，显示完整提现邮箱，未保存时显示「-」</td></tr>
-      <tr><td>个人资料弹窗 · 提现账号行</td><td>显示 CPF、手机号、真实姓名；已保存的邮箱<b>不显示</b></td><td>增加显示 <b>邮箱：{完整提现邮箱}</b></td></tr>
-      <tr><td>提现账户弹窗 · 邮箱输入框</td><td>有格式校验（请输入正确的邮箱）；无长度上限</td><td>新增最多 64 位；保存前去除首尾空格；点「确认」时增加本人审核中提款、绑定占用上限两项校验</td></tr>
+      <tr><td>个人资料弹窗 · 提现账号行</td><td>增加显示 <b>邮箱：{完整提现邮箱}</b>，位于手机号之后、真实姓名之前；未保存邮箱时不显示</td></tr>
+      <tr><td>提现账户弹窗 · 邮箱输入框</td><td>增加最多 64 位限制；保存前去除首尾空格；点「确认」时增加本人审核中提款、绑定占用上限两项校验</td></tr>
     </tbody>
   </table>
+  <p class="keep">会员详情「提现账号」中的「邮箱」字段即提现邮箱，显示保持不变；提现账户弹窗的其余字段及邮箱格式校验保持不变。</p>
   <p class="sub">补充说明</p>
   <table>
     <thead><tr><th style="width:90px">字段</th><th>含义</th><th style="width:80px">控件</th><th style="width:60px">必填</th><th>输入要求</th></tr></thead>
     <tbody>
       <tr><td>邮箱</td><td>会员的提现邮箱，作为 EMAIL 提款方式的 PIX Key。</td><td>文本输入框</td><td>否</td><td>
-        最多 64 个字符；保存前去除首尾空格；格式规则同 5.2 节，不符时字段下方提示「请输入正确的邮箱」。<br>
+        最多 64 个字符；保存前去除首尾空格；格式不符时提示「请输入正确的邮箱」。<br>
         点击「确认」时按第八章校验：本人存在审核中提款订单时提示「提款审核中，暂时无法保存」；提现邮箱占用数（不含本人）已达上限时提示「该 CPF / 手机号 / 邮箱绑定次数已达上限」。
       </td></tr>
     </tbody>
   </table>
-  <ul>
-    <li>会员详情与个人资料弹窗的「修改」打开同一个「提现账户」弹窗。</li>
-    <li>个人资料弹窗「提现账号」行：未保存时显示「未绑定」；已保存时第一行显示「PIX：」，第二行按 CPF、CNPJ、EVP、手机号、邮箱、真实姓名的顺序显示有值的项，以空格分隔，未填写的项不显示，手机号带 55 前缀。示例：<code>CPF：12345678909  邮箱：qatest@gmail.com  真实姓名：QA Email Test</code></li>
-    <li>会员详情与个人资料弹窗都显示完整提现邮箱，不脱敏。</li>
-  </ul>
+  <ul><li>会员详情与个人资料弹窗都显示完整提现邮箱，不脱敏。</li></ul>
 
   <h2 id="s72">7.2 会员列表 · 会员查询</h2>
   <table class="chg">
-    <thead><tr><th style="width:170px">位置</th><th style="width:240px">现状</th><th>改动</th></tr></thead>
+    <thead><tr><th style="width:200px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>会员查询下拉</td><td>会员昵称 / 手机号(会员账号) / 会员ID / 姓名 / 提现手机号 / CPF</td><td>在 CPF 之后新增 <b>提现邮箱</b>；选中后输入框占位为「请输入提现邮箱」</td></tr>
+      <tr><td>会员查询下拉</td><td>在 CPF 之后新增 <b>提现邮箱</b>；选中后输入框占位为「请输入提现邮箱」，匹配规则见 9.2 节</td></tr>
     </tbody>
   </table>
-  <p class="sub">补充说明</p>
-  <ul><li>输入完整提现邮箱精确匹配，匹配规则见 9.2 节。</li></ul>
+  <p class="keep">其余查询选项保持不变。</p>
 </div>
 
 <!-- 八 -->
@@ -405,9 +350,9 @@ table.chg th{color:#8a4b00}
       <tr><td>H5 安全中心 → 提现账号管理保存</td><td>本人存在审核中提款订单时不允许保存，提示「提款审核中，暂时无法保存」；提现邮箱占用数（不含本人）已达上限时不允许保存，提示「该 CPF / 手机号 / 邮箱绑定次数已达上限」。</td></tr>
       <tr><td>会员详情保存</td><td>本人存在审核中提款订单时不允许保存，提示「提款审核中，暂时无法保存」；提现邮箱占用数（不含本人）已达上限时不允许保存，提示「该 CPF / 手机号 / 邮箱绑定次数已达上限」。</td></tr>
       <tr><td>释放</td><td>运营在会员详情删除或更换会员的提现邮箱后，原提现邮箱的占用随即释放。</td></tr>
-      <tr><td>不限制</td><td>「相同提现资料可同时绑定会员数量」= 0 时不做占用上限校验。</td></tr>
     </tbody>
   </table>
+  <p class="keep">CPF、手机号的占用统计与校验规则保持不变。</p>
 </div>
 
 <!-- 九 -->
@@ -488,7 +433,8 @@ table.chg th{color:#8a4b00}
   <table>
     <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
     <tbody>
-      <tr><td>v1.3</td><td>2026-11-18</td><td>第四～七章改为按页面先列「位置 / 现状 / 改动」改动点表，字段规格与规则放在表后补充说明；去掉 6.0 改动总览。</td></tr>
+      <tr><td>v1.4</td><td>2026-11-18</td><td>改动点表只保留「位置 / 改动」两列，不再列出与本需求无关的原有逻辑与原值，统一注明保持不变；第八章同步精简。</td></tr>
+      <tr><td>v1.3</td><td>2026-11-18</td><td>第四～七章改为按页面先列改动点表，规则放在表后补充说明；去掉 6.0 改动总览。</td></tr>
       <tr><td>v1.2</td><td>2026-11-18</td><td>新增 5.5 节「安全中心 → 提现账号管理」，新增常显的「邮箱」字段（不随提款方式开关显隐，未保存可填写、已保存只读），第八章补充该页保存校验；5.3 节补充收款信息弹窗「保存」仅对当前取款页生效、订单审核中 / 拒绝 / 罚没时不保存；同步补充 9.1 节、十一章文案与十二章边界。</td></tr>
       <tr><td>v1.1</td><td>2026-11-18</td><td>7.1 节新增「个人资料弹窗 → 提现账号」展示规则：已保存提现账号时显示提现邮箱。</td></tr>
       <tr><td>v1.0</td><td>2026-11-18</td><td>初稿：新增 EMAIL 提款方式，覆盖后台配置、H5 收款信息、出款报表、会员管理、绑定校验、脱敏与搜索、导出。</td></tr>
