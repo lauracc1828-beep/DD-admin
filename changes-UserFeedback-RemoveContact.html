@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>用户反馈收集 · 本次改动说明</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
+.page{max-width:980px;margin:0 auto;padding:32px 24px 80px}
+.cover{background:linear-gradient(135deg,#0a2a6e 0%,#1a5fa8 60%,#3ab8d8 100%);border-radius:12px;padding:44px 48px;color:#fff;margin-bottom:22px;text-align:center}
+.cover-title{font-size:28px;font-weight:700;letter-spacing:2px;margin-bottom:8px}
+.cover-sub{font-size:15px;opacity:.85;margin-bottom:22px}
+.cover-meta{display:flex;justify-content:center;gap:32px;font-size:13px;opacity:.75;flex-wrap:wrap}
+.section{background:#fff;border-radius:10px;padding:24px 30px;margin-bottom:16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+h1{font-size:19px;font-weight:700;color:#08305c;padding-bottom:10px;border-bottom:2px solid #dbe8f6;margin-bottom:16px}
+h2{font-size:15px;font-weight:600;color:#0b3f78;margin:26px 0 10px;padding-left:10px;border-left:3px solid #1a5fa8}
+h2:first-of-type{margin-top:0}
+h3{font-size:14px;font-weight:600;color:#0961BD;margin:16px 0 6px}
+p{margin-bottom:10px;color:#333}ul,ol{padding-left:20px;margin-bottom:10px}li{margin-bottom:4px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+thead tr{background:#eaf2fb}
+th{padding:9px 12px;text-align:left;font-weight:600;color:#0b3f78;border:1px solid #d6dee8}
+td{padding:8px 12px;border:1px solid #e0e4ea;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfc}
+.notice{background:#edf2ff;border-left:4px solid #4a7aee;border-radius:6px;padding:11px 15px;margin:12px 0;font-size:13px;color:#1a3a8a}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:4px;white-space:nowrap}
+.t-new{background:#e8f7ef;color:#0a5c3a;border:1px solid #8fceb0}
+.t-mod{background:#fdf3e3;color:#7a4b00;border:1px solid #e0b878}
+.t-del{background:#fdecec;color:#c0341d;border:1px solid #e6a5a5}
+.legend{font-size:12px;color:#888;margin-top:8px}
+code{background:#eaf2fb;color:#0961BD;padding:1px 5px;border-radius:3px;font-size:12px;font-family:monospace}
+.before{color:#a33}
+.after{color:#0a7d3e;font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="cover">
+  <div class="cover-title">用户反馈收集 · 本次改动说明</div>
+  <div class="cover-sub">去掉会员联系方式（WhatsApp / 邮箱）收集</div>
+  <div class="cover-meta"><span>对应 PRD：v1.5 → v1.6</span><span>更新日期：2026-11-18</span><span>作者：Laura</span></div>
+</div>
+
+<div class="section">
+  <h1>一、改动概览</h1>
+  <p>反馈浮层不再收集会员的联系方式，H5 前台、商户后台、总控后台同步去掉联系方式相关的输入、校验、展示、筛选与导出。完整需求以《用户反馈收集 PRD》v1.6 为准，本文只说明相对 v1.5 的改动点。</p>
+  <table>
+    <thead><tr><th style="width:5%">#</th><th style="width:30%">改动点</th><th style="width:10%">类型</th><th>涉及章节</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>H5 反馈浮层去掉「联系方式（选填）」输入项及格式校验</td><td><span class="tag t-del">删除</span></td><td>4.4、5.1、六、八、九</td></tr>
+      <tr><td>2</td><td>商户后台反馈列表去掉「联系方式」筛选项与列，详情去掉联系方式</td><td><span class="tag t-del">删除</span></td><td>3.2.1、3.2.2、3.3</td></tr>
+      <tr><td>3</td><td>总控后台反馈列表去掉「联系方式」列，详情去掉联系方式</td><td><span class="tag t-del">删除</span></td><td>2.3.2、2.4、2.6.2</td></tr>
+      <tr><td>4</td><td>反馈数据不再包含联系方式字段（含导出）</td><td><span class="tag t-del">删除</span></td><td>一（名词定义）、七</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h1>二、逐项说明</h1>
+
+  <h2>改动 1 · H5 反馈浮层<span class="tag t-del" style="margin-left:8px">删除</span></h2>
+  <table>
+    <thead><tr><th style="width:22%">项目</th><th>v1.6 规则</th></tr></thead>
+    <tbody>
+      <tr><td>浮层内容</td><td>自上而下为：标题栏 / 问题 / 反馈类型 / 补充说明（选填）/ 上传图片（选填）/ 提交按钮。去掉「联系方式（选填）」标题与「WhatsApp 或邮箱」输入框。</td></tr>
+      <tr><td>提交校验顺序</td><td>① 至少选择 1 个反馈类型 → ② 当天成功提交未达 3 条（服务端校验）→ ③ 请求成功。去掉原第 2 步「联系方式为空或格式正确」及其错误提示。</td></tr>
+      <tr><td>下线的文案</td><td>
+        联系方式（选填）／Contato (opcional)<br>
+        WhatsApp 或邮箱／WhatsApp ou e-mail<br>
+        请输入正确的 WhatsApp 号码或邮箱／Por favor, insira um WhatsApp ou e-mail válido</td></tr>
+    </tbody>
+  </table>
+
+  <h2>改动 2 · 商户后台「消息管理 › 用户反馈」<span class="tag t-del" style="margin-left:8px">删除</span></h2>
+  <table>
+    <thead><tr><th style="width:22%">位置</th><th>v1.6 规则</th></tr></thead>
+    <tbody>
+      <tr><td>筛选项</td><td>提交时间 / 会员查询 / 反馈类型 / 来源入口 / 处理状态 / 游戏名称。去掉「联系方式（全部 / 有 / 无）」。</td></tr>
+      <tr><td>列表列</td><td>反馈ID / 提交时间 / 会员ID / 会员账号 / VIP等级 / 反馈类型 / 补充说明 / 图片 / 来源入口 / 游戏 / 处理状态 / 处理人 / 处理时间 / 操作。去掉「联系方式」列。</td></tr>
+      <tr><td>反馈详情</td><td>「反馈内容」区块为：反馈ID、提交时间、反馈类型、补充说明、图片。去掉联系方式。</td></tr>
+      <tr><td>导出</td><td>导出列与列表列一致，不含联系方式。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>改动 3 · 总控后台「站点会员管理 › 会员反馈管理」<span class="tag t-del" style="margin-left:8px">删除</span></h2>
+  <table>
+    <thead><tr><th style="width:22%">位置</th><th>v1.6 规则</th></tr></thead>
+    <tbody>
+      <tr><td>反馈列表列</td><td>站点名称 / 厅主账号 / 反馈ID / 提交时间 / 会员ID / 会员账号 / VIP等级 / 反馈类型 / 补充说明 / 图片 / 来源入口 / 游戏 / 处理状态 / 处理人 / 处理时间 / 操作。去掉「联系方式」列。</td></tr>
+      <tr><td>反馈详情</td><td>「反馈内容」区块为：站点名称、厅主账号、反馈ID、提交时间、反馈类型、补充说明、图片、处理状态。去掉联系方式。</td></tr>
+      <tr><td>导出</td><td>导出列与列表列一致，不含联系方式。</td></tr>
+    </tbody>
+  </table>
+
+  <h2>改动 4 · 反馈数据<span class="tag t-del" style="margin-left:8px">删除</span></h2>
+  <table>
+    <thead><tr><th style="width:22%">项目</th><th>v1.6 规则</th></tr></thead>
+    <tbody>
+      <tr><td>会员填写字段</td><td>反馈类型、补充说明、图片。提交接口不再接收、不再保存联系方式。</td></tr>
+      <tr><td>其他字段</td><td>系统记录、自动附带、处理信息各字段不变。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h1>三、相关文档</h1>
+  <ul>
+    <li>《用户反馈收集 PRD》v1.6：<a href="https://lauracc1828-beep.github.io/DD-admin/PRD-UserFeedback.html" target="_blank">PRD-UserFeedback.html</a></li>
+    <li>H5 前台原型：<a href="https://lauracc1828-beep.github.io/DD-admin/frontend-prototype-UserFeedback.html" target="_blank">frontend-prototype-UserFeedback.html</a></li>
+    <li>商户后台原型：<a href="https://lauracc1828-beep.github.io/DD-admin/prototype.html#ufb" target="_blank">prototype.html#ufb</a></li>
+    <li>总控后台原型：<a href="https://lauracc1828-beep.github.io/DD-admin/prototype-master-UserFeedback.html" target="_blank">prototype-master-UserFeedback.html</a></li>
+    <li>设计稿清单：<a href="https://lauracc1828-beep.github.io/DD-admin/design-list-UserFeedback.html" target="_blank">design-list-UserFeedback.html</a></li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>

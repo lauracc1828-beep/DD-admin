@@ -2491,14 +2491,14 @@ select.fs.ph{color:#bfbfbf}
             <div class="filter-item"><span class="filter-label">来源入口：</span><select class="f-select" id="ufb-f-src"><option value="">全部</option><option>游戏加载页</option><option>「我的」页</option></select></div>
             <div class="filter-item"><span class="filter-label">处理状态：</span><select class="f-select" id="ufb-f-st"><option value="">全部</option><option value="0">待处理</option><option value="1">已处理</option><option value="2">无需处理</option></select></div>
             <div class="filter-item"><span class="filter-label">游戏名称：</span><input class="f-input" id="ufb-f-game" placeholder="请输入游戏名称" style="min-width:140px"></div>
-            <div class="filter-item"><span class="filter-label">联系方式：</span><select class="f-select" id="ufb-f-ct" style="min-width:96px"><option value="">全部</option><option value="1">有</option><option value="0">无</option></select></div>
+            
             <div class="filter-item" style="margin-left:auto"><button class="btn btn-white" onclick="ufbReset()">重 置</button><button class="btn btn-query" style="margin-left:10px" onclick="ufbRender()">查 询</button></div>
           </div>
         </div>
         <div class="action-bar"><button class="btn btn-blue" onclick="toast('导出任务已创建，请到「报表查询 / 导出页面」下载')">导 出</button></div>
         <div class="table-wrap"><div class="table-scroll">
           <table>
-            <thead><tr><th>反馈ID</th><th>提交时间</th><th>会员ID</th><th>会员账号</th><th>VIP等级</th><th style="min-width:150px">反馈类型</th><th style="min-width:220px">补充说明</th><th>图片</th><th>联系方式</th><th>来源入口</th><th>游戏</th><th>处理状态</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead>
+            <thead><tr><th>反馈ID</th><th>提交时间</th><th>会员ID</th><th>会员账号</th><th>VIP等级</th><th style="min-width:150px">反馈类型</th><th style="min-width:220px">补充说明</th><th>图片</th><th>来源入口</th><th>游戏</th><th>处理状态</th><th>处理人</th><th>处理时间</th><th>操作</th></tr></thead>
             <tbody id="ufb-tbody"></tbody>
           </table>
         </div></div>
@@ -9564,14 +9564,14 @@ function rtLinkSave(){
   }
   window.ufbRender=function(){
     initFilters();
-    var st=v('ufb-f-st'),kt=v('ufb-f-kt'),kw=v('ufb-f-kw').trim(),tp=v('ufb-f-type'),src=v('ufb-f-src'),gm=v('ufb-f-game').trim().toLowerCase(),ct=v('ufb-f-ct'),fs=v('ufb-f-s'),fe=v('ufb-f-e');
+    var st=v('ufb-f-st'),kt=v('ufb-f-kt'),kw=v('ufb-f-kw').trim(),tp=v('ufb-f-type'),src=v('ufb-f-src'),gm=v('ufb-f-game').trim().toLowerCase(),fs=v('ufb-f-s'),fe=v('ufb-f-e');
     var rows=UFB.filter(function(r){
       if(st&&String(r.st)!==st) return false;
       if(kw&&(kt==='mid'?r.mid:r.acc)!==kw) return false;
       if(tp&&r.tp.indexOf(parseInt(tp,10))<0) return false;
       if(src&&r.src!==src) return false;
       if(gm&&r.game.toLowerCase().indexOf(gm)<0) return false;
-      if(ct==='1'&&!r.ct) return false; if(ct==='0'&&r.ct) return false;
+
       var d=r.t.slice(0,10); if(fs&&d<fs) return false; if(fe&&d>fe) return false;
       return true;
     });
@@ -9579,14 +9579,14 @@ function rtLinkSave(){
     document.getElementById('ufb-tbody').innerHTML=rows.length?rows.map(function(r){
       var l=last(r);
       return '<tr><td>'+r.id+'</td><td>'+r.t+'</td><td>'+r.mid+'</td><td>'+r.acc+'</td><td>'+r.vip+'</td><td>'+tpHtml(r.tp)+'</td>'
-        +'<td class="ufb-txt" title="'+e(r.txt)+'">'+(r.txt?e(r.txt):'-')+'</td><td>'+imgHtml(r)+'</td><td>'+(r.ct?e(r.ct):'-')+'</td><td>'+r.src+'</td>'
+        +'<td class="ufb-txt" title="'+e(r.txt)+'">'+(r.txt?e(r.txt):'-')+'</td><td>'+imgHtml(r)+'</td><td>'+r.src+'</td>'
         +'<td>'+(r.game?e(r.game)+'<br><span style="color:#8c8c8c">'+e(r.vd)+'</span>':'-')+'</td><td>'+stHtml(r.st)+'</td>'
         +'<td>'+(l?l.op:'-')+'</td><td>'+(l?l.t:'-')+'</td><td><span class="ufb-lk" onclick="ufbOpen(\''+r.id+'\')">详情/处理</span></td></tr>';
-    }).join(''):'<tr><td colspan="15" style="text-align:center;color:#bfbfbf;padding:40px">暂无数据</td></tr>';
+    }).join(''):'<tr><td colspan="14" style="text-align:center;color:#bfbfbf;padding:40px">暂无数据</td></tr>';
   };
   window.ufbReset=function(){
     ['ufb-f-kw','ufb-f-game','ufb-f-s','ufb-f-e'].forEach(function(id){document.getElementById(id).value=''});
-    ['ufb-f-type','ufb-f-src','ufb-f-st','ufb-f-ct'].forEach(function(id){document.getElementById(id).value=''});
+    ['ufb-f-type','ufb-f-src','ufb-f-st'].forEach(function(id){document.getElementById(id).value=''});
     document.getElementById('ufb-f-kt').value='mid'; ufbRender();
   };
   window.ufbSwitchTab=function(n){
@@ -9600,7 +9600,7 @@ function rtLinkSave(){
     var kv=function(rows){return rows.map(function(x){return '<tr><td class="k">'+x[0]+'</td><td>'+x[1]+'</td></tr>'}).join('')};
     document.getElementById('ufb-d-fb').innerHTML=kv([
       ['反馈ID',cur.id],['提交时间',cur.t],['反馈类型',tpHtml(cur.tp)],
-      ['补充说明',cur.txt?e(cur.txt):'-'],['图片',imgHtml(cur,1)],['联系方式',cur.ct?e(cur.ct):'-']]);
+      ['补充说明',cur.txt?e(cur.txt):'-'],['图片',imgHtml(cur,1)]]);
     document.getElementById('ufb-d-env').innerHTML=kv([
       ['会员ID',cur.mid],['会员账号',cur.acc],['VIP等级',cur.vip],['来源入口',cur.src],
       ['游戏',cur.game?e(cur.game)+'（'+e(cur.vd)+'）':'-'],['终端',cur.term],['设备系统',cur.os],['浏览器',e(cur.br)],['IP',cur.ip]]);

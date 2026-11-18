@@ -159,10 +159,10 @@ body{background:var(--page);color:var(--ink);font-family:-apple-system,BlinkMacS
   <p class="sub">UI 设计排期用。按「页面 × 状态」逐帧拆分，一帧即一张需交付的设计稿。</p>
   <div class="meta">
     <span class="chip">需求 <b>用户反馈收集</b></span>
-    <span class="chip">依据 <b>《用户反馈收集 PRD》v1.3</b></span>
-    <span class="chip">需出稿 <b>17 帧</b></span>
+    <span class="chip">依据 <b>《用户反馈收集 PRD》v1.6</b></span>
+    <span class="chip">需出稿 <b>16 帧</b></span>
     <span class="chip">沿用不出稿 <b>2 帧</b></span>
-    <span class="chip">合计 <b>19 帧</b></span>
+    <span class="chip">合计 <b>18 帧</b></span>
     <span class="chip">新增图标 <b>2 个</b></span>
     <span class="chip">作者 <b>Laura</b></span>
     <span class="chip">日期 <b>2026-11-07</b></span>
@@ -218,8 +218,6 @@ function sheet(o){
     h+='<div class="fld"><div class="fh"><span class="n">Imagens<span class="tip"> (opcional) · JPG ou PNG, até 5MB cada</span></span><span class="c">'+im.length+'/3</span></div><div class="imgs">'+
       im.map(function(s,i){return '<div class="img '+cls[i]+'"><span class="del">✕</span>'+(s==='up'?'<div class="ov"><span class="spin"></span>Enviando</div>':s==='fail'?'<div class="ov fail">!<br>Falha no envio</div>':'')+'</div>';}).join('')+
       (im.length<3?'<div class="add"><i>+</i>Adicionar</div>':'')+'</div></div>';
-    h+='<div class="fld"><div class="fh"><span class="n">Contato<span class="tip"> (opcional)</span></span></div><div class="ip'+(o.ct?' v':'')+(o.ctErr?' err':'')+'">'+(o.ct||'WhatsApp ou e-mail')+'</div>'+
-      (o.ctErr?'<div class="err-t">Por favor, insira um WhatsApp ou e-mail válido</div>':'')+'</div>';
   }
   h+='<div class="sbtn'+(o.sub==='on'?'':' dis')+'">'+(o.sub==='busy'?'<span class="spin"></span>':'')+'Enviar</div></div>';
   if(o.kb) h+='<div class="kbph"><div class="kbph-t">系统键盘<br><span>Teclado do sistema</span></div><div class="kbph-n">系统提供 · 无需设计<br>仅示意占高 291</div></div>';
@@ -235,19 +233,18 @@ var G=[
  {id:'B',name:'「我的」页 · 菜单列表',cnt:'1 帧需出稿 · 1 帧沿用',gd:'入口二。页面为现网页面，本次改动两处：「Suporte」后加副文案；新增「Feedback」菜单项。',f:[
   {c:'B1',n:'菜单 · 显示 Feedback 入口',s:mine({}),t:'会员已登录，且站点开启「意见反馈功能」。',k:'①「Suporte」后加<b>浅灰 12px 常规副文案</b>，与 Suporte 同行，右侧红色角标与箭头保持现网；② 新增菜单项「Feedback」，排在 Suporte 之后、Centro de Segurança 之前，<b>需新出菜单图标</b>（帧内黄色虚线框）。点击整行打开反馈浮层。',cp:'客服｜24 小时在线服务｜意见反馈',p:'PRD 4.3'},
   {c:'B2',n:'菜单 · 功能关闭',ref:1,s:mine({fb:false}),t:'站点关闭「意见反馈功能」。',k:'与 B1 仅差 Feedback 一行；Suporte 副文案照常显示，样式以 B1 为准，不单独出稿。',p:'依据：PRD 4.1、4.3'}]},
- {id:'C',name:'反馈浮层',cnt:'12 帧需出稿',gd:'新增组件。从屏幕底部弹出，带半透明遮罩；两个入口打开同一个浮层。C1 为主稿，其余帧在 C1 基础上变化。',f:[
-  {c:'C1',n:'初始态 · 加载页来源',s:bgLoad({p:38})+sheet({st:'ing'}),t:'点击加载页文字链「Algo que podemos melhorar?」。',k:'标题下方显示<b>加载状态行</b>（闪烁圆点 + 进度，游戏在后台继续加载）；7 个类型标签均未选，输入框为空，「Enviar」置灰。字号层级：标题 18 加粗、区块标题 14 加粗、辅助说明与计数 12 灰色常规，与区块标题同行。',cp:'帮助我们改进｜游戏正在后台加载 38%，填写不影响游戏加载｜我们可以改进什么？ 可多选｜补充说明（选填）｜上传图片（选填）JPG、PNG，单张不超过 5MB｜联系方式（选填）WhatsApp 或邮箱｜提交',p:'PRD 4.2、4.4'},
+ {id:'C',name:'反馈浮层',cnt:'11 帧需出稿',gd:'新增组件。从屏幕底部弹出，带半透明遮罩；两个入口打开同一个浮层。C1 为主稿，其余帧在 C1 基础上变化。',f:[
+  {c:'C1',n:'初始态 · 加载页来源',s:bgLoad({p:38})+sheet({st:'ing'}),t:'点击加载页文字链「Algo que podemos melhorar?」。',k:'标题下方显示<b>加载状态行</b>（闪烁圆点 + 进度，游戏在后台继续加载）；7 个类型标签均未选，输入框为空，「Enviar」置灰。字号层级：标题 18 加粗、区块标题 14 加粗、辅助说明与计数 12 灰色常规，与区块标题同行。',cp:'帮助我们改进｜游戏正在后台加载 38%，填写不影响游戏加载｜我们可以改进什么？ 可多选｜补充说明（选填）｜上传图片（选填）JPG、PNG，单张不超过 5MB｜提交',p:'PRD 4.2、4.4'},
   {c:'C2',n:'初始态 · 「我的」页来源',s:mine({})+sheet({}),t:'点击「我的」页 Feedback 菜单。',k:'与 C1 相同，<b>没有加载状态行</b>，标题下直接是问题区。',cp:'同 C1（无加载状态行）',p:'PRD 4.3、4.4'},
   {c:'C3',n:'浮层打开期间游戏加载完成',s:game()+sheet({st:'ok',sel:[1],txt:'Demora para abrir.',sub:'on'}),t:'从加载页打开浮层，填写过程中游戏加载完成。',k:'加载状态行变为<b>完成色</b>文案；浮层<b>不自动关闭</b>，已填内容保留；遮罩下方背景由加载页变为游戏画面。',cp:'✓ 游戏已加载完成，可随时返回游戏',p:'PRD 4.2、第九章'},
-  {c:'C4',n:'已选类型 · 填写中',s:bgLoad({p:52})+sheet({st:'ing',p:52,sel:[1,4],txt:LONGTXT,ct:'+55 11 91234-5678',sub:'on'}),t:'选中至少 1 个类型并填写内容。',k:'选中标签为黄底 + 勾选标记，再次点击取消；补充说明右上角字数 <b>N/300</b>，到 300/300 后不能再输入；「Enviar」激活。',cp:'字数 N/300',p:'PRD 4.4'},
+  {c:'C4',n:'已选类型 · 填写中',s:bgLoad({p:52})+sheet({st:'ing',p:52,sel:[1,4],txt:LONGTXT,sub:'on'}),t:'选中至少 1 个类型并填写内容。',k:'选中标签为黄底 + 勾选标记，再次点击取消；补充说明右上角字数 <b>N/300</b>，到 300/300 后不能再输入；「Enviar」激活。',cp:'字数 N/300',p:'PRD 4.4'},
   {c:'C5',n:'类型多 · 名称长',s:mine({})+sheet({types:LONG,sel:[6]}),t:'总控最多启用 10 个类型，葡语名称最长 30 个字符（帧内后 3 个为示意名称）。',k:'确认 10 个标签含长名称时的<b>换行排布</b>；浮层最高占屏 92%，超出时<b>浮层内部滚动</b>，需明确「Enviar」在滚动时的位置。',cp:'类型名称由总控配置，初始 7 个见 PRD 2.5.4',p:'PRD 2.5.3、4.4'},
-  {c:'C6',n:'键盘弹起',s:mine({})+sheet({kb:1,focus:'ta',txt:'O jogo trava',sub:'on',sel:[1]}),t:'聚焦补充说明或联系方式输入框，系统键盘弹起。',k:'浮层整体上推至键盘上方，<b>当前输入框与「Enviar」不被键盘遮挡</b>；上方内容可在浮层内滚动查看。',cp:'—',p:'PRD 4.4'},
+  {c:'C6',n:'键盘弹起',s:mine({})+sheet({kb:1,focus:'ta',txt:'O jogo trava',sub:'on',sel:[1]}),t:'聚焦补充说明输入框，系统键盘弹起。',k:'浮层整体上推至键盘上方，<b>当前输入框与「Enviar」不被键盘遮挡</b>；上方内容可在浮层内滚动查看。',cp:'—',p:'PRD 4.4'},
   {c:'C7',n:'图片 · 已添加 2 张',s:mine({})+sheet({sel:[0],imgs:['ok','ok'],sub:'on'}),t:'点击「Adicionar」从相册选图后。',k:'缩略图按选择顺序排列，右上角删除按钮；行尾张数 <b>N/3</b>；未满 3 张时末尾保留「+ Adicionar」。',cp:'添加图片｜张数 N/3',p:'PRD 5.3'},
   {c:'C8',n:'图片 · 已满 3 张',s:mine({})+sheet({sel:[0],imgs:['ok','ok','ok'],sub:'on'}),t:'已添加 3 张。',k:'「+ Adicionar」隐藏，张数显示 3/3。',cp:'—',p:'PRD 5.3'},
   {c:'C9',n:'图片 · 上传中',s:mine({})+sheet({sel:[0],imgs:['ok','up']}),t:'图片添加后立即上传。',k:'缩略图上叠加<b>上传中</b>状态（转圈 + 文案）；有图片上传中时「Enviar」<b>置灰</b>，全部上传结束后恢复。原型未画此状态，需设计。',cp:'上传中',p:'PRD 5.3'},
   {c:'C10',n:'图片 · 上传失败',s:mine({})+sheet({sel:[0],imgs:['ok','fail'],sub:'on'}),t:'单张图片上传失败。',k:'缩略图上叠加<b>上传失败</b>状态，可点删除后重新添加；不影响提交，提交时只附带上传成功的图片。原型未画此状态，需设计。',cp:'上传失败',p:'PRD 5.3'},
-  {c:'C11',n:'联系方式格式错误',s:mine({})+sheet({sel:[2],ct:'abc123',ctErr:1,sub:'on'}),t:'点击「Enviar」时，联系方式不是邮箱，也不是 10~13 位号码。',k:'输入框<b>标红</b>，下方红色提示；浮层不关闭，已填内容保留。',cp:'请输入正确的 WhatsApp 号码或邮箱',p:'PRD 4.4、5.1'},
-  {c:'C12',n:'提交中',s:mine({})+sheet({sel:[2],txt:LONGTXT,sub:'busy'}),t:'点击「Enviar」后至接口返回前。',k:'按钮置灰 + loading，防止重复提交。',cp:'提交',p:'PRD 4.4'}]},
+  {c:'C11',n:'提交中',s:mine({})+sheet({sel:[2],txt:LONGTXT,sub:'busy'}),t:'点击「Enviar」后至接口返回前。',k:'按钮置灰 + loading，防止重复提交。',cp:'提交',p:'PRD 4.4'}]},
  {id:'D',name:'轻提示',cnt:'1 帧需出稿',gd:'新增文案，浮层上方居中显示，约 2 秒后自动消失。若站点已有统一的 Toast 组件，直接套用。',f:[
   {c:'D1',n:'Toast · 最长文案',s:mine({})+sheet({sel:[2],sub:'on',toast:'Você atingiu o limite de feedbacks de hoje. Tente novamente amanhã.'}),t:'图片校验不通过、当天已提交 3 条、提交失败。',k:'按<b>最长一条</b>出稿确认换行；其余文案：Apenas imagens JPG ou PNG ／ O tamanho da imagem não deve exceder 5MB ／ Máximo de 3 imagens ／ Falha no envio. Tente novamente.',cp:'今天的反馈次数已达上限，请明天再来｜仅支持 JPG、PNG 格式图片｜图片大小不得超过 5MB｜最多上传 3 张图片｜提交失败，请稍后重试',p:'PRD 5.1、5.2、5.3'}]},
  {id:'E',name:'提交成功页',cnt:'2 帧需出稿',gd:'新增状态，在浮层内原地切换，不跳转页面。按来源入口区分按钮文案。不显示任何奖励信息。',f:[

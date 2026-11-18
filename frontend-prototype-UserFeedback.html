@@ -229,11 +229,6 @@ body{margin:0;background:#1b1b1d;color:#e6e6e6;font-family:-apple-system,BlinkMa
           <div class="imgs" id="imgs"></div>
           <input type="file" id="img-in" accept="image/jpeg,image/png" multiple style="display:none" onchange="pickImgs(this)">
         </div>
-        <div class="fld">
-          <div class="fld-hd"><span class="n"><span data-i="ctLb"></span><i data-i="opt"></i></span></div>
-          <input class="ip" id="ip" data-ph="ctPh" maxlength="64" oninput="clearErr()">
-          <div class="err-t" id="ip-err" data-i="ctErr"></div>
-        </div>
         <button class="sub" id="sub" disabled onclick="submitFb()" data-i="submit"></button>
       </div>
       <div class="ok-wrap" id="ok-wrap">
@@ -287,7 +282,6 @@ var I18N={
 
   txtLb:['补充说明','Conte mais'], opt:['（选填）',' (opcional)'], txtPh:['想说的话，可以写在这里……','Escreva aqui o que quiser nos contar...'],
   imgLb:['上传图片','Imagens'], imgTip:['JPG、PNG，单张不超过 5MB','JPG ou PNG, até 5MB cada'], imgAdd:['添加图片','Adicionar'],
-  ctLb:['联系方式','Contato'], ctPh:['WhatsApp 或邮箱','WhatsApp ou e-mail'], ctErr:['请输入正确的 WhatsApp 号码或邮箱','Por favor, insira um WhatsApp ou e-mail válido'],
   submit:['提交','Enviar'], okT:['谢谢！','Obrigado!'], okS:['你的意见能帮助我们做得更好。','Sua opinião nos ajuda a melhorar.'],
   back:['返回游戏','Voltar ao jogo'], done:['完成','Finalizar'],
   eMax:['最多上传 3 张图片','Máximo de 3 imagens'], eFmt:['仅支持 JPG、PNG 格式图片','Apenas imagens JPG ou PNG'], eSize:['图片大小不得超过 5MB','O tamanho da imagem não deve exceder 5MB'],
@@ -393,7 +387,7 @@ function toggleChip(id){
 function openSheet(src){
   S.src=src; S.sel=[];
   document.getElementById('ta').value=''; document.getElementById('ta-n').textContent='0';
-  document.getElementById('ip').value=''; clearErr(); S.imgs=[]; renderImgs();
+  S.imgs=[]; renderImgs();
   document.getElementById('form-wrap').style.display='block';
   document.getElementById('ok-wrap').style.display='none';
   document.getElementById('ok-btn').innerHTML=tr(src==='loading'?'back':'done');
@@ -426,36 +420,27 @@ function pickImgs(inp){
   if(msg) ftoast(msg);
   inp.value='';
 }
-function clearErr(){document.getElementById('ip').classList.remove('err');document.getElementById('ip-err').classList.remove('on')}
-function validContact(v){
-  if(!v) return true;
-  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return true;
-  var d=v.replace(/[\s\-()+]/g,'');
-  return /^\d{10,13}$/.test(d);
-}
 function ftoast(m){var t=document.getElementById('ftoast');t.innerHTML=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on')},2200)}
 function pad(n){return n<10?'0'+n:n}
 function now(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
 
 function submitFb(){
   if(!S.sel.length) return;
-  var ip=document.getElementById('ip').value.trim();
-  if(!validContact(ip)){document.getElementById('ip').classList.add('err');document.getElementById('ip-err').classList.add('on');return}
   if(S.cnt>=3){ftoast(tr('eDay'));return}
   if(S.net==='fail'){ftoast(tr('eNet'));return}
   S.cnt++;
   document.querySelectorAll('#seg-cnt button').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.v,10)===S.cnt)});
-  showData(ip);
+  showData();
   document.getElementById('form-wrap').style.display='none';
   document.getElementById('ok-wrap').style.display='block';
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function showData(ip){
+function showData(){
   var names=TYPES.filter(function(t){return S.sel.indexOf(t.id)>-1}).map(function(t){return t.name}).join('、');
   var txt=document.getElementById('ta').value.trim();
   var rows=[
     ['grp','用户填写'],
-    ['反馈类型',names],['补充说明',txt||'-'],['图片',S.imgs.length?S.imgs.length+' 张':'-'],['联系方式',ip||'-'],
+    ['反馈类型',names],['补充说明',txt||'-'],['图片',S.imgs.length?S.imgs.length+' 张':'-'],
     ['grp','系统记录'],
     ['反馈ID','FB'+(++seq)],['提交时间',now()],['商户','888'],['会员ID','26894081'],['会员账号','11912311111'],['VIP 等级','VIP24'],
     ['grp','自动附带信息'],
