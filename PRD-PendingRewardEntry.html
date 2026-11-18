@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>待领取奖励入口与范围扩展 PRD v1.4</title>
+<title>待领取奖励入口与范围扩展 PRD v1.5</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -49,7 +49,7 @@ a{color:#0961BD}
 <div class="cover">
   <div class="cover-title">待领取奖励入口与范围扩展</div>
   <div class="cover-sub">功能 PRD · H5 首页待领取入口 / 待领取页面纳入 VIP 奖励与返水</div>
-  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-16</span></div>
+  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-18</span></div>
 </div>
 
 <div class="toc">
@@ -203,10 +203,11 @@ a{color:#0961BD}
 <table>
 <thead><tr><th>奖励</th><th>纳入条件</th><th>本次是否改动</th></tr></thead>
 <tbody>
-<tr><td>救援金、神秘彩金、充值、红包雨</td><td>活动后台「领取方式」= 手动领取，且奖励当前可领取</td><td>否，沿用现有逻辑</td></tr>
+<tr><td>救援金、神秘彩金、充值</td><td>活动后台「领取方式」= 手动领取，且奖励当前可领取</td><td>否，沿用现有逻辑</td></tr>
 <tr><td>VIP 奖励</td><td>见 6.2</td><td><b>新增</b></td></tr>
 <tr><td>返水</td><td>见 6.3</td><td><b>新增</b></td></tr>
 <tr><td>会员答谢、签到、首充亏损返利、限时充值返利、助力转盘、幸运转盘、注册引导转盘、自定义</td><td>不纳入。会员答谢在点击领取时才计算奖励；签到、首充亏损返利在活动内点击后自动发放；其余为自动派发或走各自申请流程</td><td>否</td></tr>
+<tr><td>红包雨</td><td>不纳入。红包雨（神秘矿场）在会员点击「立即挖矿」时才确定奖励金额并同时领取到账，不存在已派发未领取的奖励；无论后台「领取方式」为手动领取还是自动领取，均不进入待领取页面，也不计入待领取数量与总金额</td><td>是，移出待领取范围</td></tr>
 </tbody>
 </table>
 
@@ -289,6 +290,7 @@ a{color:#0961BD}
 <tr><td>v1.2</td><td>2026-11-09</td><td>待领取列表中 VIP、返水的名称与来源葡语改为沿用我方前台现有文案：升级奖励 Recompensa de upgrade，返水 Cashback，实时返水 Cashback em tempo real。</td></tr>
 <tr><td>v1.3</td><td>2026-11-10</td><td>待领取列表「来源」列统一为获奖条件：VIP 来源改为「VIP{等级}」，福利类型移到活动名称（如「VIP 每日奖励」）；返水来源改为「有效投注 {金额}」。</td></tr>
 <tr><td>v1.4</td><td>2026-11-16</td><td>研发答疑：全部失败时提示后端返回的失败原因，无原因时兜底「领取失败，请稍后重试」；部分失败不再提示失败，只弹成功部分的到账弹框；VIP 四类活动名称统一用前台「奖励」叫法（VIP 升级/每日/每周/每月奖励），后台「福利类型」只作对应关系；最低展示金额为空时按总金额 &gt; 0 判断，总金额为 0 不显示入口；新增一键领取全部失败处理；VIP 奖励不满足 VIP 原领取规则时保留在列表、只对成功部分提示。</td></tr>
+<tr><td>v1.5</td><td>2026-11-18</td><td>红包雨移出待领取范围：手动领取的红包雨不再进入待领取页面，不计入待领取数量与总金额。</td></tr>
 </tbody>
 </table>
 </div>
