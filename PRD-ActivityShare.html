@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>活动详情页社媒分享 PRD v1.0</title>
+<title>活动详情页社媒分享 PRD v1.1</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -49,7 +49,7 @@ figcaption{font-size:12px;color:#888;margin-top:6px}
 <div class="cover">
   <div class="cover-title">活动详情页社媒分享</div>
   <div class="cover-sub">PRD 产品需求文档 · 活动配置开关 / 活动详情页分享卡片 / 分享文案与分享链接</div>
-  <div class="cover-meta"><span>版本：v1.0</span><span>作者：Laura</span><span>更新日期：2026-11-20</span></div>
+  <div class="cover-meta"><span>版本：v1.1</span><span>作者：Laura</span><span>更新日期：2026-11-24</span></div>
 </div>
 
 <div class="toc">
@@ -167,7 +167,7 @@ figcaption{font-size:12px;color:#888;margin-top:6px}
 <rect x="180" y="740" width="200" height="44" rx="6" fill="#fff" stroke="#1a5fa8"/>
 <text x="280" y="760" text-anchor="middle">分享文案 + 空格 + 分享链接</text><text x="280" y="776" text-anchor="middle">（链接带活动页来源标识）</text>
 <rect x="180" y="820" width="200" height="44" rx="22" fill="#e6f4ff" stroke="#1a5fa8"/>
-<text x="280" y="840" text-anchor="middle">按推荐好友页现有交互</text><text x="280" y="856" text-anchor="middle">打开对应平台</text>
+<text x="280" y="840" text-anchor="middle">按 5.2 点击规则</text><text x="280" y="856" text-anchor="middle">打开对应平台</text>
 </svg>
 </div>
 </div>
@@ -262,7 +262,7 @@ figcaption{font-size:12px;color:#888;margin-top:6px}
 
 <h2 id="s52">5.2 点击分享</h2>
 <ul>
-<li>已登录：按第六章生成分享内容，点击各平台图标后的交互与推荐好友页现有分享保持一致。</li>
+<li>已登录：按第六章生成分享内容。点击 X 时打开 X 发帖页，预填「分享文案 + 空格 + 分享链接」；点击其余平台图标的交互与推荐好友页现有分享保持一致。</li>
 <li>未登录：点击任一平台图标，弹出登录弹窗；登录成功后再执行分享。</li>
 </ul>
 
@@ -347,6 +347,7 @@ figcaption{font-size:12px;color:#888;margin-top:6px}
 <table>
 <thead><tr><th>版本</th><th>日期</th><th>修订内容</th></tr></thead>
 <tbody>
+<tr><td>v1.1</td><td>2026-11-24</td><td>5.2 点击分享：X 改为打开 X 发帖页并预填分享文案与链接，其余平台交互与推荐好友页保持一致。</td></tr>
 <tr><td>v1.0</td><td>2026-11-20</td><td>首版：活动配置新增社媒分享开关；8 类活动详情页新增社媒分享卡片；分享文案读取代理返佣比例配置的分享宣传语，系统默认文案动态读取网站名称；分享链接新增活动页来源标识。</td></tr>
 </tbody>
 </table>
