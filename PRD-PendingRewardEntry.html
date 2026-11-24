@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>待领取奖励入口与范围扩展 PRD v1.5</title>
+<title>待领取奖励入口与范围扩展 PRD v1.6</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -49,7 +49,7 @@ a{color:#0961BD}
 <div class="cover">
   <div class="cover-title">待领取奖励入口与范围扩展</div>
   <div class="cover-sub">功能 PRD · H5 首页待领取入口 / 待领取页面纳入 VIP 奖励与返水</div>
-  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-18</span></div>
+  <div class="cover-meta"><span>版本：v1.6</span><span>作者：Laura</span><span>更新日期：2026-11-24</span></div>
 </div>
 
 <div class="toc">
@@ -222,7 +222,7 @@ a{color:#0961BD}
 <h2 id="s63">6.3 返水</h2>
 <ul>
 <li><b>纳入条件</b>：会员存在「领取状态 = 未领取」的返水记录（站点后台「返水管理 → 会员返水记录」）。</li>
-<li><b>合并显示</b>：所有未领取返水在待领取列表中合并为 <b>1 条</b>：时间 = 最近一笔未领取返水的发放时间；活动名称 = 返水；奖励 = 未领取返水金额合计，与返水页「可领取」金额一致；来源 = 获奖条件「有效投注 {金额}」，金额为这些未领取返水对应的有效投注额合计，复用现有来源文案「有效投注 {sourceAmount}」。</li>
+<li><b>合并显示</b>：所有未领取返水在待领取列表中合并为 <b>1 条</b>：时间 = 最近一笔未领取返水的发放时间；活动名称 = 返水；奖励 = 未领取返水金额合计，与返水页「可领取」金额一致；来源 = 返水（显示奖励类型，不显示获奖条件）。</li>
 <li><b>计数</b>：无论未领取返水记录有多少笔，在待领取数量中计为 1。</li>
 <li><b>移出条件</b>：未领取返水全部领取后移出。</li>
 </ul>
@@ -257,8 +257,8 @@ a{color:#0961BD}
 <tr><td>待领取列表 · 活动名称</td><td>VIP 每周奖励</td><td>VIP Bônus Semanal</td><td>沿用（我方 VIP 页）</td></tr>
 <tr><td>待领取列表 · 活动名称</td><td>VIP 每月奖励</td><td>VIP Bônus Mensal</td><td>沿用（我方 VIP 页）</td></tr>
 <tr><td>待领取列表 · 来源</td><td>VIP{等级}</td><td>VIP{nível}</td><td>沿用（我方前台）</td></tr>
-<tr><td>待领取列表 · 活动名称</td><td>返水</td><td>Cashback</td><td>沿用（我方前台）</td></tr>
-<tr><td>待领取列表 · 来源</td><td>有效投注 {金额}</td><td>Aposta válida de {valor}</td><td>沿用（我方待领取页）</td></tr>
+<tr><td>待领取列表 · 活动名称</td><td>返水</td><td>Rebate</td><td>沿用（我方优惠页返水标签）</td></tr>
+<tr><td>待领取列表 · 来源</td><td>返水</td><td>Rebate</td><td>沿用（我方优惠页返水标签）</td></tr>
 <tr><td>一键领取全部失败 · 后端无原因时的兜底提示</td><td>领取失败，请稍后重试</td><td>Falha na coleta. Tente novamente mais tarde.</td><td>新增（按「Falha na/no …」现有风格自译）</td></tr>
 <tr><td>后台 · 最低展示金额校验</td><td>请输入大于等于 0 的金额，最多 2 位小数</td><td>—</td><td>后台中文</td></tr>
 </tbody>
@@ -291,6 +291,7 @@ a{color:#0961BD}
 <tr><td>v1.3</td><td>2026-11-10</td><td>待领取列表「来源」列统一为获奖条件：VIP 来源改为「VIP{等级}」，福利类型移到活动名称（如「VIP 每日奖励」）；返水来源改为「有效投注 {金额}」。</td></tr>
 <tr><td>v1.4</td><td>2026-11-16</td><td>研发答疑：全部失败时提示后端返回的失败原因，无原因时兜底「领取失败，请稍后重试」；部分失败不再提示失败，只弹成功部分的到账弹框；VIP 四类活动名称统一用前台「奖励」叫法（VIP 升级/每日/每周/每月奖励），后台「福利类型」只作对应关系；最低展示金额为空时按总金额 &gt; 0 判断，总金额为 0 不显示入口；新增一键领取全部失败处理；VIP 奖励不满足 VIP 原领取规则时保留在列表、只对成功部分提示。</td></tr>
 <tr><td>v1.5</td><td>2026-11-18</td><td>红包雨移出待领取范围：手动领取的红包雨不再进入待领取页面，不计入待领取数量与总金额。</td></tr>
+<tr><td>v1.6</td><td>2026-11-24</td><td>返水行的活动名称与来源均显示「返水 / Rebate」，来源不再显示有效投注金额。</td></tr>
 </tbody>
 </table>
 </div>
