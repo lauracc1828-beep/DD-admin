@@ -9605,8 +9605,8 @@ var EM_WD = [
   // 待审核出款订单
   { k:'W1', pg:'ma', mid:'80000002', phone:'11900000002', no:'5392790011200000003', method:'电子钱包', acct:'-', card:'-', cpf:'-', payee:'-', amt:'80.00', t:'2026-10-30 15:02:41', at:'人工审核', first:'否' },
   { k:'P1', pg:'ma', mid:'83491174', phone:'55900000000', no:'5392762640869367808', method:'PIX', acct:'CPF', card:'111*****344', cpf:'111*****344', payee:'Lucas Pereira', amt:'16.00', t:'2026-08-31 23:28:20', at:'自动代付条件不符', first:'是', acc:'111*****344, BRL, 111*****344' },
-  { k:'P2', pg:'ma', mid:'83491180', phone:'55911112222', no:'5392762640869399999', method:'PIX', acct:'PHONE', card:'222*****455', cpf:'222*****455', payee:'Carla Mendes', amt:'20.00', t:'2026-08-31 22:10:05', at:'自动代付条件不符', first:'否', acc:'551*****000, BRL, 222*****455' },
-  { k:'E1', pg:'ma', mid:'80000006', phone:'11900000006', no:'5392790011200000006', method:'PIX', acct:'EMAIL', card:'123*****909', cpf:'123*****909', payee:'QA Email Test', amt:'20.00', t:'2026-11-18 05:10:12', at:'自动代付条件不符', first:'否', em:true },
+  { k:'P2', pg:'ma', mid:'83491180', phone:'55911112222', no:'5392762640869399999', method:'PIX', acct:'PHONE', acctNo:'551*****000', card:'222*****455', cpf:'222*****455', payee:'Carla Mendes', amt:'20.00', t:'2026-08-31 22:10:05', at:'自动代付条件不符', first:'否', acc:'551*****000, BRL, 222*****455' },
+  { k:'E1', pg:'ma', mid:'80000006', phone:'11900000006', no:'5392790011200000006', method:'PIX', acct:'EMAIL', acctNo:'qat*****@gmail.com', card:'123*****909', cpf:'123*****909', payee:'QA Email Test', amt:'20.00', t:'2026-11-18 05:10:12', at:'自动代付条件不符', first:'否', em:true },
   // 已审核出款订单
   { k:'W4', pg:'wr', mid:'80000001', phone:'11900000001', no:'5392790011200000001', method:'电子钱包', acct:'-', cpf:'-', payee:'-', amt:'100.00', t:'2026-10-29 14:20:05', done:'2026-10-29 14:20:08', dur:'0分钟', op:'admin002', at:'人工审核', first:'是', pay:'-' },
   { k:'W5', pg:'wr', mid:'80000003', phone:'11900000003', no:'5392790011200000004', method:'电子钱包', acct:'-', cpf:'-', payee:'-', amt:'30.00', t:'2026-10-20 09:12:33', done:'2026-10-20 09:15:02', dur:'2分钟', op:'admin002', at:'人工审核', first:'是', pay:'-' },
@@ -9636,7 +9636,7 @@ function emReg(r){   /* 订单明细复用 ngOpenOrder：未登记的订单按�
 var EM_COLS = {
   ma:[ ['', function(r){ return '<input type="checkbox">'; }],
     ['会员ID', emMid], ['手机号(会员账号)/姓名', function(r){ return r.phone+' / -'; }], ['订单号', function(r){ return r.no+' <span class="copy-icon">⧉</span>'; }],
-    ['提款方式', function(r){ return r.method; }], ['提款信息', emPinfo, 'em-pi'], ['提款金额', function(r){ return r.amt+'(BRL) <span class="copy-icon">⧉</span>'; }],
+    ['提款方式', function(r){ return r.method; }], ['账户类型', function(r){ return r.acct; }], ['提款账户', function(r){ var v = r.acctNo || r.card || '-'; return v + (v !== '-' ? ' <span class="copy-icon">⧉</span>' : ''); }], ['提款金额', function(r){ return r.amt+'(BRL) <span class="copy-icon">⧉</span>'; }],
     ['提款类型', function(){ return '即时提款'; }], ['申请时间', function(r){ return r.t; }],
     ['订单状态', function(r){ return EM_LOCK[r.k] ? emBadge('审核中','wb-wait') : emBadge('待审核','wb-wait'); }],
     ['操作人', function(r){ return EM_LOCK[r.k] ? 'admin001' : ''; }], ['手续费', function(){ return '0.00'; }], ['实际出款', function(r){ return r.amt+'(BRL)'; }],

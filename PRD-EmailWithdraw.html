@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>增加Email提款方式 PRD v1.4</title>
+<title>增加Email提款方式 PRD v1.5</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#eef1f5;line-height:1.75}
@@ -46,7 +46,7 @@ table.chg th{color:#8a4b00}
 <div class="cover">
   <div class="cover-title">增加Email提款方式</div>
   <div class="cover-sub">PRD 产品需求文档 · 提款方式配置 / H5 收款信息 / 出款报表 / 会员资料</div>
-  <div class="cover-meta"><span>版本：v1.4</span><span>作者：Laura</span><span>更新日期：2026-11-18</span></div>
+  <div class="cover-meta"><span>版本：v1.5</span><span>作者：Laura</span><span>更新日期：2026-11-26</span></div>
 </div>
 
 <div class="toc">
@@ -103,7 +103,7 @@ table.chg th{color:#8a4b00}
     <tbody>
       <tr><td>后台配置</td><td>提现管理 → 提款方式配置新增「邮箱 / EMAIL」；其他提现配置的绑定数量上限覆盖提现邮箱。</td><td>第四章</td></tr>
       <tr><td>H5 前台</td><td>收款信息弹窗新增 EMAIL 方式及「邮箱」字段；输入校验；保存与回填；已保存收款信息卡片展示；安全中心「提现账号管理」页显示提现邮箱。</td><td>第五章</td></tr>
-      <tr><td>出款报表</td><td>待审核出款订单、已审核出款订单、总出款记录：账户类型取值、提款信息栏、订单明细、提款账号列、筛选与搜索。</td><td>第六章</td></tr>
+      <tr><td>出款报表</td><td>待审核出款订单、已审核出款订单、总出款记录：账户类型与提款账户 / 提款账号列、提款信息栏、订单明细、筛选与搜索。</td><td>第六章</td></tr>
       <tr><td>会员管理</td><td>会员详情、个人资料弹窗的提现账号显示提现邮箱；提现账户弹窗邮箱编辑校验；会员列表按提现邮箱查询。</td><td>第七章</td></tr>
       <tr><td>绑定校验</td><td>提现邮箱纳入绑定数量上限与唯一性校验。</td><td>第八章</td></tr>
       <tr><td>导出</td><td>上述报表导出字段随本次新增字段与取值同步。</td><td>第十章</td></tr>
@@ -266,13 +266,13 @@ table.chg th{color:#8a4b00}
   <table class="chg">
     <thead><tr><th style="width:200px">位置</th><th>改动</th></tr></thead>
     <tbody>
-      <tr><td>列表 · 提款信息栏</td><td>EMAIL 单：账户类型显示 <b>EMAIL</b>，提款卡号显示 CPF 脱敏</td></tr>
-      <tr><td>列表 · 一键复制</td><td>EMAIL 单复制内容中的账户类型为 EMAIL</td></tr>
+      <tr><td>列表 · 账户类型列</td><td>EMAIL 单显示 <b>EMAIL</b></td></tr>
+      <tr><td>列表 · 提款账户列</td><td>EMAIL 单显示提现邮箱脱敏，如 <code>qat*****@gmail.com</code>；复制按钮复制该脱敏值</td></tr>
       <tr><td>订单明细 / 审核弹窗 · 提现账号信息</td><td>EMAIL 单显示 <code>qat*****@gmail.com, BRL, 123*****909</code>，取值见 6.4 节</td></tr>
       <tr><td>筛选 · 账户类型</td><td>新增选项 <b>EMAIL</b></td></tr>
     </tbody>
   </table>
-  <p class="keep">列表不新增列；其余列、筛选、操作与 CPF、PHONE 订单的显示保持不变。</p>
+  <p class="keep">其余列、筛选、操作与 CPF、PHONE 订单的显示保持不变；EMAIL 单的 CPF ID 列显示 CPF 脱敏。</p>
 
   <h2 id="s62">6.2 已审核出款订单</h2>
   <table class="chg">
@@ -290,7 +290,7 @@ table.chg th{color:#8a4b00}
     <tbody>
       <tr><td>列表 · 账户类型列</td><td>EMAIL 单显示 <b>EMAIL</b></td></tr>
       <tr><td>列表 · 提款账号列</td><td>EMAIL 单显示提现邮箱脱敏，如 <code>qat*****@gmail.com</code></td></tr>
-      <tr><td>列表 · 提款信息栏 / 一键复制</td><td>同 6.1</td></tr>
+      <tr><td>列表 · 提款信息栏 / 一键复制</td><td>EMAIL 单：账户类型显示 <b>EMAIL</b>，提款卡号显示 CPF 脱敏；一键复制内容中的账户类型为 EMAIL</td></tr>
       <tr><td>筛选 · 账户类型</td><td>新增选项 <b>EMAIL</b></td></tr>
       <tr><td>筛选 · 提款账号</td><td>支持输入完整提现邮箱搜索，匹配规则见 9.2 节</td></tr>
     </tbody>
@@ -374,7 +374,7 @@ table.chg th{color:#8a4b00}
 <!-- 十 -->
 <div class="section" id="s10">
   <h1>十、导出</h1>
-  <p>待审核出款订单、已审核出款订单、总出款记录的导出文件随列表同步：账户类型列支持 EMAIL 取值，提款账号列 EMAIL 订单输出提现邮箱脱敏，提款信息内容与列表一致。导出的其他字段与逻辑不变。</p>
+  <p>待审核出款订单、已审核出款订单、总出款记录的导出文件随列表同步：账户类型列支持 EMAIL 取值，提款账户 / 提款账号列 EMAIL 订单输出提现邮箱脱敏，提款信息内容与列表一致。导出的其他字段与逻辑不变。</p>
 </div>
 
 <!-- 十一 -->
@@ -433,6 +433,7 @@ table.chg th{color:#8a4b00}
   <table>
     <thead><tr><th style="width:80px">版本</th><th style="width:110px">日期</th><th>修订内容</th></tr></thead>
     <tbody>
+      <tr><td>v1.5</td><td>2026-11-26</td><td>6.1 节待审核出款订单列表改为「账户类型」「提款账户」两列的显示规则；6.3 节提款信息栏单独写明。</td></tr>
       <tr><td>v1.4</td><td>2026-11-18</td><td>改动点表只保留「位置 / 改动」两列，不再列出与本需求无关的原有逻辑与原值，统一注明保持不变；第八章同步精简。</td></tr>
       <tr><td>v1.3</td><td>2026-11-18</td><td>第四～七章改为按页面先列改动点表，规则放在表后补充说明；去掉 6.0 改动总览。</td></tr>
       <tr><td>v1.2</td><td>2026-11-18</td><td>新增 5.5 节「安全中心 → 提现账号管理」，新增常显的「邮箱」字段（不随提款方式开关显隐，未保存可填写、已保存只读），第八章补充该页保存校验；5.3 节补充收款信息弹窗「保存」仅对当前取款页生效、订单审核中 / 拒绝 / 罚没时不保存；同步补充 9.1 节、十一章文案与十二章边界。</td></tr>
